@@ -1,0 +1,90 @@
+package Main;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
+
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
+import com.formdev.flatlaf.FlatDarkLaf;
+
+import API.GestionAPI;
+
+public class MainJFX {
+	public static boolean openOnEclipse = false;
+	public static GestionAPI API = new GestionAPI();
+    public static void main(String[] args) throws Exception {
+    	// Obtient la classe actuelle
+        Class<?> currentClass = MainJFX.class;
+
+        // Obtient la ProtectionDomain de la classe actuelle
+        ProtectionDomain protectionDomain = currentClass.getProtectionDomain();
+
+        // Obtient la CodeSource � partir de la ProtectionDomain
+        CodeSource codeSource = protectionDomain.getCodeSource();
+
+        // v�rifie si la CodeSource est une URL
+        if (codeSource != null && codeSource.getLocation() != null) {
+            URL codeSourceUrl = codeSource.getLocation();
+
+            // v�rifie si l'URL commence par "file:" (ex�cution depuis Eclipse)
+            if (codeSourceUrl.getProtocol().equals("file")) {
+                System.out.println("+ Le programme est en cours d'ex�cution depuis Eclipse.");
+                openOnEclipse = true;
+            } else {
+                System.out.println("+  Le programme est en cours d'ex�cution depuis un fichier JAR.");
+                // Code sp�cifique pour le traitement si le programme est ex�cut� depuis un JAR
+                testFolderInJar("flag");
+            }
+        } else {
+            System.out.println("- Impossible de d�tecter la source d'ex�cution du programme.");
+        } 
+        // Installer FlatLaf
+        try {
+            UIManager.setLookAndFeel(new FlatDarkLaf());
+        } catch (UnsupportedLookAndFeelException ex) {
+            ex.printStackTrace();
+        }
+        
+        BDD_v2.deconnexionBDD();
+		BDD_v2.connexionBDD();
+		
+//		BDD_v2.suppressionsDesTables();
+		//BDD_v2.creationdesTables();
+		BDD_v2.verifierEtCreerTables();
+		BDD_v2.getAllListPlayerTableName();
+//		API.TAB_WTA();
+		
+		SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                MenuPrincipal app = new MenuPrincipal();
+                app.setVisible(true);
+            }
+        });
+		
+		//BDD_v2.deconnexionBDD();
+	}
+ // M�thode pour tester si un dossier existe dans le JAR
+    private static void testFolderInJar(String folderName) throws IOException {
+        // Obtention du contenu du dossier depuis le JAR
+        InputStream inputStream = MainJFX.class.getClassLoader().getResourceAsStream(folderName);
+        if (inputStream != null) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            System.out.println("+ Contenu du dossier \"" + folderName + "\" dans le JAR :");
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+            reader.close();
+        } else {
+            System.out.println("- Le dossier \"" + folderName + "\" n'existe pas dans le JAR.");
+        }
+    }
+
+}
