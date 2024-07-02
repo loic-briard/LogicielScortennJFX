@@ -1,7 +1,3 @@
-/*
- * Sauvegarde des position et des styles de chaque joueur en fonction du type d'affichage choisi
- */
-
 package Diffusion;
 
 import java.awt.Color;
@@ -25,7 +21,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 
-//Classe repr�sentant un �l�ment avec ses propri�t�s
+//Classe représentant un élément avec ses propriétés
 class ElementJoueur {
 	private int positionX;
 	private int positionY;
@@ -43,7 +39,7 @@ class ElementJoueur {
 		return positionY;
 	}
 }
-//Classe repr�sentant un �l�ment avec ses propri�t�s
+//Classe représentant un élément avec ses propriétés
 class ElementPoliceJoueur {
 	private boolean visible;
 	private String font;
@@ -95,19 +91,20 @@ class ElementOneJoueur {
 	}
 }
 class ElementJoueurGame {
-	private Map<String, ElementJoueur> player1 = new HashMap<>();
-    private Map<String, ElementJoueur> player2 = new HashMap<>();
-    private Map<String, ElementPoliceJoueur> playerPolice = new HashMap<>();
+	private ArrayList<Map<String,Map<String, ElementJoueur>>> game = new ArrayList<>();
+	private Map<String, ElementPoliceJoueur> playerPolice = new HashMap<>();
     
-    public Map<String, ElementJoueur> getPlayer1() {
-        return player1;
-    }
-    public Map<String, ElementJoueur> getPlayer2() {
-        return player2;
+    public ArrayList<Map<String, Map<String, ElementJoueur>>> getPlayer() {
+        return game;
     }
     public Map<String, ElementPoliceJoueur> getPlayerPolice() {
 		return playerPolice;
 	}
+	public void setPlayerPolice(Map<String, ElementPoliceJoueur> playerPolice) {
+		this.playerPolice = playerPolice;
+	}
+	public void setPlayer(ArrayList<Map<String, Map<String, ElementJoueur>>> playerList) {
+		game = playerList;	}
 }
 class ElementJoueurTab {
 	private ArrayList<Map<String,Map<String, ElementJoueur>>> tab = new ArrayList<>();
@@ -124,7 +121,6 @@ class ElementJoueurTab {
 	}
 	public void setPlayer(ArrayList<Map<String, Map<String, ElementJoueur>>> playerList) {
 		tab = playerList;	}
-    
 }
 class ElementJoueurFull {
 	private ArrayList<Map<String,Map<String, ElementJoueur>>> full = new ArrayList<>();
@@ -147,94 +143,98 @@ public class ConfigurationSaveLoad {
 	public void setLocations(Map<String, Object> map) {
 		this.locations = map;
 	}
-	// M�thode pour sauvegarder les donn�es de configuration au format JSON
+	// Méthode pour sauvegarder les données de configuration au format JSON
 	public static void saveConfigToFile(ElementOneJoueur data, String filePath, String fileName) {
 	    Gson gson = new Gson();
-	 // V�rifiez si le dossier existe
+//	    Map<String, ElementOneJoueur> eventsMap = data.getLocations();
+//	    Map<String, Object> events = new HashMap<>();
+	 // Vérifiez si le dossier existe
 	    File destination = new File(filePath);
         if (!destination.exists()) {
-            // Si le dossier n'existe pas, essayez de le cr�er
+            // Si le dossier n'existe pas, essayez de le créer
             if (destination.mkdirs()) {
-                System.out.println("++++ Le dossier a ete cree avec succes.");
+                System.out.println("++++ Le dossier a été créé avec succès.");
             } else {
-                System.out.println("---- La creation du dossier a echoue.");
-                return; // Arr�tez l'ex�cution si la cr�ation du dossier �choue
+                System.out.println("---- La création du dossier a échoué.");
+                return; // Arrêtez l'exécution si la création du dossier échoue
             }
         }
         try (FileWriter writer = new FileWriter(filePath + File.separator + fileName, false)) {
 			String json = gson.toJson(data);
 			writer.write(json);
-			System.out.println("++++ fichier modifie pour 1 joueur: " + filePath);
+			System.out.println("++++ fichier modifié : " + filePath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	// M�thode pour sauvegarder les donn�es de configuration au format JSON
-	public static void saveConfigToFileGame(ElementJoueurGame data, String filePath, String fileName) {
+	// Méthode pour sauvegarder les données de configuration au format JSON
+	public static void saveConfigToFileGame(ElementJoueurGame elementsTwoPlayer, String filePath, String fileName) {
 		Gson gson = new Gson();
-		// V�rifiez si le dossier existe
+		// Vérifiez si le dossier existe
 		File destination = new File(filePath);
 		if (!destination.exists()) {
-			// Si le dossier n'existe pas, essayez de le cr�er
+			// Si le dossier n'existe pas, essayez de le créer
 			if (destination.mkdirs()) {
-				System.out.println("++++ Le dossier a ete cree avec succes.");
+				System.out.println("++++ Le dossier a été créé avec succès.");
 			} else {
-				System.out.println("---- La creation du dossier a echoue.");
-				return; // Arr�tez l'ex�cution si la cr�ation du dossier �choue
+				System.out.println("---- La création du dossier a échoué.");
+				return; // Arrêtez l'exécution si la création du dossier échoue
+			}
+		}
+		try (FileWriter writer = new FileWriter(filePath + File.separator + fileName, false)) {
+			String json = gson.toJson(elementsTwoPlayer);
+			writer.write(json);
+			System.out.println("++++ fichier modifié : " + filePath);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// Méthode pour sauvegarder les données de configuration au format JSON
+	public static void saveConfigToFileTab(ElementJoueurTab data, String filePath, String fileName) {
+		Gson gson = new Gson();
+		// Vérifiez si le dossier existe
+		File destination = new File(filePath);
+		if (!destination.exists()) {
+			// Si le dossier n'existe pas, essayez de le créer
+			if (destination.mkdirs()) {
+				System.out.println("++++ Le dossier a été créé avec succès.");
+			} else {
+				System.out.println("---- La création du dossier a échoué.");
+				return; // Arrêtez l'exécution si la création du dossier échoue
 			}
 		}
 		try (FileWriter writer = new FileWriter(filePath + File.separator + fileName, false)) {
 			String json = gson.toJson(data);
 			writer.write(json);
-			System.out.println("++++ fichier modifie pour game : " + filePath);
+			System.out.println("++++ fichier modifié : " + filePath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	// M�thode pour sauvegarder les donn�es de configuration au format JSON
-		public static void saveConfigToFileTab(ElementJoueurTab data, String filePath, String fileName) {
-			Gson gson = new Gson();
-			// V�rifiez si le dossier existe
-			File destination = new File(filePath);
-			if (!destination.exists()) {
-				// Si le dossier n'existe pas, essayez de le cr�er
-				if (destination.mkdirs()) {
-					System.out.println("++++ Le dossier a ete cree avec succes.");
-				} else {
-					System.out.println("---- La creation du dossier a echoue.");
-					return; // Arr�tez l'ex�cution si la cr�ation du dossier �choue
-				}
-			}
-			try (FileWriter writer = new FileWriter(filePath + File.separator + fileName, false)) {
-				String json = gson.toJson(data);
-				writer.write(json);
-				System.out.println("++++ fichier modifie pour tab : " + filePath);
-			} catch (IOException e) {
-				e.printStackTrace();
+
+	// Méthode pour sauvegarder les données de configuration au format JSON
+	public static void saveConfigToFileFull(ElementJoueurFull data, String filePath, String fileName) {
+		Gson gson = new Gson();
+		// Vérifiez si le dossier existe
+		File destination = new File(filePath);
+		if (!destination.exists()) {
+			// Si le dossier n'existe pas, essayez de le créer
+			if (destination.mkdirs()) {
+				System.out.println("++++ Le dossier a été créé avec succès.");
+			} else {
+				System.out.println("---- La création du dossier a échoué.");
+				return; // Arrêtez l'exécution si la création du dossier échoue
 			}
 		}
-		// M�thode pour sauvegarder les donn�es de configuration au format JSON
-		public static void saveConfigToFileFull(ElementJoueurFull data, String filePath, String fileName) {
-			Gson gson = new Gson();
-			// V�rifiez si le dossier existe
-			File destination = new File(filePath);
-			if (!destination.exists()) {
-				// Si le dossier n'existe pas, essayez de le cr�er
-				if (destination.mkdirs()) {
-					System.out.println("++++ Le dossier a ete cree avec succes.");
-				} else {
-					System.out.println("---- La creation du dossier a echoue.");
-					return; // Arr�tez l'ex�cution si la cr�ation du dossier �choue
-				}
-			}
-			try (FileWriter writer = new FileWriter(filePath + File.separator + fileName, false)) {
-				String json = gson.toJson(data);
-				writer.write(json);
-				System.out.println("++++ fichier modifie pour full : " + filePath);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		try (FileWriter writer = new FileWriter(filePath + File.separator + fileName, false)) {
+			String json = gson.toJson(data);
+			writer.write(json);
+			System.out.println("++++ fichier modifié : " + filePath);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+	}
 	
 	public static ConfigurationSaveLoad loadConfigFromFile(String filePath) {
 		Gson gson = new Gson();
@@ -243,21 +243,21 @@ public class ConfigurationSaveLoad {
 		try (Reader reader = new FileReader(filePath)) {
 			JsonElement jsonElement = JsonParser.parseReader(reader);
 			if (jsonElement.isJsonObject()) {
-				// V�rifier si le fichier est vide ou ne contient pas de propri�t�s
+				// Vérifier si le fichier est vide ou ne contient pas de propriétés
 				if (jsonElement == null || jsonElement.isJsonNull() || !jsonElement.isJsonObject()) {
-					System.out.println("---- Le fichier est vide ou n'est pas un objet JSON !");
+					System.out.println("Le fichier est vide ou n'est pas un objet JSON !");
 					return null;
 				}
 				JsonObject configObject = jsonElement.getAsJsonObject();
-				// Mappez les propri�t�s du fichier JSON � votre structure de classe ConfigurationSaveLoad
+				// Mappez les propriétés du fichier JSON à votre structure de classe ConfigurationSaveLoad
 				data = gson.fromJson(configObject, ConfigurationSaveLoad.class);
 				// Reste du code
 			} else {
-				System.out.println("---- Le fichier est vide ou n'est pas un objet JSON !");
+				System.out.println("Le fichier est vide ou n'est pas un objet JSON !");
 				return null;
 			}
 		} catch (IOException e) {
-			System.out.println("---- Le fichier n'existe pas !");
+			System.out.println("Le fichier n'existe pas !");
 		}
 		return data;
 	}
@@ -265,10 +265,10 @@ public class ConfigurationSaveLoad {
 	public static void saveWindows(String nomEvent, String typeWindows, Map<JPanel, JLabel> JoueurDetailsP1, Map<JPanel, JLabel> JoueurDetailsP2) {
 		ConfigurationSaveLoad eventData = loadConfigFromFile("Config/" + nomEvent + "/player.json");
 		if (eventData == null) {
-			System.out.println("---- le contenu de " + "Config/" + nomEvent + "/player.json" + " est vide !");
+			System.out.println("le contenu de " + "Config/" + nomEvent + "/player.json" + " est vide !");
 			eventData = new ConfigurationSaveLoad();
 		} else {
-			System.out.println("++++ le contenu de " + "Config/" + nomEvent + "/player.json" + " est plein !");
+			System.out.println("le contenu de " + "Config/" + nomEvent + "/player.json" + " est plein !");
 		}
 		
 		switch (typeWindows) {
@@ -283,62 +283,102 @@ public class ConfigurationSaveLoad {
 				playerElement.setPositionY(panel.getY());
 				playerPolice.setVisible(panel.isVisible());
 				if (panel.getName().equals("ImgJoueur") || panel.getName().equals("ImgFlag")) {
-					playerPolice.setTaille((int) panel.getHeight());
-				}
-				playerPolice.setFont(FontSerializer(label.getFont()));
-				playerPolice.setColor(ColorSerializer(label.getForeground()));
-				elementsOnePlayer.getOnePlayer().put(panel.getName(), playerElement);
-				elementsOnePlayer.getOnePlayerPolice().put(panel.getName(), playerPolice);
-			}
-			System.out.println("++++ enregistrement de player effectuer");
-			saveConfigToFile(elementsOnePlayer, "Config/" + nomEvent, "player.json");
-			break;
-		case "game":
-			ElementJoueurGame elementsTwoPlayer = new ElementJoueurGame();
-			for (Map.Entry<JPanel, JLabel> entry : JoueurDetailsP1.entrySet()) {
-				JPanel panel = entry.getKey();
-				JLabel label = entry.getValue();
-				ElementJoueur playerElement = new ElementJoueur();
-				ElementPoliceJoueur playerPolice = new ElementPoliceJoueur();
-				playerElement.setPositionX(panel.getX());
-				playerElement.setPositionY(panel.getY());
-				playerPolice.setVisible(panel.isVisible());
-				if (panel.getName().equals("ImgJoueur") || panel.getName().equals("ImgFlag")) {
+					//System.out.println("taille : " + panel.getName() + panel.getHeight());
 					playerPolice.setTaille((int) panel.getHeight());
 				}
 				System.out.println(FontSerializer(label.getFont()));
 				playerPolice.setFont(FontSerializer(label.getFont()));
 				playerPolice.setColor(ColorSerializer(label.getForeground()));
-				elementsTwoPlayer.getPlayer1().put(panel.getName(), playerElement);
-				elementsTwoPlayer.getPlayerPolice().put(panel.getName(), playerPolice);
+				elementsOnePlayer.getOnePlayer().put(panel.getName(), playerElement);
+				elementsOnePlayer.getOnePlayerPolice().put(panel.getName(), playerPolice);
 			}
-			for (Map.Entry<JPanel, JLabel> entry : JoueurDetailsP2.entrySet()) {
-				JPanel panel = entry.getKey();
-//				JLabel label = entry.getValue();
-				ElementJoueur playerElement = new ElementJoueur();
-				playerElement.setPositionX(panel.getX());
-				playerElement.setPositionY(panel.getY());
-				elementsTwoPlayer.getPlayer2().put(panel.getName(), playerElement);
-			}
-			System.out.println("++++ enregistrement de Game effectuer");
-			saveConfigToFileGame(elementsTwoPlayer, "Config/" + nomEvent, "game.json");
+			System.out.println("enregistrement de player effectuer");
+			saveConfigToFile(elementsOnePlayer, "Config/" + nomEvent, "player.json");
 			break;
+//		case "game":
+//			ElementJoueurGame elementsTwoPlayer = new ElementJoueurGame();
+//			for (Map.Entry<JPanel, JLabel> entry : JoueurDetailsP1.entrySet()) {
+//				JPanel panel = entry.getKey();
+//				JLabel label = entry.getValue();
+//				ElementJoueur playerElement = new ElementJoueur();
+//				ElementPoliceJoueur playerPolice = new ElementPoliceJoueur();
+//				playerElement.setPositionX(panel.getX());
+//				playerElement.setPositionY(panel.getY());
+//				playerPolice.setVisible(panel.isVisible());
+//				if (panel.getName().equals("ImgJoueur") || panel.getName().equals("ImgFlag")) {
+//					//System.out.println("taille : " + panel.getName() + panel.getHeight());
+//					playerPolice.setTaille((int) panel.getHeight());
+//				}
+//				System.out.println(FontSerializer(label.getFont()));
+//				playerPolice.setFont(FontSerializer(label.getFont()));
+//				playerPolice.setColor(ColorSerializer(label.getForeground()));
+//				elementsTwoPlayer.getPlayer1().put(panel.getName(), playerElement);
+//				elementsTwoPlayer.getPlayerPolice().put(panel.getName(), playerPolice);
+//			}
+//			for (Map.Entry<JPanel, JLabel> entry : JoueurDetailsP2.entrySet()) {
+//				JPanel panel = entry.getKey();
+////				JLabel label = entry.getValue();
+//				ElementJoueur playerElement = new ElementJoueur();
+//				playerElement.setPositionX(panel.getX());
+//				playerElement.setPositionY(panel.getY());
+//				elementsTwoPlayer.getPlayer2().put(panel.getName(), playerElement);
+//			}
+//			System.out.println("enregistrement de Game effectuer");
+//			saveConfigToFileGame(elementsTwoPlayer, "Config/" + nomEvent, "game.json");
+//			break;
 
 		default:
-			System.out.println("---- Probleme nom de la fenetre !!");
+			System.out.println("Probleme nom de la fenetre !!");
 			break;
 		}
 	}
-	public static void saveWindowsTab(String nomEvent, String typeWindows, ArrayList<Map<JPanel, JLabel>> JoueurDetails ) {
-		ConfigurationSaveLoad eventData = loadConfigFromFile("Config/" + nomEvent + "/player.json");
+	public static void saveWindowsMultiTab(String nomEvent, String typeWindows, ArrayList<Map<JPanel, JLabel>> JoueurDetails ) {
+		ConfigurationSaveLoad eventData = loadConfigFromFile("Config/" + nomEvent + "/"+typeWindows+".json");
 		if (eventData == null) {
-			System.out.println("---- le contenu de " + "Config/" + nomEvent + "/player.json" + " est vide !");
+			System.out.println("le contenu de " + "Config/" + nomEvent + "/"+typeWindows+".json" + " est vide !");
 			eventData = new ConfigurationSaveLoad();
 		} else {
-			System.out.println("++++ le contenu de " + "Config/" + nomEvent + "/player.json" + " est plein !");
+			System.out.println("le contenu de " + "Config/" + nomEvent + "/"+typeWindows+".json" + " est plein !");
 		}
 		
 		switch (typeWindows) {
+		case "game":
+			int k = 0;
+			ElementJoueurGame elementsGamePlayer = new ElementJoueurGame();
+			
+			for (Map<JPanel, JLabel> map : JoueurDetails) {
+				
+				Map<String, Map<String, ElementJoueur>> playerList = new HashMap<>();
+				Map<String, ElementJoueur> player = new HashMap<String, ElementJoueur>();
+				
+				for (Map.Entry<JPanel, JLabel> entry : map.entrySet()) {
+					JPanel panel = entry.getKey();
+					JLabel label = entry.getValue();
+					
+					ElementJoueur playerElement = new ElementJoueur();
+					ElementPoliceJoueur playerPolice = new ElementPoliceJoueur();
+					
+					playerElement.setPositionX(panel.getX());
+					playerElement.setPositionY(panel.getY());
+					
+					playerPolice.setVisible(panel.isVisible());
+					if (panel.getName().equals("ImgJoueur") || panel.getName().equals("ImgFlag")) {
+						//System.out.println("taille : " + panel.getName() + panel.getHeight());
+						playerPolice.setTaille((int) panel.getHeight());
+					}
+					playerPolice.setFont(FontSerializer(label.getFont()));
+					playerPolice.setColor(ColorSerializer(label.getForeground()));
+					
+					player.put(panel.getName(), playerElement);
+					elementsGamePlayer.getPlayerPolice().put(panel.getName(), playerPolice);
+				}
+				playerList.put("player"+k, player);
+				elementsGamePlayer.getPlayer().add(playerList);
+				k++;
+			}
+			System.out.println("enregistrement de game effectuer");
+			saveConfigToFileGame(elementsGamePlayer, "Config/" + nomEvent, "game.json");
+			break;
 		case "tab":
 			int i = 0;
 			ElementJoueurTab elementsTabPlayer = new ElementJoueurTab();
@@ -360,6 +400,7 @@ public class ConfigurationSaveLoad {
 					
 					playerPolice.setVisible(panel.isVisible());
 					if (panel.getName().equals("ImgJoueur") || panel.getName().equals("ImgFlag")) {
+						//System.out.println("taille : " + panel.getName() + panel.getHeight());
 						playerPolice.setTaille((int) panel.getHeight());
 					}
 					playerPolice.setFont(FontSerializer(label.getFont()));
@@ -372,7 +413,7 @@ public class ConfigurationSaveLoad {
 				elementsTabPlayer.getPlayer().add(playerList);
 				i++;
 			}
-			System.out.println("++++ enregistrement de tab effectuer");
+			System.out.println("enregistrement de tab effectuer");
 			saveConfigToFileTab(elementsTabPlayer, "Config/" + nomEvent, "tab.json");
 			break;
 		case "full":
@@ -396,6 +437,7 @@ public class ConfigurationSaveLoad {
 					
 					playerPoliceFull.setVisible(panel.isVisible());
 					if (panel.getName().equals("ImgJoueur") || panel.getName().equals("ImgFlag")) {
+						//System.out.println("taille : " + panel.getName() + panel.getHeight());
 						playerPoliceFull.setTaille((int) panel.getHeight());
 					}
 					playerPoliceFull.setFont(FontSerializer(label.getFont()));
@@ -408,12 +450,12 @@ public class ConfigurationSaveLoad {
 				elementsFullPlayer.getPlayer().add(playerList);
 				j++;
 			}
-			System.out.println("++++ enregistrement de full effectuer");
+			System.out.println("enregistrement de full effectuer");
 			saveConfigToFileFull(elementsFullPlayer, "Config/" + nomEvent, "full.json");
 			break;
 
 		default:
-			System.out.println("---- Probleme nom de la fenetre !!");
+			System.out.println("Probleme nom de la fenetre !!");
 			break;
 		}
 	}
@@ -423,16 +465,20 @@ public class ConfigurationSaveLoad {
 		if (typeFenetre == "player" || typeFenetre == "game") {
 			switch (index) {
 			case 0:
+				// System.out.println("getElement Player 1");
 				Player = "player";
 				break;
 			case 1:
+				// System.out.println("getElement Player 1");
 				Player = "player1";
 				break;
 			case 2:
+				// System.out.println("getElement Player 2");
 				Player = "player2";
 				break;
 
 			default:
+				System.out.println("getelement player solo ou tab");
 				break;
 			}
 		}
@@ -444,34 +490,56 @@ public class ConfigurationSaveLoad {
 			if (jsonElement.isJsonObject()) {
 				JsonObject configObject = jsonElement.getAsJsonObject();
 				JsonObject elementObject = new JsonObject();//configObject.getAsJsonObject(typeFenetre).getAsJsonObject(nomElement);
-				//System.out.println("++++ emplecement : " + emplacement + "| type fenetre : " + typeFenetre);
+				System.out.println("++++ emplacement : " + emplacement + "| type fenetre : " + typeFenetre);
 				switch (typeFenetre) {
 				case "player":
-					//System.out.println("++++ recup player");
+					System.out.println("++++ recup player");
 					elementObject = configObject.getAsJsonObject(Player).getAsJsonObject(nomElement);
 					break;
 				case "game":
-					//System.out.println("++++ recup game");
-					elementObject = configObject.getAsJsonObject(Player).getAsJsonObject(nomElement);
-					break;
-				case "tab":
-					//System.out.println("++++ recup tab");
+					System.out.println("++++ recup game");
+//					elementObject = configObject.getAsJsonObject(Player).getAsJsonObject(nomElement);
 					if (configObject.has(typeFenetre) && configObject.get(typeFenetre).isJsonArray()) {
 						JsonArray tabArray = configObject.getAsJsonArray(typeFenetre);
-						// V�rifier si l'index sp�cifi� est valide
+						// Vérifier si l'index spécifié est valide
 						if(index > tabArray.size()-1) {
-							System.out.println("---- index superieur au nombre d'elements dans le fichier config");
+							System.out.println("index superieur au nombre d'elements dans le fichier config");
+							index = 0;
+						}else System.out.println("---- probleme fichier 2");
+						if (index >= 0 && index < tabArray.size()) {
+							JsonObject playerObject = tabArray.get(index).getAsJsonObject();
+
+							// Vérifier si le joueur spécifié existe
+							if (playerObject.has("player" + index) && playerObject.get("player" + index).isJsonObject()) {
+								JsonObject player = playerObject.getAsJsonObject("player" + index);
+//								JsonObject playerDetails = player.getAsJsonObject("player");
+								System.out.println("player" + index);
+								// Vérifier si "Prizetotal" existe
+								if (player.has(nomElement) && player.get(nomElement).isJsonObject()) {
+									elementObject = player.getAsJsonObject(nomElement);
+								}else System.out.println("---- probleme fichier 5");
+							}else System.out.println("---- probleme fichier 4");
+						}else System.out.println("---- probleme fichier 3");
+					}else System.out.println("---- probleme fichier 1");
+					break;
+				case "tab":
+					System.out.println("++++ recup tab");
+					if (configObject.has(typeFenetre) && configObject.get(typeFenetre).isJsonArray()) {
+						JsonArray tabArray = configObject.getAsJsonArray(typeFenetre);
+						// Vérifier si l'index spécifié est valide
+						if(index > tabArray.size()-1) {
+							System.out.println("index superieur au nombre d'elements dans le fichier config");
 							index = 0;
 						}
 						if (index >= 0 && index < tabArray.size()) {
 							JsonObject playerObject = tabArray.get(index).getAsJsonObject();
 
-							// V�rifier si le joueur sp�cifi� existe
+							// Vérifier si le joueur spécifié existe
 							if (playerObject.has("player" + index) && playerObject.get("player" + index).isJsonObject()) {
 								JsonObject player = playerObject.getAsJsonObject("player" + index);
 //								JsonObject playerDetails = player.getAsJsonObject("player");
-								//System.out.println("++++  player " + index);
-								// V�rifier si "Prizetotal" existe
+								System.out.println("player" + index);
+								// Vérifier si "Prizetotal" existe
 								if (player.has(nomElement) && player.get(nomElement).isJsonObject()) {
 									elementObject = player.getAsJsonObject(nomElement);
 								}
@@ -480,23 +548,23 @@ public class ConfigurationSaveLoad {
 					}
 					break;
 				case "full":
-					//System.out.println("++++ recup full, index : "+index);
+					System.out.println("++++ recup full, index : "+index);
 					if (configObject.has(typeFenetre) && configObject.get(typeFenetre).isJsonArray()) {
 						JsonArray tabArray = configObject.getAsJsonArray(typeFenetre);
-						// V�rifier si l'index sp�cifi� est valide
+						// Vérifier si l'index spécifié est valide
 						if(index > tabArray.size()-1) {
-							System.out.println("---- index superieur au nombre d'elements dans le fichier config");
+							System.out.println("index superieur au nombre d'elements dans le fichier config");
 							index = 0;
 						}
 						if (index >= 0 && index < tabArray.size()) {
 							
 							JsonObject playerObject = tabArray.get(index).getAsJsonObject();
 							
-							// V�rifier si le joueur sp�cifi� existe
+							// Vérifier si le joueur spécifié existe
 							if (playerObject.has("player" + index) && playerObject.get("player" + index).isJsonObject()) {
 								JsonObject player = playerObject.getAsJsonObject("player" + index);
-								//System.out.println("++++ player" + index);
-								// V�rifier si "Prizetotal" existe
+								System.out.println("player" + index);
+								// Vérifier si "Prizetotal" existe
 								if (player.has(nomElement) && player.get(nomElement).isJsonObject()) {
 									elementObject = player.getAsJsonObject(nomElement);
 								}
@@ -514,33 +582,46 @@ public class ConfigurationSaveLoad {
 		        // Set the properties based on the retrieved JSON data
 		        element.setPositionX(elementObject.getAsJsonPrimitive("positionX").getAsInt());
 		        element.setPositionY(elementObject.getAsJsonPrimitive("positionY").getAsInt());
+//		        element.setVisible(elementObject.getAsJsonPrimitive("visible").getAsBoolean());
+//		        element.setFont(elementObject.getAsJsonPrimitive("font").getAsString());
+//		        element.setColor(elementObject.getAsJsonPrimitive("color").getAsString());
+//		        if(nomElement.equals("ImgJoueur") || nomElement.equals("ImgFlag"))
+//		        {
+//		        	//System.out.println("taille : "+elementObject.getAsJsonPrimitive("taille").getAsInt());
+//		        	element.setTaille(elementObject.getAsJsonPrimitive("taille").getAsInt());
+//		        }
+		        //System.out.println("Donné récuperer : "+typeFenetre+"|"+nomElement);
+		        // Return the ElementJoueur instance
 		        return element;
 		        }else {
-		        	System.out.println("---- la config de Player est vide !");
+		        	System.out.println("la config de Player est vide !");
 				    return null;
 		        }
 			} else {
-			    System.out.println("---- Le fichier est vide ou n'est pas un objet JSON !");
+			    System.out.println("Le fichier est vide ou n'est pas un objet JSON !");
 			    return null;
 			}
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
-		System.out.println("++++ type fenetre : "+typeFenetre+", emplacement fichier sauvegarde : "+emplacement);
+
 	    return null;
     }
 	public ElementPoliceJoueur getElementPolice(String emplacement, String eventName, String typeFenetre, String nomElement, int index) {
+		
 		try (Reader reader = new FileReader(emplacement)) {
 			JsonElement jsonElement = JsonParser.parseReader(reader);
 			if (jsonElement.isJsonObject()) {
 				JsonObject configObject = jsonElement.getAsJsonObject();
 				JsonObject elementObject = new JsonObject();//configObject.getAsJsonObject(typeFenetre).getAsJsonObject(nomElement);
-				//System.out.println("++++ emplecement : " + emplacement + "| type fenetre : " + typeFenetre);
+				System.out.println("emplecement : " + emplacement + "| type fenetre : " + typeFenetre);
 				switch (typeFenetre) {
 				case "player":
+					//System.out.println("recup player");
 					elementObject = configObject.getAsJsonObject("playerPolice").getAsJsonObject(nomElement);
 					break;
 				case "game":
+					//System.out.println("recup game");
 					elementObject = configObject.getAsJsonObject("playerPolice").getAsJsonObject(nomElement);
 					break;
 				case "tab":
@@ -565,17 +646,17 @@ public class ConfigurationSaveLoad {
 		        }
 					return elementPolice;
 				}else {
-					System.out.println("---- la config de Player est vide !");
+					System.out.println("la config de Player est vide !");
 					return null;
 				}
 			} else {
-				System.out.println("---- Le fichier est vide ou n'est pas un objet JSON !");
+				System.out.println("Le fichier est vide ou n'est pas un objet JSON !");
 				return null;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("++++ emplacement Police : " + emplacement + "| type fenetre : " + typeFenetre);
+		
 		return null;
 	}
 	

@@ -489,7 +489,7 @@ public class TabConfigurationPlayerInfos extends JPanel {
 	}
 
 	public void refreshSpinner(PlayerForDiffusion infosPlayerDetails) {
-		//System.out.println("++++> refresh player : "+infosPlayerDetails.nameLabel.getText()+" current player : "+this.getJoueurName());
+		System.out.println("++++> refresh player : "+infosPlayerDetails.nameLabel.getText()+" current player : "+this.getJoueurName());
 		nameXvalue.setValue(infosPlayerDetails.playerName.getLocation().x);
 		nameYvalue.setValue(infosPlayerDetails.playerName.getLocation().y);
 		SurnameXvalue.setValue(infosPlayerDetails.playerSurname.getLocation().x);

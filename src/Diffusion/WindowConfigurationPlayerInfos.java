@@ -82,18 +82,49 @@ public class WindowConfigurationPlayerInfos extends JFrame {
 					switch (typeFenetre) {
 					case "player":
 						System.out.println("++++> save single");
-						PlayerForDiffusion infosPlayerDetails = tabInfosJ1.getInfosPlayerDetails();
-						infosPlayerDetails.enegistrerDetailsJoueurs();
-						ConfigurationSaveLoad.saveWindows(dysplayFrame.getNameEvent(), typeFenetre, infosPlayerDetails.mapJoueurDetails.getMapJoueurDetails(), null);
+//						ArrayList<Map<JPanel, JLabel>> joueurDetailsPlayer = new ArrayList<Map<JPanel, JLabel>>();
+						tabbedPane.setSelectedIndex(0);
+		                Component selectedComponentPlayer = tabbedPane.getSelectedComponent();
+				        if (selectedComponentPlayer instanceof TabConfigurationPlayerInfos) {
+				            TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponentPlayer;
+				            PlayerForDiffusion infosPlayerDetails = currentTab.getInfosPlayerDetails();
+				            if (infosPlayerDetails != null) {
+				            	infosPlayerDetails.enegistrerDetailsJoueurs();
+				                ConfigurationSaveLoad.saveWindows(dysplayFrame.getNameEvent(), typeFenetre, infosPlayerDetails.mapJoueurDetails.getMapJoueurDetails(), null);
+				            }
+				        } else {
+				            // Handle the case where the selected component is not of type tabInfosPlayer
+				            System.out.println("Error: Selected component is not an instance of tabInfosPlayer");
+				        }
 						break;
 						
 					case "game":
 						System.out.println("++++> save double match");
-						PlayerForDiffusion infosPlayer1Details = tabInfosJ1.getInfosPlayerDetails();
-						PlayerForDiffusion infosPlayer2Details = tabInfosJ2.getInfosPlayerDetails();
-						infosPlayer1Details.enegistrerDetailsJoueurs();
-						infosPlayer2Details.enegistrerDetailsJoueurs();
-						ConfigurationSaveLoad.saveWindows(dysplayFrame.getNameEvent(), typeFenetre, infosPlayer1Details.mapJoueurDetails.getMapJoueurDetails(), infosPlayer2Details.mapJoueurDetails.getMapJoueurDetails());
+						
+						ArrayList<Map<JPanel, JLabel>> joueurDetailsGame = new ArrayList<Map<JPanel, JLabel>>();
+						
+						for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+			                tabbedPane.setSelectedIndex(i);
+			                Component selectedComponent = tabbedPane.getSelectedComponent();
+					        if (selectedComponent instanceof TabConfigurationPlayerInfos) {
+					            TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;
+					            PlayerForDiffusion infosGameDetails = currentTab.getInfosPlayerDetails();
+					            if (infosGameDetails != null) {
+					            	infosGameDetails.enegistrerDetailsJoueurs();
+					                joueurDetailsGame.add(infosGameDetails.mapJoueurDetails.getMapJoueurDetails());
+					            }
+					        } else {
+					            // Handle the case where the selected component is not of type tabInfosPlayer
+					            System.out.println("Error: Selected component is not an instance of gameInfosPlayer");
+					        }
+			            }
+						ConfigurationSaveLoad.saveWindowsMultiTab(dysplayFrame.getNameEvent(), typeFenetre, joueurDetailsGame);
+						
+//						PlayerForDiffusion infosPlayer1Details = tabInfosJ1.getInfosPlayerDetails();
+//						PlayerForDiffusion infosPlayer2Details = tabInfosJ2.getInfosPlayerDetails();
+//						infosPlayer1Details.enegistrerDetailsJoueurs();
+//						infosPlayer2Details.enegistrerDetailsJoueurs();
+//						ConfigurationSaveLoad.saveWindows(dysplayFrame.getNameEvent(), typeFenetre, infosPlayer1Details.mapJoueurDetails.getMapJoueurDetails(), infosPlayer2Details.mapJoueurDetails.getMapJoueurDetails());
 						break;
 					case "tab":
 						System.out.println("++++> save tab");
@@ -114,7 +145,7 @@ public class WindowConfigurationPlayerInfos extends JFrame {
 					            System.out.println("Error: Selected component is not an instance of tabInfosPlayer");
 					        }
 			            }
-						ConfigurationSaveLoad.saveWindowsTab(dysplayFrame.getNameEvent(), typeFenetre, joueurDetails);
+						ConfigurationSaveLoad.saveWindowsMultiTab(dysplayFrame.getNameEvent(), typeFenetre, joueurDetails);
 						break;
 					case "full":
 						System.out.println("++++> save full");
@@ -137,7 +168,7 @@ public class WindowConfigurationPlayerInfos extends JFrame {
 					            System.out.println("----> Error: Selected component is not an instance of tabInfosPlayer");
 					        }
 						}
-						ConfigurationSaveLoad.saveWindowsTab(dysplayFrame.getNameEvent(), typeFenetre, joueurDetailsFull);
+						ConfigurationSaveLoad.saveWindowsMultiTab(dysplayFrame.getNameEvent(), typeFenetre, joueurDetailsFull);
 						break;
 
 					default:

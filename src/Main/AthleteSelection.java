@@ -138,7 +138,6 @@ public class AthleteSelection extends JFrame {
 							        BDD_v2.updateAgeJoueur(joueurAvecVerif.getID(), age, choosenBDD);
 							    }
 							} catch (ClassNotFoundException | SQLException | ParseException e1) {
-								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
 		    	            selectedPlayers.add(joueurAvecVerif);

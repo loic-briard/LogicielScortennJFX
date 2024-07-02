@@ -16,9 +16,7 @@ public class Joueur {
 	int rank;
     int taille;
 	int age;
-	int weight;
-	
-	
+	int weight;	
 	
 	public Joueur(int ID, String sexe, String nom, String prenom, String display_name, String nation_acronyme, 
 			String birthDate, String ImgJoueur, int rank, int taille, String main, int age, int weight, String prizetotal, String BirthPlace, String CityResidence){
@@ -206,7 +204,7 @@ public class Joueur {
 
 	@Override
 	public String toString() {
-		return "Joueur [ID=" + ID + ", " + sexe + ", " + nom + ", " + prenom + ", display name=" + display_name + ", nationalité=" + natio_acronyme + ", main=" + main
+		return "Joueur [ID=" + ID + ", " + sexe + ", " + nom + ", " + prenom + ", display name=" + display_name + ", nationalitï¿½=" + natio_acronyme + ", main=" + main
 				+ ", birthDate=" + birthDate + ", BirthPlace=" + BirthPlace + ", CityResidence=" + CityResidence + ", imgJoueur=" + imgJoueur + ", prizetotal=" + prizetotal + ", rank=" + rank
 				+ ", taille=" + taille + "cm, age=" + age + ", weight=" + weight + "kg]";
 	}

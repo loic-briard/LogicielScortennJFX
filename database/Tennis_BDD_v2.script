@@ -28,7 +28,7 @@ SET FILES NIO TRUE
 SET FILES NIO SIZE 256
 SET FILES LOG TRUE
 SET FILES LOG SIZE 50
-SET FILES CHECK 6612
+SET FILES CHECK 10128
 SET DATABASE COLLATION "SQL_TEXT" PAD SPACE
 CREATE USER SA PASSWORD DIGEST 'd41d8cd98f00b204e9800998ecf8427e'
 ALTER USER SA SET LOCAL TRUE
@@ -241,7 +241,7 @@ INSERT INTO FLAG VALUES('PYF','flag\PYF.png')
 INSERT INTO FLAG VALUES('QAT','flag\QAT.png')
 INSERT INTO FLAG VALUES('REU','flag\REU.png')
 INSERT INTO FLAG VALUES('ROU','flag\ROU.png')
-INSERT INTO FLAG VALUES('RUS','flag\RUS.png')
+INSERT INTO FLAG VALUES('RUS','flag\russie.png')
 INSERT INTO FLAG VALUES('RWA','flag\RWA.png')
 INSERT INTO FLAG VALUES('SAU','flag\SAU.png')
 INSERT INTO FLAG VALUES('SDN','flag\SDN.png')
@@ -1310,3 +1310,4 @@ INSERT INTO LISTJFX VALUES(4,'Men','Zverev','Alexander','Zverev A.','DEU','20/04
 INSERT INTO LISTJFX VALUES(5,'Men','Hurkacz','Hubert','Hurkacz H.','POL','11/02/1997','PlayersImages\Hurkacz_H.png',7,'196','right-handed','27','81','12882811\u20ac','Wroclaw, Poland','Wroclaw, Poland')
 INSERT INTO LISTJFX VALUES(6,'Men','Medvedev','Daniil','Medvedev D.','RUS','11/02/1996','PlayersImages\Medvedev_D.png',5,'198','right-handed','28','83','34176534\u20ac','Moscow, Russia','Monte Carlo, Monaco')
 INSERT INTO LISTJFX VALUES(7,'Men','Rublev','Andrey','Rublev A.','RUS','20/10/1997','PlayersImages\Rublev_A.png',6,'188','right-handed','26','70','19806908\u20ac','Moscow, Russia','Moscow, Russia')
+INSERT INTO LISTJFX VALUES(8,'Men','Kukushkin','Mikhail','Kukushkin M.','KAZ','09/07/1997','PlayersImages\andrev_rublev.png',132,'155','left-handed','26','59','6595','Boukistant','Boukistagnia')

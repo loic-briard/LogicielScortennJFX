@@ -64,7 +64,7 @@ public class BDD_v2 {
 		try {
 			if (connection != null) {
 				connection.close();
-				System.out.println("+++ Connexion BD ferm�e");
+				System.out.println("+++ Connexion BD fermee");
 			}
 		} catch (SQLException e) {
 			System.err.println("--- Erreur lors de la fermeture de la connexion a la base de donnees : " + e.getMessage());
