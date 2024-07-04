@@ -35,15 +35,15 @@ public class MainJFX {
 
             // v�rifie si l'URL commence par "file:" (ex�cution depuis Eclipse)
             if (codeSourceUrl.getProtocol().equals("file")) {
-                System.out.println("+ Le programme est en cours d'ex�cution depuis Eclipse.");
+                System.out.println("> execution from Eclipse.");
                 openOnEclipse = true;
             } else {
-                System.out.println("+  Le programme est en cours d'ex�cution depuis un fichier JAR.");
+                System.out.println("> execution from JAR file");
                 // Code sp�cifique pour le traitement si le programme est ex�cut� depuis un JAR
                 testFolderInJar("flag");
             }
         } else {
-            System.out.println("- Impossible de d�tecter la source d'ex�cution du programme.");
+            System.out.println("! execution source from the program impossible !");
         } 
         // Installer FlatLaf
         try {
@@ -83,7 +83,7 @@ public class MainJFX {
             }
             reader.close();
         } else {
-            System.out.println("- Le dossier \"" + folderName + "\" n'existe pas dans le JAR.");
+            System.out.println(" ! File \"" + folderName + "\" doesn't exists in JAR file");
         }
     }
 

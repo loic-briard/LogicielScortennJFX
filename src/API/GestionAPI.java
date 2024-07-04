@@ -300,7 +300,7 @@ public class GestionAPI {
 
 		HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-		System.out.println("++++ Conexion API ATP "+response.statusCode());
+		System.out.println("> Conexion API ATP "+response.statusCode());
 		if(!(response.statusCode() == 401)) {
 //			s_reponse = response.body();
 			return (response.body());
@@ -319,7 +319,7 @@ public class GestionAPI {
 		
 		HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 		
-		System.out.println("++++ Conexion API WTA "+response.statusCode());
+		System.out.println("> Conexion API WTA "+response.statusCode());
 		if(!(response.statusCode() == 401)) {
 //			s_reponse = response.body();
 			return (response.body());
@@ -376,7 +376,7 @@ public class GestionAPI {
 			//les valeurs "" et 0 seront ajouter une fois le joueur choisit sinon on atteint la limite de requete de l'api
 			Joueur joueur = new Joueur(i_ID, "homme",s_name, s_surname, s_displayName, s_alpha3, "", s_imgTemp, i_rankingValue, 0, "", 0, 0, "", "", "");
 
-			System.out.println("++++ joueur insere dans bdd ATP, name : "+s_name+", surname : "+s_surname);
+			System.out.println("  + Player added in ATP, name : "+s_name+", surname : "+s_surname);
 			//insertion dans la base de données
 			BDD_v2.insertionJoueurDansBDD(joueur, BDD_v2.ATP);
 			
@@ -431,7 +431,7 @@ public class GestionAPI {
 				//les valeurs "" et 0 seront ajouter une fois le joueur choisit sinon on atteint la limite de requete de l'api
 				Joueur joueur = new Joueur(i_ID, "femme",s_name, s_surname, s_displayName, s_alpha3, "", s_imgTemp, i_rankingValue, 0, "", 0, 0, "", "", "");
 				
-				System.out.println("++++ joueur insere dans bdd WTA, name : "+s_name+", surname : "+s_surname);
+				System.out.println("  + player added in WTA, name : "+s_name+", surname : "+s_surname);
 				//insertion dans la base de données
 				BDD_v2.insertionJoueurDansBDD(joueur, BDD_v2.WTA);
 				
@@ -442,14 +442,14 @@ public class GestionAPI {
 //		Object o_infosJoueur[] = new Object[8]; 
 		// verification si il n'y a pas deja les infos
 		if (BDD_v2.verifInfosManquante(id,bddname) == true) {
-			System.out.println("---- infos manquante");
+			System.out.println("  ! infos manquante !");
 
 			HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create("https://allsportsapi2.p.rapidapi.com/api/tennis/player/" + id)) // "https://allsportsapi2.p.rapidapi.com/api/tennis/player/37785"))//
 					.setHeader("X-RapidAPI-Key", s_cleAPI).setHeader("X-RapidAPI-Host", "allsportsapi2.p.rapidapi.com").build();
 
 			HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-			System.out.println("++++ statut code API : " + response.statusCode());
+			System.out.println("  statut code API : " + response.statusCode());
 			if (response.statusCode() == 403 || response.statusCode() == 401) {
 				s_reponse = response.body();
 				JOptionPane.showMessageDialog(null, "le nom de la clé API n'est pas correct : "+s_cleAPI, "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -507,7 +507,7 @@ public class GestionAPI {
 				String s_birthplace = playerTeamInfo.has("birthplace") ? playerTeamInfo.getString("birthplace") +"" : " ";
 //				String s_birthplace = playerTeamInfo.getString("birthplace");
 				
-				System.out.println("++++ info sup : "+id_recup+", "+ 
+				System.out.println("  additional informations : "+id_recup+", "+ 
 						formattedDate+", "+
 						i_ranking+", "+
 						s_height+", "+
@@ -529,7 +529,7 @@ public class GestionAPI {
 						s_residence, 
 						bddname);
 			}
-		}else System.out.println("++++ infos complete");
+		}else System.out.println("  infos complete !");
 	}
 	
 	//recupere l'image du joueur selectionne via son id et met le chemin vers l'image dans la bdd
@@ -544,7 +544,7 @@ public class GestionAPI {
                     .build();
 
             HttpResponse<byte[]> response = httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray());
-            System.out.println("++++ recuperation de l'image: " + response.statusCode());
+            System.out.println("  get image from API : " + response.statusCode());
 
             byte[] imageData = response.body();
             InputStream in = new ByteArrayInputStream(imageData);
@@ -562,11 +562,11 @@ public class GestionAPI {
                 if (!dossier.exists()) {
                     dossier.mkdir();
                 }else
-                	System.out.println("++++ le dossier pour l'image existe");
+                	System.out.println("  folder for image exist");
 
                 // Chemin complet du fichier
                 String cheminFichier = dossierImages + File.separator + nomFichier;
-                System.out.println("++++ chemin vers l'image dans le dossier PlayersImages : "+cheminFichier);
+                System.out.println("  image path from PlayersImages folder : "+cheminFichier);
                 // Enregistrez l'image dans le fichier       
                 ImageIO.write(image, "png", new File(cheminFichier));
 
@@ -574,7 +574,7 @@ public class GestionAPI {
                 BDD_v2.updateImgJoueur(id, cheminFichier, bddname);
             }
         } else {
-            System.out.println("---- L'image existe déjà");
+            System.out.println("  image already exist !");
         }
     }
 	

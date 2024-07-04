@@ -38,7 +38,7 @@ class ZoomPanel extends JPanel {
     }
 }
 
-public class ZoomPanelExample {
+public class ZoomPanelExample1 {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Zoom Panel Example");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -15,7 +15,6 @@ import javax.swing.*;
 import java.io.File;
 import java.net.MalformedURLException;
 
-import Main.BDD_v2; // Assurez-vous que la classe BDD_v2 est correctement importée
 import Players.Joueur;
 
 public class MainApp extends Application {
