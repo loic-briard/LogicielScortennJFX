@@ -63,16 +63,7 @@ public class TabPolice extends JPanel {
 		checkboxLine = new JCheckBox("Display line",listPlayer.get(0).playerLine.isVisible());
 		
 		TailleImg = new JSpinner(new SpinnerNumberModel(listPlayer.get(0).tailleImgJoueur, 0, 1980, 1));
-		TailleFlag = new JSpinner(new SpinnerNumberModel(listPlayer.get(0).tailleImgFlag, 0, 1980, 1));
-		
-//		JButton validationButtonAll = new JButton("confirm config");
-//		validationButtonAll.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				placemenFrame.confirmAllTab();
-//				placemenFrame.refreshAllTab();
-//			}
-//		});
-		
+		TailleFlag = new JSpinner(new SpinnerNumberModel(listPlayer.get(0).tailleImgFlag, 0, 1980, 1));		
 
 		JButton buttonFontName = new JButton("Choose Font");
 		JButton buttonFontSurname = new JButton("Choose Font");

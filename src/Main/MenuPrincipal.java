@@ -243,7 +243,7 @@ public class MenuPrincipal extends JFrame {
         // Obtenez tous les �crans disponibles
         SpinnerListModel spinnerInitScreen = new SpinnerListModel(screens);
         JSpinner spinnerScreen = new JSpinner(spinnerInitScreen);
-        spinnerInitScreen.setValue(screens[1]);
+//        spinnerInitScreen.setValue(screens[0]);
         JPanel choixEcran = new JPanel();
         choixEcran.add(actualDisplayLabel);
         choixEcran.add(new JLabel(", choose the screen to display the tournament : "));
@@ -283,8 +283,8 @@ public class MenuPrincipal extends JFrame {
 					e1.printStackTrace();
 				}
 				WindowBroadcastPublic diffusionFrame = new WindowBroadcastPublic(eventChoosen,(GraphicsDevice) spinnerScreen.getValue());               
-                new WindowTournamentTree(selectedPlayers,eventChoosen, diffusionFrame,(int) spinnerNbJoueur.getValue());
-                
+				WindowTournamentTree windowTournamentTree = new WindowTournamentTree(selectedPlayers,eventChoosen, diffusionFrame,(int) spinnerNbJoueur.getValue());
+				diffusionFrame.setWindowTournamentTreeFromBroadcast(windowTournamentTree);
                 System.out.println("-> Selected event : "+eventChoosen.getNom()+", player list : "+bddPLayersComboBox.getSelectedItem()+", number of players : "+(int) spinnerNbJoueur.getValue());
         	}
         });

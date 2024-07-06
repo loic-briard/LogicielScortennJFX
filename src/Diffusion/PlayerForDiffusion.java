@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 import Main.BDD_v2;
 import Main.ImageUtility;
 import Players.Joueur;
+import Police.TabPolice;
 import Police.chosenPolice;
 
 public class PlayerForDiffusion extends JPanel{
@@ -103,6 +104,9 @@ public class PlayerForDiffusion extends JPanel{
 	
 	public Joueur getJoueur() {
 		return joueur;
+	}
+	public int getPlayerIndex() {
+		return this.numeroPlayer;
 	}
 	
 	public PlayerForDiffusion(String nomEvent, WindowBroadcastPublic diffusionFrame,String typeFrame, int numeroPlayer) {
@@ -272,6 +276,10 @@ public class PlayerForDiffusion extends JPanel{
 			recupInfosPlayer();
 			break;
 		}
+		case "tree": {
+			recupInfosPlayer();
+			break;
+		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + typeFen);
 		}
@@ -414,7 +422,14 @@ public class PlayerForDiffusion extends JPanel{
 		playerCityresidence.setSize((int)cityresidenceLabel.getPreferredSize().getWidth(), (int)cityresidenceLabel.getPreferredSize().getHeight()+5);
 		playerLine.setSize((int)lineLabel.getPreferredSize().getWidth(), (int)lineLabel.getPreferredSize().getHeight()+5);
 		
-		this.frameForDiffusion.addContent(playerLayer, panelPlayerGlobal);		
+//		this.frameForDiffusion.addContent(playerLayer, panelPlayerGlobal);
+//		panelPlayerGlobal.setVisible(true);
+//		panelPlayerGlobal.setForeground(Color.red);
+//		panelPlayerGlobal.setOpaque(false);
+		this.setLayout(null);
+		this.setOpaque(false);
+		this.add(panelPlayerGlobal);
+		this.setBounds(0, 0,this.frameForDiffusion.getWidth(), this.frameForDiffusion.getHeight());
 		
 		switch (typeFen) {
 		case "full":{
@@ -453,7 +468,7 @@ public class PlayerForDiffusion extends JPanel{
 												dimensionLabel.getHeight());
 
 										animationFrame.animateLabel(startPanel, endPoint, endDimension, endColor, endFont, 1000, JLayeredPane.POPUP_LAYER, this.frameForDiffusion.getLayeredPane(),() -> {
-											
+											this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer].setVisible(true);
 										});
 									}
 								}
@@ -465,16 +480,12 @@ public class PlayerForDiffusion extends JPanel{
 				}
 			});
 			break;
-		}	
+		}
 		default:{
 			animationFrame.zoomPanel(panelPlayerGlobal, frameForDiffusion, 500, null);	
 		}
 		}
-		ArrayList<PlayerForDiffusion> listPlayerForTree = new ArrayList<PlayerForDiffusion>();
-		PlayerForDiffusion[] tabPlayerForTree = new PlayerForDiffusion[8];
-		tabPlayerForTree[this.getNumeroPlayer()] = this;
-		PlayerForDiffusion PlayerForDiffusiontest = tabPlayerForTree[this.getNumeroPlayer()];
-        
+		
 		this.frameForDiffusion.revalidate();
 		this.frameForDiffusion.repaint();		
 	}
@@ -489,15 +500,12 @@ public class PlayerForDiffusion extends JPanel{
 			break;
 		case "game":
 			emplacementPlayer = "Config/"+nomEvent+"/game.json";
-			//index = getNumeroPlayer();
 			break;
 		case "tab":
 			emplacementPlayer = "Config/"+nomEvent+"/tab.json";
-			//index = getNumeroPlayer();
 			break;
 		case "full":
 			emplacementPlayer = "Config/"+nomEvent+"/full.json";
-			//index = getNumeroPlayer();
 			break;
 
 		default:
@@ -832,7 +840,38 @@ public class PlayerForDiffusion extends JPanel{
                 break;
 			}
 			case "full": {
-				windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(getNumeroPlayer());
+				PlayerForDiffusion[] tableauPlayerDiffusionTree = frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree();//tableau des joueur full actuellement afficher
+				ArrayList<PlayerForDiffusion> listPlayerDiffusionTree = new ArrayList<PlayerForDiffusion>();
+				int indexTab = 0;
+				if (windowConfigurationPlayerInfos == null) {
+					windowConfigurationPlayerInfos = new WindowConfigurationPlayerInfos(frameForDiffusion, "full");
+//						placementFrameTwoPlayer.setTabPolice(new TabPolice(ListSelectedJoueur));
+				} else {
+					windowConfigurationPlayerInfos.tabbedPane.removeAll();
+					windowConfigurationPlayerInfos.tabbedPane.revalidate();
+					windowConfigurationPlayerInfos.tabbedPane.repaint();
+					windowConfigurationPlayerInfos.setTypeFenetre("full");
+				}
+				for (int i=0; i<tableauPlayerDiffusionTree.length;i++) {
+					if(tableauPlayerDiffusionTree[i] != null) {
+						listPlayerDiffusionTree.add(tableauPlayerDiffusionTree[i]);
+						tableauPlayerDiffusionTree[i].setPlacementFrameTwoPlayer(windowConfigurationPlayerInfos);
+						TabConfigurationPlayerInfos tabFull = new TabConfigurationPlayerInfos(tableauPlayerDiffusionTree[i], tableauPlayerDiffusionTree[i].getJoueur(), frameForDiffusion, windowConfigurationPlayerInfos);
+						windowConfigurationPlayerInfos.addTabJoueur(tabFull);
+						System.out.println("    FULL player to disply : "+tableauPlayerDiffusionTree[i].nameLabel.getText());
+					}
+				}
+				if(listPlayerDiffusionTree.size() != 0) {
+					windowConfigurationPlayerInfos.setTabPolice(new TabPolice(listPlayerDiffusionTree, windowConfigurationPlayerInfos));
+					windowConfigurationPlayerInfos.pack();
+				}
+				for (int i = 0; i < listPlayerDiffusionTree.size(); i++) {
+					if(playerfordifusion2.getNumeroPlayer() == listPlayerDiffusionTree.get(i).getNumeroPlayer()) {
+						indexTab = i;
+					}						
+				}				
+				
+				windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(indexTab);
 				Component selectedComponent = windowConfigurationPlayerInfos.tabbedPane.getSelectedComponent();
 		        if (selectedComponent instanceof TabConfigurationPlayerInfos) {
 		            TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;

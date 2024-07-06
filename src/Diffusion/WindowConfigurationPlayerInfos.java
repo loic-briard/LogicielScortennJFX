@@ -159,7 +159,17 @@ public class WindowConfigurationPlayerInfos extends JFrame {
 					            System.out.println("! Error: Selected component is not an instance of tabInfosPlayer");
 					        }
 						}
-						ConfigurationSaveLoad.saveWindowsMultiTab(dysplayFrame.getNameEvent(), typeFenetre, joueurDetailsFull);
+						for (int i = 0; i < joueurDetailsFull.size(); i++) {
+				            Map<JPanel, JLabel> panelLabelMap = joueurDetailsFull.get(i);
+				            System.out.println("Map " + i + ":");
+				            for (Map.Entry<JPanel, JLabel> entry : panelLabelMap.entrySet()) {
+				                JPanel panel = entry.getKey();
+				                JLabel label = entry.getValue();
+				                System.out.println("\tJPanel Name: " + panel.getName());
+				                System.out.println("\tJLabel Text: " + label.getText());
+				            }
+				        }
+//						ConfigurationSaveLoad.saveWindowsMultiTab(dysplayFrame.getNameEvent(), typeFenetre, joueurDetailsFull);
 						break;
 
 					default:
@@ -196,7 +206,7 @@ public class WindowConfigurationPlayerInfos extends JFrame {
 		        Component selectedComponent = tabbedPane.getSelectedComponent();
 		        if (selectedComponent instanceof TabConfigurationPlayerInfos) {
 		            TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;
-		            currentTab.confirmTabPlayer();;
+		            currentTab.confirmTabPlayer();
 		        }
 			}
 		}

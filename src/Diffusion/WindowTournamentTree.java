@@ -27,13 +27,14 @@ public class WindowTournamentTree extends JFrame {
 	private WindowBroadcastPublic windowBroadcastPublic;
 	private Evenement event;
 	public WindowConfigurationPlayerInfos windowConfigPlayer;
+	private PlayerForDiffusion[] tabPlayerForTree;
 	private int i;
 	private int nbJoueur;
 	private JPanel[] playerPanel;// = new JPanel();
 	private boolean blackButtonAppuyer = false;
 	private boolean fondButtonAppuyer;
-
-
+	
+	
 	public WindowTournamentTree(ArrayList<Joueur> selectedJoueurs, Evenement event, WindowBroadcastPublic diffusionFrame, int nbJoueur) {
 		setTitle("Broadcast configuration");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -50,6 +51,7 @@ public class WindowTournamentTree extends JFrame {
 		this.selectedJoueurs = selectedJoueurs;
 		this.windowBroadcastPublic =diffusionFrame;
 		this.event = event;
+		this.tabPlayerForTree = new PlayerForDiffusion[nbJoueur];
 		addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -96,7 +98,10 @@ public class WindowTournamentTree extends JFrame {
 		JButton playerButton = new JButton("Full Competition");
 		playerButton.addActionListener(e -> {
 			windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_4());
-			
+			for(int u=0; u<tabPlayerForTree.length;u++) {
+				if(tabPlayerForTree[u] != null)
+					System.out.println("player from tab tree index : "+u+" name :"+tabPlayerForTree[u].getJoueur().getNom());
+			}
 			// cr�ation d'une liste de PlayerForDiffusion pour aficher le tournoi complet
 			ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
 			windowBroadcastPublic.removeLayerContent(JLayeredPane.PALETTE_LAYER);//nettoyage du layer
@@ -124,9 +129,9 @@ public class WindowTournamentTree extends JFrame {
 				windowConfigPlayer.tabbedPane.revalidate();
 				windowConfigPlayer.tabbedPane.repaint();
 				windowConfigPlayer.setTypeFenetre("full");
-//					placementFrameTwoPlayer.setTabPolice(new TabPolice(ListSelectedJoueur));
 			}
 			for (PlayerForDiffusion playerForDiffusion : ListSelectedJoueur) {
+				this.windowBroadcastPublic.addContent(JLayeredPane.PALETTE_LAYER, playerForDiffusion);
 				playerForDiffusion.setPlacementFrameTwoPlayer(windowConfigPlayer);
 				TabConfigurationPlayerInfos tabFull = new TabConfigurationPlayerInfos(playerForDiffusion, playerForDiffusion.getJoueur(), windowBroadcastPublic, windowConfigPlayer);
 				windowConfigPlayer.addTabJoueur(tabFull);
@@ -195,8 +200,15 @@ public class WindowTournamentTree extends JFrame {
                 	try {
                 		windowBroadcastPublic.removeLayerContent(JLayeredPane.MODAL_LAYER);//nettoyage du layer
                 		Joueur soloPlayer = foundPlayer(selectedItem);
-                		PlayerForDiffusion soloPlayerDetails = new PlayerForDiffusion(this.event.getNom(), windowBroadcastPublic, "player",0);
                 		int ligne = Indexbutton + (nbJoueur/4)*indexPanel;
+                		//ajout du player dans le tableau pour l'arbre de tournoi
+                		PlayerForDiffusion playerDetailsForTree = new PlayerForDiffusion(this.event.getNom(), windowBroadcastPublic, "full",ligne-1);
+                		playerDetailsForTree.setPlayer(soloPlayer, ligne);
+                		playerDetailsForTree.setVisible(false);
+                		playerDetailsForTree.setPlacementFrameTwoPlayer(windowConfigPlayer);
+                		tabPlayerForTree[ligne-1] = playerDetailsForTree;
+                		//initialisation et affichage de player solo
+                		PlayerForDiffusion soloPlayerDetails = new PlayerForDiffusion(this.event.getNom(), windowBroadcastPublic, "player",ligne-1);
                 		soloPlayerDetails.setPlayer(soloPlayer, ligne);
                 		ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
                 		ListSelectedJoueur.add(soloPlayerDetails);
@@ -209,8 +221,8 @@ public class WindowTournamentTree extends JFrame {
         					windowConfigPlayer.tabbedPane.repaint();
         					windowConfigPlayer.setTypeFenetre("player");
         				}
-                		
-                		windowBroadcastPublic.add(soloPlayerDetails);
+                		this.windowBroadcastPublic.addContent(JLayeredPane.PALETTE_LAYER, tabPlayerForTree[ligne-1]);
+                		this.windowBroadcastPublic.addContent(JLayeredPane.MODAL_LAYER, soloPlayerDetails);
                 		soloPlayerDetails.setPlacementFrameTwoPlayer(windowConfigPlayer);
                 		TabConfigurationPlayerInfos tabOnePlayer = new TabConfigurationPlayerInfos(soloPlayerDetails, soloPlayer, windowBroadcastPublic,windowConfigPlayer);
 						windowConfigPlayer.addTabJoueur(tabOnePlayer);
@@ -276,9 +288,9 @@ public class WindowTournamentTree extends JFrame {
 						windowConfigPlayer.tabbedPane.revalidate();
 						windowConfigPlayer.tabbedPane.repaint();
 						windowConfigPlayer.setTypeFenetre("game");
-					}					
-					windowBroadcastPublic.add(PlayerDetails1);
-					windowBroadcastPublic.add(PlayerDetails2);
+					}
+					this.windowBroadcastPublic.addContent(JLayeredPane.MODAL_LAYER, PlayerDetails1);
+					this.windowBroadcastPublic.addContent(JLayeredPane.MODAL_LAYER, PlayerDetails2);
 					PlayerDetails1.setPlacementFrameTwoPlayer(windowConfigPlayer);
 					PlayerDetails2.setPlacementFrameTwoPlayer(windowConfigPlayer);
 					TabConfigurationPlayerInfos tabP1 = new TabConfigurationPlayerInfos(PlayerDetails1, Player1, windowBroadcastPublic, windowConfigPlayer);
@@ -325,6 +337,7 @@ public class WindowTournamentTree extends JFrame {
 				windowConfigPlayer.setTypeFenetre("tab");
 			}
 			for (PlayerForDiffusion playerForDiffusion : ListSelectedJoueur) {
+				this.windowBroadcastPublic.addContent(JLayeredPane.MODAL_LAYER, playerForDiffusion);
 				playerForDiffusion.setPlacementFrameTwoPlayer(windowConfigPlayer);
 				TabConfigurationPlayerInfos tabPool = new TabConfigurationPlayerInfos(playerForDiffusion, playerForDiffusion.getJoueur(), windowBroadcastPublic, windowConfigPlayer);
 				windowConfigPlayer.addTabJoueur(tabPool);
@@ -365,5 +378,9 @@ public class WindowTournamentTree extends JFrame {
 	        }
 	    }
 	    return null;
+	}
+
+	public PlayerForDiffusion[] getTabPlayerForTree() {
+		return tabPlayerForTree;
 	}
 }

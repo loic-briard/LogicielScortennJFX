@@ -14,6 +14,7 @@ public class WindowBroadcastPublic extends JFrame {
 	private Evenement actualEvent;
 	private JLayeredPane layeredPane;
     private JLabel backgroundLabel;
+    private WindowTournamentTree windowTournamentTree;
     private WindowAnimationConfiguration animationFrame;
 
 	public JLayeredPane getLayeredPaneWindowBroadcastPublic() {
@@ -22,8 +23,13 @@ public class WindowBroadcastPublic extends JFrame {
 	public WindowAnimationConfiguration getAnimationFrame() {
 		return animationFrame;
 	}
-	public WindowBroadcastPublic(Evenement eventChoosen,GraphicsDevice screen ) {
-		//new JFrame("Broadcast");
+	public WindowTournamentTree getWindowTournamentTreeFromBroadcast() {
+		return windowTournamentTree;
+	}
+	public void setWindowTournamentTreeFromBroadcast(WindowTournamentTree windowTournamentTree) {
+		this.windowTournamentTree = windowTournamentTree;
+	}
+	public WindowBroadcastPublic(Evenement eventChoosen,GraphicsDevice screen) {
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setUndecorated(true);
 		
@@ -88,26 +94,6 @@ public class WindowBroadcastPublic extends JFrame {
 	    }
 	    layeredPane.repaint();
 	}
-//	public JPanel setBackgroundImage(String img, String temp) throws IOException {
-//		JPanel panel = new JPanel() {
-//			private static final long serialVersionUID = 1;
-//			private BufferedImage buf = ImageIO.read(new File(img));
-//
-//			protected void paintComponent(Graphics g) {
-//				super.paintComponent(g);
-//				g.drawImage(buf, 0, 0, this.getWidth(), this.getHeight(), null);
-//			}
-//		};
-//		panel.setLayout(null);
-//		this.setContentPane(panel);
-//		this.revalidate();
-//		this.repaint();
-//
-//		return panel;
-//	}
-	
-
-
 	public void close() {
 		//this.placementFrame.dispose();
 		this.dispose();

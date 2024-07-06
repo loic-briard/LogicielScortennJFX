@@ -120,6 +120,14 @@ public class WindowAnimationConfiguration extends JFrame{
                  // Exécuter l'action une fois l'animation terminée
                     if (onComplete != null) {
                         onComplete.run();
+                        // Parcourir et supprimer les composants de la couche spécifique
+                        for (Component component : layeredPane.getComponentsInLayer(layer)) {
+                            layeredPane.remove(component);
+                        }
+
+                        // Rafraîchir le layeredPane
+                        layeredPane.repaint();
+                        layeredPane.revalidate();
                     }
                 }
 
