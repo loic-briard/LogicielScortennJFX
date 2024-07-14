@@ -26,6 +26,9 @@ import Main.ImageUtility;
 import Players.Joueur;
 import Police.TabPolice;
 import Police.chosenPolice;
+import Sauvegarde.ConfigurationSaveLoad;
+import Sauvegarde.ElementJoueur;
+import Sauvegarde.ElementPoliceJoueur;
 
 public class PlayerForDiffusion extends JPanel{
 	private static final long serialVersionUID = 1L;
@@ -115,6 +118,7 @@ public class PlayerForDiffusion extends JPanel{
 		this.nomEvent = nomEvent;
 		this.numeroPlayer = numeroPlayer;
 		this.animationFrame = frameForDiffusion.getAnimationFrame();
+		System.out.println("--- index du joueur a afficher from "+typeFen+" : "+numeroPlayer+" ---");
 		policeName = new chosenPolice();
 		policeSurname = new chosenPolice();
 		policeAcro = new chosenPolice();
@@ -276,10 +280,6 @@ public class PlayerForDiffusion extends JPanel{
 			recupInfosPlayer();
 			break;
 		}
-		case "tree": {
-			recupInfosPlayer();
-			break;
-		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + typeFen);
 		}
@@ -384,11 +384,6 @@ public class PlayerForDiffusion extends JPanel{
 		panelPlayerGlobal.setOpaque(false);
 //		panelPlayerGlobal.setBackground(Color.RED);
 
-		Integer playerLayer = JLayeredPane.MODAL_LAYER;
-		if(typeFen == "full")
-			playerLayer = JLayeredPane.PALETTE_LAYER;
-		else
-			playerLayer = JLayeredPane.MODAL_LAYER;
 		panelPlayerGlobal.add(playerName);
 		panelPlayerGlobal.add(playerSurname);
 		panelPlayerGlobal.add(playerAcro);
@@ -442,8 +437,7 @@ public class PlayerForDiffusion extends JPanel{
 				ConfigurationSaveLoad configData = ConfigurationSaveLoad
 						.loadConfigFromFile("Config/" + nomEvent + "/full.json");
 				try {
-					Map<String, Map<String, Object>> playerData = configData.getAllElementVisible(8,
-							"Config/" + nomEvent + "/full.json");
+					Map<String, Map<String, Object>> playerData = configData.getAllElementVisible(8,"Config/" + nomEvent + "/full.json");//modifier "8" pour remplacer par le nombre de joueur selectionné
 					// Parcourir les données récupérées pour les joueurs
 					for (Map.Entry<String, Map<String, Object>> playerEntry : playerData.entrySet()) {
 						String playerNameFull = playerEntry.getKey();
@@ -464,8 +458,7 @@ public class PlayerForDiffusion extends JPanel{
 										Color endColor = (Color) elementData.get("color");
 										JLabel dimensionLabel = new JLabel(nameLabel.getText());
 										dimensionLabel.setFont(endFont);
-										Dimension endDimension = new Dimension(dimensionLabel.getWidth(),
-												dimensionLabel.getHeight());
+										Dimension endDimension = new Dimension(dimensionLabel.getWidth(), dimensionLabel.getHeight());
 
 										animationFrame.animateLabel(startPanel, endPoint, endDimension, endColor, endFont, 1000, JLayeredPane.POPUP_LAYER, this.frameForDiffusion.getLayeredPane(),() -> {
 											this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer].setVisible(true);
@@ -491,7 +484,7 @@ public class PlayerForDiffusion extends JPanel{
 	}
 
 	private void recupInfosPlayer() {
-		int index = getNumeroPlayer();
+		int index = numeroPlayer;
 		String emplacementPlayer = null;
 		switch (typeFen) {
 		case "player":
@@ -511,6 +504,7 @@ public class PlayerForDiffusion extends JPanel{
 		default:
 			break;
 		}
+		System.out.println("--- index du joueur a recup from "+typeFen+" : "+index+" | "+numeroPlayer+" ---");
 		System.out.println("Get JSON info for : "+typeFen+", player index : "+index+", localisation : "+emplacementPlayer);
 		ConfigurationSaveLoad configData = ConfigurationSaveLoad.loadConfigFromFile(emplacementPlayer);
 		if (configData != null) {

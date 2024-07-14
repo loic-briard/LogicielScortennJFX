@@ -4,11 +4,14 @@ package Diffusion;
  * fenetre qui comporte les onglet de position de chaque joueur et l'onglet de style
  */
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
@@ -19,6 +22,10 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import Police.TabPolice;
+import Sauvegarde.ConfigurationSaveLoad;
+import Sauvegarde.ElementJoueur;
+import Sauvegarde.ElementJoueurFull;
+import Sauvegarde.ElementPoliceJoueur;
 
 public class WindowConfigurationPlayerInfos extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -141,35 +148,63 @@ public class WindowConfigurationPlayerInfos extends JFrame {
 						break;
 					case "full":
 						System.out.println("Save FULL");
-						ArrayList<Map<JPanel, JLabel>> joueurDetailsFull = new ArrayList<Map<JPanel, JLabel>>();						
+						ElementJoueurFull elementJoueurFull = new ElementJoueurFull();
 						for (int i = 0; i < tabbedPane.getTabCount()-1; i++) {
 							tabbedPane.setSelectedIndex(i);
-							// Check if the selected component is an instance of tabInfosPlayer
-					        Component selectedComponent = tabbedPane.getSelectedComponent();
+							Component selectedComponent = tabbedPane.getSelectedComponent();
 					        if (selectedComponent instanceof TabConfigurationPlayerInfos) {
 					            TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;
-					            PlayerForDiffusion infosTabDetails = currentTab.getInfosPlayerDetails();
-					            // Ensure that infosTabDetails is not null before using it
-					            if (joueurDetailsFull != null) {
-					                infosTabDetails.enegistrerDetailsJoueurs();
-					                joueurDetailsFull.add(infosTabDetails.mapJoueurDetails.getMapJoueurDetails());
+					            PlayerForDiffusion pfdFromTab = currentTab.getInfosPlayerDetails();
+					            if (pfdFromTab != null) {
+					                pfdFromTab.enegistrerDetailsJoueurs();
 					            }
-					        } else {
-					            // Handle the case where the selected component is not of type tabInfosPlayer
-					            System.out.println("! Error: Selected component is not an instance of tabInfosPlayer");
-					        }
+					            
+					            Map<String, Map<String, ElementJoueur>> playerList = new HashMap<>();
+								Map<String, ElementJoueur> player = new HashMap<String, ElementJoueur>();
+								for (Map.Entry<JPanel, JLabel> entry : pfdFromTab.mapJoueurDetails.getMapJoueurDetails().entrySet()) {
+									
+									JPanel panel = entry.getKey();
+									JLabel label = entry.getValue();
+									ElementJoueur playerElement = new ElementJoueur();
+									ElementPoliceJoueur playerPoliceFull = new ElementPoliceJoueur();
+									
+									playerElement.setPositionX(panel.getX());
+									playerElement.setPositionY(panel.getY());
+									
+									playerPoliceFull.setVisible(panel.isVisible());
+									if (panel.getName().equals("ImgJoueur") || panel.getName().equals("ImgFlag")) {
+										//System.out.println("taille : " + panel.getName() + panel.getHeight());
+										playerPoliceFull.setTaille((int) panel.getHeight());
+									}
+									playerPoliceFull.setFont(FontSerializer(label.getFont()));
+									playerPoliceFull.setColor(ColorSerializer(label.getForeground()));
+									
+									player.put(panel.getName(), playerElement);
+									elementJoueurFull.getPlayerPolice().put(panel.getName(), playerPoliceFull);
+								}
+								playerList.put("player"+pfdFromTab.getNumeroPlayer(), player);
+								elementJoueurFull.getPlayer().add(playerList);
+					        }							
 						}
-						for (int i = 0; i < joueurDetailsFull.size(); i++) {
-				            Map<JPanel, JLabel> panelLabelMap = joueurDetailsFull.get(i);
-				            System.out.println("Map " + i + ":");
-				            for (Map.Entry<JPanel, JLabel> entry : panelLabelMap.entrySet()) {
-				                JPanel panel = entry.getKey();
-				                JLabel label = entry.getValue();
-				                System.out.println("\tJPanel Name: " + panel.getName());
-				                System.out.println("\tJLabel Text: " + label.getText());
-				            }
-				        }
-//						ConfigurationSaveLoad.saveWindowsMultiTab(dysplayFrame.getNameEvent(), typeFenetre, joueurDetailsFull);
+						System.out.println("--Elements in full from window config player:");
+						for (Map<String, Map<String, ElementJoueur>> playerMap : elementJoueurFull.getPlayer()) {
+							for (Map.Entry<String, Map<String, ElementJoueur>> playerEntry : playerMap.entrySet()) {
+								System.out.println("Player: " + playerEntry.getKey());
+								for (Map.Entry<String, ElementJoueur> elementEntry : playerEntry.getValue().entrySet()) {
+									ElementJoueur element = elementEntry.getValue();
+									System.out.println("  Element: " + elementEntry.getKey() + " PositionX: " + element.getPositionX() + " PositionY: " + element.getPositionY());
+								}
+							}
+						}
+						System.out.println("Elements Police in full");
+						for (Map.Entry<String, ElementPoliceJoueur> entry : elementJoueurFull.getPlayerPolice().entrySet()) {
+							ElementPoliceJoueur police = entry.getValue();
+							System.out.println("Element: " + entry.getKey() + " Visible: " + police.isVisible() + " Font: " + police.getFont() + " Color: " + police.getColor() + " Taille: " + police.getTaille());
+						}
+						ElementJoueurFull testReadJson = ConfigurationSaveLoad.readJsonFileFull("Config/" + dysplayFrame.getNameEvent() + "/" + typeFenetre + ".json");
+						ConfigurationSaveLoad.saveConfigToFileFull(testReadJson, "Config/" + dysplayFrame.getNameEvent(), "full.json");
+						ConfigurationSaveLoad.updateElementJoueurFull(dysplayFrame.getNameEvent(), testReadJson, elementJoueurFull);
+//						ConfigurationSaveLoad.replacePlayerDataFull(dysplayFrame.getNameEvent(), testReadJson);
 						break;
 
 					default:
@@ -209,5 +244,13 @@ public class WindowConfigurationPlayerInfos extends JFrame {
 		            currentTab.confirmTabPlayer();
 		        }
 			}
+		}
+		public static String FontSerializer(Font fontToSerialize) {
+			String SerializeFont = fontToSerialize.getName()+","+fontToSerialize.getStyle()+","+fontToSerialize.getSize();		
+			return SerializeFont;
+		}
+		public static String ColorSerializer(Color colorToSerialize) {
+			String SerializeColor = colorToSerialize.getRed()+","+colorToSerialize.getGreen()+","+colorToSerialize.getBlue();		
+			return SerializeColor;
 		}
 }

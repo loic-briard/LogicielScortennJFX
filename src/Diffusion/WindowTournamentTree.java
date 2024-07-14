@@ -204,7 +204,7 @@ public class WindowTournamentTree extends JFrame {
                 		//ajout du player dans le tableau pour l'arbre de tournoi
                 		PlayerForDiffusion playerDetailsForTree = new PlayerForDiffusion(this.event.getNom(), windowBroadcastPublic, "full",ligne-1);
                 		playerDetailsForTree.setPlayer(soloPlayer, ligne);
-                		playerDetailsForTree.setVisible(false);
+//                		playerDetailsForTree.setVisible(false);
                 		playerDetailsForTree.setPlacementFrameTwoPlayer(windowConfigPlayer);
                 		tabPlayerForTree[ligne-1] = playerDetailsForTree;
                 		//initialisation et affichage de player solo

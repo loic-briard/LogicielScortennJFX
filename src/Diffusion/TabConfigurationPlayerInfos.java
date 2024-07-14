@@ -101,8 +101,6 @@ public class TabConfigurationPlayerInfos extends JPanel {
 	private JSpinner positionYLine;
 	public SpinnerNumberModel lineYvalue;
 
-	
-
 	private WindowBroadcastPublic dysplayFrame;
 	private Joueur joueur;
 	private PlayerForDiffusion infosPlayerDetails;

@@ -1,4 +1,4 @@
-package Diffusion;
+package Sauvegarde;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -8,8 +8,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -21,59 +23,8 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 
-
-//Classe représentant un élément avec ses propriétés
-class ElementJoueur {
-	private int positionX;
-	private int positionY;
-	
-	public void setPositionX(int x) {
-		this.positionX = x;		
-	}
-	public void setPositionY(int y) {
-		this.positionY = y;
-	}
-	public int getPositionX() {
-		return positionX;
-	}
-	public int getPositionY() {
-		return positionY;
-	}
-}
-//Classe représentant un élément avec ses propriétés
-class ElementPoliceJoueur {
-	private boolean visible;
-	private String font;
-	private String color;
-	private int taille;
-	
-	public void setTaille(int taille) {
-		this.taille = taille;
-	}
-	public void setVisible(boolean b) {
-		this.visible = b;
-	}
-	public void setFont(String Font) {
-		this.font = Font;
-	}
-	public void setColor(String Color) {
-		this.color = Color;
-	}
-	
-	public int getTaille() {
-		return taille;
-	}
-	public boolean isVisible() {
-		return visible;
-	}
-	public String getFont() {
-		return font;
-	}
-	public String getColor() {
-		return color;
-	}
-}
 class ElementOneJoueurForTab {
 	private Map<String, ElementJoueur> player = new HashMap<>();
 	
@@ -124,17 +75,7 @@ class ElementJoueurTab {
 	public void setPlayer(ArrayList<Map<String, Map<String, ElementJoueur>>> playerList) {
 		tab = playerList;	}
 }
-class ElementJoueurFull {
-	private ArrayList<Map<String,Map<String, ElementJoueur>>> full = new ArrayList<>();
-	private Map<String, ElementPoliceJoueur> playerPolice = new HashMap<>();
-    
-    public ArrayList<Map<String, Map<String, ElementJoueur>>> getPlayer() {
-        return full;
-    }
-    public Map<String, ElementPoliceJoueur> getPlayerPolice() {
-		return playerPolice;
-	}
-}
+
 
 public class ConfigurationSaveLoad {
 	private Map<String, Object> locations = new HashMap<>();
@@ -229,6 +170,7 @@ public class ConfigurationSaveLoad {
 		}
 		try (FileWriter writer = new FileWriter(filePath + File.separator + fileName, false)) {
 			String json = gson.toJson(data);
+			System.out.println(json);
 			writer.write(json);
 			System.out.println("  File : " + fileName+" in folder "+filePath+" has been modified");
 		} catch (IOException e) {
@@ -418,8 +360,7 @@ public class ConfigurationSaveLoad {
 				elementsFullPlayer.getPlayer().add(playerList);
 				j++;
 			}
-			System.out.println("FULL save completed");
-			saveConfigToFileFull(elementsFullPlayer, "Config/" + nomEvent, "full.json");
+			
 			break;
 
 		default:
@@ -427,7 +368,189 @@ public class ConfigurationSaveLoad {
 			break;
 		}
 	}
-	
+
+	public static ElementJoueurFull readJsonFileFull(String filePath) {
+        ElementJoueurFull elementJoueurFull = new ElementJoueurFull();
+        Gson gson = new Gson();
+
+        try (FileReader reader = new FileReader(filePath)) {
+            JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
+
+            // Parse "full" array
+            JsonArray fullArray = jsonObject.getAsJsonArray("full");
+            for (JsonElement element : fullArray) {
+                JsonObject playerObject = element.getAsJsonObject();
+                String playerKey = playerObject.keySet().iterator().next();
+                JsonObject playerData = playerObject.getAsJsonObject(playerKey);
+
+                Map<String, Map<String, ElementJoueur>> playerMap = new HashMap<>();
+                Map<String, ElementJoueur> innerMap = new HashMap<>();
+
+                for (Map.Entry<String, JsonElement> entry : playerData.entrySet()) {
+                    ElementJoueur elementJoueur = new ElementJoueur();
+                    JsonObject positionObject = entry.getValue().getAsJsonObject();
+                    elementJoueur.setPositionX(positionObject.get("positionX").getAsInt());
+                    elementJoueur.setPositionY(positionObject.get("positionY").getAsInt());
+                    innerMap.put(entry.getKey(), elementJoueur);
+                }
+
+                playerMap.put(playerKey, innerMap);
+                elementJoueurFull.getPlayer().add(playerMap);
+            }
+
+            // Parse "playerPolice"
+            JsonObject playerPoliceObject = jsonObject.getAsJsonObject("playerPolice");
+            Map<String, ElementPoliceJoueur> playerPoliceMap = new HashMap<>();
+
+            for (Map.Entry<String, JsonElement> entry : playerPoliceObject.entrySet()) {
+                ElementPoliceJoueur elementPoliceJoueur = new ElementPoliceJoueur();
+                JsonObject policeData = entry.getValue().getAsJsonObject();
+                
+                elementPoliceJoueur.setVisible(policeData.get("visible").getAsBoolean());
+                elementPoliceJoueur.setFont(policeData.get("font").getAsString());
+                elementPoliceJoueur.setColor(policeData.get("color").getAsString());
+                elementPoliceJoueur.setTaille(policeData.get("taille").getAsInt());
+
+                playerPoliceMap.put(entry.getKey(), elementPoliceJoueur);
+            }
+
+            elementJoueurFull.getPlayerPolice().putAll(playerPoliceMap);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return elementJoueurFull;
+    }
+	public static void updateElementJoueurFull(String nomEvent,ElementJoueurFull original, ElementJoueurFull partial) {
+        // Update players
+        for (Map<String, Map<String, ElementJoueur>> partialPlayerMap : partial.getPlayer()) {
+            String playerKey = partialPlayerMap.keySet().iterator().next();
+            Map<String, ElementJoueur> partialInnerMap = partialPlayerMap.get(playerKey);
+
+            // Find the corresponding player in the original ElementJoueurFull
+            Map<String, Map<String, ElementJoueur>> originalPlayerMap = original.getPlayer().stream()
+                .filter(map -> map.containsKey(playerKey))
+                .findFirst()
+                .orElse(null);
+
+            if (originalPlayerMap == null) {
+                // If the player doesn't exist in the original, add it
+                original.getPlayer().add(partialPlayerMap);
+            } else {
+                // If the player exists, update its data
+                Map<String, ElementJoueur> originalInnerMap = originalPlayerMap.get(playerKey);
+                for (Map.Entry<String, ElementJoueur> entry : partialInnerMap.entrySet()) {
+                    originalInnerMap.put(entry.getKey(), entry.getValue());
+                }
+            }
+        }
+
+        // Update playerPolice
+        for (Map.Entry<String, ElementPoliceJoueur> entry : partial.getPlayerPolice().entrySet()) {
+            original.getPlayerPolice().put(entry.getKey(), entry.getValue());
+        }
+        //affichage du elementJoueurFull to save
+        System.out.println("--Elements in full from to save --:");
+	    for (Map<String, Map<String, ElementJoueur>> playerMap : original.getPlayer()) {
+	        for (Map.Entry<String, Map<String, ElementJoueur>> playerEntry : playerMap.entrySet()) {
+	            System.out.println("Player: " + playerEntry.getKey());
+	            for (Map.Entry<String, ElementJoueur> elementEntry : playerEntry.getValue().entrySet()) {
+	                ElementJoueur element = elementEntry.getValue();
+	                System.out.println("  Element: " + elementEntry.getKey() + " PositionX: " + element.getPositionX() + " PositionY: " + element.getPositionY());
+	            }
+	        }
+	    }
+
+	    System.out.println("Elements Police in full");
+	    for (Map.Entry<String, ElementPoliceJoueur> entry : original.getPlayerPolice().entrySet()) {
+	        ElementPoliceJoueur police = entry.getValue();
+	        System.out.println("Element: " + entry.getKey() + " Visible: " + police.isVisible() + " Font: " + police.getFont() + " Color: " + police.getColor() + " Taille: " + police.getTaille());
+	    }
+	    
+        saveConfigToFileFull(original, "Config/" + nomEvent, "full.json");
+	    System.out.println("FULL save completed");
+        
+    }
+
+	public static void replacePlayerDataFull(String nomEvent, ElementJoueurFull source) {
+	    ElementJoueurFull target = readJsonFileFull("Config/" + nomEvent + "/" + "full.json");
+
+	    System.out.println("--Elements in full from json:");
+	    for (Map<String, Map<String, ElementJoueur>> playerMap : target.getPlayer()) {
+	        for (Map.Entry<String, Map<String, ElementJoueur>> playerEntry : playerMap.entrySet()) {
+	            System.out.println("Player: " + playerEntry.getKey());
+	            for (Map.Entry<String, ElementJoueur> elementEntry : playerEntry.getValue().entrySet()) {
+	                ElementJoueur element = elementEntry.getValue();
+	                System.out.println("  Element: " + elementEntry.getKey() + " PositionX: " + element.getPositionX() + " PositionY: " + element.getPositionY());
+	            }
+	        }
+	    }
+	    System.out.println("Elements Police in full");
+	    for (Map.Entry<String, ElementPoliceJoueur> entry : target.getPlayerPolice().entrySet()) {
+	        ElementPoliceJoueur police = entry.getValue();
+	        System.out.println("Element: " + entry.getKey() + " Visible: " + police.isVisible() + " Font: " + police.getFont() + " Color: " + police.getColor() + " Taille: " + police.getTaille());
+	    }
+
+	    // Replace "full" part
+	    ArrayList<Map<String, Map<String, ElementJoueur>>> targetFull = target.getPlayer();
+	    ArrayList<Map<String, Map<String, ElementJoueur>>> sourceFull = source.getPlayer();
+
+	    // Using a LinkedHashMap to preserve insertion order
+	    LinkedHashMap<String, Map<String, ElementJoueur>> targetMap = new LinkedHashMap<>();
+	    for (Map<String, Map<String, ElementJoueur>> playerMap : targetFull) {
+	        targetMap.putAll(playerMap);
+	    }
+
+	    for (Map<String, Map<String, ElementJoueur>> sourcePlayerMap : sourceFull) {
+	        for (String playerKey : sourcePlayerMap.keySet()) {
+	            targetMap.put(playerKey, sourcePlayerMap.get(playerKey));
+	        }
+	    }
+
+	    // Convert back to ArrayList for target
+	    targetFull.clear();
+	    targetFull.add(new LinkedHashMap<>(targetMap));
+
+	    // Replace "playerPolice" part
+	    Map<String, ElementPoliceJoueur> targetPlayerPolice = target.getPlayerPolice();
+	    Map<String, ElementPoliceJoueur> sourcePlayerPolice = source.getPlayerPolice();
+
+	    for (String key : sourcePlayerPolice.keySet()) {
+	        targetPlayerPolice.put(key, sourcePlayerPolice.get(key));
+	    }
+
+	    System.out.println("--Elements in full from to save --:");
+	    for (Map<String, Map<String, ElementJoueur>> playerMap : target.getPlayer()) {
+	        for (Map.Entry<String, Map<String, ElementJoueur>> playerEntry : playerMap.entrySet()) {
+	            System.out.println("Player: " + playerEntry.getKey());
+	            for (Map.Entry<String, ElementJoueur> elementEntry : playerEntry.getValue().entrySet()) {
+	                ElementJoueur element = elementEntry.getValue();
+	                System.out.println("  Element: " + elementEntry.getKey() + " PositionX: " + element.getPositionX() + " PositionY: " + element.getPositionY());
+	            }
+	        }
+	    }
+
+	    System.out.println("Elements Police in full");
+	    for (Map.Entry<String, ElementPoliceJoueur> entry : target.getPlayerPolice().entrySet()) {
+	        ElementPoliceJoueur police = entry.getValue();
+	        System.out.println("Element: " + entry.getKey() + " Visible: " + police.isVisible() + " Font: " + police.getFont() + " Color: " + police.getColor() + " Taille: " + police.getTaille());
+	    }
+
+	    saveConfigToFileFull(target, "Config/" + nomEvent, "full.json");
+	    System.out.println("FULL save completed");
+	}
+
+	/**
+	 * retourne la position d'un element d'un joueur (ex: position du label name) en
+	 * fonction du type d'evenement, de fenetre, le NOM DE L'ELEMENT, et l'INDEX du
+	 * joueur 
+	 * @param eventName Le nom de l'événement.
+	 * @param typeFenetre   Le type de fenêtre (par exemple, "full").
+	 * @param nomElement   l'element a recuperer (ex: name)
+	 * @param index  index du joueur a recuperer dans le fichier json
+	 * @return ElementJoueur  qui donne le X et Y de l'element recherche
+	 */
 	public ElementJoueur getElement(String emplacement, String eventName, String typeFenetre, String nomElement, int index) {
 		String Player = "";
 		if (typeFenetre == "player" || typeFenetre == "game") {
@@ -608,47 +731,46 @@ public class ConfigurationSaveLoad {
 		
 		return null;
 	}
-	public Map<String, Map<String, Object>> getAllElementVisible(int nbPlayer,String filePath) throws JsonIOException, JsonSyntaxException, IOException{
+	public Map<String, Map<String, Object>> getAllElementVisible(int nbPlayer, String filePath) throws JsonIOException, JsonSyntaxException, IOException {
+	    Map<String, Map<String, Object>> playerData = new HashMap<>();
+	    try (Reader reader = new FileReader(filePath)) {
+	        JsonElement jsonElement = JsonParser.parseReader(reader);
+	        if (jsonElement.isJsonObject()) {
+	            JsonObject configObject = jsonElement.getAsJsonObject();
+	            JsonArray playersArray = configObject.getAsJsonArray("full");
 
-		Map<String, Map<String, Object>> playerData = new HashMap<>();
-		try (Reader reader = new FileReader(filePath)) {
-			JsonElement jsonElement = JsonParser.parseReader(reader);
-			if (jsonElement.isJsonObject()) {
-				JsonObject configObject = jsonElement.getAsJsonObject();
-				JsonArray playersArray = configObject.getAsJsonArray("full");
+	            JsonObject playerPolice = configObject.getAsJsonObject("playerPolice");
 
-				JsonObject playerPolice = configObject.getAsJsonObject("playerPolice");
+	            System.out.println();
+	            for (int i = 0; i < nbPlayer; i++) {
+	                System.out.println("Get element visible for player " + i);
+	                JsonObject playerObject = playersArray.get(i).getAsJsonObject().getAsJsonObject("player" + i);
+	                Map<String, Object> elementsData = new HashMap<>();
 
-				for (int i = 0; i < nbPlayer; i++) {
-					JsonObject playerObject = playersArray.get(i).getAsJsonObject().getAsJsonObject("player" + i);
-					
-					Map<String, Object> elementsData = new HashMap<>();
+	                for (String key : playerObject.keySet()) {
+	                    boolean isVisible = playerPolice.getAsJsonObject(key).get("visible").getAsBoolean();
 
-					for (String key : playerObject.keySet()) {
-						boolean isVisible = playerPolice.getAsJsonObject(key).get("visible").getAsBoolean();
+	                    if (isVisible) {
+	                        int positionX = playerObject.getAsJsonObject(key).getAsJsonPrimitive("positionX").getAsInt();
+	                        int positionY = playerObject.getAsJsonObject(key).getAsJsonPrimitive("positionY").getAsInt();
+	                        String font = playerPolice.getAsJsonObject(key).get("font").getAsString();
+	                        String color = playerPolice.getAsJsonObject(key).get("color").getAsString();
 
-						if (isVisible) {
-							//System.out.println("key recuperer : "+key);
-							int positionX = playerObject.getAsJsonObject(key).getAsJsonPrimitive("positionX").getAsInt();
-							int positionY = playerObject.getAsJsonObject(key).getAsJsonPrimitive("positionY").getAsInt();
-							String font = playerPolice.getAsJsonObject(key).get("font").getAsString();
-							String color = playerPolice.getAsJsonObject(key).get("color").getAsString();
+	                        Map<String, Object> elementData = new HashMap<>();
+	                        elementData.put("position", new Point(positionX, positionY));
+	                        elementData.put("font", font);
+	                        elementData.put("color", parseColor(color));
 
-							Map<String, Object> elementData = new HashMap<>();
-							elementData.put("position", new Point(positionX, positionY));
-							elementData.put("font", font);
-							elementData.put("color", parseColor(color));
-
-							elementsData.put(key, elementData);
-						}
-					}
-					playerData.put("player" + i, elementsData);
-				}
-			}
-		}
-		return playerData;
+	                        elementsData.put(key, elementData);
+	                    }
+	                }
+	                playerData.put("player" + i, elementsData);
+	            }
+	        }
+	    }
+	    return playerData;
 	}
-	
+			
 	public static String FontSerializer(Font fontToSerialize) {
 		String SerializeFont = fontToSerialize.getName()+","+fontToSerialize.getStyle()+","+fontToSerialize.getSize();		
 		return SerializeFont;
