@@ -6,7 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ExampleAnimationDeplacement extends JFrame {
-    private JLayeredPane layeredPane;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JLayeredPane layeredPane;
     private JLabel originalLabel;
 
     public ExampleAnimationDeplacement() {

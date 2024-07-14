@@ -5,7 +5,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ZoomExample2 extends JFrame {
-    private JLayeredPane layeredPane;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JLayeredPane layeredPane;
     private ZoomablePanel targetPanel;
 
     public ZoomExample2() {
@@ -53,9 +57,6 @@ public class ZoomExample2 extends JFrame {
         int targetWidth = frame.getWidth();
         int targetHeight = frame.getHeight();
 
-        // Calculer la position initiale du JPanel
-        Point initialLocation = panel.getLocation();
-
         // Ajouter le JPanel au JLayeredPane avec la couche cible
         layeredPane.add(panel, targetLayer);
 
@@ -96,7 +97,11 @@ public class ZoomExample2 extends JFrame {
 }
 
 class ZoomablePanel extends JPanel {
-    private double scale = 1.0;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private double scale = 1.0;
 
     public void setScale(double scale) {
         this.scale = scale;
