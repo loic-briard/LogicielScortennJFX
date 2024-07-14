@@ -18,7 +18,6 @@ import java.awt.MediaTracker;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.*;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -182,12 +181,10 @@ public class MenuPrincipal extends JFrame {
         eventComboBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // R�cup�rez l'�l�ment s�lectionn�
-                String selectedEvent = (String) eventComboBox.getSelectedItem();
-                // Faites ce que vous voulez avec l'�v�nement s�lectionn�
-                System.out.println("++ Event selected: " + selectedEvent);
+//                String selectedEvent = (String) eventComboBox.getSelectedItem();
             }
         });
-        eventComboBox.setSelectedIndex(-1);
+        eventComboBox.setSelectedIndex(0);//mettre -1
         
         Integer[] allowedValues = {8, 16, 32, 64};
         SpinnerListModel spinnerInitNbJoueur = new SpinnerListModel(allowedValues);
@@ -202,12 +199,10 @@ public class MenuPrincipal extends JFrame {
         bddPLayersComboBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // R�cup�rez l'�l�ment s�lectionn�
-                String selectedEventBDD = (String) bddPLayersComboBox.getSelectedItem();
-                // Faites ce que vous voulez avec l'�v�nement s�lectionn�
-                System.out.println("++ BDD selected: " + selectedEventBDD);
+//                String selectedEventBDD = (String) bddPLayersComboBox.getSelectedItem();
             }
         });
-        bddPLayersComboBox.setSelectedIndex(-1);
+        bddPLayersComboBox.setSelectedIndex(1);//mettre -1
         
         JButton selectAthleteButton = new JButton("Athlete select");
         JButton diffusionButton = new JButton("For diffusion");
@@ -223,7 +218,6 @@ public class MenuPrincipal extends JFrame {
         		for (GraphicsDevice screen : screens) {
         			Rectangle bounds = screen.getDefaultConfiguration().getBounds();
         			if (bounds.contains(location)) {
-        				//System.out.println("La fen�tre est sur l'�cran : " + screen.getIDstring());
         				actualScreen=screen.getIDstring();
         				actualDisplayLabel.setText("Actuel screen : "+actualScreen);
         				revalidate();
@@ -239,7 +233,6 @@ public class MenuPrincipal extends JFrame {
         for (GraphicsDevice screen : screens) {
         	Rectangle bounds = screen.getDefaultConfiguration().getBounds();
         	if (bounds.contains(location)) {
-        		//System.out.println("La fen�tre est sur l'�cran : " + screen.getIDstring());
         		actualScreen=screen.getIDstring();
         		actualDisplayLabel.setText("Actuel screen : "+actualScreen);
         		revalidate();
@@ -250,6 +243,7 @@ public class MenuPrincipal extends JFrame {
         // Obtenez tous les �crans disponibles
         SpinnerListModel spinnerInitScreen = new SpinnerListModel(screens);
         JSpinner spinnerScreen = new JSpinner(spinnerInitScreen);
+//        spinnerInitScreen.setValue(screens[0]);
         JPanel choixEcran = new JPanel();
         choixEcran.add(actualDisplayLabel);
         choixEcran.add(new JLabel(", choose the screen to display the tournament : "));
@@ -283,20 +277,15 @@ public class MenuPrincipal extends JFrame {
                 String selectedEvent = (String) eventComboBox.getSelectedItem();
                 Evenement eventChoosen = new Evenement(selectedEvent);
 				try {
-					System.out.println("++ Evenement selectione : "+selectedEvent);
 					eventChoosen = BDD_v2.getEvenementByName(selectedEvent);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				WindowBroadcastPublic diffusionFrame = new WindowBroadcastPublic(eventChoosen,(GraphicsDevice) spinnerScreen.getValue());
-				try {
-					diffusionFrame.setBackgroundImage("black.jpg");
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}                
-                new WindowTournamentTree(selectedPlayers,eventChoosen, diffusionFrame,(int) spinnerNbJoueur.getValue());
+				WindowBroadcastPublic diffusionFrame = new WindowBroadcastPublic(eventChoosen,(GraphicsDevice) spinnerScreen.getValue());               
+				WindowTournamentTree windowTournamentTree = new WindowTournamentTree(selectedPlayers,eventChoosen, diffusionFrame,(int) spinnerNbJoueur.getValue());
+				diffusionFrame.setWindowTournamentTreeFromBroadcast(windowTournamentTree);
+                System.out.println("-> Selected event : "+eventChoosen.getNom()+", player list : "+bddPLayersComboBox.getSelectedItem()+", number of players : "+(int) spinnerNbJoueur.getValue());
         	}
         });
         // Ajoutez le label et le JComboBox au JPanel

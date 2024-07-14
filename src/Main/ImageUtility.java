@@ -35,7 +35,7 @@ public class ImageUtility extends JLabel {
                 double aspectRatio = (double) originalImage.getWidth() / originalImage.getHeight();
                 this.width = (int) (aspectRatio * height);
             }else {
-            	System.out.println("++ taille de l'image originale");
+            	System.out.println("  taille de l'image originale");
             	height = originalImage.getHeight();
             	width = originalImage.getWidth();
             }

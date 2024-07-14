@@ -40,13 +40,13 @@ public class BDD_v2 {
 	// --------------------------------------- INITIALISATION --------------------------------------------------------------------------------------------------------------
 
 	public static void connexionBDD() throws ClassNotFoundException, SQLException {
-		System.out.println("+++ Connexion a la BDD");
+		System.out.println("Database connexion");
 		Class.forName("org.hsqldb.jdbcDriver");
 		try {
 			connection = DriverManager.getConnection(url, login, password);
-			System.out.println("+++ Connecter a la BDD !");
+			System.out.println("  Database connected !!");
 		} catch (SQLException e) {
-			System.err.println("--- Erreur lors de la connexion a la base de donn�es : " + e.getMessage());
+			System.err.println("  ! Erreur connexion database ! " + e.getMessage());
 		}
 	}
 
@@ -64,10 +64,10 @@ public class BDD_v2 {
 		try {
 			if (connection != null) {
 				connection.close();
-				System.out.println("+++ Connexion BD ferm�e");
+				System.out.println("Database connexion closed");
 			}
 		} catch (SQLException e) {
-			System.err.println("--- Erreur lors de la fermeture de la connexion a la base de donnees : " + e.getMessage());
+			System.err.println("! Error during closing database ! " + e.getMessage());
 		}
 	}
 
@@ -83,7 +83,7 @@ public class BDD_v2 {
 
 		executerRequeteSQL(requete);
 
-		System.out.println("--- Tables supprimees");
+		System.out.println("  - Tables deleted");
 	}
 
 	public static void creationdesTables() throws ClassNotFoundException, SQLException {
@@ -104,7 +104,7 @@ public class BDD_v2 {
 
 		executerRequeteSQL(requete);
 
-		System.out.println("+++ creation des tables effectue");
+		System.out.println("  + create tables finished");
 	}
 
 	public static void creationNewTable(String name) throws ClassNotFoundException, SQLException {
@@ -128,7 +128,7 @@ public class BDD_v2 {
 				+ "FOREIGN KEY (Nat) REFERENCES Flag(NomAcro))";
 		executerRequeteSQL(requete);
 
-		System.out.println("+++ Tables de joueurs " + name + " ajoutees");
+		System.out.println("  + Player tables " + name + " added");
 	}
 
 	// --------------------------------------- INSERTIONS--------------------------------------------------------------------------------------------------------------
@@ -140,7 +140,7 @@ public class BDD_v2 {
 				+ background.getImage_3() + "', '" + background.getImage_4()+ "', '" + background.getImage_5() + "');");
 
 		executerRequeteSQL(requete.toString());
-		System.out.println("+++ Background : " + background.getNom() + " insere");
+		System.out.println("  + Background : " + background.getNom() + " added");
 	}
 
 	public static void insertionEventDansBDD(Evenement event) throws SQLException, ClassNotFoundException {
@@ -149,7 +149,7 @@ public class BDD_v2 {
 		requete.append("INSERT INTO Event (NOM, NOMBG) VALUES" + "('" + event.getNom() + "', '" + event.getBackground().getNom() + "');");
 
 		executerRequeteSQL(requete.toString());
-		System.out.println("+++ Evenement : " + event.getNom() + " insere");
+		System.out.println("  + Evenement : " + event.getNom() + " added");
 	}
 
 	public static void insertionDrapeauDansBDD(Drapeau drapeau) throws SQLException, ClassNotFoundException {
@@ -158,7 +158,7 @@ public class BDD_v2 {
 		requete.append("INSERT INTO Flag (NomAcro, ImgFlag) VALUES" + "('" + drapeau.getNom() + "', '" + drapeau.getImageDrapeau() + "');");
 
 		executerRequeteSQL(requete.toString());
-		System.out.println("+++ Drapeau de : " + drapeau.getNom() + " insere");
+		System.out.println("  + Drapeau de : " + drapeau.getNom() + " added");
 	}
 
 	public static void insertionJoueurDansBDD(Joueur joueur, String bddName) throws SQLException, ClassNotFoundException {
@@ -201,7 +201,7 @@ public class BDD_v2 {
 				count = resultSet.getInt(1);
 			}
 		}
-		System.out.println("+++ nombre d'element dans bd " + NomBDD + " = " + count);
+		System.out.println("  numbers of element in database " + NomBDD + " = " + count);
 		return count;
 	}
 
@@ -385,15 +385,15 @@ public class BDD_v2 {
 				rowCount++;
 				String backgroundName = resultSet.getString("BackgroundName");
 				String img1 = resultSet.getString("Img_1");
-				System.out.println("+++ background image 1 : "+img1);
+//				System.out.println("+++ background image 1 : "+img1);
 				String img2 = resultSet.getString("Img_2");
-				System.out.println("+++ background image 2 : "+img2);
+//				System.out.println("+++ background image 2 : "+img2);
 				String img3 = resultSet.getString("Img_3");
-				System.out.println("+++ background image 3 : "+img3);
+//				System.out.println("+++ background image 3 : "+img3);
 				String img4 = resultSet.getString("Img_4");
-				System.out.println("+++ background image 4 : "+img4);
+//				System.out.println("+++ background image 4 : "+img4);
 				String img5 = resultSet.getString("Img_5");
-				System.out.println("+++ background image 5 : "+img5);
+//				System.out.println("+++ background image 5 : "+img5);
 
 				data[rowCount - 1][0] = backgroundName;
 				data[rowCount - 1][1] = img1;
@@ -436,7 +436,7 @@ public class BDD_v2 {
 	}
 
 	public static Background getOneBackground(String nomBackground) throws SQLException {
-		System.out.println("+++ recuperation du background : " + nomBackground);
+		System.out.println("  get background named : " + nomBackground);
 		String requete = "SELECT Background.Nom AS BackgroundName, Background.Img_1, Background.Img_2, Background.Img_3, " + "Background.Img_4,Background.Img_5 FROM BACKGROUND WHERE Nom = '" + nomBackground + "'";
 		Background backgroundtemp = new Background(nomBackground);
 		try (Statement statement = connection.createStatement()) {
@@ -606,7 +606,7 @@ public class BDD_v2 {
 
 		String requete = "SELECT id, Sexe, Nom, Prenom, NomAfficher, Nat, Birthdate, ImgJoueur, Ranking, height, hand, age, " + "weight, PRIZETOTAL, BIRTHPLACE, CITYRESIDENCE FROM " + selectedBDD
 				+ " LIMIT ?, ?";
-		System.out.println("+++ get all data joueur from bdd : " + selectedBDD);
+		System.out.println("  get all data PLayer from database : " + selectedBDD);
 
 		try (PreparedStatement preparedStatement = connection.prepareStatement(requete)) {
 			preparedStatement.setInt(1, start);
@@ -634,7 +634,7 @@ public class BDD_v2 {
 		String requete = "SELECT id, Sexe, Nom, Prenom, NomAfficher, Nat, Birthdate, ImgJoueur, Ranking, height, hand, age, " + "weight, PRIZETOTAL, BIRTHPLACE, CITYRESIDENCE FROM " + selectedBDD
 				+ " WHERE Nom = '" + nomJoueur + "'";
 
-		System.out.println("+++ get data du joueur : "+nomJoueur+" from bdd : " + selectedBDD);
+		System.out.println("  get data from player : "+nomJoueur+" from database : " + selectedBDD);
 		try (Statement statement = connection.createStatement()) {
 			ResultSet resultSet = statement.executeQuery(requete);
 
@@ -660,7 +660,7 @@ public class BDD_v2 {
 				try {
 					if (!tableName.equals("EVENT") && !tableName.equals("FLAG") && !tableName.equals("BACKGROUND")) {
 						tabBdd.add(tableName);
-						System.out.println("+++ recuperation des tables de joueur, nom de la table : " + tableName);
+						System.out.println("  get player tables; name of table retrieved : " + tableName);
 					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -673,7 +673,7 @@ public class BDD_v2 {
 	// ---------------------------------------------------- UPDATE------------------------------------------------------------------------------
 	public static void updateBackgroundInDatabase(String oldBackgroundName, String[] newBackground) {
 
-		System.out.println("+++ ancien nom background = " + oldBackgroundName + ", nouveau nom = " + newBackground[0]);
+		System.out.println("  old background name = " + oldBackgroundName + ", new background name = " + newBackground[0]);
 		updateBackgroundIfNeeded(oldBackgroundName, newBackground[0]);
 
 		String deleteQuery = "DELETE FROM Background WHERE Nom = ?";
@@ -683,7 +683,7 @@ public class BDD_v2 {
 			PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
 			deleteStatement.setString(1, oldBackgroundName);
 			deleteStatement.executeUpdate();
-			System.out.println("--- suppression du Background : " + oldBackgroundName);
+			System.out.println("  - remove background : " + oldBackgroundName);
 			// Ins�rer le nouveau background
 			PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
 			insertStatement.setString(1, newBackground[0]);
@@ -693,12 +693,11 @@ public class BDD_v2 {
 			insertStatement.setString(5, newBackground[4]);
 			insertStatement.setString(6, newBackground[5]);
 			insertStatement.executeUpdate();
-			System.out.println("+++ insertion du Background : " + newBackground[0]);
-
-			System.out.println("+++ Background mis a jour avec succes dans la base de donnees.");
+			System.out.println("  + add background : " + newBackground[0]);
+			System.out.println("  Background update successful");
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.err.println("--- Erreur lors de la mise a jour du background dans la base de donnees.");
+			System.err.println("  ! Error during background update !");
 		}
 	}
 
@@ -720,13 +719,13 @@ public class BDD_v2 {
 						updateStatement.setString(2, oldBackgroundName);
 						updateStatement.executeUpdate();
 					}
-					System.out.println("+++ update des evenements pour utiliser le nouveau fond");
+					System.out.println("  update event for new background");
 				} else {
-					System.out.println("--- Les evenements n'ont pas ete mis a jour.");
+					System.out.println("  ! background not update");
 				}
 			} else {
 				// L'ancien fond n'est pas utilis� par un �v�nement
-				System.out.println("--- Pas d'evenement avec le fond " + oldBackgroundName);
+				System.out.println("  background " + oldBackgroundName+" was not used");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -752,9 +751,9 @@ public class BDD_v2 {
 						updateStatement.setString(2, backgroundName);
 						updateStatement.executeUpdate();
 					}
-					System.out.println("+++ update evenements avec fond par defaut");
+					System.out.println("  update evenet with defaut background");
 				} else {
-					System.out.println("--- Les �v�evenements n'ont pas ete mis a jour.");
+					System.out.println("  ! events were not upadted");
 				}
 			} else {
 				// Le fond n'est pas utilis� par un �v�nement, vous pouvez le supprimer en toute s�curit�
@@ -762,7 +761,7 @@ public class BDD_v2 {
 				try (PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery)) {
 					deleteStatement.setString(1, backgroundName);
 					deleteStatement.executeUpdate();
-					System.out.println("--- Le fond " + backgroundName + " a ete supprime.");
+					System.out.println("  - Background " + backgroundName + " has been deleted");
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
@@ -779,10 +778,10 @@ public class BDD_v2 {
 			updateStatement.setString(2, backgroundNewName);
 			updateStatement.setString(3, currentName);
 			updateStatement.executeUpdate();
-			System.out.println("+++ L'evenements " + currentName + " a ete mis a jour avec le nouveau nom et le nouvel arriere-plan.");
+			System.out.println("  event " + currentName + " has been updated with new name and new background");
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.err.println("--- Erreur lors de la mise a jour de l'evenements dans la base de donnees.");
+			System.err.println("  ! Error during update event in database !");
 		}
 	}
 
@@ -794,9 +793,9 @@ public class BDD_v2 {
 				updateStatement.setString(1, eventName);
 				updateStatement.executeUpdate();
 			}
-			System.out.println("--- L'event " + eventName + " a ete supprime");
+			System.out.println("  - event " + eventName + " has been deleted");
 		} else {
-			System.out.println("!!! l'event n'a pas ete supprime");
+			System.out.println("  ! event hasn't been deleted");
 		}
 	}
 
@@ -808,9 +807,9 @@ public class BDD_v2 {
 				updateStatement.setString(1, playertName);
 				updateStatement.executeUpdate();
 			}
-			System.out.println("--- Le joueur " + playertName + " a ete supprime");
+			System.out.println("  - PLayer " + playertName + " has been deleted");
 		} else {
-			System.out.println("!!! le joueur n'a pas ete supprime");
+			System.out.println("  ! player hasn't been deleted");
 		}
 	}
 
@@ -823,7 +822,7 @@ public class BDD_v2 {
 				}
 			}
 		}
-		System.out.println("--- toutes les tables de joueur ont ete supprime (sauf ATP/WTA)");
+		System.out.println("  all player table have been deleted except ATP and WTA");
 	}
 	public static void deleteOnePlayerTable(String s_tableNameToDelete) throws SQLException {
 		String s_tableName = s_tableNameToDelete.toUpperCase();
@@ -832,7 +831,7 @@ public class BDD_v2 {
 			try (PreparedStatement updateStatement = connection.prepareStatement(deleteQuery)) {
 				updateStatement.executeUpdate();
 			}
-			System.out.println("--- La table " + s_tableName + " a ete supprime");
+			System.out.println("  - table " + s_tableName + " has been deleted");
 		}
 	}
 
@@ -907,7 +906,7 @@ public class BDD_v2 {
 
 				preparedStatement.executeUpdate(); // Ex�cutez la requ�te de mise � jour
 			}
-			System.out.println("+++ mise a jour infos suplamentaire via API dans bdd : "+bddName);
+			System.out.println("  update additional information from api in database : "+bddName);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			// G�rez les erreurs de la base de donn�es ici
@@ -917,7 +916,7 @@ public class BDD_v2 {
 
 	// mise a jour du chemin vers l'image du joueur
 	public static void updateImgJoueur(int id, String path, String bddName) {
-		System.out.println("+++ chemin ou ce trouve l'image du joueur a mettre a jour : " + path);
+		System.out.println("  image pathh from the player who is updated : " + path);
 		try {
 
 			String updateQuery = "UPDATE " + bddName + " SET ImgJoueur = ? WHERE id = ?";
@@ -950,7 +949,7 @@ public class BDD_v2 {
 
 	// v�rifiquation si l'image du joueur existe
 	public static boolean verif_image(int id, String bddName) throws SQLException, ClassNotFoundException, IOException {
-		System.out.println("+++ verification qu'une image existe");
+		System.out.println("  checking if an image exist");
 		boolean b_image_existe = false;
 		String s_requete = "SELECT * FROM " + bddName + " WHERE id = " + id;
 		try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(s_requete)) {
@@ -960,10 +959,10 @@ public class BDD_v2 {
 					if (resultSet.getString("ImgJoueur") == "clear.png" || resultSet.getString("ImgJoueur") == null || resultSet.getString("ImgJoueur") == ""
 							|| resultSet.getString("ImgJoueur").isEmpty()) {
 						b_image_existe = false;
-						System.out.println("--- image manquante");
+						System.out.println("  ! image missing");
 						return b_image_existe;
 					} else {
-						System.out.println("+++ image existe");
+						System.out.println("  image exists");
 						b_image_existe = true;
 					}
 				}
@@ -974,7 +973,7 @@ public class BDD_v2 {
 
 	// renvoi true si des infos sont manquantes sinon renvoie false
 	public static boolean verifInfosManquante(int id, String bddName) throws SQLException, ClassNotFoundException {
-		System.out.println("+++ Verification des informations des joueur dans la BDD : "+bddName);
+		System.out.println("  player informations checking in database : "+bddName);
 
 		boolean b_infosManquante = false;
 		String s_requete = "SELECT * FROM " + bddName + " WHERE id = " + id;
@@ -1009,7 +1008,7 @@ public class BDD_v2 {
 		for (String table : tables) {
 			if (!tableExiste(table)) {
 				// Si la table n'existe pas, la creer
-				System.out.println("--- La table : " + table + " n'existe pas. Creation en cours...");
+				System.out.println("  table : " + table + " doesn't exists. Creation in progress ... ");
 				if (table.equals("Background")) {
 					executerRequeteSQL("CREATE TABLE " + table + " (Nom VARCHAR(20) PRIMARY KEY, Img_1 varchar(255), Img_2 varchar(255), Img_3 varchar(255), Img_4 varchar(255), Img_5 varchar(255));");
 
@@ -1032,9 +1031,9 @@ public class BDD_v2 {
 //					executerRequeteSQL("CREATE TABLE " + table
 //							+ " (id int PRIMARY KEY, Sexe varchar(15), Nom varchar(100), Prenom varchar(100), NomAfficher varchar(100), Nat varchar(10), Birthdate varchar(50), ImgJoueur varchar(255), Ranking int, height varchar(10), hand varchar(25), age varchar(10), weight varchar(20), PRIZETOTAL varchar(60), BIRTHPLACE varchar(200), CITYRESIDENCE varchar(200), FOREIGN KEY (Nat) REFERENCES Flag(NomAcro));");
 				}
-				System.out.println("+++ Table " + table + " a ete cree avec succes.");
+				System.out.println("  + Table " + table + " creating with success");
 			} else
-				System.out.println("+++  la table : " + table + " existe !");
+				System.out.println("  Table : " + table + " already exists !");
 		}
 		// verifications donn�es atp et wta
 		if (compterNbElementsBDD("ATP") < 1) {
@@ -1143,7 +1142,7 @@ public class BDD_v2 {
 	            // Ex�cuter la requ�te d'insertion
 	            preparedStatement.executeUpdate();
 	        }
-	        System.out.println("+++ Data imported successfully from CSV file.");
+	        System.out.println("  Data imported successfully from CSV file.");
 	    } catch (SQLException | IOException e) {
 	        e.printStackTrace();       
 	    }

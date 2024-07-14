@@ -101,8 +101,6 @@ public class TabConfigurationPlayerInfos extends JPanel {
 	private JSpinner positionYLine;
 	public SpinnerNumberModel lineYvalue;
 
-	
-
 	private WindowBroadcastPublic dysplayFrame;
 	private Joueur joueur;
 	private PlayerForDiffusion infosPlayerDetails;
@@ -112,9 +110,7 @@ public class TabConfigurationPlayerInfos extends JPanel {
 		return joueur.getDisplay_name();
 	}
 
-	public PlayerForDiffusion getInfosPlayerDetails() {
-//		confirmTabPlayer();
-		
+	public PlayerForDiffusion getInfosPlayerDetails() {		
 		return infosPlayerDetails;
 	}
 
@@ -333,8 +329,7 @@ public class TabConfigurationPlayerInfos extends JPanel {
 		choixColonne++;
 		this.setLayout(new BorderLayout());
 		this.add(panelTab, BorderLayout.NORTH);
-//		this.add(validationButtonAll, BorderLayout.SOUTH);
-//		confirmTabPlayer();
+		
 		refreshSpinner(infosPlayerDetails);
 	}
 
@@ -465,7 +460,7 @@ public class TabConfigurationPlayerInfos extends JPanel {
 	}
 
 	public void confirmTabPlayer() {
-		System.out.println("++++> confirm tab player !");
+		System.out.println("  Update position elements player from windowConfigurationPlayerInfos");
 		setPositionName(infosPlayerDetails, (int) positionXname.getValue(), (int) positionYname.getValue());
 		setPositionSurname(infosPlayerDetails, (int) positionXSurname.getValue(), (int) positionYSurname.getValue());
 		setPositionImg(infosPlayerDetails, joueur, (int) positionXImg.getValue(), (int) positionYImg.getValue(), (int) infosPlayerDetails.getPlacementFrameTwoPlayer().getTabPolice().TailleImg.getValue());
@@ -489,7 +484,7 @@ public class TabConfigurationPlayerInfos extends JPanel {
 	}
 
 	public void refreshSpinner(PlayerForDiffusion infosPlayerDetails) {
-		//System.out.println("++++> refresh player : "+infosPlayerDetails.nameLabel.getText()+" current player : "+this.getJoueurName());
+		System.out.println("  Refresh player spinner : "+infosPlayerDetails.nameLabel.getText()+" current player : "+this.getJoueurName());
 		nameXvalue.setValue(infosPlayerDetails.playerName.getLocation().x);
 		nameYvalue.setValue(infosPlayerDetails.playerName.getLocation().y);
 		SurnameXvalue.setValue(infosPlayerDetails.playerSurname.getLocation().x);
@@ -520,8 +515,6 @@ public class TabConfigurationPlayerInfos extends JPanel {
 		CityresidenceYvalue.setValue(infosPlayerDetails.playerCityresidence.getLocation().y);
 		lineXvalue.setValue(infosPlayerDetails.playerLine.getLocation().x);
 		lineYvalue.setValue(infosPlayerDetails.playerLine.getLocation().y);
-//		if(infosPlayerDetails.getPlacementFrameTwoPlayer().getTabPolice() != null)
-//			confirmTabPlayer();
 	}
 
 }
