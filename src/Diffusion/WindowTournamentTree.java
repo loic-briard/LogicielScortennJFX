@@ -100,7 +100,8 @@ public class WindowTournamentTree extends JFrame {
 			windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_4());
 			int indexPlayer = -1;
 			// cr�ation d'une liste de PlayerForDiffusion pour aficher le tournoi complet
-			windowBroadcastPublic.removeLayerContent(JLayeredPane.PALETTE_LAYER);//nettoyage du layer
+			windowBroadcastPublic.removeLayerContent(JLayeredPane.MODAL_LAYER);//nettoyage du layer
+    		windowBroadcastPublic.removeLayerContent(JLayeredPane.PALETTE_LAYER);//nettoyage du layer
 			for (int y = 0; i < playerPanel.length-1; y++) {
 				if(y==4)break;
 				for (int i = 0; i < nbJoueur/4; i++) {

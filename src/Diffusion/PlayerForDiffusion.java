@@ -432,35 +432,35 @@ public class PlayerForDiffusion extends JPanel{
 				ConfigurationSaveLoad configData = ConfigurationSaveLoad
 						.loadConfigFromFile("Config/" + nomEvent + "/full.json");
 				try {
-					Map<String, Map<String, Object>> playerData = configData.getAllElementVisible(this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getNbJoueur(),"Config/" + nomEvent + "/full.json");//modifier "8" pour remplacer par le nombre de joueur selectionné
-					// Parcourir les données récupérées pour les joueurs
-					for (Map.Entry<String, Map<String, Object>> playerEntry : playerData.entrySet()) {
-						String playerNameFull = playerEntry.getKey();
-						if (playerNameFull.equals("player" + (Integer.parseInt(lineLabel.getText()) - 1))) {
-							Map<String, Object> elements = playerEntry.getValue();
-							for (Map.Entry<String, Object> elementEntry : elements.entrySet()) {
-								String elementName = elementEntry.getKey();
-								for (Component searchedPanel : panelPlayerGlobal.getComponents()) {
-									if (elementName.equals(searchedPanel.getName())) {
-										JPanel startPanel = (JPanel) searchedPanel;
-										@SuppressWarnings("unchecked")
-										Map<String, Object> elementData = (Map<String, Object>) elementEntry.getValue();
-										Point endPoint = (Point) elementData.get("position");
-										String font = (String) elementData.get("font");
-										Font endFont = new Font(font.split(",")[0],Integer.parseInt(font.split(",")[1]),Integer.parseInt(font.split(",")[2]));
-										Color endColor = (Color) elementData.get("color");
-										JLabel dimensionLabel = new JLabel(nameLabel.getText());
-										dimensionLabel.setFont(endFont);
-										Dimension endDimension = new Dimension(dimensionLabel.getWidth(), dimensionLabel.getHeight());
-
-										animationFrame.animateLabel(startPanel, endPoint, endDimension, endColor, endFont, JLayeredPane.POPUP_LAYER, this.frameForDiffusion.getLayeredPane(),() -> {
-											this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer].setVisible(true);
-										});
+						Map<String, Map<String, Object>> playerData = configData.getAllElementVisible(this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getNbJoueur(),"Config/" + nomEvent + "/full.json");//modifier "8" pour remplacer par le nombre de joueur selectionné
+						// Parcourir les données récupérées pour les joueurs
+						for (Map.Entry<String, Map<String, Object>> playerEntry : playerData.entrySet()) {
+							String playerNameFull = playerEntry.getKey();
+							if (playerNameFull.equals("player" + (Integer.parseInt(lineLabel.getText()) - 1))) {
+								Map<String, Object> elements = playerEntry.getValue();
+								for (Map.Entry<String, Object> elementEntry : elements.entrySet()) {
+									String elementName = elementEntry.getKey();
+									for (Component searchedPanel : panelPlayerGlobal.getComponents()) {
+										if (elementName.equals(searchedPanel.getName())) {
+											JPanel startPanel = (JPanel) searchedPanel;
+											@SuppressWarnings("unchecked")
+											Map<String, Object> elementData = (Map<String, Object>) elementEntry.getValue();
+											Point endPoint = (Point) elementData.get("position");
+											String font = (String) elementData.get("font");
+											Font endFont = new Font(font.split(",")[0],Integer.parseInt(font.split(",")[1]),Integer.parseInt(font.split(",")[2]));
+											Color endColor = (Color) elementData.get("color");
+											JLabel dimensionLabel = new JLabel(nameLabel.getText());
+											dimensionLabel.setFont(endFont);
+											Dimension endDimension = new Dimension(dimensionLabel.getWidth(), dimensionLabel.getHeight());
+	
+											animationFrame.animateLabel(startPanel, endPoint, endDimension, endColor, endFont, JLayeredPane.POPUP_LAYER, this.frameForDiffusion.getLayeredPane(),() -> {
+												this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer].setVisible(true);
+											});
+										}
 									}
 								}
 							}
 						}
-					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

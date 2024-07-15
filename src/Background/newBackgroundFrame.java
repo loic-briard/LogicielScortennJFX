@@ -31,6 +31,14 @@ public class newBackgroundFrame extends JFrame {
     private JButton loadButton5;
 
     public newBackgroundFrame(ListOfBackgroundFrame parentFrame) {
+    	ImageIcon logoIcon = new ImageIcon("icon.png");
+        // V�rifiez si l'ic�ne a �t� charg�e avec succ�s
+        if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
+            setIconImage(logoIcon.getImage());
+        } else {
+            // Si l'ic�ne n'a pas pu �tre charg�e, affichez un message d'erreur
+            System.err.println("Impossible de charger l'icone.");
+        }
     	this.currentImage1 = "Background/transparent.png";
     	this.currentImage2 = "Background/transparent.png";
     	this.currentImage3 = "Background/transparent.png";
