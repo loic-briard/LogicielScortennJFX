@@ -243,7 +243,9 @@ public class MenuPrincipal extends JFrame {
         // Obtenez tous les �crans disponibles
         SpinnerListModel spinnerInitScreen = new SpinnerListModel(screens);
         JSpinner spinnerScreen = new JSpinner(spinnerInitScreen);
-//        spinnerInitScreen.setValue(screens[0]);
+        if(screens.length > 1) {
+        	spinnerInitScreen.setValue(screens[1]);
+        }
         JPanel choixEcran = new JPanel();
         choixEcran.add(actualDisplayLabel);
         choixEcran.add(new JLabel(", choose the screen to display the tournament : "));

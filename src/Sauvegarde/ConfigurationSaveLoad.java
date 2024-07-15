@@ -168,7 +168,7 @@ public class ConfigurationSaveLoad {
 		}
 		try (FileWriter writer = new FileWriter(filePath + File.separator + fileName, false)) {
 			String json = gson.toJson(data);
-			System.out.println(json);
+//			System.out.println(json);
 			writer.write(json);
 			System.out.println("  File : " + fileName+" in folder "+filePath+" has been modified");
 		} catch (IOException e) {

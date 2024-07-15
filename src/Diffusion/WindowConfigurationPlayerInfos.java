@@ -202,7 +202,7 @@ public class WindowConfigurationPlayerInfos extends JFrame {
 							System.out.println("Element: " + entry.getKey() + " Visible: " + police.isVisible() + " Font: " + police.getFont() + " Color: " + police.getColor() + " Taille: " + police.getTaille());
 						}
 						ElementJoueurFull testReadJson = ConfigurationSaveLoad.readJsonFileFull("Config/" + dysplayFrame.getNameEvent() + "/" + typeFenetre + ".json");
-						ConfigurationSaveLoad.saveConfigToFileFull(testReadJson, "Config/" + dysplayFrame.getNameEvent(), "full.json");
+//						ConfigurationSaveLoad.saveConfigToFileFull(testReadJson, "Config/" + dysplayFrame.getNameEvent(), "full.json");
 						ConfigurationSaveLoad.updateElementJoueurFull(dysplayFrame.getNameEvent(), testReadJson, elementJoueurFull);
 //						ConfigurationSaveLoad.replacePlayerDataFull(dysplayFrame.getNameEvent(), testReadJson);
 						break;

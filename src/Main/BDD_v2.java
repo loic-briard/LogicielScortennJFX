@@ -858,7 +858,7 @@ public class BDD_v2 {
 			// Cr�ez une requ�te SQL pour mettre � jour les donn�es du joueur
 			String updateQuery = "UPDATE " + bddName + " SET Sexe = ?, Nom = ?, Prenom = ?, NomAfficher = ?, Nat = ?, Birthdate = ?, "
 					+ "ImgJoueur = ?, Ranking = ?, height = ?, hand = ?, age = ?, weight = ?, PRIZETOTAL = ?, " + "BIRTHPLACE = ?, CITYRESIDENCE = ? WHERE id = ?";
-
+			System.out.println(updateQuery);
 			try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
 				preparedStatement.setString(1, sexe);
 				preparedStatement.setString(2, playerName);
@@ -876,7 +876,7 @@ public class BDD_v2 {
 				preparedStatement.setString(14, birthplace);
 				preparedStatement.setString(15, cityResidence);
 				preparedStatement.setInt(16, id);
-
+				System.out.println(preparedStatement);
 				preparedStatement.executeUpdate(); // Ex�cutez la requ�te de mise � jour
 			}
 		} catch (SQLException e) {

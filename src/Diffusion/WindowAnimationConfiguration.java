@@ -4,45 +4,111 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.MediaTracker;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.Timer;
 
 public class WindowAnimationConfiguration extends JFrame{
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
+    private JCheckBox zoomAnimationCheckBox;
+    private JSpinner zoomAnimationSpinner;
+    private JCheckBox labelAnimationCheckBox;
+    private JSpinner labelAnimationSpinner;
 
-	public WindowAnimationConfiguration() {
-		setTitle("Animation");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setSize(800, 800);
-		ImageIcon logoIcon = new ImageIcon("icon.png");
-        // V�rifiez si l'ic�ne a �t� charg�e avec succ�s
+    public WindowAnimationConfiguration() {
+        setTitle("Animation Configuration");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setSize(400, 200);
+        setLayout(new GridBagLayout());
+
+        ImageIcon logoIcon = new ImageIcon("icon.png");
         if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
             setIconImage(logoIcon.getImage());
         } else {
-            // Si l'ic�ne n'a pas pu �tre charg�e, affichez un message d'erreur
-            System.err.println("Impossible de charger l'ic�ne.");
+            System.err.println("Impossible de charger l'icône.");
         }
-        
-	}	
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        // Zoom Animation
+        zoomAnimationCheckBox = new JCheckBox("Zoom Animation");
+        zoomAnimationCheckBox.setEnabled(true);
+        add(zoomAnimationCheckBox, gbc);
+
+        gbc.gridx = 1;
+        zoomAnimationSpinner = new JSpinner(new SpinnerNumberModel(1000, 0, 10000, 100));
+        add(zoomAnimationSpinner, gbc);
+
+        gbc.gridx = 2;
+        add(new JLabel("ms"), gbc);
+
+        // Label Animation
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        labelAnimationCheckBox = new JCheckBox("Label Animation");
+        labelAnimationCheckBox.setEnabled(true);
+        add(labelAnimationCheckBox, gbc);
+
+        gbc.gridx = 1;
+        labelAnimationSpinner = new JSpinner(new SpinnerNumberModel(1000, 0, 10000, 100));
+        add(labelAnimationSpinner, gbc);
+
+        gbc.gridx = 2;
+        add(new JLabel("ms"), gbc);
+        setVisible(true);
+    }
+
+
+    // Getter methods for the new components
+    public boolean isZoomAnimationEnabled() {
+        return zoomAnimationCheckBox.isSelected();
+    }
+
+    public int getZoomAnimationDuration() {
+    	if(isZoomAnimationEnabled())
+    		return (int) zoomAnimationSpinner.getValue();
+    	else
+    		return 0;
+    }
+
+    public boolean isLabelAnimationEnabled() {
+        return labelAnimationCheckBox.isSelected();
+    }
+
+    public int getLabelAnimationDuration() {
+    	if(isLabelAnimationEnabled())
+    		return (int) labelAnimationSpinner.getValue();
+    	else
+    		return 0;
+    }
 	
-	public void zoomPanel(ZoomablePanel panel, WindowBroadcastPublic frame, int duration, Runnable onComplete) {
+	public void zoomPanel(ZoomablePanel panel, WindowBroadcastPublic frame, Runnable onComplete) {
         System.out.println("Animation ZOOM");
         int initialWidth = panel.getWidth();
         int initialHeight = panel.getHeight();
         int targetWidth = frame.getWidth();
         int targetHeight = frame.getHeight();
+        
+        int duration = getZoomAnimationDuration();
+        System.out.println("dure animation zoom : "+duration);
 
         // Timer pour animer le zoom
         Timer timer = new Timer(10, null);
@@ -80,7 +146,7 @@ public class WindowAnimationConfiguration extends JFrame{
         timer.start();
     }
     // Méthode pour animer un JLabel
-    public void animateLabel(/*JLabel label,*/JPanel panel ,Point targetLocation,Dimension targetSize, Color targetColor, Font targetFont, int duration, Integer layer, JLayeredPane layeredPane, Runnable onComplete) {
+    public void animateLabel(/*JLabel label,*/JPanel panel ,Point targetLocation,Dimension targetSize, Color targetColor, Font targetFont, Integer layer, JLayeredPane layeredPane, Runnable onComplete) {
     	System.out.println("Animation ANIMATELABEL : "+panel.getName());
     	JLabel startLabel = new JLabel();
     	for (Component component : panel.getComponents()) {
@@ -88,6 +154,8 @@ public class WindowAnimationConfiguration extends JFrame{
     	    	startLabel = (JLabel) component;
     	    }
     	}
+    	int duration = getLabelAnimationDuration();
+    	System.out.println("dure animation label : "+duration);
     	// Dupliquer le JLabel    	
         JLabel animatedLabel = new JLabel(startLabel.getText());
         animatedLabel.setFont(startLabel.getFont());
