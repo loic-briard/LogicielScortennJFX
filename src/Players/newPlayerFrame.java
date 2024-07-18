@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,9 +24,11 @@ import com.toedter.calendar.JDateChooser;
 import javax.swing.*;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import org.json.JSONException;
 
 import Main.BDD_v2;
 import Main.ImageUtility;
+import Main.MainJFX;
 
 public class newPlayerFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -86,7 +89,9 @@ public class newPlayerFrame extends JFrame {
 		bddPLayersComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String selectedEventBDD = (String) bddPLayersComboBox.getSelectedItem();
-				System.out.println("++++ BDD selected: " + selectedEventBDD);
+				System.out.println("     BDD selected: " + selectedEventBDD);
+				if(selectedJoueurs != null)
+					selectedJoueurs.clear();
 				if (bddPLayersComboBox.getSelectedItem() != null) {
 					try {
 						selectedJoueurs = BDD_v2.getAllJoueurs((String) bddPLayersComboBox.getSelectedItem());
@@ -97,7 +102,7 @@ public class newPlayerFrame extends JFrame {
 
 					// Ajoutez les éléments de la liste aux JComboBox
 					for (Joueur joueur : selectedJoueurs) {
-						selectedPLayerComboBox.addItem(joueur.getNom());
+						selectedPLayerComboBox.addItem(joueur.getDisplay_name());
 					}
 				}
 			}
@@ -274,8 +279,15 @@ public class newPlayerFrame extends JFrame {
 		b_recupInfoPlayer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				for (Joueur joueur : selectedJoueurs) {
-		            if (joueur.getNom().equals((String) selectedPLayerComboBox.getSelectedItem())) {
-		                autoCompleteInfosJoueur(joueur); // Retourne le joueur si son nom correspond
+		            if (joueur.getDisplay_name().equals((String) selectedPLayerComboBox.getSelectedItem())) {
+		            	try {
+							MainJFX.API.insertionsInfosSupJoueur(joueur.getID(), (String)bddPLayersComboBox.getSelectedItem());
+							autoCompleteInfosJoueur(BDD_v2.getJoueurParID(joueur.getID(), (String)bddPLayersComboBox.getSelectedItem())); // Retourne le joueur si son nom correspond
+						} catch (ClassNotFoundException | IOException | InterruptedException | JSONException
+								| SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 		            }
 		        }
 			}

@@ -8,20 +8,13 @@ package Main;
  * - selection de la liste de joueur 
  * - selection du nombre de joueur participant au tournoi
  */
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.MediaTracker;
-import java.awt.Point;
-import java.awt.Rectangle;
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
+import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import javax.swing.*;
 
 import Background.ListOfBackgroundFrame;
 import Diffusion.WindowTournamentTree;
@@ -34,129 +27,35 @@ import Players.ListOfPlayersFrame;
 
 public class MenuPrincipal extends JFrame {
     private static final long serialVersionUID = 1L;
-    private AthleteSelection athleteSelection; // Assurez-vous que cette r�f�rence est initialis�e correctement
-
- // Gardez une r�f�rence aux fen�tres correspondantes
+    private static final String TITLE = "Main Menu";
+    private static final String ICON_PATH = "icon.png";
+    
+    private AthleteSelection athleteSelection;
     private JFrame listEventsWindow;
     private JFrame listBGWindow;
     private JFrame listPlayersWindow;
     private JFrame flagsWindow;
-    private  String actualScreen = new String();
+    private String actualScreen = "";
 
-	private JComboBox<String> eventComboBox;
-	private static JComboBox<String> bddPLayersComboBox;
+    private JComboBox<String> eventComboBox;
+    private static JComboBox<String> bddPLayersComboBox;
+    private JSpinner spinnerNbJoueur;
+    private JSpinner spinnerScreen;
+    private JSpinner sizeFenetreX;
+    private JSpinner sizeFenetreY;
 
-	public MenuPrincipal() {
-        // Creez la fenetre principale
+    public MenuPrincipal() {
+        initializeFrame();
+        createMenuBar();
+        createMainPanel();
+        setVisible(true);
+    }
+
+    private void initializeFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 800);
-        // Initialisation de la fen�tre
-    	setTitle("Main Menu");
-    	ImageIcon logoIcon = new ImageIcon("icon.png");
-        // Verifiez si l'ic�ne a �t� charg�e avec succ�s
-        if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
-            setIconImage(logoIcon.getImage());
-        } else {
-            // Si l'icone n'a pas pu etre chargee, affichez un message d'erreur
-            System.err.println("- Impossible de charger l'icone.");
-        }
-        
-        
-
-        // Creez un menu-------------------------------------------------------------------------------------------------------------------------------------------------
-        JMenuBar menuBar = new JMenuBar();
-        // Menu "File"
-        JMenu fileMenu = new JMenu("File");
-        JMenuItem exitMenuItem = new JMenuItem("Exit");
-        exitMenuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
-        fileMenu.add(exitMenuItem);
-        menuBar.add(fileMenu);
-
-        // Menu "Event"
-		JMenuItem listEventMenuItem = new JMenuItem("Events");
-		listEventMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (listEventsWindow == null || !listEventsWindow.isVisible()) {
-	                try {
-	                	listEventsWindow = new ListOfEventsFrame(MenuPrincipal.this);
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}else {
-					listEventsWindow.toFront();
-					listEventsWindow.setState(JFrame.NORMAL);					
-				}
-			}
-		});
-		menuBar.add(listEventMenuItem);
-        
-        //list of background
-		JMenuItem listBGMenuItem = new JMenuItem("Background");
-        listBGMenuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	if (listBGWindow == null || !listBGWindow.isVisible()) {
-            		try {
-            			listBGWindow = new ListOfBackgroundFrame();
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-            	}else {
-            		listBGWindow.toFront();
-            		listBGWindow.setState(JFrame.NORMAL);
-            	}
-            }
-        });
-        menuBar.add(listBGMenuItem);
-        
-        //List of players
-        JMenuItem listPlayersMenuItem = new JMenuItem("Players");
-		listPlayersMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (listPlayersWindow == null || !listPlayersWindow.isVisible()) {
-					try {
-						listPlayersWindow = new ListOfPlayersFrame();
-					} catch (SQLException | ClassNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}else {
-					listPlayersWindow.toFront();
-					listPlayersWindow.setState(JFrame.NORMAL);
-				}
-			}
-		});
-		menuBar.add(listPlayersMenuItem);
-		
-        //flags
-		JMenuItem flagsMenuItem = new JMenuItem("Flags");
-		flagsMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (flagsWindow == null || !flagsWindow.isVisible()) {
-					try {
-						flagsWindow = new ListOfFlag();
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}else {
-					flagsWindow.toFront();
-					flagsWindow.setState(JFrame.NORMAL);
-				}
-			}
-		});
-		menuBar.add(flagsMenuItem);
-		
-		// Ajoutez le menuBar a la JFrame dans la region PAGE_START
-        setLayout(new BorderLayout());
-        add(menuBar, BorderLayout.PAGE_START);
-        
-		// Fin du menu-------------------------------------------------------------------------------------------------------------------------------------------------
+        setTitle(TITLE);
+        setIconImage(new ImageIcon(ICON_PATH).getImage());
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -167,172 +66,278 @@ public class MenuPrincipal extends JFrame {
                 }
             }
         });
-        // elements du menu principal ---------------------------------------------------------------------------------------------------------------------------------
-        JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10)); // Mise en page pour centrer les composants
-        
-        // Creez le label "Select an event" au centre
-        JLabel selectEventLabel = new JLabel("Select an event");
-        selectEventLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        //menu deroulant de tout les events
-        eventComboBox = new JComboBox<>(BDD_v2.getNamesFromDatabase("event"));
-        refreshEventComboBox();
-        // Ajoutez un ecouteur d'evenements au JComboBox pour gerer la selection
-        eventComboBox.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // R�cup�rez l'�l�ment s�lectionn�
-//                String selectedEvent = (String) eventComboBox.getSelectedItem();
+    }
+
+    private void createMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(createFileMenu());
+        menuBar.add(createMenuItem("Events", e -> openListEventsWindow()));
+        menuBar.add(createMenuItem("Background", e -> openListBGWindow()));
+        menuBar.add(createMenuItem("Players", e -> openListPlayersWindow()));
+        menuBar.add(createMenuItem("Flags", e -> openListFlagsWindow()));
+        setJMenuBar(menuBar);
+    }
+
+    private JMenu createFileMenu() {
+        JMenu fileMenu = new JMenu("File");
+        JMenuItem exitMenuItem = new JMenuItem("Exit");
+        exitMenuItem.addActionListener(e -> System.exit(0));
+        fileMenu.add(exitMenuItem);
+        return fileMenu;
+    }
+
+    private JMenuItem createMenuItem(String name, ActionListener listener) {
+        JMenuItem menuItem = new JMenuItem(name);
+        menuItem.addActionListener(listener);
+        return menuItem;
+    }
+
+    private void openListEventsWindow() {
+        if (listEventsWindow == null || !listEventsWindow.isVisible()) {
+            try {
+                listEventsWindow = new ListOfEventsFrame(this);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
-        });
-        eventComboBox.setSelectedIndex(0);//mettre -1
-        
-        Integer[] allowedValues = {8, 16, 32, 64};
-        SpinnerListModel spinnerInitNbJoueur = new SpinnerListModel(allowedValues);
-        JSpinner spinnerNbJoueur = new JSpinner(spinnerInitNbJoueur);
-        spinnerNbJoueur.addChangeListener(e -> {
-        	spinnerNbJoueur.revalidate();
-        	spinnerNbJoueur.repaint();
-        });
-        //menu deroulant des bdd des joueurs
-        bddPLayersComboBox = new JComboBox<>(new DefaultComboBoxModel<>(BDD_v2.tabBdd.toArray(new String[0])));
-        // Ajoutez un �couteur d'�v�nements au JComboBox pour g�rer la s�lection
-        bddPLayersComboBox.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // R�cup�rez l'�l�ment s�lectionn�
-//                String selectedEventBDD = (String) bddPLayersComboBox.getSelectedItem();
+        } else {
+            listEventsWindow.toFront();
+            listEventsWindow.setState(JFrame.NORMAL);
+        }
+    }
+
+    private void openListBGWindow() {
+        if (listBGWindow == null || !listBGWindow.isVisible()) {
+            try {
+                listBGWindow = new ListOfBackgroundFrame();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
-        });
-        bddPLayersComboBox.setSelectedIndex(1);//mettre -1
-        
-        JButton selectAthleteButton = new JButton("Athlete select");
-        JButton diffusionButton = new JButton("For diffusion");
-        
-        JLabel actualDisplayLabel = new JLabel();
-        this.addComponentListener(new ComponentAdapter() {
-        	@Override
-        	public void componentMoved(ComponentEvent e) {
-        		Point location = getLocation();
-        		// Obtenez tous les �crans disponibles
-        		GraphicsDevice[] screens = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-        		
-        		for (GraphicsDevice screen : screens) {
-        			Rectangle bounds = screen.getDefaultConfiguration().getBounds();
-        			if (bounds.contains(location)) {
-        				actualScreen=screen.getIDstring();
-        				actualDisplayLabel.setText("Actuel screen : "+actualScreen);
-        				revalidate();
-        				repaint();
-        				break;
-        			}
-        		}
-        	}
-        });
-        Point location = getLocation();
-        GraphicsDevice[] screens = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-        
-        for (GraphicsDevice screen : screens) {
-        	Rectangle bounds = screen.getDefaultConfiguration().getBounds();
-        	if (bounds.contains(location)) {
-        		actualScreen=screen.getIDstring();
-        		actualDisplayLabel.setText("Actuel screen : "+actualScreen);
-        		revalidate();
-        		repaint();
-        		break;
-        	}
+        } else {
+            listBGWindow.toFront();
+            listBGWindow.setState(JFrame.NORMAL);
         }
-        // Obtenez tous les �crans disponibles
-        SpinnerListModel spinnerInitScreen = new SpinnerListModel(screens);
-        JSpinner spinnerScreen = new JSpinner(spinnerInitScreen);
-        if(screens.length > 1) {
-        	spinnerInitScreen.setValue(screens[1]);
+    }
+
+    private void openListPlayersWindow() {
+        if (listPlayersWindow == null || !listPlayersWindow.isVisible()) {
+            try {
+                listPlayersWindow = new ListOfPlayersFrame();
+            } catch (SQLException | ClassNotFoundException ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            listPlayersWindow.toFront();
+            listPlayersWindow.setState(JFrame.NORMAL);
         }
-        JPanel choixEcran = new JPanel();
-        choixEcran.add(actualDisplayLabel);
-        choixEcran.add(new JLabel(", choose the screen to display the tournament : "));
-        choixEcran.add(spinnerScreen);
-        
-        selectAthleteButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					athleteSelection = new AthleteSelection((String) bddPLayersComboBox.getSelectedItem());
-				} catch (SQLException | ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
-        diffusionButton.addActionListener(new ActionListener() {
-        	@Override
-        	public void actionPerformed(ActionEvent e) {
-        		// Appelez la m�thode getSelectedPlayers() pour r�cup�rer les joueurs s�lectionn�s
-                ArrayList<Joueur> selectedPlayers = athleteSelection.getSelectedPlayers();
-                
-                // Affichez les joueurs s�lectionn�s, par exemple, dans une bo�te de dialogue
-                StringBuilder playersInfo = new StringBuilder("Selected players :\n");
-                for (Joueur joueur : selectedPlayers) {
-                    playersInfo.append(joueur.getNom()).append(" ").append(joueur.getPrenom()).append("\n");
-                }
-                
-                JOptionPane.showMessageDialog(null, playersInfo.toString(), "Selected players", JOptionPane.INFORMATION_MESSAGE);
-                
-                String selectedEvent = (String) eventComboBox.getSelectedItem();
-                Evenement eventChoosen = new Evenement(selectedEvent);
-				try {
-					eventChoosen = BDD_v2.getEvenementByName(selectedEvent);
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				WindowBroadcastPublic diffusionFrame = new WindowBroadcastPublic(eventChoosen,(GraphicsDevice) spinnerScreen.getValue());               
-				WindowTournamentTree windowTournamentTree = new WindowTournamentTree(selectedPlayers,eventChoosen, diffusionFrame,(int) spinnerNbJoueur.getValue());
-				diffusionFrame.setWindowTournamentTreeFromBroadcast(windowTournamentTree);
-                System.out.println("-> Selected event : "+eventChoosen.getNom()+", player list : "+bddPLayersComboBox.getSelectedItem()+", number of players : "+(int) spinnerNbJoueur.getValue());
-        	}
-        });
-        // Ajoutez le label et le JComboBox au JPanel
-        panel.add(selectEventLabel, BorderLayout.CENTER);
-        panel.add(eventComboBox, BorderLayout.EAST);
-        panel.add(bddPLayersComboBox, BorderLayout.EAST);
-        panel.add(selectAthleteButton, BorderLayout.EAST);
-        panel.add(spinnerNbJoueur, BorderLayout.EAST);
-        panel.add(diffusionButton, BorderLayout.EAST);
-        
-     // Cr�ation du conteneur principal avec un GridBagLayout
+    }
+
+    private void openListFlagsWindow() {
+        if (flagsWindow == null || !flagsWindow.isVisible()) {
+            try {
+                flagsWindow = new ListOfFlag();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            flagsWindow.toFront();
+            flagsWindow.setState(JFrame.NORMAL);
+        }
+    }
+
+    private void createMainPanel() {
         JPanel mainPanel = new JPanel(new GridBagLayout());
-        add(mainPanel); // Ajout du conteneur principal � la JFrame
-
-        // Cr�ation d'un objet GridBagConstraints pour configurer l'ajout des composants
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0; // Position en colonne
-        gbc.gridy = 0; // Position en ligne
-        gbc.anchor = GridBagConstraints.CENTER; // Alignement au centre
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
 
-        // Ajout du panneau "panel" au centre de la cellule
+        JPanel panelDimension = createDimensionPanel();
+        mainPanel.add(panelDimension, gbc);
+
+        gbc.gridy++;
+        JPanel panel = createSelectionPanel();
         mainPanel.add(panel, gbc);
 
-        // Changement de la position en ligne pour placer "choixEcran" en dessous de "panel"
-        gbc.gridy = 1;
-        // Ajout du panneau "choixEcran" au centre de la cellule
+        gbc.gridy++;
+        JPanel choixEcran = createScreenSelectionPanel();
         mainPanel.add(choixEcran, gbc);
 
-        setVisible(true);
+        add(mainPanel);
     }
-	
-	public void refreshEventComboBox() {
-	    // Obtenez � nouveau les noms d'�v�nements depuis la base de donn�es
-	    String[] eventNames = BDD_v2.getNamesFromDatabase("event");
-	    // Effacez tous les �l�ments actuels du JComboBox
-	    if(eventComboBox != null)
-	    	eventComboBox.removeAllItems();
-	    // Ajoutez les nouveaux noms d'�v�nements
-	    for (String eventName : eventNames) {
-	        eventComboBox.addItem(eventName);
-	    }
-	    eventComboBox.setSelectedIndex(-1);
-	}
-	public static void refreshPlayerTableCombobox() throws SQLException {
-		BDD_v2.getAllListPlayerTableName();
-		bddPLayersComboBox.setModel(new DefaultComboBoxModel<>(BDD_v2.tabBdd.toArray(new String[0])));
+
+    private JPanel createDimensionPanel() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        panel.add(new JLabel("window width "));
+        sizeFenetreX = new JSpinner(new SpinnerNumberModel(0, 0, 100000, 1));
+        panel.add(sizeFenetreX);
+        panel.add(new JLabel("window height "));
+        sizeFenetreY = new JSpinner(new SpinnerNumberModel(0, 0, 100000, 1));
+        panel.add(sizeFenetreY);
+        return panel;
+    }
+
+    private JPanel createSelectionPanel() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        
+        JLabel selectEventLabel = new JLabel("Select an event");
+        selectEventLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        eventComboBox = new JComboBox<>(BDD_v2.getNamesFromDatabase("event"));
+        refreshEventComboBox();
+        eventComboBox.setSelectedIndex(-1);
+        
+        Integer[] allowedValues = {0, 8, 16, 32, 64};
+        SpinnerListModel spinnerInitNbJoueur = new SpinnerListModel(allowedValues);
+        spinnerNbJoueur = new JSpinner(spinnerInitNbJoueur);
+        
+        bddPLayersComboBox = new JComboBox<>(new DefaultComboBoxModel<>(BDD_v2.tabBdd.toArray(new String[0])));
+        bddPLayersComboBox.setSelectedIndex(-1);
+        
+        JButton selectAthleteButton = new JButton("Athlete select");
+        selectAthleteButton.addActionListener(e -> openAthleteSelection());
+        
+        JButton diffusionButton = new JButton("For diffusion");
+        diffusionButton.addActionListener(e -> handleDiffusionButton());
+        
+        panel.add(selectEventLabel);
+        panel.add(eventComboBox);
+        panel.add(bddPLayersComboBox);
+        panel.add(selectAthleteButton);
+        panel.add(spinnerNbJoueur);
+        panel.add(diffusionButton);
+        
+        return panel;
+    }
+
+    private JPanel createScreenSelectionPanel() {
+        JPanel panel = new JPanel();
+        JLabel actualDisplayLabel = new JLabel();
+        updateActualScreen(actualDisplayLabel);
+        
+        GraphicsDevice[] screens = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+        SpinnerListModel spinnerInitScreen = new SpinnerListModel(screens);
+        spinnerScreen = new JSpinner(spinnerInitScreen);
+        if(screens.length > 1) {
+            spinnerInitScreen.setValue(screens[1]);
+        }
+        
+        panel.add(actualDisplayLabel);
+        panel.add(new JLabel(", choose the screen to display the tournament : "));
+        panel.add(spinnerScreen);
+        
+        return panel;
+    }
+
+    private void updateActualScreen(JLabel actualDisplayLabel) {
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentMoved(ComponentEvent e) {
+                Point location = getLocation();
+                GraphicsDevice[] screens = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+                
+                for (GraphicsDevice screen : screens) {
+                    Rectangle bounds = screen.getDefaultConfiguration().getBounds();
+                    if (bounds.contains(location)) {
+                        actualScreen = screen.getIDstring();
+                        actualDisplayLabel.setText("Actuel screen : " + actualScreen);
+                        revalidate();
+                        repaint();
+                        break;
+                    }
+                }
+            }
+        });
+    }
+
+    private void openAthleteSelection() {
+        try {
+            athleteSelection = new AthleteSelection((String) bddPLayersComboBox.getSelectedItem());
+        } catch (SQLException | ClassNotFoundException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    private void handleDiffusionButton() {
+        if (eventComboBox.getSelectedItem() == null) {
+            blinkComponentBorder(eventComboBox, 3);
+        } else if(bddPLayersComboBox.getSelectedItem() == null) {
+            blinkComponentBorder(bddPLayersComboBox, 3);
+        } else if((int) spinnerNbJoueur.getValue() == 0) {
+            blinkComponentBorder(spinnerNbJoueur, 3);
+        } else {
+            ArrayList<Joueur> selectedPlayers = athleteSelection.getSelectedPlayers();
+            displaySelectedPlayers(selectedPlayers);
+            createDiffusionWindow(selectedPlayers);
+        }
+    }
+
+    private void displaySelectedPlayers(ArrayList<Joueur> selectedPlayers) {
+        StringBuilder playersInfo = new StringBuilder("Selected players :\n");
+        for (Joueur joueur : selectedPlayers) {
+            playersInfo.append(joueur.getNom()).append(" ").append(joueur.getPrenom()).append("\n");
+        }
+        JOptionPane.showMessageDialog(null, playersInfo.toString(), "Selected players", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void createDiffusionWindow(ArrayList<Joueur> selectedPlayers) {
+        String selectedEvent = (String) eventComboBox.getSelectedItem();
+        Evenement eventChoosen = new Evenement(selectedEvent);
+        try {
+            eventChoosen = BDD_v2.getEvenementByName(selectedEvent);
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
+        WindowBroadcastPublic diffusionFrame = new WindowBroadcastPublic(eventChoosen, (GraphicsDevice) spinnerScreen.getValue(), new Dimension((int)sizeFenetreX.getValue(), (int)sizeFenetreY.getValue()));
+        WindowTournamentTree windowTournamentTree = new WindowTournamentTree(selectedPlayers, eventChoosen, diffusionFrame, (int) spinnerNbJoueur.getValue());
+        diffusionFrame.setWindowTournamentTreeFromBroadcast(windowTournamentTree);
+        System.out.println("-> Selected event : " + eventChoosen.getNom() + ", player list : " + bddPLayersComboBox.getSelectedItem() + ", number of players : " + (int) spinnerNbJoueur.getValue());
+    }
+
+    public void refreshEventComboBox() {
+        String[] eventNames = BDD_v2.getNamesFromDatabase("event");
+        eventComboBox.setModel(new DefaultComboBoxModel<>(eventNames));
+        eventComboBox.setSelectedIndex(-1);
+    }
+
+    public static void refreshPlayerTableCombobox() throws SQLException {
+        BDD_v2.getAllListPlayerTableName();
+        bddPLayersComboBox.setModel(new DefaultComboBoxModel<>(BDD_v2.tabBdd.toArray(new String[0])));
+    }
+
+	public static void blinkComponentBorder(JComponent component, int blinkCount) {
+	    final int[] count = {0};
+	    final boolean[] isRed = {false};
+	    final Border originalBorder = component.getBorder();
+	    if (originalBorder instanceof LineBorder) {
+			((LineBorder) originalBorder).getLineColor();
+		} else {
+			component.getBackground();
+		}
+	    if (originalBorder instanceof LineBorder) {
+			((LineBorder) originalBorder).getThickness();
+		}
+
+	    Timer timer = new Timer(250, new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            if (count[0] >= blinkCount * 2) {
+	                ((Timer) e.getSource()).stop();
+	                component.setBorder(originalBorder);
+	                return;
+	            }
+
+	            if (isRed[0]) {
+	                component.setBorder(originalBorder);
+	            } else {
+	                component.setBorder(new LineBorder(Color.RED, 2));
+	            }
+
+	            isRed[0] = !isRed[0];
+	            count[0]++;
+	            component.repaint();
+	        }
+	    });
+
+	    timer.start();
 	}
 }

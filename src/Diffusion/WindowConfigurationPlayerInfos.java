@@ -43,6 +43,9 @@ public class WindowConfigurationPlayerInfos extends JFrame {
 	public void setTypeFenetre(String typeFenetre) {
 		this.typeFenetre = typeFenetre;
 	}
+	public String getTypeFenetre() {
+		return this.typeFenetre;
+	}
 	
 	public void setTabPolice(TabPolice tabPolice) {
 		this.tabPolice = tabPolice;
@@ -59,6 +62,11 @@ public class WindowConfigurationPlayerInfos extends JFrame {
 	
 	public void addTabJoueur(TabConfigurationPlayerInfos tabInfos) {
 		this.tabbedPane.addTab(tabInfos.getJoueurName(), tabInfos);
+		this.tabbedPane.revalidate();
+		this.tabbedPane.repaint();
+	}
+	public void insertTabJoueur(TabConfigurationPlayerInfos tabInfos, int indexTab) {
+		this.tabbedPane.insertTab(tabInfos.getJoueurName(), null, tabInfos, null, indexTab);
 		this.tabbedPane.revalidate();
 		this.tabbedPane.repaint();
 	}

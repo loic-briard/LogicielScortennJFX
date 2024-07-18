@@ -5,34 +5,41 @@ package Diffusion;
  */
 
 import javax.swing.*;
-
 import Event.Evenement;
 import java.awt.*;
 
 public class WindowBroadcastPublic extends JFrame {
-	private static final long serialVersionUID = 1L;
-	private Evenement actualEvent;
-	private JLayeredPane layeredPane;
-    private JLabel backgroundLabel;
+    private static final long serialVersionUID = 1L;
+    private final Evenement actualEvent;
+    private final JLayeredPane layeredPane;
+    private final JLabel backgroundLabel;
     private WindowTournamentTree windowTournamentTree;
-    private WindowAnimationConfiguration animationFrame;
+    private final WindowAnimationConfiguration animationFrame;
 
-	public JLayeredPane getLayeredPaneWindowBroadcastPublic() {
-		return layeredPane;
-	}
-	public WindowAnimationConfiguration getAnimationFrame() {
-		return animationFrame;
-	}
-	public WindowTournamentTree getWindowTournamentTreeFromBroadcast() {
-		return windowTournamentTree;
-	}
-	public void setWindowTournamentTreeFromBroadcast(WindowTournamentTree windowTournamentTree) {
-		this.windowTournamentTree = windowTournamentTree;
-	}
-	public WindowBroadcastPublic(Evenement eventChoosen,GraphicsDevice screen) {
-		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+    public WindowBroadcastPublic(Evenement eventChoosen, GraphicsDevice screen, Dimension windowDimension) {
+    	this.actualEvent = eventChoosen;        
+    	setupFrame(screen, windowDimension);
+        
+        layeredPane = new JLayeredPane();
+        setupLayeredPane();
+        
+        backgroundLabel = new JLabel();
+        backgroundLabel.setBounds(0, 0, this.getWidth(), this.getHeight());
+        setBackgroundImage("black.jpg"); // Mettre le chemin de l'image initiale
+        layeredPane.add(backgroundLabel, JLayeredPane.DEFAULT_LAYER);
+        
+        animationFrame = new WindowAnimationConfiguration();
+        
+        this.add(layeredPane);
+        this.setVisible(true);
+    }
+
+    private void setupFrame(GraphicsDevice screen, Dimension windowDimension) {
+    	if(windowDimension.getHeight() == 0.0 || windowDimension.getWidth() == 0.0)
+			this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		else
+			this.setSize(windowDimension);
 		setUndecorated(true);
-		
 		//placement dans l'ecran choisit
 		Rectangle bounds = screen.getDefaultConfiguration().getBounds();
 		// D�finissez la position initiale de la fen�tre sur le deuxi�me �cran
@@ -46,36 +53,24 @@ public class WindowBroadcastPublic extends JFrame {
 			// Si l'ic�ne n'a pas pu �tre charg�e, affichez un message d'erreur
 			System.err.println("Impossible de charger l'ic�ne.");
 		}
-		this.actualEvent = eventChoosen;
 		setTitle("Diffusion : "+actualEvent.getNom());	
 		this.setVisible(true);
-		
-		// Créer un JLayeredPane pour superposer les composants
-        layeredPane = new JLayeredPane();
+    }
+
+    private void setupLayeredPane() {
         layeredPane.setLayout(null);
         layeredPane.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
-		// Ajouter une image de fond avec un JLabel
-        backgroundLabel = new JLabel();
-        backgroundLabel.setBounds(0, 0, this.getWidth(), this.getHeight());
-        setBackgroundImage("black.jpg"); // Mettre le chemin de l'image initiale
-        layeredPane.add(backgroundLabel, JLayeredPane.DEFAULT_LAYER);
-        
-        animationFrame = new WindowAnimationConfiguration();
-        
-        this.add(layeredPane);
-	}
-	public String getNameEvent() {
-		return this.actualEvent.getNom();
-	}
-	// Méthode pour mettre à jour l'image de fond
-	public void setBackgroundImage(String imagePath) {
-		ImageIcon imageBackground = new ImageIcon(imagePath);
+    }
+
+    public void setBackgroundImage(String imagePath) {
+        ImageIcon imageBackground = new ImageIcon(imagePath);
 		Image scaledImageBackground = imageBackground.getImage().getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_SMOOTH);
 		System.out.println("> switch background to : "+imagePath);
 		backgroundLabel.setIcon(new ImageIcon(scaledImageBackground));
-	}
-	public void setBackgroundImageLayered(String imagePath, Integer layer) {
-		removeLayerContent(layer);
+    }
+
+    public void setBackgroundImageLayered(String imagePath, Integer layer) {
+        removeLayerContent(layer);
 		ImageIcon imageBackground = new ImageIcon(imagePath);
 		Image scaledImageBackground = imageBackground.getImage().getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_SMOOTH);
 		System.out.println("> switch background to : "+imagePath+" on layer : "+layer);
@@ -83,20 +78,31 @@ public class WindowBroadcastPublic extends JFrame {
 		imageLabel.setBounds(0, 0, this.getWidth(), this.getHeight());
 		imageLabel.setIcon(new ImageIcon(scaledImageBackground));
 		layeredPane.add(imageLabel, layer);
-	}
-	public void addContent(Integer layer, JPanel panelContent) {
-		layeredPane.add(panelContent, layer);
-	}
-	public void removeLayerContent(int layer) {
-	    Component[] components = layeredPane.getComponentsInLayer(layer);
-	    for (Component component : components) {
-	        layeredPane.remove(component);
-	    }
-	    layeredPane.repaint();
-	}
-	public void close() {
-		//this.placementFrame.dispose();
-		this.dispose();
-//		new Configuration().saveConfiguration(playerName.getX(), playerName.getY(), placementFrame.checkboxName.isSelected(), playerName.getFont().toString());
-	}
+    }
+
+    public void addContent(Integer layer, JPanel panelContent) {
+        layeredPane.add(panelContent, layer);
+    }
+
+    public void removeLayerContent(int layer) {
+        for (Component component : layeredPane.getComponentsInLayer(layer)) {
+            layeredPane.remove(component);
+        }
+        layeredPane.repaint();
+    }
+
+    public void close() {
+        this.dispose();
+    }
+
+    // Getters
+    public JLayeredPane getLayeredPaneWindowBroadcastPublic() { return layeredPane; }
+    public WindowAnimationConfiguration getAnimationFrame() { return animationFrame; }
+    public WindowTournamentTree getWindowTournamentTreeFromBroadcast() { return windowTournamentTree; }
+    public String getNameEvent() { return this.actualEvent.getNom(); }
+
+    // Setter
+    public void setWindowTournamentTreeFromBroadcast(WindowTournamentTree windowTournamentTree) {
+        this.windowTournamentTree = windowTournamentTree;
+    }
 }

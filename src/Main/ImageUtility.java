@@ -20,6 +20,7 @@ public class ImageUtility extends JLabel {
     private static final long serialVersionUID = 1L;
     private int width; // Largeur de l'image redimensionn�e
     private String imagePath;
+    private BufferedImage rezizedImage;
 
     public ImageUtility(String imagePath, int height) {
         this.imagePath = imagePath;
@@ -51,7 +52,8 @@ public class ImageUtility extends JLabel {
             Graphics g = resizedImage.getGraphics();
             g.drawImage(scaledImage, 0, 0, null);
             g.dispose();
-
+            
+            this.rezizedImage = resizedImage;
             // Affichez l'image redimensionn�e dans le JLabel
             setIcon(new ImageIcon(resizedImage));
         } catch (IOException e) {
@@ -65,6 +67,9 @@ public class ImageUtility extends JLabel {
     }
     public String getImagePath() {
         return imagePath;
+    }
+    public BufferedImage getRezizedImage() {
+    	return rezizedImage;
     }
     
     public static String chargerFichier() {

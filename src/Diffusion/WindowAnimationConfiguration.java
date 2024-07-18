@@ -1,92 +1,59 @@
 package Diffusion;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.MediaTracker;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
-import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.Timer;
+import java.util.Arrays;
 
-public class WindowAnimationConfiguration extends JFrame{
-	private static final long serialVersionUID = 1L;
+public class WindowAnimationConfiguration extends JFrame {
+    private static final long serialVersionUID = 1L;
 
-    private JCheckBox zoomAnimationCheckBox;
-    private JSpinner zoomAnimationSpinner;
-    private JCheckBox labelAnimationCheckBox;
-    private JSpinner labelAnimationSpinner;
+    private final JCheckBox zoomAnimationCheckBox;
+    private final JSpinner zoomAnimationSpinner;
+    private final JCheckBox labelAnimationCheckBox;
+    private final JSpinner labelAnimationSpinner;
 
     public WindowAnimationConfiguration() {
         setTitle("Animation Configuration");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(400, 200);
         setLayout(new GridBagLayout());
+        setIconImage(new ImageIcon("icon.png").getImage());
 
-        ImageIcon logoIcon = new ImageIcon("icon.png");
-        if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
-            setIconImage(logoIcon.getImage());
-        } else {
-            System.err.println("Impossible de charger l'icône.");
-        }
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(5, 5, 5, 5);
-
-        // Zoom Animation
         zoomAnimationCheckBox = new JCheckBox("Zoom Animation");
-        zoomAnimationCheckBox.setEnabled(true);
-        add(zoomAnimationCheckBox, gbc);
-
-        gbc.gridx = 1;
         zoomAnimationSpinner = new JSpinner(new SpinnerNumberModel(1000, 0, 10000, 100));
-        add(zoomAnimationSpinner, gbc);
-
-        gbc.gridx = 2;
-        add(new JLabel("ms"), gbc);
-
-        // Label Animation
-        gbc.gridx = 0;
-        gbc.gridy = 1;
         labelAnimationCheckBox = new JCheckBox("Label Animation");
-        labelAnimationCheckBox.setEnabled(true);
-        add(labelAnimationCheckBox, gbc);
-
-        gbc.gridx = 1;
         labelAnimationSpinner = new JSpinner(new SpinnerNumberModel(1000, 0, 10000, 100));
-        add(labelAnimationSpinner, gbc);
 
-        gbc.gridx = 2;
-        add(new JLabel("ms"), gbc);
+        setupComponents();
         setVisible(true);
     }
 
+    private void setupComponents() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 5, 5, 5);
 
-    // Getter methods for the new components
+        addRow(gbc, 0, zoomAnimationCheckBox, zoomAnimationSpinner);
+        addRow(gbc, 1, labelAnimationCheckBox, labelAnimationSpinner);
+    }
+
+    private void addRow(GridBagConstraints gbc, int row, JComponent... components) {
+        gbc.gridy = row;
+        Arrays.stream(components).forEach(component -> {
+            gbc.gridx = Arrays.asList(components).indexOf(component);
+            add(component, gbc);
+        });
+        gbc.gridx = components.length;
+        add(new JLabel("ms"), gbc);
+    }
+
     public boolean isZoomAnimationEnabled() {
         return zoomAnimationCheckBox.isSelected();
     }
 
     public int getZoomAnimationDuration() {
-    	if(isZoomAnimationEnabled())
-    		return (int) zoomAnimationSpinner.getValue();
-    	else
-    		return 0;
+        return isZoomAnimationEnabled() ? (int) zoomAnimationSpinner.getValue() : 0;
     }
 
     public boolean isLabelAnimationEnabled() {
@@ -94,146 +61,167 @@ public class WindowAnimationConfiguration extends JFrame{
     }
 
     public int getLabelAnimationDuration() {
-    	if(isLabelAnimationEnabled())
-    		return (int) labelAnimationSpinner.getValue();
-    	else
-    		return 0;
+        return isLabelAnimationEnabled() ? (int) labelAnimationSpinner.getValue() : 0;
     }
-	
-	public void zoomPanel(ZoomablePanel panel, WindowBroadcastPublic frame, Runnable onComplete) {
+
+    public void animateLabel(JPanel panel, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, Integer layer, JLayeredPane layeredPane, Runnable onComplete) {
+        JLabel startLabel = (JLabel) panel.getComponents()[0];
+        JLabel animatedLabel = new JLabel();
+        if (startLabel.getIcon() != null && startLabel.getText() == null) {
+        	animatedLabel = new JLabel(startLabel.getIcon());
+        }else
+        	animatedLabel = new JLabel(startLabel.getText());
+        
+        setupAnimatedLabel(animatedLabel, startLabel, panel, layeredPane, layer);
+        animateLabel(animatedLabel, targetLocation, targetSize, targetColor, targetFont, getLabelAnimationDuration(), layeredPane, layer, onComplete);
+    }
+    public void animateImage(JPanel imagePanel, JLabel imageLabel, Point targetLocation, Dimension targetSize, Integer layer, JLayeredPane layeredPane, Runnable onComplete) {
+        JLabel startLabel = imageLabel;
+        JLabel animatedLabel = imageLabel;
+        Font targetFont = new Font("Arial", 1, 25);
+        Color targetColor = Color.BLACK;
+        setupAnimatedLabel(animatedLabel, startLabel, imagePanel, layeredPane, layer);
+        animateLabel(animatedLabel, targetLocation, targetSize, targetColor, targetFont, getLabelAnimationDuration(), layeredPane, layer, onComplete);
+    }
+
+    public void zoomPanel(JPanel panel, WindowBroadcastPublic frame, Runnable onComplete) {
         System.out.println("Animation ZOOM");
         int initialWidth = panel.getWidth();
         int initialHeight = panel.getHeight();
         int targetWidth = frame.getWidth();
         int targetHeight = frame.getHeight();
+        Point initialLocation = panel.getLocation();
         
         int duration = getZoomAnimationDuration();
-        System.out.println("dure animation zoom : "+duration);
+        System.out.println("durée animation zoom : " + duration);
 
-        // Timer pour animer le zoom
+        Timer timer = createTimer(duration, (progress) -> {
+            int newWidth = (int) (initialWidth + progress * (targetWidth - initialWidth));
+            int newHeight = (int) (initialHeight + progress * (targetHeight - initialHeight));
+            
+            // Calcul de la nouvelle position pour garder le panel centré
+            int newX = initialLocation.x + (initialWidth - newWidth) / 2;
+            int newY = initialLocation.y + (initialHeight - newHeight) / 2;
+
+            panel.setBounds(newX, newY, newWidth, newHeight);
+            
+            if (panel instanceof ZoomablePanel) {
+                ((ZoomablePanel) panel).setScale(progress);
+            }
+            
+            panel.revalidate();
+            panel.repaint();
+
+            if (progress >= 1.0 && onComplete != null) {
+                onComplete.run();
+            }
+        });
+        
+        timer.start();
+    }
+
+
+    private void animateLabel(JLabel label, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, int duration, JLayeredPane layeredPane, Integer layer, Runnable onComplete) {
+        Timer timer = createTimer(duration, (progress) -> {
+            updateLabelProperties(label, targetLocation, targetSize, targetColor, targetFont, progress);
+            if (progress >= 1.0 || (label.getLocation().equals(targetLocation.getLocation()))) {
+                if (onComplete != null) {
+                    onComplete.run();
+                }
+                cleanupAnimation(layeredPane, layer);
+            }
+        });
+        timer.start();
+    }
+    private Point interpolatePoint(Point start, Point end, double progress) {
+        int newX = (int) (start.x + progress * (end.x - start.x));
+        int newY = (int) (start.y + progress * (end.y - start.y));
+        return new Point(newX, newY);
+    }
+
+    private Dimension interpolateDimension(Dimension start, Dimension end, double progress) {
+        int newWidth = (int) (start.width + progress * (end.width - start.width));
+        int newHeight = (int) (start.height + progress * (end.height - start.height));
+        return new Dimension(newWidth, newHeight);
+    }
+
+    private Timer createTimer(int duration, ProgressCallback callback) {
         Timer timer = new Timer(10, null);
         final long startTime = System.currentTimeMillis();
 
-        timer.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                long elapsed = System.currentTimeMillis() - startTime;
-                double progress = (double) elapsed / duration;
-
-                if (progress >= 1.0) {
-                    progress = 1.0;
-                    timer.stop();
-
-                    // Exécuter l'action une fois l'animation terminée
-                    if (onComplete != null) {
-                        onComplete.run();
-                    }
-                }
-
-                int newWidth = (int) (initialWidth + progress * (targetWidth - initialWidth));
-                int newHeight = (int) (initialHeight + progress * (targetHeight - initialHeight));
-                int newX = (targetWidth - newWidth) / 2;
-                int newY = (targetHeight - newHeight) / 2;
-
-                panel.setSize(newWidth, newHeight);
-                panel.setLocation(newX, newY);
-                panel.setScale(progress);
-                panel.revalidate();
-                panel.repaint();
+        ActionListener listener = e -> {
+            long elapsed = System.currentTimeMillis() - startTime;
+            double progress = Math.min((double) elapsed / duration, 1.0);
+            callback.onProgress(progress);
+            if (progress >= 1.0) {
+                timer.stop();
             }
-        });
+        };
 
-        timer.start();
+        timer.addActionListener(listener);
+        return timer;
     }
-    // Méthode pour animer un JLabel
-    public void animateLabel(/*JLabel label,*/JPanel panel ,Point targetLocation,Dimension targetSize, Color targetColor, Font targetFont, Integer layer, JLayeredPane layeredPane, Runnable onComplete) {
-    	System.out.println("Animation ANIMATELABEL : "+panel.getName());
-    	JLabel startLabel = new JLabel();
-    	for (Component component : panel.getComponents()) {
-    	    if (component.getClass().equals(JLabel.class)) {
-    	    	startLabel = (JLabel) component;
-    	    }
-    	}
-    	int duration = getLabelAnimationDuration();
-    	System.out.println("dure animation label : "+duration);
-    	// Dupliquer le JLabel    	
-        JLabel animatedLabel = new JLabel(startLabel.getText());
+
+    @FunctionalInterface
+    private interface ProgressCallback {
+        void onProgress(double progress);
+    }
+
+    private void updateLabelProperties(JLabel label, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, double progress) {
+        Point startLocation = label.getLocation();
+        Color startColor = label.getForeground();
+        Font startFont = label.getFont();
+
+        label.setLocation(interpolatePoint(startLocation, targetLocation, progress));
+        label.setForeground(interpolateColor(startColor, targetColor, progress));
+        label.setFont(interpolateFont(startFont, targetFont, progress));
+//        System.out.println("'"+label.getText()+"'");
+        if (label.getText() == null || label.getText() == "") {
+        	if (label.getIcon() != null) {
+        		// Interpoler la taille
+              Dimension newSize = interpolateDimension(label.getPreferredSize(), targetSize, progress);
+              label.setSize(newSize);
+              Image img = ((ImageIcon) label.getIcon()).getImage();
+              Image newImg = img.getScaledInstance(newSize.width, newSize.height, Image.SCALE_SMOOTH);
+              label.setIcon(new ImageIcon(newImg));
+        	}
+//        	System.out.println("taille du label a animer : "+label.getPreferredSize());
+//        	label.setSize(interpolateDimension(label.getPreferredSize(), targetSize, progress));
+        }else
+        	label.setSize(label.getPreferredSize());
+
+        label.revalidate();
+        label.repaint();
+    }
+
+    private void setupAnimatedLabel(JLabel animatedLabel, JLabel startLabel, JPanel panel, JLayeredPane layeredPane, Integer layer) {
         animatedLabel.setFont(startLabel.getFont());
         animatedLabel.setForeground(startLabel.getForeground());
         animatedLabel.setSize(panel.getSize());
         animatedLabel.setLocation(panel.getLocation());
         layeredPane.add(animatedLabel, layer);
-
-        Point startLocation = animatedLabel.getLocation();
-//        Dimension startSize = animatedLabel.getSize();
-        Color startColor = animatedLabel.getForeground();
-        Font startFont = animatedLabel.getFont();
-        
-        JLabel dimensionLabel = new JLabel(startLabel.getText());
-        dimensionLabel.setFont(targetFont);
-		animatedLabel.setSize(dimensionLabel.getWidth()+2,dimensionLabel.getHeight()+2);
-//        animatedLabel.setSize(targetSize);
-        Timer timer = new Timer(10, null);
-        final long startTime = System.currentTimeMillis();
-
-        timer.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                long elapsed = System.currentTimeMillis() - startTime;
-                double progress = (double) elapsed / duration;
-
-                if (progress >= 1.0) {
-                    progress = 1.0;
-                    timer.stop();
-                 // Exécuter l'action une fois l'animation terminée
-                    if (onComplete != null) {
-                        onComplete.run();
-                        // Parcourir et supprimer les composants de la couche spécifique
-                        for (Component component : layeredPane.getComponentsInLayer(layer)) {
-                            layeredPane.remove(component);
-                        }
-
-                        // Rafraîchir le layeredPane
-                        layeredPane.repaint();
-                        layeredPane.revalidate();
-                    }
-                }
-
-                // Interpolation de la position
-                int newX = (int) (startLocation.x + progress * (targetLocation.x - startLocation.x));
-                int newY = (int) (startLocation.y + progress * (targetLocation.y - startLocation.y));
-                animatedLabel.setLocation(newX, newY);
-
-                // Interpolation de la taille
-//                int newWidth = (int) (startSize.width + progress * (targetSize.width - startSize.width));
-//                int newHeight = (int) (startSize.height + progress * (targetSize.height - startSize.height));
-//                animatedLabel.setSize(newWidth, newHeight);
-                animatedLabel.setSize((int)animatedLabel.getPreferredSize().getWidth(), (int)animatedLabel.getPreferredSize().getHeight());
-
-                // Interpolation de la couleur
-                int newRed = (int) (startColor.getRed() + progress * (targetColor.getRed() - startColor.getRed()));
-                int newGreen = (int) (startColor.getGreen() + progress * (targetColor.getGreen() - startColor.getGreen()));
-                int newBlue = (int) (startColor.getBlue() + progress * (targetColor.getBlue() - startColor.getBlue()));
-                animatedLabel.setForeground(new Color(newRed, newGreen, newBlue));
-                
-                // Interpolation de la taille de la police
-                int startFontSize = startFont.getSize();
-                int targetFontSize = targetFont.getSize();
-                int newFontSize = (int) (startFontSize + progress * (targetFontSize - startFontSize));
-                Font newFont = startFont.deriveFont((float) newFontSize);
-                animatedLabel.setFont(newFont);
-
-                // Changer la police à la fin de l'animation
-                if (progress == 1.0) {
-                    animatedLabel.setFont(targetFont);
-                    animatedLabel.setSize((int)animatedLabel.getPreferredSize().getWidth()+2, (int)animatedLabel.getPreferredSize().getHeight()+2);
-                }
-
-                animatedLabel.revalidate();
-                animatedLabel.repaint();
-            }
-        });
-
-        timer.start();
     }
+
+    private void cleanupAnimation(JLayeredPane layeredPane, Integer layer) {
+        Arrays.stream(layeredPane.getComponentsInLayer(layer)).forEach(layeredPane::remove);
+        layeredPane.repaint();
+        layeredPane.revalidate();
+    }
+
+    private Color interpolateColor(Color start, Color end, double progress) {
+        int newRed = interpolateColorComponent(start.getRed(), end.getRed(), progress);
+        int newGreen = interpolateColorComponent(start.getGreen(), end.getGreen(), progress);
+        int newBlue = interpolateColorComponent(start.getBlue(), end.getBlue(), progress);
+        return new Color(newRed, newGreen, newBlue);
+    }
+
+    private int interpolateColorComponent(int start, int end, double progress) {
+        return (int) (start + progress * (end - start));
+    }
+
+    private Font interpolateFont(Font start, Font end, double progress) {
+        float newSize = (float) (start.getSize() + progress * (end.getSize() - start.getSize()));
+        return start.deriveFont(newSize);
+    }
+    
 }

@@ -14,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import java.nio.file.*;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -23,13 +24,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
-class ElementOneJoueurForTab {
-	private Map<String, ElementJoueur> player = new HashMap<>();
-	
-	public Map<String, ElementJoueur> getOnePlayer() {
-		return player;
-	}
-}
 class ElementOneJoueur {
 	private Map<String, ElementJoueur> player = new HashMap<>();
 	private Map<String, ElementPoliceJoueur> playerPolice = new HashMap<>();
@@ -739,9 +733,9 @@ public class ConfigurationSaveLoad {
 
 	            JsonObject playerPolice = configObject.getAsJsonObject("playerPolice");
 
-	            System.out.println();
+	            //System.out.println();
 	            for (int i = 0; i < nbPlayer; i++) {
-	                System.out.println("Get element visible for player " + i);
+	                //System.out.println("Get element visible for player " + i);
 	                JsonObject playerObject = playersArray.get(i).getAsJsonObject().getAsJsonObject("player" + i);
 	                Map<String, Object> elementsData = new HashMap<>();
 
@@ -758,6 +752,7 @@ public class ConfigurationSaveLoad {
 	                        elementData.put("position", new Point(positionX, positionY));
 	                        elementData.put("font", font);
 	                        elementData.put("color", parseColor(color));
+	                        elementData.put("taille", playerPolice.getAsJsonObject(key).get("taille").getAsInt());
 
 	                        elementsData.put(key, elementData);
 	                    }
@@ -768,6 +763,81 @@ public class ConfigurationSaveLoad {
 	    }
 	    return playerData;
 	}
+	
+	public static void initJson(int nbJoueur,String nomEvent) {
+		try {
+			ArrayList<String> listFileName = new ArrayList<String>();
+			listFileName.add("player.json");
+			listFileName.add("game.json");
+			Path targetPath = Paths.get("config" + File.separator + nomEvent);
+			// Créer le dossier destination s'il n'existe pas
+            if (!Files.exists(targetPath)) {
+                Files.createDirectories(targetPath);
+                System.out.println("Dossier destination créé : " + targetPath);
+                for (String fileName : listFileName) {
+                	
+                	Path sourcePath = Paths.get("config" + File.separator + "default",fileName);			
+                	// Construire le chemin complet du fichier destination
+                	Path destinationFile = targetPath.resolve(sourcePath.getFileName());
+                	
+                	// Copier le fichier
+                	Files.copy(sourcePath, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+                	System.out.println("Fichier copié avec succès : " + destinationFile);
+                }
+                ElementJoueurFull defaultData = createDefaultElementJoueurFull(nbJoueur);
+                saveConfigToFileFull(defaultData, "config" + File.separator + nomEvent, "full.json");
+            }
+            
+		} catch (IOException e) {
+			System.err.println("Erreur lors de la copie du fichier : " + e.getMessage());
+		}
+	}
+	private static ElementJoueurFull createDefaultElementJoueurFull(int nbJoueur) {
+        ElementJoueurFull defaultData = new ElementJoueurFull();
+
+        // Initialiser les joueurs (par exemple, 2 joueurs)
+        for (int i = 0; i < nbJoueur; i++) {
+            Map<String, Map<String, ElementJoueur>> playerMap = new HashMap<>();
+            Map<String, ElementJoueur> elements = new HashMap<>();
+
+            String[] elementNames = {"Prizetotal", "Birthplace", "ImgJoueur", "Rank", "Birthdate", "Hand", "Weight", 
+                                     "Name", "Acronyme", "CityResidence", "Line", "Height", "ImgFlag", "Surname", "Age"};
+            int j=0;
+			for (String elementName : elementNames) {
+
+				ElementJoueur element = new ElementJoueur();
+				element.setPositionX(0 + (j * 100));
+				element.setPositionY(0);
+				elements.put(elementName, element);
+				j++;
+
+			}
+
+            playerMap.put("player" + i, elements);
+            defaultData.getPlayer().add(playerMap);
+        }
+
+        // Initialiser playerPolice
+        Map<String, ElementPoliceJoueur> playerPolice = new HashMap<>();
+        String[] elementNames = {"Prizetotal", "Birthplace", "ImgJoueur", "Rank", "Birthdate", "Hand", "Weight", 
+                                 "Name", "Acronyme", "CityResidence", "Line", "Height", "ImgFlag", "Surname", "Age"};
+
+		for (String elementName : elementNames) {
+			ElementPoliceJoueur policeElement = new ElementPoliceJoueur();
+			if (elementName == "Name" || elementName == "Surname" || elementName == "Acronyme") 
+				policeElement.setVisible(true);
+			else
+				policeElement.setVisible(false);
+			policeElement.setFont("Arial,1,25");
+			policeElement.setColor("0,0,0");
+			policeElement.setTaille(0);
+			playerPolice.put(elementName, policeElement);
+		}
+
+        defaultData.getPlayerPolice().putAll(playerPolice);;
+
+        return defaultData;
+    }
 			
 	public static String FontSerializer(Font fontToSerialize) {
 		String SerializeFont = fontToSerialize.getName()+","+fontToSerialize.getStyle()+","+fontToSerialize.getSize();		
