@@ -444,10 +444,17 @@ public class PlayerForDiffusion extends JPanel{
 				    if (endComponent.isVisible()) {
 				    	Point endPoint = endComponent.getLocation();
 				    	Dimension endDimension;
-				    	if (endComponent.getName().equals("ImgFlag")) {
+				    	if (endComponent.getName().equals("ImgFlag") || endComponent.getName().equals("ImgJoueur")) {
 				    		JPanel endPanel = (JPanel) endComponent;
-				    		JPanel imagePanel = playerFlag;
-				            JLabel imageLabel = FlagLabel;
+				    		JPanel imagePanel;
+				    		JLabel imageLabel;
+				    		if(endComponent.getName().equals("ImgFlag")) {
+				    			imagePanel = playerFlag;
+					    		imageLabel = FlagLabel;
+				    		}else {
+				    			imagePanel = playerImg;
+					    		imageLabel = ImgLabel;
+				    		}
 //				            JLabel dimensionLabel = new ImageUtility(FlagLabel.getImagePath(), (int)elementData.get("taille"));
 				            endDimension = endPanel.getComponents()[0].getPreferredSize(); // Assurez-vous que la taille est stockée dans votre JSON
 				            animationFrame.animateImage(imagePanel,imageLabel, endPoint, endDimension,
@@ -484,7 +491,6 @@ public class PlayerForDiffusion extends JPanel{
 		}
 		}
 
-		
 		this.frameForDiffusion.revalidate();
 		this.frameForDiffusion.repaint();		
 	}
@@ -790,6 +796,8 @@ public class PlayerForDiffusion extends JPanel{
 
 		public void mouseReleased(MouseEvent e) {
 			//frameForDiffusion.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+
+
 			switch (typeFen) {
 			case "player": {
 				//si fenetre differente de type player
@@ -896,6 +904,7 @@ public class PlayerForDiffusion extends JPanel{
 				throw new IllegalArgumentException("! Unexpected value: " + typeFen);
 			}
 			//placementFrame.refreshSpinner();
+			System.out.println("type de fenetre du joueur creer "+windowConfigurationPlayerInfos.getTypeFenetre());
 		}
 	}
 	
@@ -980,6 +989,7 @@ public class PlayerForDiffusion extends JPanel{
 	        	windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(getNumeroPlayer()+1);
 	            System.out.println("! Error: Selected component is not an instance of tabInfosPlayer");
 	        }
+	        frameForDiffusion.getWindowTournamentTreeFromBroadcast().windowConfigPlayerFull = windowConfigurationPlayerInfos;
 		} else {
 			//si la fenetre est de type full ca veut dire qu'il y a deja des joueur de full dans les onglets
 			if(this.windowConfigurationPlayerInfos.getTypeFenetre() == "full") {

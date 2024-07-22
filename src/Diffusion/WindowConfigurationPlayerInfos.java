@@ -84,7 +84,7 @@ public class WindowConfigurationPlayerInfos extends JFrame {
 	}
 
 	private void initializeFrame() {
-        setTitle("Configuration Player Information");
+        setTitle("Configuration Player Information "+this.frameType.toString().toLowerCase());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(500, 700);
         setIconImage(new ImageIcon("icon.png").getImage());

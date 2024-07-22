@@ -327,7 +327,7 @@ public class WindowTournamentTree extends JFrame {
     	windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_4());
 	    windowBroadcastPublic.removeLayerContent(JLayeredPane.MODAL_LAYER);//nettoyage du layer
 		windowBroadcastPublic.removeLayerContent(JLayeredPane.PALETTE_LAYER);//nettoyage du layer
-		if (windowConfigPlayerFull == null || !windowConfigPlayerFull.isDisplayable()|| windowConfigPlayerFull.getTypeFenetre() != "full" ) {
+		if (windowConfigPlayerFull == null || !windowConfigPlayerFull.isDisplayable()) {
 			windowConfigPlayerFull = new WindowConfigurationPlayerInfos(windowBroadcastPublic, "autre");
 		} else {
 			windowConfigPlayerFull.tabbedPane.removeAll();

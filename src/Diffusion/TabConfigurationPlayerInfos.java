@@ -2,11 +2,8 @@ package Diffusion;
 
 import java.awt.*;
 import javax.swing.*;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-
-import Main.BDD_v2;
 import Main.ImageUtility;
 import Players.Joueur;
 import Police.TabPolice;
