@@ -188,7 +188,6 @@ public class WindowTournamentTree extends JFrame {
         		windowBroadcastPublic.removeLayerContent(JLayeredPane.MODAL_LAYER);//nettoyage du layer
         		Joueur soloPlayer = foundPlayer(selectedItem);
         		int ligne = playerIndex + (nbJoueur/4)*panelIndex;
-        		System.out.println("ligne du joueur : "+ligne+1);
         		if(soloPlayer != null) {
         			//ajout du player dans le tableau pour l'arbre de tournoi
         			PlayerForDiffusion playerDetailsForTree = new PlayerForDiffusion(this.event.getNom(), windowBroadcastPublic, "full",ligne);
@@ -240,7 +239,7 @@ public class WindowTournamentTree extends JFrame {
 		windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_2());
 		windowBroadcastPublic.removeLayerContent(JLayeredPane.MODAL_LAYER);//nettoyage du layer
 		// Check if the indices are within bounds before accessing the list
-		System.out.println("++++> index Button: " + buttonIndex + ", index P1: " + playerIndex1 + ", index P2: " + playerIndex2);
+//		System.out.println(" index Button: " + buttonIndex + ", index P1: " + playerIndex1 + ", index P2: " + playerIndex2);
 		if (playerIndex1 < selectedJoueurs.size() && playerIndex2 < selectedJoueurs.size()) {
 			Joueur Player1 = foundPlayer(getSelectedPlayerName(playerPanel[indexPanel], playerIndex1));
 			Joueur Player2 = foundPlayer(getSelectedPlayerName(playerPanel[indexPanel], playerIndex2));

@@ -93,7 +93,6 @@ public class WindowAnimationConfiguration extends JFrame {
         Point initialLocation = panel.getLocation();
         
         int duration = getZoomAnimationDuration();
-        System.out.println("durée animation zoom : " + duration);
 
         Timer timer = createTimer(duration, (progress) -> {
             int newWidth = (int) (initialWidth + progress * (targetWidth - initialWidth));
@@ -175,7 +174,6 @@ public class WindowAnimationConfiguration extends JFrame {
         label.setLocation(interpolatePoint(startLocation, targetLocation, progress));
         label.setForeground(interpolateColor(startColor, targetColor, progress));
         label.setFont(interpolateFont(startFont, targetFont, progress));
-//        System.out.println("'"+label.getText()+"'");
         if (label.getText() == null || label.getText() == "") {
         	if (label.getIcon() != null) {
         		// Interpoler la taille
@@ -185,8 +183,6 @@ public class WindowAnimationConfiguration extends JFrame {
               Image newImg = img.getScaledInstance(newSize.width, newSize.height, Image.SCALE_SMOOTH);
               label.setIcon(new ImageIcon(newImg));
         	}
-//        	System.out.println("taille du label a animer : "+label.getPreferredSize());
-//        	label.setSize(interpolateDimension(label.getPreferredSize(), targetSize, progress));
         }else
         	label.setSize(label.getPreferredSize());
 

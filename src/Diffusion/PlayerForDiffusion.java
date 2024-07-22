@@ -126,7 +126,6 @@ public class PlayerForDiffusion extends JPanel{
 		this.nomEvent = nomEvent;
 		this.numeroPlayer = numeroPlayer;
 		this.animationFrame = frameForDiffusion.getAnimationFrame();
-		System.out.println("--- index du joueur a afficher from "+typeFen+" : "+numeroPlayer+" ---");
 		policeName = new chosenPolice();
 		policeSurname = new chosenPolice();
 		policeAcro = new chosenPolice();
@@ -511,8 +510,7 @@ public class PlayerForDiffusion extends JPanel{
 		default:
 			break;
 		}
-		System.out.println("--- index du joueur a recup from "+typeFen+" : "+index+" | "+numeroPlayer+" ---");
-		System.out.println("Get JSON info for : "+typeFen+", player index : "+index+", localisation : "+emplacementPlayer);
+		System.out.println("--- index du joueur a recup from "+typeFen+" : "+index+" | "+numeroPlayer+", localisation : "+emplacementPlayer+" ---");
 		ConfigurationSaveLoad configData = ConfigurationSaveLoad.loadConfigFromFile(emplacementPlayer);
 		if (configData != null) {
 			ElementPoliceJoueur elementPoliceSurname = configData.getElementPolice(emplacementPlayer, nomEvent, typeFen,"Surname", index);
@@ -563,7 +561,6 @@ public class PlayerForDiffusion extends JPanel{
 				if (elementFlag != null) {
 					playerFlag.setLocation(elementFlag.getPositionX(), elementFlag.getPositionY());
 //					playerFlag.bounds(elementFlag.getPositionX(), elementFlag.getPositionY(),10,10);
-					 System.out.println("--- taille image flag : "+elementPoliceFlag.getTaille());
 					tailleImgFlag = elementPoliceFlag.getTaille();
 				}
 			}
@@ -746,7 +743,7 @@ public class PlayerForDiffusion extends JPanel{
 				}
 			}
 		}else {
-			System.out.println("Config in JSON null --> defaut config");
+			System.out.println("! Config in JSON null --> defaut config");
 			// Positions des nouveaux panneaux
 			playerName.setLocation(10, 0);
 			playerSurname.setLocation(10, 20);
@@ -795,31 +792,64 @@ public class PlayerForDiffusion extends JPanel{
 			//frameForDiffusion.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			switch (typeFen) {
 			case "player": {
-				windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(0); //mets l'onglet correspondant au joueur
-				Component selectedComponent = windowConfigurationPlayerInfos.tabbedPane.getSelectedComponent();//recupere les infos de l'onglet
-		        if (selectedComponent instanceof TabConfigurationPlayerInfos) {
-		            TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;//
-		    		System.out.println(" Player draged : "+playerfordifusion2.nameLabel.getText()+" for window PLAYER");		
-		            currentTab.refreshSpinner(playerfordifusion2);//mise a jour des positions de l'onglet du joueur selectionné
-		        } else {
-		            // Handle the case where the selected component is not of type tabInfosPlayer
-		        	windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(getNumeroPlayer()+1);
-		            System.out.println("! Error: Selected component is not an instance of tabInfosPlayer");
-		        }				
+				//si fenetre differente de type player
+				if(windowConfigurationPlayerInfos.getTypeFenetre() != typeFen) {
+					windowConfigurationPlayerInfos.tabbedPane.removeAll();
+					windowConfigurationPlayerInfos.tabbedPane.revalidate();
+					windowConfigurationPlayerInfos.tabbedPane.repaint();
+					windowConfigurationPlayerInfos.setTypeFenetre("player");
+					ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
+        			ListSelectedJoueur.add(playerfordifusion2);
+					TabConfigurationPlayerInfos tabOnePlayer = new TabConfigurationPlayerInfos(playerfordifusion2, playerfordifusion2.getJoueur(), frameForDiffusion, windowConfigurationPlayerInfos);
+					windowConfigurationPlayerInfos.addTabJoueur(tabOnePlayer);
+					windowConfigurationPlayerInfos.setTabPolice(new TabPolice(ListSelectedJoueur, windowConfigurationPlayerInfos));
+				}else {
+					windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(0); //mets l'onglet correspondant au joueur
+					Component selectedComponent = windowConfigurationPlayerInfos.tabbedPane.getSelectedComponent();//recupere les infos de l'onglet
+					if (selectedComponent instanceof TabConfigurationPlayerInfos) {
+						TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;//
+						System.out.println(" Player draged : "+playerfordifusion2.nameLabel.getText()+" for window PLAYER");		
+						currentTab.refreshSpinner(playerfordifusion2);//mise a jour des positions de l'onglet du joueur selectionné
+					} else {
+						// Handle the case where the selected component is not of type tabInfosPlayer
+						windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(getNumeroPlayer()+1);
+						System.out.println("! Error: Selected component is not an instance of tabInfosPlayer");
+					}				
+				}
 				break;
 			}
 			case "game": {
-				windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(getNumeroPlayer()); //mets l'onglet correspondant au joueur
-				Component selectedComponent = windowConfigurationPlayerInfos.tabbedPane.getSelectedComponent();//recupere les infos de l'onglet
-		        if (selectedComponent instanceof TabConfigurationPlayerInfos) {
-		            TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;//
-		    		System.out.println(" Player draged : "+playerfordifusion2.nameLabel.getText()+" for window GAME");		
-		            currentTab.refreshSpinner(playerfordifusion2);//mise a jour des positions de l'onglet du joueur selectionné
-		        } else {
-		            // Handle the case where the selected component is not of type tabInfosPlayer
-		        	windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(getNumeroPlayer()+1);
-		            System.out.println(" tabInfosPlayer");
-		        }
+				//si fenetre differente de type player
+				if(windowConfigurationPlayerInfos.getTypeFenetre() != typeFen) {
+					windowConfigurationPlayerInfos.tabbedPane.removeAll();
+					windowConfigurationPlayerInfos.tabbedPane.revalidate();
+					windowConfigurationPlayerInfos.tabbedPane.repaint();
+					windowConfigurationPlayerInfos.setTypeFenetre("game");
+					ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
+					for (Component layerComponent : frameForDiffusion.getLayeredPaneWindowBroadcastPublic().getComponentsInLayer(JLayeredPane.PALETTE_LAYER)) {
+						if(layerComponent instanceof PlayerForDiffusion) {
+							ListSelectedJoueur.add((PlayerForDiffusion)layerComponent);
+						}
+					}
+					for (PlayerForDiffusion playerForDiffusion : ListSelectedJoueur) {
+						TabConfigurationPlayerInfos tabPool = new TabConfigurationPlayerInfos(playerForDiffusion, playerForDiffusion.getJoueur(), frameForDiffusion, windowConfigurationPlayerInfos);
+						windowConfigurationPlayerInfos.addTabJoueur(tabPool);
+						System.out.println("    GAME player to display : "+playerForDiffusion.nameLabel.getText()+" "+playerForDiffusion.getNumeroPlayer());
+					}	
+					windowConfigurationPlayerInfos.setTabPolice(new TabPolice(ListSelectedJoueur, windowConfigurationPlayerInfos));
+				}else {
+					windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(getNumeroPlayer()); //mets l'onglet correspondant au joueur
+					Component selectedComponent = windowConfigurationPlayerInfos.tabbedPane.getSelectedComponent();//recupere les infos de l'onglet
+			        if (selectedComponent instanceof TabConfigurationPlayerInfos) {
+			            TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;//
+			    		System.out.println(" Player draged : "+playerfordifusion2.nameLabel.getText()+" for window GAME");		
+			            currentTab.refreshSpinner(playerfordifusion2);//mise a jour des positions de l'onglet du joueur selectionné
+			        } else {
+			            // Handle the case where the selected component is not of type tabInfosPlayer
+			        	windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(getNumeroPlayer()+1);
+			            System.out.println("! Error: Selected component is not an instance of tabInfosPlayer");
+			        }
+				}
 				break;
 			}
 			case "tab": {
@@ -832,7 +862,7 @@ public class PlayerForDiffusion extends JPanel{
 		        } else {
 		            // Handle the case where the selected component is not of type tabInfosPlayer
 		        	windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(getNumeroPlayer()+1);
-		            System.out.println(" tabInfosPlayer");
+		            System.out.println("! Error: Selected component is not an instance of tabInfosPlayer");
 		        }
                 break;
 			}
@@ -902,7 +932,7 @@ public class PlayerForDiffusion extends JPanel{
 					tableauPlayerDiffusionTree[i].setPlacementFrameTwoPlayer(windowConfigurationPlayerInfos);
 					TabConfigurationPlayerInfos tabFull = new TabConfigurationPlayerInfos(tableauPlayerDiffusionTree[i], tableauPlayerDiffusionTree[i].getJoueur(), frameForDiffusion, windowConfigurationPlayerInfos);
 					windowConfigurationPlayerInfos.addTabJoueur(tabFull);
-					System.out.println("    FULL player to disply : "+tableauPlayerDiffusionTree[i].nameLabel.getText());
+					System.out.println("FULL player actually displyed : "+tableauPlayerDiffusionTree[i].nameLabel.getText());
 				}
 			}
 			//ajoute l'onglet de police
@@ -921,16 +951,15 @@ public class PlayerForDiffusion extends JPanel{
 			Component selectedComponent = windowConfigurationPlayerInfos.tabbedPane.getSelectedComponent();
 	        if (selectedComponent instanceof TabConfigurationPlayerInfos) {
 	            TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;
-	            System.out.println(" Player draged : "+playerfordifusion2.nameLabel.getText()+" for window FULL");	
+	            System.out.println(" Player draged from FULL : "+playerfordifusion2.nameLabel.getText());	
 	            currentTab.refreshSpinner(playerfordifusion2);
 	        } else {
 	            // Handle the case where the selected component is not of type tabInfosPlayer
 	        	windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(getNumeroPlayer()+1);
-	            System.out.println(" tabInfosPlayer");
+	            System.out.println("! Error: Selected component is not an instance of tabInfosPlayer");
 	        }
 		} else {
-			System.out.println("!il y a tant d'onglet : "+windowConfigurationPlayerInfos.tabbedPane.getTabCount());
-			//si la fenetre est de type full ca veut dire qu'il y a deja des joueur de full dan les onglets
+			//si la fenetre est de type full ca veut dire qu'il y a deja des joueur de full dans les onglets
 			if(this.windowConfigurationPlayerInfos.getTypeFenetre() == "full") {
 				// recupere lindex de l'onglet du joueur 
 				for (int i = 0; i < windowConfigurationPlayerInfos.tabbedPane.getTabCount()-1; i++) {
@@ -977,7 +1006,7 @@ public class PlayerForDiffusion extends JPanel{
 						tableauPlayerDiffusionTree[i].setPlacementFrameTwoPlayer(windowConfigurationPlayerInfos);
 						TabConfigurationPlayerInfos tabFull = new TabConfigurationPlayerInfos(tableauPlayerDiffusionTree[i], tableauPlayerDiffusionTree[i].getJoueur(), frameForDiffusion, windowConfigurationPlayerInfos);
 						windowConfigurationPlayerInfos.addTabJoueur(tabFull);
-						System.out.println("    FULL player to disply : "+tableauPlayerDiffusionTree[i].nameLabel.getText());
+						System.out.println("FULL player to display : "+tableauPlayerDiffusionTree[i].nameLabel.getText());
 					}
 				}
 				//ajoute l'onglet de police
@@ -1001,7 +1030,7 @@ public class PlayerForDiffusion extends JPanel{
 		        } else {
 		            // Handle the case where the selected component is not of type tabInfosPlayer
 		        	windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(getNumeroPlayer()+1);
-		            System.out.println(" tabInfosPlayer");
+		            System.out.println("! Error: Selected component is not an instance of tabInfosPlayer");
 		        }
 			}
 		}

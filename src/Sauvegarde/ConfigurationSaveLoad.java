@@ -442,23 +442,23 @@ public class ConfigurationSaveLoad {
         for (Map.Entry<String, ElementPoliceJoueur> entry : partial.getPlayerPolice().entrySet()) {
             original.getPlayerPolice().put(entry.getKey(), entry.getValue());
         }
-        //affichage du elementJoueurFull to save
-        System.out.println("--Elements in full from to save --:");
-	    for (Map<String, Map<String, ElementJoueur>> playerMap : original.getPlayer()) {
-	        for (Map.Entry<String, Map<String, ElementJoueur>> playerEntry : playerMap.entrySet()) {
-	            System.out.println("Player: " + playerEntry.getKey());
-	            for (Map.Entry<String, ElementJoueur> elementEntry : playerEntry.getValue().entrySet()) {
-	                ElementJoueur element = elementEntry.getValue();
-	                System.out.println("  Element: " + elementEntry.getKey() + " PositionX: " + element.getPositionX() + " PositionY: " + element.getPositionY());
-	            }
-	        }
-	    }
-
-	    System.out.println("Elements Police in full");
-	    for (Map.Entry<String, ElementPoliceJoueur> entry : original.getPlayerPolice().entrySet()) {
-	        ElementPoliceJoueur police = entry.getValue();
-	        System.out.println("Element: " + entry.getKey() + " Visible: " + police.isVisible() + " Font: " + police.getFont() + " Color: " + police.getColor() + " Taille: " + police.getTaille());
-	    }
+//        //affichage du elementJoueurFull to save
+//        System.out.println("--Elements in full from to save --:");
+//	    for (Map<String, Map<String, ElementJoueur>> playerMap : original.getPlayer()) {
+//	        for (Map.Entry<String, Map<String, ElementJoueur>> playerEntry : playerMap.entrySet()) {
+//	            System.out.println("Player: " + playerEntry.getKey());
+//	            for (Map.Entry<String, ElementJoueur> elementEntry : playerEntry.getValue().entrySet()) {
+//	                ElementJoueur element = elementEntry.getValue();
+//	                System.out.println("  Element: " + elementEntry.getKey() + " PositionX: " + element.getPositionX() + " PositionY: " + element.getPositionY());
+//	            }
+//	        }
+//	    }
+//
+//	    System.out.println("Elements Police in full");
+//	    for (Map.Entry<String, ElementPoliceJoueur> entry : original.getPlayerPolice().entrySet()) {
+//	        ElementPoliceJoueur police = entry.getValue();
+//	        System.out.println("Element: " + entry.getKey() + " Visible: " + police.isVisible() + " Font: " + police.getFont() + " Color: " + police.getColor() + " Taille: " + police.getTaille());
+//	    }
 	    
         saveConfigToFileFull(original, "Config/" + nomEvent, "full.json");
 	    System.out.println("FULL save completed");
@@ -467,22 +467,22 @@ public class ConfigurationSaveLoad {
 
 	public static void replacePlayerDataFull(String nomEvent, ElementJoueurFull source) {
 	    ElementJoueurFull target = readJsonFileFull("Config/" + nomEvent + "/" + "full.json");
-
-	    System.out.println("--Elements in full from json:");
-	    for (Map<String, Map<String, ElementJoueur>> playerMap : target.getPlayer()) {
-	        for (Map.Entry<String, Map<String, ElementJoueur>> playerEntry : playerMap.entrySet()) {
-	            System.out.println("Player: " + playerEntry.getKey());
-	            for (Map.Entry<String, ElementJoueur> elementEntry : playerEntry.getValue().entrySet()) {
-	                ElementJoueur element = elementEntry.getValue();
-	                System.out.println("  Element: " + elementEntry.getKey() + " PositionX: " + element.getPositionX() + " PositionY: " + element.getPositionY());
-	            }
-	        }
-	    }
-	    System.out.println("Elements Police in full");
-	    for (Map.Entry<String, ElementPoliceJoueur> entry : target.getPlayerPolice().entrySet()) {
-	        ElementPoliceJoueur police = entry.getValue();
-	        System.out.println("Element: " + entry.getKey() + " Visible: " + police.isVisible() + " Font: " + police.getFont() + " Color: " + police.getColor() + " Taille: " + police.getTaille());
-	    }
+//
+//	    System.out.println("--Elements in full from json:");
+//	    for (Map<String, Map<String, ElementJoueur>> playerMap : target.getPlayer()) {
+//	        for (Map.Entry<String, Map<String, ElementJoueur>> playerEntry : playerMap.entrySet()) {
+//	            System.out.println("Player: " + playerEntry.getKey());
+//	            for (Map.Entry<String, ElementJoueur> elementEntry : playerEntry.getValue().entrySet()) {
+//	                ElementJoueur element = elementEntry.getValue();
+//	                System.out.println("  Element: " + elementEntry.getKey() + " PositionX: " + element.getPositionX() + " PositionY: " + element.getPositionY());
+//	            }
+//	        }
+//	    }
+//	    System.out.println("Elements Police in full");
+//	    for (Map.Entry<String, ElementPoliceJoueur> entry : target.getPlayerPolice().entrySet()) {
+//	        ElementPoliceJoueur police = entry.getValue();
+//	        System.out.println("Element: " + entry.getKey() + " Visible: " + police.isVisible() + " Font: " + police.getFont() + " Color: " + police.getColor() + " Taille: " + police.getTaille());
+//	    }
 
 	    // Replace "full" part
 	    ArrayList<Map<String, Map<String, ElementJoueur>>> targetFull = target.getPlayer();
@@ -512,22 +512,22 @@ public class ConfigurationSaveLoad {
 	        targetPlayerPolice.put(key, sourcePlayerPolice.get(key));
 	    }
 
-	    System.out.println("--Elements in full from to save --:");
-	    for (Map<String, Map<String, ElementJoueur>> playerMap : target.getPlayer()) {
-	        for (Map.Entry<String, Map<String, ElementJoueur>> playerEntry : playerMap.entrySet()) {
-	            System.out.println("Player: " + playerEntry.getKey());
-	            for (Map.Entry<String, ElementJoueur> elementEntry : playerEntry.getValue().entrySet()) {
-	                ElementJoueur element = elementEntry.getValue();
-	                System.out.println("  Element: " + elementEntry.getKey() + " PositionX: " + element.getPositionX() + " PositionY: " + element.getPositionY());
-	            }
-	        }
-	    }
-
-	    System.out.println("Elements Police in full");
-	    for (Map.Entry<String, ElementPoliceJoueur> entry : target.getPlayerPolice().entrySet()) {
-	        ElementPoliceJoueur police = entry.getValue();
-	        System.out.println("Element: " + entry.getKey() + " Visible: " + police.isVisible() + " Font: " + police.getFont() + " Color: " + police.getColor() + " Taille: " + police.getTaille());
-	    }
+//	    System.out.println("--Elements in full from to save --:");
+//	    for (Map<String, Map<String, ElementJoueur>> playerMap : target.getPlayer()) {
+//	        for (Map.Entry<String, Map<String, ElementJoueur>> playerEntry : playerMap.entrySet()) {
+//	            System.out.println("Player: " + playerEntry.getKey());
+//	            for (Map.Entry<String, ElementJoueur> elementEntry : playerEntry.getValue().entrySet()) {
+//	                ElementJoueur element = elementEntry.getValue();
+//	                System.out.println("  Element: " + elementEntry.getKey() + " PositionX: " + element.getPositionX() + " PositionY: " + element.getPositionY());
+//	            }
+//	        }
+//	    }
+//
+//	    System.out.println("Elements Police in full");
+//	    for (Map.Entry<String, ElementPoliceJoueur> entry : target.getPlayerPolice().entrySet()) {
+//	        ElementPoliceJoueur police = entry.getValue();
+//	        System.out.println("Element: " + entry.getKey() + " Visible: " + police.isVisible() + " Font: " + police.getFont() + " Color: " + police.getColor() + " Taille: " + police.getTaille());
+//	    }
 
 	    saveConfigToFileFull(target, "Config/" + nomEvent, "full.json");
 	    System.out.println("FULL save completed");
