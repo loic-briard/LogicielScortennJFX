@@ -19,6 +19,7 @@ public class WindowAnimationConfiguration extends JFrame {
         setSize(400, 200);
         setLayout(new GridBagLayout());
         setIconImage(new ImageIcon("icon.png").getImage());
+        setLocationRelativeTo(null);
 
         zoomAnimationCheckBox = new JCheckBox("Zoom Animation");
         zoomAnimationSpinner = new JSpinner(new SpinnerNumberModel(1000, 0, 10000, 100));

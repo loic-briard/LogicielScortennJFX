@@ -220,6 +220,8 @@ public class ConfigurationSaveLoad {
 					//System.out.println("taille : " + panel.getName() + panel.getHeight());
 					playerPolice.setTaille((int) panel.getHeight());
 				}
+				if(panel.getComponents()[0] instanceof JLabel)
+					label = (JLabel) panel.getComponents()[0];
 				playerPolice.setFont(FontSerializer(label.getFont()));
 				playerPolice.setColor(ColorSerializer(label.getForeground()));
 				elementsOnePlayer.getOnePlayer().put(panel.getName(), playerElement);
@@ -268,6 +270,8 @@ public class ConfigurationSaveLoad {
 						//System.out.println("taille : " + panel.getName() + panel.getHeight());
 						playerPolice.setTaille((int) panel.getHeight());
 					}
+					if(panel.getComponents()[0] instanceof JLabel)
+						label = (JLabel) panel.getComponents()[0];
 					playerPolice.setFont(FontSerializer(label.getFont()));
 					playerPolice.setColor(ColorSerializer(label.getForeground()));
 					
@@ -305,6 +309,9 @@ public class ConfigurationSaveLoad {
 						//System.out.println("taille : " + panel.getName() + panel.getHeight());
 						playerPolice.setTaille((int) panel.getHeight());
 					}
+					if(panel.getComponents()[0] instanceof JLabel)
+						label = (JLabel) panel.getComponents()[0];
+					
 					playerPolice.setFont(FontSerializer(label.getFont()));
 					playerPolice.setColor(ColorSerializer(label.getForeground()));
 					
@@ -342,6 +349,8 @@ public class ConfigurationSaveLoad {
 						//System.out.println("taille : " + panel.getName() + panel.getHeight());
 						playerPoliceFull.setTaille((int) panel.getHeight());
 					}
+					if(panel.getComponents()[0] instanceof JLabel)
+						label = (JLabel) panel.getComponents()[0];
 					playerPoliceFull.setFont(FontSerializer(label.getFont()));
 					playerPoliceFull.setColor(ColorSerializer(label.getForeground()));
 					
@@ -543,31 +552,7 @@ public class ConfigurationSaveLoad {
 	 * @param index  index du joueur a recuperer dans le fichier json
 	 * @return ElementJoueur  qui donne le X et Y de l'element recherche
 	 */
-	public ElementJoueur getElement(String emplacement, String eventName, String typeFenetre, String nomElement, int index) {
-		String Player = "";
-		if (typeFenetre == "player" || typeFenetre == "game") {
-			switch (index) {
-			case 0:
-				// System.out.println("getElement Player 1");
-				Player = "player";
-				break;
-			case 1:
-				// System.out.println("getElement Player 1");
-				Player = "player1";
-				break;
-			case 2:
-				// System.out.println("getElement Player 2");
-				Player = "player2";
-				break;
-
-			default:
-				System.out.println("! ERROR get element : "+nomElement+" from file : "+emplacement);
-				break;
-			}
-		}
-		if(typeFenetre == "tab" || typeFenetre == "full")
-			Player="player"+index;
-		
+	public ElementJoueur getElement(String emplacement, String eventName, String typeFenetre, String nomElement, int index) {		
 		try (Reader reader = new FileReader(emplacement)) {
 			JsonElement jsonElement = JsonParser.parseReader(reader);
 			if (jsonElement.isJsonObject()) {
@@ -576,7 +561,7 @@ public class ConfigurationSaveLoad {
 				System.out.println(typeFenetre+" GET element : "+nomElement+" for player index : "+index+" from file : "+emplacement);
 				switch (typeFenetre) {
 				case "player":
-					elementObject = configObject.getAsJsonObject(Player).getAsJsonObject(nomElement);
+					elementObject = configObject.getAsJsonObject("player").getAsJsonObject(nomElement);
 					break;
 				case "game":
 //					elementObject = configObject.getAsJsonObject(Player).getAsJsonObject(nomElement);

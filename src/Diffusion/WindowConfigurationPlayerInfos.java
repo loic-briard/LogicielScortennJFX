@@ -84,7 +84,7 @@ public class WindowConfigurationPlayerInfos extends JFrame {
 	}
 
 	private void initializeFrame() {
-        setTitle("Configuration Player Information "+this.frameType.toString().toLowerCase());
+        setTitle("Configuration Player Information :  "+this.frameType.toString().toLowerCase());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(500, 700);
         setIconImage(new ImageIcon("icon.png").getImage());
@@ -183,6 +183,8 @@ public class WindowConfigurationPlayerInfos extends JFrame {
             if ("ImgJoueur".equals(panel.getName()) || "ImgFlag".equals(panel.getName())) {
                 playerPoliceFull.setTaille(panel.getHeight());
             }
+            if(panel.getComponents()[0] instanceof JLabel)
+				label = (JLabel) panel.getComponents()[0];
             playerPoliceFull.setFont(FontSerializer(label.getFont()));
             playerPoliceFull.setColor(ColorSerializer(label.getForeground()));
             

@@ -53,7 +53,7 @@ public class MenuPrincipal extends JFrame {
 
     private void initializeFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1000, 800);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         setTitle(TITLE);
         setIconImage(new ImageIcon(ICON_PATH).getImage());
         addWindowListener(new WindowAdapter() {

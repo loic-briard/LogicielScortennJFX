@@ -176,7 +176,7 @@ public class TabConfigurationPlayerInfos extends JPanel {
     }
 
     public void refreshSpinner(PlayerForDiffusion infosPlayerDetails) {
-        System.out.println("Refresh player spinner : " + infosPlayerDetails.nameLabel.getText() + " current player : " + this.joueur.getDisplay_name());
+//        System.out.println("Refresh player spinner : " + infosPlayerDetails.nameLabel.getText() + " current player : " + this.joueur.getDisplay_name());
         for (Map.Entry<String, JSpinner> entry : spinners.entrySet()) {
             String key = entry.getKey();
             if (key.endsWith("X")) {

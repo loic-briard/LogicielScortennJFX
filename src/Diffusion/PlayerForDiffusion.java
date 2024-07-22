@@ -15,8 +15,11 @@ import java.awt.Point;
 import java.awt.event.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -54,8 +57,7 @@ public class PlayerForDiffusion extends JPanel{
 	// -----------------------------------
 	public JLabel nameLabel;
 	public JLabel SurnameLabel;
-	public JLabel ImgLabel;
-//	public JLabel FlagLabel;
+	public ImageUtility ImgLabel;
 	public ImageUtility FlagLabel;
 	public JLabel AcroLabel;
 	public JLabel RankLabel;
@@ -96,6 +98,8 @@ public class PlayerForDiffusion extends JPanel{
 	private int numeroPlayer;
 	private WindowAnimationConfiguration animationFrame;
 	private ZoomablePanel panelPlayerGlobal;
+	private static final String CONFIG_DIR = "Config/";
+	private static final String JSON_EXT = ".json";
 
 	public int getNumeroPlayer() {
 		return numeroPlayer;
@@ -113,9 +117,6 @@ public class PlayerForDiffusion extends JPanel{
 	public Joueur getJoueur() {
 		return joueur;
 	}
-	public int getPlayerIndex() {
-		return this.numeroPlayer;
-	}
 	public JPanel getPanelGlobal() {
 		return this.panelPlayerGlobal;
 	}
@@ -126,649 +127,303 @@ public class PlayerForDiffusion extends JPanel{
 		this.nomEvent = nomEvent;
 		this.numeroPlayer = numeroPlayer;
 		this.animationFrame = frameForDiffusion.getAnimationFrame();
-		policeName = new chosenPolice();
-		policeSurname = new chosenPolice();
-		policeAcro = new chosenPolice();
-		policeRank = new chosenPolice();
-		policeBirthDate = new chosenPolice();
-		policeBirthPlace = new chosenPolice();
-		policeHeight = new chosenPolice();
-		policeWeight = new chosenPolice();
-		policeHand = new chosenPolice();
-		policeAge = new chosenPolice();
-		policePrizetotal = new chosenPolice();
-		policeCityresidence = new chosenPolice();
-		policeLine = new chosenPolice();
-		policeName.setNewfont(new Font("Arial", Font.BOLD, 25));
-		policeName.setNewColor(Color.BLACK);
-		policeSurname.setNewfont(new Font("Arial", Font.BOLD, 25));
-		policeSurname.setNewColor(Color.BLACK);
-		policeAcro.setNewfont(new Font("Arial", Font.BOLD, 25));
-		policeAcro.setNewColor(Color.BLACK);
-		policeRank.setNewfont(new Font("Arial", Font.BOLD, 25));
-		policeRank.setNewColor(Color.BLACK);
-		policeBirthDate.setNewfont(new Font("Arial", Font.BOLD, 25));
-		policeBirthDate.setNewColor(Color.BLUE);
-		policeBirthPlace.setNewfont(new Font("Arial", Font.BOLD, 25));
-		policeBirthPlace.setNewColor(Color.BLUE);
-		policeHeight.setNewfont(new Font("Arial", Font.BOLD, 25));
-		policeHeight.setNewColor(Color.BLUE);
-		policeWeight.setNewfont(new Font("Arial", Font.BOLD, 25));
-		policeWeight.setNewColor(Color.BLUE);
-		policeHand.setNewfont(new Font("Arial", Font.BOLD, 25));
-		policeHand.setNewColor(Color.BLUE);
-		policeAge.setNewfont(new Font("Arial", Font.BOLD, 25));
-		policeAge.setNewColor(Color.BLUE);
-		policePrizetotal.setNewfont(new Font("Arial", Font.BOLD, 25));
-		policePrizetotal.setNewColor(Color.BLUE);
-		policeCityresidence.setNewfont(new Font("Arial", Font.BOLD, 25));
-		policeCityresidence.setNewColor(Color.BLUE);
-		policeLine.setNewfont(new Font("Arial", Font.BOLD, 25));
-		policeLine.setNewColor(Color.BLUE);
 
-		playerName = new JPanel();
-		playerName.setOpaque(false);
-		playerName.setName("Name");
-		MouseAdapterPanel mouseAdapterPanelName = new MouseAdapterPanel(playerName);
-		playerName.addMouseListener(mouseAdapterPanelName);
-		playerName.addMouseMotionListener(mouseAdapterPanelName);
-
-		playerSurname = new JPanel();
-		playerSurname.setOpaque(false);
-		playerSurname.setName("Surname");
-		MouseAdapterPanel mouseAdapterPanelSurname = new MouseAdapterPanel(playerSurname);
-		playerSurname.addMouseListener(mouseAdapterPanelSurname);
-		playerSurname.addMouseMotionListener(mouseAdapterPanelSurname);
-
-		playerImg = new JPanel();
-		playerImg.setOpaque(false);
-		playerImg.setName("ImgJoueur");
-		MouseAdapterPanel mouseAdapterPanelImg = new MouseAdapterPanel(playerImg);
-		playerImg.addMouseListener(mouseAdapterPanelImg);
-		playerImg.addMouseMotionListener(mouseAdapterPanelImg);
-
-		playerFlag = new JPanel();
-		playerFlag.setOpaque(false);
-		playerFlag.setName("ImgFlag");
-		MouseAdapterPanel mouseAdapterPanelFlag = new MouseAdapterPanel(playerFlag);
-		playerFlag.addMouseListener(mouseAdapterPanelFlag);
-		playerFlag.addMouseMotionListener(mouseAdapterPanelFlag);
-
-		playerAcro = new JPanel();
-		playerAcro.setOpaque(false);
-		playerAcro.setName("Acronyme");
-		MouseAdapterPanel mouseAdapterPanelAcro = new MouseAdapterPanel(playerAcro);
-		playerAcro.addMouseListener(mouseAdapterPanelAcro);
-		playerAcro.addMouseMotionListener(mouseAdapterPanelAcro);
-
-		playerRank = new JPanel();
-		playerRank.setOpaque(false);
-		playerRank.setName("Rank");
-		MouseAdapterPanel mouseAdapterPanelRank = new MouseAdapterPanel(playerRank);
-		playerRank.addMouseListener(mouseAdapterPanelRank);
-		playerRank.addMouseMotionListener(mouseAdapterPanelRank);
-
-		playerBirthdate = new JPanel();
-		playerBirthdate.setOpaque(false);
-		playerBirthdate.setName("Birthdate");
-		MouseAdapterPanel mouseAdapterPanelBirthdate = new MouseAdapterPanel(playerBirthdate);
-		playerBirthdate.addMouseListener(mouseAdapterPanelBirthdate);
-		playerBirthdate.addMouseMotionListener(mouseAdapterPanelBirthdate);
-
-		playerBirthplace = new JPanel();
-		playerBirthplace.setOpaque(false);
-		playerBirthplace.setName("Birthplace");
-		MouseAdapterPanel mouseAdapterPanelBirthplace = new MouseAdapterPanel(playerBirthplace);
-		playerBirthplace.addMouseListener(mouseAdapterPanelBirthplace);
-		playerBirthplace.addMouseMotionListener(mouseAdapterPanelBirthplace);
-
-		playerHeight = new JPanel();
-		playerHeight.setOpaque(false);
-		playerHeight.setName("Height");
-		MouseAdapterPanel mouseAdapterPanelHeight = new MouseAdapterPanel(playerHeight);
-		playerHeight.addMouseListener(mouseAdapterPanelHeight);
-		playerHeight.addMouseMotionListener(mouseAdapterPanelHeight);
-
-		playerWeight = new JPanel();
-		playerWeight.setOpaque(false);
-		playerWeight.setName("Weight");
-		MouseAdapterPanel mouseAdapterPanelWeight = new MouseAdapterPanel(playerWeight);
-		playerWeight.addMouseListener(mouseAdapterPanelWeight);
-		playerWeight.addMouseMotionListener(mouseAdapterPanelWeight);
-
-		playerHand = new JPanel();
-		playerHand.setOpaque(false);
-		playerHand.setName("Hand");
-		MouseAdapterPanel mouseAdapterPanelHand = new MouseAdapterPanel(playerHand);
-		playerHand.addMouseListener(mouseAdapterPanelHand);
-		playerHand.addMouseMotionListener(mouseAdapterPanelHand);
-
-		playerAge = new JPanel();
-		playerAge.setOpaque(false);
-		playerAge.setName("Age");
-		MouseAdapterPanel mouseAdapterPanelAge = new MouseAdapterPanel(playerAge);
-		playerAge.addMouseListener(mouseAdapterPanelAge);
-		playerAge.addMouseMotionListener(mouseAdapterPanelAge);
-
-		playerPrizetotal = new JPanel();
-		playerPrizetotal.setOpaque(false);
-		playerPrizetotal.setName("Prizetotal");
-		MouseAdapterPanel mouseAdapterPanelPrizetotal = new MouseAdapterPanel(playerPrizetotal);
-		playerPrizetotal.addMouseListener(mouseAdapterPanelPrizetotal);
-		playerPrizetotal.addMouseMotionListener(mouseAdapterPanelPrizetotal);
-
-		playerCityresidence = new JPanel();
-		playerCityresidence.setOpaque(false);
-		playerCityresidence.setName("CityResidence");
-		MouseAdapterPanel mouseAdapterPanelCityresidence = new MouseAdapterPanel(playerCityresidence);
-		playerCityresidence.addMouseListener(mouseAdapterPanelCityresidence);
-		playerCityresidence.addMouseMotionListener(mouseAdapterPanelCityresidence);
-
-		playerLine = new JPanel();
-		playerLine.setOpaque(false);
-		playerLine.setName("Line");
-		MouseAdapterPanel mouseAdapterPanelLine = new MouseAdapterPanel(playerLine);
-		playerLine.addMouseListener(mouseAdapterPanelLine);
-		playerLine.addMouseMotionListener(mouseAdapterPanelLine);
-		switch (typeFen) {
-		case "player": {
-			recupInfosPlayer();
-			break;
-		}
-		case "game": {
-			recupInfosPlayer();
-			break;
-		}
-		case "tab": {
-			recupInfosPlayer();
-			break;
-		}
-		case "full": {
-			recupInfosPlayer();
-			break;
-		}
-		default:
-			throw new IllegalArgumentException("Unexpected value: " + typeFen);
-		}
+		initializePolice();
+		createPlayerPanels();
+		recupInfosPlayer(getEmplacementPlayer());
 		playerfordifusion2 = this;
 	}
 	
-	public void setPlayer(Joueur player, int i) throws ClassNotFoundException, SQLException {
-		this.joueur = player;
-		// ajout affichage nom --------------------------------------------------
-		nameLabel = new JLabel(joueur.getNom());//nameLabel = new JLabel(joueur.getNom());
-		nameLabel.setForeground(policeName.getNewColor());
-		nameLabel.setFont(policeName.getNewfont());
-		playerName.removeAll();
-		playerName.add(nameLabel);
-		// ajout affichage prenom ------------------------------------------------
-		SurnameLabel = new JLabel(joueur.getPrenom());
-		SurnameLabel.setForeground(policeSurname.getNewColor());
-		SurnameLabel.setFont(policeSurname.getNewfont());
-		playerSurname.removeAll();
-		playerSurname.add(SurnameLabel);
-		// ajout affichage image joueur ------------------------------------------
-		ImgLabel = new ImageUtility(joueur.getImgJoueur(), tailleImgJoueur);
-		playerImg.removeAll();
-		playerImg.add(ImgLabel);
-		// ajout affichage drapeau --------------------------------------------------------------
-		FlagLabel = new ImageUtility(BDD_v2.getFlagImagePathByAcronym(joueur.getNatio_acronyme()), tailleImgFlag);
-		playerFlag.removeAll();
-		playerFlag.add(FlagLabel);
-		// ajout affichage acronyme pays --------------------------------------------------------------
-		AcroLabel = new JLabel(joueur.getNatio_acronyme());
-		AcroLabel.setForeground(policeAcro.getNewColor());
-		AcroLabel.setFont(policeAcro.getNewfont());
-		playerAcro.removeAll();
-		playerAcro.add(AcroLabel);
-		// ajout affichage Rank -------------------------------------------------------------------
-		RankLabel = new JLabel(joueur.getRank() + "");
-		RankLabel.setForeground(policeRank.getNewColor());
-		RankLabel.setFont(policeRank.getNewfont());
-		playerRank.removeAll();
-		playerRank.add(RankLabel);
+	private void initializePolice() {
+		policeName = createPolice() ;
+		policeSurname = createPolice() ;
+		policeAcro = createPolice() ;
+		policeRank = createPolice() ;
+		policeBirthDate = createPolice() ;
+		policeBirthPlace = createPolice() ;
+		policeHeight = createPolice() ;
+		policeWeight = createPolice() ;
+		policeHand = createPolice() ;
+		policeAge = createPolice() ;
+		policePrizetotal = createPolice() ;
+		policeCityresidence = createPolice() ;
+		policeLine = createPolice() ;
+	}
+	private chosenPolice createPolice() {
+		chosenPolice policeInitial = new chosenPolice();
+		policeInitial.setNewfont(new Font("Arial", Font.BOLD, 25));
+		policeInitial.setNewColor(Color.BLACK);
+		return policeInitial;
+	}
+	private void createPlayerPanels() {
+	    String[] panelNames = {"Name", "Surname", "ImgJoueur", "ImgFlag", "Acronyme", "Rank", "Birthdate", "Birthplace", "Height", "Weight", "Hand", "Age", "Prizetotal", "CityResidence", "Line"};
+	    for (String name : panelNames) {
+	        JPanel panel = createPlayerPanel(name);
+	        switch (name) {
+	            case "Name": playerName = panel; break;
+	            case "Surname": playerSurname = panel; break;
+	            case "ImgJoueur": playerImg = panel; break;
+	            case "ImgFlag": playerFlag = panel; break;
+	            case "Acronyme": playerAcro = panel; break;
+	            case "Rank": playerRank = panel; break;
+	            case "Birthdate": playerBirthdate = panel; break;
+	            case "Birthplace": playerBirthplace = panel; break;
+	            case "Height": playerHeight = panel; break;
+	            case "Weight": playerWeight = panel; break;
+	            case "Hand": playerHand = panel; break;
+	            case "Age": playerAge = panel; break;
+	            case "Prizetotal": playerPrizetotal = panel; break;
+	            case "CityResidence": playerCityresidence = panel; break;
+	            case "Line": playerLine = panel; break;
+	        }
+	    }
+	}
+	private JPanel createPlayerPanel(String name) {
+	    JPanel panel = new JPanel();
+	    panel.setOpaque(false);
+	    panel.setName(name);
+	    MouseAdapterPanel mouseAdapter = new MouseAdapterPanel(panel);
+	    panel.addMouseListener(mouseAdapter);
+	    panel.addMouseMotionListener(mouseAdapter);
+	    return panel;
+	}
+	private String getEmplacementPlayer() {
+	    return switch (typeFen) {
+	        case "player" -> CONFIG_DIR + nomEvent + "/player" + JSON_EXT;
+	        case "game" -> CONFIG_DIR + nomEvent + "/game" + JSON_EXT;
+	        case "tab" -> CONFIG_DIR + nomEvent + "/tab" + JSON_EXT;
+	        case "full" -> CONFIG_DIR + nomEvent + "/full" + JSON_EXT;
+	        default -> throw new IllegalArgumentException("Unexpected value: " + typeFen);
+	    };
+	}
+	public void setPlayer(Joueur joueur, int i) throws ClassNotFoundException, SQLException {
+	    this.joueur = joueur;
+	    
+	    // Créer une map pour stocker les informations du joueur
+	    Map<JPanel, LabelInfo> playerInfo = new LinkedHashMap<>();
+	    playerInfo.put(playerName, new LabelInfo(joueur.getNom(), policeName));
+	    playerInfo.put(playerSurname, new LabelInfo(joueur.getPrenom(), policeSurname));
+	    playerInfo.put(playerAcro, new LabelInfo(joueur.getNatio_acronyme(), policeAcro));
+	    playerInfo.put(playerRank, new LabelInfo(String.valueOf(joueur.getRank()), policeRank));
+	    playerInfo.put(playerBirthdate, new LabelInfo(joueur.getBirthDate(), policeBirthDate));
+	    playerInfo.put(playerBirthplace, new LabelInfo(joueur.getBirthPlace(), policeBirthPlace));
+	    playerInfo.put(playerHeight, new LabelInfo(String.valueOf(joueur.getTaille()), policeHeight));
+	    playerInfo.put(playerWeight, new LabelInfo(String.valueOf(joueur.getWeight()), policeWeight));
+	    playerInfo.put(playerHand, new LabelInfo(joueur.getMain(), policeHand));
+	    playerInfo.put(playerAge, new LabelInfo(String.valueOf(joueur.getAge()), policeAge));
+	    playerInfo.put(playerPrizetotal, new LabelInfo(joueur.getPrizetotal(), policePrizetotal));
+	    playerInfo.put(playerCityresidence, new LabelInfo(joueur.getCityResidence(), policeCityresidence));
+	    playerInfo.put(playerLine, new LabelInfo(String.valueOf(i), policeLine));
 
-		birthdateLabel = new JLabel(joueur.getBirthDate());
-		birthdateLabel.setForeground(policeBirthDate.getNewColor());
-		birthdateLabel.setFont(policeBirthDate.getNewfont());
-		playerBirthdate.removeAll();
-		playerBirthdate.add(birthdateLabel);
+	    // Mettre à jour tous les panneaux de texte
+	    playerInfo.forEach((panel, info) -> updateTextPanel(panel, info));
 
-		birthPlaceLabel = new JLabel(joueur.getBirthPlace());
-		birthPlaceLabel.setForeground(policeBirthPlace.getNewColor());
-		birthPlaceLabel.setFont(policeBirthPlace.getNewfont());
-		playerBirthplace.removeAll();
-		playerBirthplace.add(birthPlaceLabel);
+	    // Mettre à jour les panneaux d'image
+	    ImgLabel = new ImageUtility(joueur.getImgJoueur(), tailleImgJoueur);
+	    FlagLabel = new ImageUtility(BDD_v2.getFlagImagePathByAcronym(joueur.getNatio_acronyme()),tailleImgFlag);
+	    updateImagePanel(playerImg, ImgLabel);
+	    updateImagePanel(playerFlag, FlagLabel);
 
-		heightLabel = new JLabel(String.valueOf(joueur.getTaille()));
-		heightLabel.setForeground(policeHeight.getNewColor());
-		heightLabel.setFont(policeHeight.getNewfont());
-		playerHeight.removeAll();
-		playerHeight.add(heightLabel);
+	    // Créer et configurer le panneau global
+	    setupGlobalPanel();
 
-		weightLabel = new JLabel(String.valueOf(joueur.getWeight()));
-		weightLabel.setForeground(policeWeight.getNewColor());
-		weightLabel.setFont(policeWeight.getNewfont());
-		playerWeight.removeAll();
-		playerWeight.add(weightLabel);
-
-		handLabel = new JLabel(joueur.getMain());
-		handLabel.setForeground(policeHand.getNewColor());
-		handLabel.setFont(policeHand.getNewfont());
-		playerHand.removeAll();
-		playerHand.add(handLabel);
-
-		ageLabel = new JLabel(String.valueOf(joueur.getAge()));
-		ageLabel.setForeground(policeAge.getNewColor());
-		ageLabel.setFont(policeAge.getNewfont());
-		playerAge.removeAll();
-		playerAge.add(ageLabel);
-
-		prizetotalLabel = new JLabel(joueur.getPrizetotal());
-		prizetotalLabel.setForeground(policePrizetotal.getNewColor());
-		prizetotalLabel.setFont(policePrizetotal.getNewfont());
-		playerPrizetotal.removeAll();
-		playerPrizetotal.add(prizetotalLabel);
-
-		cityresidenceLabel = new JLabel(joueur.getCityResidence());
-		cityresidenceLabel.setForeground(policeCityresidence.getNewColor());
-		cityresidenceLabel.setFont(policeCityresidence.getNewfont());
-		playerCityresidence.removeAll();
-		playerCityresidence.add(cityresidenceLabel);
-
-		lineLabel = new JLabel(""+i);
-		lineLabel.setForeground(policeLine.getNewColor());
-		lineLabel.setFont(policeLine.getNewfont());
-		playerLine.removeAll();
-		playerLine.add(lineLabel);
-		
-		panelPlayerGlobal = new ZoomablePanel();
-		panelPlayerGlobal.setSize(50, 50);
-		panelPlayerGlobal.setLocation(this.frameForDiffusion.getWidth()/2-panelPlayerGlobal.getWidth()/2, this.frameForDiffusion.getHeight()/2-panelPlayerGlobal.getHeight()/2);
-//		panelPlayerGlobal.setLayout(new FlowLayout());
-		panelPlayerGlobal.setLayout(null);
-		panelPlayerGlobal.setOpaque(false);
-//		panelPlayerGlobal.setBackground(Color.RED);
-
-		panelPlayerGlobal.add(playerName);
-		panelPlayerGlobal.add(playerSurname);
-		panelPlayerGlobal.add(playerAcro);
-		panelPlayerGlobal.add(playerRank);
-		panelPlayerGlobal.add(playerBirthdate);
-		panelPlayerGlobal.add(playerBirthplace);
-		panelPlayerGlobal.add(playerHeight);
-		panelPlayerGlobal.add(playerWeight);
-		panelPlayerGlobal.add(playerHand);
-		panelPlayerGlobal.add(playerAge);
-		panelPlayerGlobal.add(playerPrizetotal);
-		panelPlayerGlobal.add(playerCityresidence);
-		panelPlayerGlobal.add(playerLine);
-		panelPlayerGlobal.revalidate();
-		panelPlayerGlobal.repaint();
-		panelPlayerGlobal.add(playerImg);
-		panelPlayerGlobal.add(playerFlag);
-		playerName.setSize((int)nameLabel.getPreferredSize().getWidth(), (int)nameLabel.getPreferredSize().getHeight()+5);
-		playerSurname.setSize((int)SurnameLabel.getPreferredSize().getWidth(), (int)SurnameLabel.getPreferredSize().getHeight()+5);
-		playerImg.setSize((int)ImgLabel.getPreferredSize().getWidth(), (int)ImgLabel.getPreferredSize().getHeight()+5);
-		playerFlag.setSize((int)FlagLabel.getPreferredSize().getWidth(), (int)FlagLabel.getPreferredSize().getHeight()+5);
-		playerAcro.setSize((int)AcroLabel.getPreferredSize().getWidth(), (int)AcroLabel.getPreferredSize().getHeight()+5);
-		playerRank.setSize((int)RankLabel.getPreferredSize().getWidth(), (int)RankLabel.getPreferredSize().getHeight()+5);
-		playerBirthdate.setSize((int)birthdateLabel.getPreferredSize().getWidth(), (int)birthdateLabel.getPreferredSize().getHeight()+5);
-		playerBirthplace.setSize((int)birthPlaceLabel.getPreferredSize().getWidth(), (int)birthPlaceLabel.getPreferredSize().getHeight()+5);
-		playerHeight.setSize((int)heightLabel.getPreferredSize().getWidth(), (int)heightLabel.getPreferredSize().getHeight()+5);
-		playerWeight.setSize((int)weightLabel.getPreferredSize().getWidth(), (int)weightLabel.getPreferredSize().getHeight()+5);
-		playerHand.setSize((int)handLabel.getPreferredSize().getWidth(), (int)handLabel.getPreferredSize().getHeight()+5);
-		playerAge.setSize((int)ageLabel.getPreferredSize().getWidth(), (int)ageLabel.getPreferredSize().getHeight()+5);
-		playerPrizetotal.setSize((int)prizetotalLabel.getPreferredSize().getWidth(), (int)prizetotalLabel.getPreferredSize().getHeight()+5);
-		playerCityresidence.setSize((int)cityresidenceLabel.getPreferredSize().getWidth(), (int)cityresidenceLabel.getPreferredSize().getHeight()+5);
-		playerLine.setSize((int)lineLabel.getPreferredSize().getWidth(), (int)lineLabel.getPreferredSize().getHeight()+5);
-		
-		this.setLayout(null);
-		this.setOpaque(false);
-		Border contour = BorderFactory.createLineBorder(Color.black);
-		panelPlayerGlobal.setBorder(contour);
-		this.add(panelPlayerGlobal);
-		this.setSize(panelPlayerGlobal.getPreferredSize());
-		this.setBounds(0, 0,this.frameForDiffusion.getWidth(), this.frameForDiffusion.getHeight());
-		
-		switch (typeFen) {
-		case "full":{
-			panelPlayerGlobal.setSize(this.frameForDiffusion.getWidth(), this.frameForDiffusion.getHeight());
-			panelPlayerGlobal.setLocation(0, 0);
-			break;
-		}
-		case "player":{
-			animationFrame.zoomPanel(panelPlayerGlobal, frameForDiffusion, () -> {
-				PlayerForDiffusion endPlayer= this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer];
-				for (Component endComponent : endPlayer.getPanelGlobal().getComponents()) {
-				    if (endComponent.isVisible()) {
-				    	Point endPoint = endComponent.getLocation();
-				    	Dimension endDimension;
-				    	if (endComponent.getName().equals("ImgFlag") || endComponent.getName().equals("ImgJoueur")) {
-				    		JPanel endPanel = (JPanel) endComponent;
-				    		JPanel imagePanel;
-				    		JLabel imageLabel;
-				    		if(endComponent.getName().equals("ImgFlag")) {
-				    			imagePanel = playerFlag;
-					    		imageLabel = FlagLabel;
-				    		}else {
-				    			imagePanel = playerImg;
-					    		imageLabel = ImgLabel;
-				    		}
-//				            JLabel dimensionLabel = new ImageUtility(FlagLabel.getImagePath(), (int)elementData.get("taille"));
-				            endDimension = endPanel.getComponents()[0].getPreferredSize(); // Assurez-vous que la taille est stockée dans votre JSON
-				            animationFrame.animateImage(imagePanel,imageLabel, endPoint, endDimension,
-				                JLayeredPane.POPUP_LAYER,
-				                this.frameForDiffusion.getLayeredPane(), () -> {
-				                    this.frameForDiffusion.getWindowTournamentTreeFromBroadcast()
-				                            .getTabPlayerForTree()[this.numeroPlayer]
-				                            .setVisible(true);
-				                });
-				    	}
-				    	else {
-				    		for (Component startComponent : panelPlayerGlobal.getComponents()) {
-								if(startComponent.getName().equals(endComponent.getName())) {
-									JPanel endPanel = (JPanel) endComponent;
-									JPanel startPanel = (JPanel) startComponent;
-									Font endFont = endPanel.getComponents()[0].getFont();
-									Color endColor = endPanel.getComponents()[0].getForeground();
-									endDimension = endPanel.getPreferredSize();
-									animationFrame.animateLabel(startPanel, endPoint, endDimension, endColor,
-											endFont, JLayeredPane.POPUP_LAYER,
-											this.frameForDiffusion.getLayeredPane(), () -> {
-												this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer].setVisible(true);
-											});
-								}
-							}
-				        }
-				    }
-				}
-			});
-			break;
-		}
-		default:{
-			animationFrame.zoomPanel(panelPlayerGlobal, frameForDiffusion, null);	
-		}
-		}
-
-		this.frameForDiffusion.revalidate();
-		this.frameForDiffusion.repaint();		
+	    // Mettre à jour l'affichage
+	    updateDisplay();
 	}
 
-	private void recupInfosPlayer() {
-		int index = numeroPlayer;
-		String emplacementPlayer = null;
-		switch (typeFen) {
-		case "player":
-			index = 0;
-			emplacementPlayer = "Config/"+nomEvent+"/player.json";
-			break;
-		case "game":
-			emplacementPlayer = "Config/"+nomEvent+"/game.json";
-			break;
-		case "tab":
-			emplacementPlayer = "Config/"+nomEvent+"/tab.json";
-			break;
-		case "full":
-			emplacementPlayer = "Config/"+nomEvent+"/full.json";
-			break;
-
-		default:
-			break;
-		}
-		System.out.println("--- index du joueur a recup from "+typeFen+" : "+index+" | "+numeroPlayer+", localisation : "+emplacementPlayer+" ---");
-		ConfigurationSaveLoad configData = ConfigurationSaveLoad.loadConfigFromFile(emplacementPlayer);
-		if (configData != null) {
-			ElementPoliceJoueur elementPoliceSurname = configData.getElementPolice(emplacementPlayer, nomEvent, typeFen,"Surname", index);
-			playerSurname.setVisible(elementPoliceSurname.isVisible());
-			if (elementPoliceSurname.isVisible()) {
-				ElementJoueur elementSurname = configData.getElement(emplacementPlayer, nomEvent, typeFen, "Surname",index);// elementWindows.getPlayer().get("Surname");
-				if (elementSurname != null) {
-					playerSurname.setLocation(elementSurname.getPositionX(), elementSurname.getPositionY());
-					policeSurname.setNewfont(new Font(elementPoliceSurname.getFont().split(",")[0],
-							Integer.parseInt(elementPoliceSurname.getFont().split(",")[1]),
-							Integer.parseInt(elementPoliceSurname.getFont().split(",")[2])));
-					policeSurname.setNewColor(new Color(Integer.parseInt(elementPoliceSurname.getColor().split(",")[0]),
-							Integer.parseInt(elementPoliceSurname.getColor().split(",")[1]),
-							Integer.parseInt(elementPoliceSurname.getColor().split(",")[2])));
-				}
-			}
-			ElementPoliceJoueur elementPoliceName = configData.getElementPolice(emplacementPlayer, nomEvent, typeFen,
-					"Name", index);// elementWindows.getPlayer().get("Name");
-			playerName.setVisible(elementPoliceName.isVisible());
-			if (elementPoliceName.isVisible()) {
-				ElementJoueur elementName = configData.getElement(emplacementPlayer, nomEvent, typeFen, "Name", index);// elementWindows.getPlayer().get("Name");
-				if (elementName != null) {
-					playerName.setLocation(elementName.getPositionX(), elementName.getPositionY());
-					policeName.setNewfont(new Font(elementPoliceName.getFont().split(",")[0],
-							Integer.parseInt(elementPoliceName.getFont().split(",")[1]),
-							Integer.parseInt(elementPoliceName.getFont().split(",")[2])));
-					policeName.setNewColor(new Color(Integer.parseInt(elementPoliceName.getColor().split(",")[0]),
-							Integer.parseInt(elementPoliceName.getColor().split(",")[1]),
-							Integer.parseInt(elementPoliceName.getColor().split(",")[2])));
-				}
-			}
-			ElementPoliceJoueur elementPoliceImg = configData.getElementPolice(emplacementPlayer, nomEvent, typeFen,
-					"ImgJoueur", index);
-			playerImg.setVisible(elementPoliceImg.isVisible());
-			if (elementPoliceImg.isVisible()) {
-				ElementJoueur elementImg = configData.getElement(emplacementPlayer, nomEvent, typeFen, "ImgJoueur",
-						index);// elementWindows.getPlayer().get("ImgJoueur");
-				if (elementImg != null) {
-					playerImg.setLocation(elementImg.getPositionX(), elementImg.getPositionY());
-					// System.out.println("taille image joueur : "+elementPoliceImg.getTaille());
-					tailleImgJoueur = elementPoliceImg.getTaille();
-				}
-			}
-			ElementPoliceJoueur elementPoliceFlag = configData.getElementPolice(emplacementPlayer, nomEvent, typeFen,"ImgFlag", index);
-			playerFlag.setVisible(elementPoliceFlag.isVisible());
-			if (elementPoliceFlag.isVisible()) {
-				ElementJoueur elementFlag = configData.getElement(emplacementPlayer, nomEvent, typeFen, "ImgFlag",index);
-				if (elementFlag != null) {
-					playerFlag.setLocation(elementFlag.getPositionX(), elementFlag.getPositionY());
-//					playerFlag.bounds(elementFlag.getPositionX(), elementFlag.getPositionY(),10,10);
-					tailleImgFlag = elementPoliceFlag.getTaille();
-				}
-			}
-			ElementPoliceJoueur elementPoliceAcro = configData.getElementPolice(emplacementPlayer, nomEvent, typeFen,
-					"Acronyme", index);
-			playerAcro.setVisible(elementPoliceAcro.isVisible());
-			if (elementPoliceAcro.isVisible()) {
-				ElementJoueur elementAcro = configData.getElement(emplacementPlayer, nomEvent, typeFen, "Acronyme",
-						index);// elementWindows.getPlayer().get("Acronyme");
-				if (elementAcro != null) {
-					playerAcro.setLocation(elementAcro.getPositionX(), elementAcro.getPositionY());
-					policeAcro.setNewfont(new Font(elementPoliceAcro.getFont().split(",")[0],
-							Integer.parseInt(elementPoliceAcro.getFont().split(",")[1]),
-							Integer.parseInt(elementPoliceAcro.getFont().split(",")[2])));
-					policeAcro.setNewColor(new Color(Integer.parseInt(elementPoliceAcro.getColor().split(",")[0]),
-							Integer.parseInt(elementPoliceAcro.getColor().split(",")[1]),
-							Integer.parseInt(elementPoliceAcro.getColor().split(",")[2])));
-				}
-			}
-			ElementPoliceJoueur elementPoliceRank = configData.getElementPolice(emplacementPlayer, nomEvent, typeFen,
-					"Rank", index);
-			playerRank.setVisible(elementPoliceRank.isVisible());
-			if (elementPoliceRank.isVisible()) {
-				ElementJoueur elementRank = configData.getElement(emplacementPlayer, nomEvent, typeFen, "Rank", index);// elementWindows.getPlayer().get("Rank");
-				if (elementRank != null) {
-					playerRank.setLocation(elementRank.getPositionX(), elementRank.getPositionY());
-					policeRank.setNewfont(new Font(elementPoliceRank.getFont().split(",")[0],
-							Integer.parseInt(elementPoliceRank.getFont().split(",")[1]),
-							Integer.parseInt(elementPoliceRank.getFont().split(",")[2])));
-					policeRank.setNewColor(new Color(Integer.parseInt(elementPoliceRank.getColor().split(",")[0]),
-							Integer.parseInt(elementPoliceRank.getColor().split(",")[1]),
-							Integer.parseInt(elementPoliceRank.getColor().split(",")[2])));
-				}
-			}
-			ElementPoliceJoueur elementPoliceBirthDate = configData.getElementPolice(emplacementPlayer, nomEvent,
-					typeFen, "Birthdate", index);
-			playerBirthdate.setVisible(elementPoliceBirthDate.isVisible());
-			if (elementPoliceBirthDate.isVisible()) {
-				ElementJoueur elementBirthDate = configData.getElement(emplacementPlayer, nomEvent, typeFen,
-						"Birthdate", index);// elementWindows.getPlayer().get("Birthdate");
-				if (elementBirthDate != null) {
-					playerBirthdate.setLocation(elementBirthDate.getPositionX(), elementBirthDate.getPositionY());
-					policeBirthDate.setNewfont(new Font(elementPoliceBirthDate.getFont().split(",")[0],
-							Integer.parseInt(elementPoliceBirthDate.getFont().split(",")[1]),
-							Integer.parseInt(elementPoliceBirthDate.getFont().split(",")[2])));
-					policeBirthDate
-							.setNewColor(new Color(Integer.parseInt(elementPoliceBirthDate.getColor().split(",")[0]),
-									Integer.parseInt(elementPoliceBirthDate.getColor().split(",")[1]),
-									Integer.parseInt(elementPoliceBirthDate.getColor().split(",")[2])));
-				}
-			}
-			ElementPoliceJoueur elementPoliceBirthPlace = configData.getElementPolice(emplacementPlayer, nomEvent,
-					typeFen, "Birthplace", index);
-			playerBirthplace.setVisible(elementPoliceBirthPlace.isVisible());
-			if (elementPoliceBirthPlace.isVisible()) {
-				ElementJoueur elementBirthPlace = configData.getElement(emplacementPlayer, nomEvent, typeFen,
-						"Birthplace", index);// elementWindows.getPlayer().get("Birthplace");
-				if (elementBirthPlace != null) {
-					playerBirthplace.setLocation(elementBirthPlace.getPositionX(), elementBirthPlace.getPositionY());
-					policeBirthPlace.setNewfont(new Font(elementPoliceBirthPlace.getFont().split(",")[0],
-							Integer.parseInt(elementPoliceBirthPlace.getFont().split(",")[1]),
-							Integer.parseInt(elementPoliceBirthPlace.getFont().split(",")[2])));
-					policeBirthPlace
-							.setNewColor(new Color(Integer.parseInt(elementPoliceBirthPlace.getColor().split(",")[0]),
-									Integer.parseInt(elementPoliceBirthPlace.getColor().split(",")[1]),
-									Integer.parseInt(elementPoliceBirthPlace.getColor().split(",")[2])));
-				}
-			}
-			ElementPoliceJoueur elementPoliceHeight = configData.getElementPolice(emplacementPlayer, nomEvent, typeFen,
-					"Height", index);
-			playerHeight.setVisible(elementPoliceHeight.isVisible());
-			if (elementPoliceHeight.isVisible()) {
-				ElementJoueur elementHeight = configData.getElement(emplacementPlayer, nomEvent, typeFen, "Height",
-						index);// elementWindows.getPlayer().get("Height");
-				if (elementHeight != null) {
-					playerHeight.setLocation(elementHeight.getPositionX(), elementHeight.getPositionY());
-					policeHeight.setNewfont(new Font(elementPoliceHeight.getFont().split(",")[0],
-							Integer.parseInt(elementPoliceHeight.getFont().split(",")[1]),
-							Integer.parseInt(elementPoliceHeight.getFont().split(",")[2])));
-					policeHeight.setNewColor(new Color(Integer.parseInt(elementPoliceHeight.getColor().split(",")[0]),
-							Integer.parseInt(elementPoliceHeight.getColor().split(",")[1]),
-							Integer.parseInt(elementPoliceHeight.getColor().split(",")[2])));
-				}
-			}
-			ElementPoliceJoueur elementPoliceWeight = configData.getElementPolice(emplacementPlayer, nomEvent, typeFen,
-					"Weight", index);
-			playerWeight.setVisible(elementPoliceWeight.isVisible());
-			if (elementPoliceWeight.isVisible()) {
-				ElementJoueur elementWeight = configData.getElement(emplacementPlayer, nomEvent, typeFen, "Weight",
-						index);// elementWindows.getPlayer().get("Weight");
-				if (elementWeight != null) {
-					playerWeight.setLocation(elementWeight.getPositionX(), elementWeight.getPositionY());
-					policeWeight.setNewfont(new Font(elementPoliceWeight.getFont().split(",")[0],
-							Integer.parseInt(elementPoliceWeight.getFont().split(",")[1]),
-							Integer.parseInt(elementPoliceWeight.getFont().split(",")[2])));
-					policeWeight.setNewColor(new Color(Integer.parseInt(elementPoliceWeight.getColor().split(",")[0]),
-							Integer.parseInt(elementPoliceWeight.getColor().split(",")[1]),
-							Integer.parseInt(elementPoliceWeight.getColor().split(",")[2])));
-				}
-			}
-			ElementPoliceJoueur elementPoliceHand = configData.getElementPolice(emplacementPlayer, nomEvent, typeFen,
-					"Hand", index);
-			playerHand.setVisible(elementPoliceHand.isVisible());
-			if (elementPoliceHand.isVisible()) {
-				ElementJoueur elementHand = configData.getElement(emplacementPlayer, nomEvent, typeFen, "Hand", index);// elementWindows.getPlayer().get("Hand");
-				if (elementHand != null) {
-					if (typeFen != "tab")
-						playerHand.setLocation(elementHand.getPositionX(), elementHand.getPositionY());
-					policeHand.setNewfont(new Font(elementPoliceHand.getFont().split(",")[0],
-							Integer.parseInt(elementPoliceHand.getFont().split(",")[1]),
-							Integer.parseInt(elementPoliceHand.getFont().split(",")[2])));
-					policeHand.setNewColor(new Color(Integer.parseInt(elementPoliceHand.getColor().split(",")[0]),
-							Integer.parseInt(elementPoliceHand.getColor().split(",")[1]),
-							Integer.parseInt(elementPoliceHand.getColor().split(",")[2])));
-				}
-			}
-			ElementPoliceJoueur elementPoliceAge = configData.getElementPolice(emplacementPlayer, nomEvent, typeFen,
-					"Age", index);
-			playerAge.setVisible(elementPoliceAge.isVisible());
-			if (elementPoliceAge.isVisible()) {
-				ElementJoueur elementAge = configData.getElement(emplacementPlayer, nomEvent, typeFen, "Age", index);// elementWindows.getPlayer().get("Age");
-				if (elementAge != null) {
-					playerAge.setLocation(elementAge.getPositionX(), elementAge.getPositionY());
-					policeAge.setNewfont(new Font(elementPoliceAge.getFont().split(",")[0],
-							Integer.parseInt(elementPoliceAge.getFont().split(",")[1]),
-							Integer.parseInt(elementPoliceAge.getFont().split(",")[2])));
-					policeAge.setNewColor(new Color(Integer.parseInt(elementPoliceAge.getColor().split(",")[0]),
-							Integer.parseInt(elementPoliceAge.getColor().split(",")[1]),
-							Integer.parseInt(elementPoliceAge.getColor().split(",")[2])));
-				}
-			}
-			ElementPoliceJoueur elementPolicePrizeTotal = configData.getElementPolice(emplacementPlayer, nomEvent,
-					typeFen, "Prizetotal", index);
-			playerPrizetotal.setVisible(elementPolicePrizeTotal.isVisible());
-			if (elementPolicePrizeTotal.isVisible()) {
-				ElementJoueur elementPrizeTotal = configData.getElement(emplacementPlayer, nomEvent, typeFen,
-						"Prizetotal", index);// elementWindows.getPlayer().get("Prizetotal");
-				if (elementPrizeTotal != null) {
-					playerPrizetotal.setLocation(elementPrizeTotal.getPositionX(), elementPrizeTotal.getPositionY());
-					policePrizetotal.setNewfont(new Font(elementPolicePrizeTotal.getFont().split(",")[0],
-							Integer.parseInt(elementPolicePrizeTotal.getFont().split(",")[1]),
-							Integer.parseInt(elementPolicePrizeTotal.getFont().split(",")[2])));
-					policePrizetotal
-							.setNewColor(new Color(Integer.parseInt(elementPolicePrizeTotal.getColor().split(",")[0]),
-									Integer.parseInt(elementPolicePrizeTotal.getColor().split(",")[1]),
-									Integer.parseInt(elementPolicePrizeTotal.getColor().split(",")[2])));
-				}
-			}
-			ElementPoliceJoueur elementPoliceCityResidence = configData.getElementPolice(emplacementPlayer, nomEvent,
-					typeFen, "CityResidence", index);
-			playerCityresidence.setVisible(elementPoliceCityResidence.isVisible());
-			if (elementPoliceCityResidence.isVisible()) {
-				ElementJoueur elementCityResidence = configData.getElement(emplacementPlayer, nomEvent, typeFen,
-						"CityResidence", index);// elementWindows.getPlayer().get("CityResidence");
-				if (elementCityResidence != null) {
-					playerCityresidence.setLocation(elementCityResidence.getPositionX(),
-							elementCityResidence.getPositionY());
-					policeCityresidence.setNewfont(new Font(elementPoliceCityResidence.getFont().split(",")[0],
-							Integer.parseInt(elementPoliceCityResidence.getFont().split(",")[1]),
-							Integer.parseInt(elementPoliceCityResidence.getFont().split(",")[2])));
-					policeCityresidence.setNewColor(
-							new Color(Integer.parseInt(elementPoliceCityResidence.getColor().split(",")[0]),
-									Integer.parseInt(elementPoliceCityResidence.getColor().split(",")[1]),
-									Integer.parseInt(elementPoliceCityResidence.getColor().split(",")[2])));
-				}
-			}
-			ElementPoliceJoueur elementPoliceLine = configData.getElementPolice(emplacementPlayer, nomEvent, typeFen,
-					"Line", index);
-			playerLine.setVisible(elementPoliceLine.isVisible());
-			if (elementPoliceLine.isVisible()) {
-				ElementJoueur elementLine = configData.getElement(emplacementPlayer, nomEvent, typeFen, "Line", index);// elementWindows.getPlayer().get("Line");
-				if (elementLine != null) {
-					playerLine.setLocation(elementLine.getPositionX(), elementLine.getPositionY());
-					policeLine.setNewfont(new Font(elementPoliceLine.getFont().split(",")[0],
-							Integer.parseInt(elementPoliceLine.getFont().split(",")[1]),
-							Integer.parseInt(elementPoliceLine.getFont().split(",")[2])));
-					policeLine.setNewColor(new Color(Integer.parseInt(elementPoliceLine.getColor().split(",")[0]),
-							Integer.parseInt(elementPoliceLine.getColor().split(",")[1]),
-							Integer.parseInt(elementPoliceLine.getColor().split(",")[2])));
-				}
-			}
-		}else {
-			System.out.println("! Config in JSON null --> defaut config");
-			// Positions des nouveaux panneaux
-			playerName.setLocation(10, 0);
-			playerSurname.setLocation(10, 20);
-			playerImg.setLocation(10, 260);
-			playerFlag.setLocation(10, 260);
-			playerAcro.setLocation(10, 40);
-			playerRank.setLocation(10, 60);
-			playerBirthdate.setLocation(10, 80);
-			playerBirthplace.setLocation(10, 100);
-			playerHeight.setLocation(10, 120);
-			playerWeight.setLocation(10, 140);
-			playerHand.setLocation(10, 160);
-			playerAge.setLocation(10, 180);
-			playerPrizetotal.setLocation(10, 200);
-			playerCityresidence.setLocation(10, 220);
-			playerLine.setLocation(10, 240);
-		}
+	private void updateTextPanel(JPanel panel, LabelInfo info) {
+	    panel.removeAll();
+	    JLabel label = new JLabel(info.text);
+	    label.setForeground(info.police.getNewColor());
+	    label.setFont(info.police.getNewfont());
+	    panel.add(label);
+	    panel.setSize(label.getPreferredSize().width, label.getPreferredSize().height + 5);
 	}
-	
+
+	private void updateImagePanel(JPanel panel, ImageUtility imageLabel) {
+	    panel.removeAll();
+	    panel.add(imageLabel);
+	    panel.setSize(imageLabel.getPreferredSize().width, imageLabel.getPreferredSize().height + 5);
+	}
+
+	private void setupGlobalPanel() {
+	    panelPlayerGlobal = new ZoomablePanel();
+	    panelPlayerGlobal.setSize(50, 50);
+	    panelPlayerGlobal.setLocation(this.frameForDiffusion.getWidth()/2-panelPlayerGlobal.getWidth()/2, 
+	                                  this.frameForDiffusion.getHeight()/2-panelPlayerGlobal.getHeight()/2);
+	    panelPlayerGlobal.setLayout(null);
+	    panelPlayerGlobal.setOpaque(false);
+
+	    // Ajouter tous les panneaux au panneau global
+	    Arrays.asList(playerName, playerSurname, playerAcro, playerRank, playerBirthdate, playerBirthplace,
+	                  playerHeight, playerWeight, playerHand, playerAge, playerPrizetotal, playerCityresidence,
+	                  playerLine, playerImg, playerFlag).forEach(panelPlayerGlobal::add);
+	}
+
+	private void updateDisplay() {
+	    this.setLayout(null);
+	    this.setOpaque(false);
+	    Border contour = BorderFactory.createLineBorder(Color.black);
+	    panelPlayerGlobal.setBorder(contour);
+	    this.add(panelPlayerGlobal);
+	    this.setSize(panelPlayerGlobal.getPreferredSize());
+	    this.setBounds(0, 0, this.frameForDiffusion.getWidth(), this.frameForDiffusion.getHeight());
+
+	    handleWindowTypeSpecificBehavior();
+
+	    this.frameForDiffusion.revalidate();
+	    this.frameForDiffusion.repaint();
+	}
+
+	private void handleWindowTypeSpecificBehavior() {
+	    switch (typeFen) {
+	        case "full":
+	            panelPlayerGlobal.setSize(this.frameForDiffusion.getWidth(), this.frameForDiffusion.getHeight());
+	            panelPlayerGlobal.setLocation(0, 0);
+	            break;
+	        case "player":
+	            animationFrame.zoomPanel(panelPlayerGlobal, frameForDiffusion, this::animatePlayerElements);
+	            break;
+	        default:
+	            animationFrame.zoomPanel(panelPlayerGlobal, frameForDiffusion, null);
+	    }
+	}
+
+	private void animatePlayerElements() {
+	    PlayerForDiffusion endPlayer = this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer];
+	    for (Component endComponent : endPlayer.getPanelGlobal().getComponents()) {
+	        if (endComponent.isVisible()) {
+	            Point endPoint = endComponent.getLocation();
+	            if (endComponent.getName().equals("ImgFlag") || endComponent.getName().equals("ImgJoueur")) {
+	                animateImageElement((JPanel) endComponent, endPoint);
+	            } else {
+	                animateTextElement(endComponent, endPoint);
+	            }
+	        }
+	    }
+	}
+
+	private void animateImageElement(JPanel endPanel, Point endPoint) {
+	    JPanel imagePanel = endPanel.getName().equals("ImgFlag") ? playerFlag : playerImg;
+	    JLabel imageLabel = endPanel.getName().equals("ImgFlag") ? FlagLabel : ImgLabel;
+	    Dimension endDimension = endPanel.getComponents()[0].getPreferredSize();
+	    animationFrame.animateImage(imagePanel, imageLabel, endPoint, endDimension,
+	            JLayeredPane.POPUP_LAYER, this.frameForDiffusion.getLayeredPane(),
+	            () -> this.frameForDiffusion.getWindowTournamentTreeFromBroadcast()
+	                    .getTabPlayerForTree()[this.numeroPlayer].setVisible(true));
+	}
+
+	private void animateTextElement(Component endComponent, Point endPoint) {
+	    for (Component startComponent : panelPlayerGlobal.getComponents()) {
+	        if (startComponent.getName().equals(endComponent.getName())) {
+	            JPanel endPanel = (JPanel) endComponent;
+	            JPanel startPanel = (JPanel) startComponent;
+	            Font endFont = endPanel.getComponents()[0].getFont();
+	            Color endColor = endPanel.getComponents()[0].getForeground();
+	            Dimension endDimension = endPanel.getPreferredSize();
+	            animationFrame.animateLabel(startPanel, endPoint, endDimension, endColor,
+	                    endFont, JLayeredPane.POPUP_LAYER,
+	                    this.frameForDiffusion.getLayeredPane(),
+	                    () -> this.frameForDiffusion.getWindowTournamentTreeFromBroadcast()
+	                            .getTabPlayerForTree()[this.numeroPlayer].setVisible(true));
+	            break;
+	        }
+	    }
+	}
+
+	private static class LabelInfo {
+	    String text;
+	    chosenPolice police;
+
+	    LabelInfo(String text, chosenPolice police) {
+	        this.text = text;
+	        this.police = police;
+	    }
+	}
+	private void recupInfosPlayer(String emplacementPlayer) {
+	    int index = numeroPlayer;
+	    System.out.println("--- index du joueur a recup from " + typeFen + " : " + index + " | " + numeroPlayer + ", localisation : " + emplacementPlayer + " ---");
+	    ConfigurationSaveLoad configData = ConfigurationSaveLoad.loadConfigFromFile(emplacementPlayer);
+	    if (configData == null) {
+	        setDefaultPositions();
+	        return;
+	    }
+
+	    updatePlayerElements(configData, emplacementPlayer, index);
+	}
+
+	private void setDefaultPositions() {
+	    System.out.println("! Config in JSON null --> defaut config");
+	    int y = 0;
+	    for (JPanel panel : Arrays.asList(playerName, playerSurname, playerAcro, playerRank, playerBirthdate, 
+	                                      playerBirthplace, playerHeight, playerWeight, playerHand, playerAge, 
+	                                      playerPrizetotal, playerCityresidence, playerLine)) {
+	        panel.setLocation(10, y);
+	        y += 20;
+	    }
+	    playerImg.setLocation(10, 260);
+	    playerFlag.setLocation(10, 260);
+	}
+
+	private void updatePlayerElements(ConfigurationSaveLoad configData, String emplacementPlayer, int index) {
+	    Map<String, Object[]> elements = new HashMap<>();
+	    elements.put("Surname", new Object[]{playerSurname, policeSurname});
+	    elements.put("Name", new Object[]{playerName, policeName});
+	    elements.put("Acronyme", new Object[]{playerAcro, policeAcro});
+	    elements.put("Rank", new Object[]{playerRank, policeRank});
+	    elements.put("Birthdate", new Object[]{playerBirthdate, policeBirthDate});
+	    elements.put("Birthplace", new Object[]{playerBirthplace, policeBirthPlace});
+	    elements.put("Height", new Object[]{playerHeight, policeHeight});
+	    elements.put("Weight", new Object[]{playerWeight, policeWeight});
+	    elements.put("Hand", new Object[]{playerHand, policeHand});
+	    elements.put("Age", new Object[]{playerAge, policeAge});
+	    elements.put("Prizetotal", new Object[]{playerPrizetotal, policePrizetotal});
+	    elements.put("CityResidence", new Object[]{playerCityresidence, policeCityresidence});
+	    elements.put("Line", new Object[]{playerLine, policeLine});
+
+	    for (Map.Entry<String, Object[]> entry : elements.entrySet()) {
+	        String elementName = entry.getKey();
+	        JPanel panel = (JPanel) entry.getValue()[0];
+	        chosenPolice police = (chosenPolice) entry.getValue()[1];
+
+	        ElementPoliceJoueur elementPolice = configData.getElementPolice(emplacementPlayer, nomEvent, typeFen, elementName, index);
+	        panel.setVisible(elementPolice.isVisible());
+	        if (elementPolice.isVisible()) {
+	            updateElement(configData, emplacementPlayer, index, elementName, panel, police, elementPolice);
+	        }
+	    }
+
+	    updateImageElement(configData, emplacementPlayer, index, "ImgJoueur", playerImg);
+	    updateImageElement(configData, emplacementPlayer, index, "ImgFlag", playerFlag);
+	}
+
+	private void updateElement(ConfigurationSaveLoad configData, String emplacementPlayer, int index, String elementName, 
+	                           JPanel panel, chosenPolice police, ElementPoliceJoueur elementPolice) {
+		ElementJoueur element = configData.getElement(emplacementPlayer, nomEvent, typeFen, elementName, index);
+	    if (element != null) {
+	        panel.setLocation(element.getPositionX(), element.getPositionY());
+	        String[] fontParts = elementPolice.getFont().split(",");
+	        police.setNewfont(new Font(fontParts[0], Integer.parseInt(fontParts[1]), Integer.parseInt(fontParts[2])));
+	        String[] colorParts = elementPolice.getColor().split(",");
+	        police.setNewColor(new Color(Integer.parseInt(colorParts[0]), Integer.parseInt(colorParts[1]), Integer.parseInt(colorParts[2])));
+	    }
+	}
+
+	private void updateImageElement(ConfigurationSaveLoad configData, String emplacementPlayer, int index, String elementName, JPanel panel) {
+	    ElementPoliceJoueur elementPolice = configData.getElementPolice(emplacementPlayer, nomEvent, typeFen, elementName, index);
+	    panel.setVisible(elementPolice.isVisible());
+	    if (elementPolice.isVisible()) {
+	        ElementJoueur element = configData.getElement(emplacementPlayer, nomEvent, typeFen, elementName, index);
+	        if (element != null) {
+	            panel.setLocation(element.getPositionX(), element.getPositionY());
+	            if (elementName.equals("ImgJoueur")) {
+	                tailleImgJoueur = elementPolice.getTaille();
+	            } else if (elementName.equals("ImgFlag")) {
+	                tailleImgFlag = elementPolice.getTaille();
+	            }
+	        }
+	    }
+	}
 
 	class MouseAdapterPanel extends MouseAdapter {
 		private JPanel panel;
@@ -795,120 +450,27 @@ public class PlayerForDiffusion extends JPanel{
 		}
 
 		public void mouseReleased(MouseEvent e) {
-			//frameForDiffusion.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		    String typeFen = playerfordifusion2.getTypeFen();
+		    int playerIndex = playerfordifusion2.getNumeroPlayer();
 
+		    switch (typeFen) {
+		        case "player":
+		        case "game":
+		        case "tab":
+		            handleStandardCase(typeFen, playerIndex);
+		            break;
+		        case "full":
+		            handleFullCase();
+		            break;
+		        default:
+		            throw new IllegalArgumentException("Unexpected value: " + typeFen);
+		    }
 
-			switch (typeFen) {
-			case "player": {
-				//si fenetre differente de type player
-//				if(windowConfigurationPlayerInfos.getTypeFenetre() != typeFen) {
-//					windowConfigurationPlayerInfos.tabbedPane.removeAll();
-//					windowConfigurationPlayerInfos.tabbedPane.revalidate();
-//					windowConfigurationPlayerInfos.tabbedPane.repaint();
-//					windowConfigurationPlayerInfos.setTypeFenetre("player");
-//					ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
-//        			ListSelectedJoueur.add(playerfordifusion2);
-//					TabConfigurationPlayerInfos tabOnePlayer = new TabConfigurationPlayerInfos(playerfordifusion2, playerfordifusion2.getJoueur(), frameForDiffusion, windowConfigurationPlayerInfos);
-//					windowConfigurationPlayerInfos.addTabJoueur(tabOnePlayer);
-//					windowConfigurationPlayerInfos.setTabPolice(new TabPolice(ListSelectedJoueur, windowConfigurationPlayerInfos));
-//				}else {
-//					windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(0); //mets l'onglet correspondant au joueur
-//					Component selectedComponent = windowConfigurationPlayerInfos.tabbedPane.getSelectedComponent();//recupere les infos de l'onglet
-//					if (selectedComponent instanceof TabConfigurationPlayerInfos) {
-//						TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;//
-//						System.out.println(" Player draged : "+playerfordifusion2.nameLabel.getText()+" for window PLAYER");		
-//						currentTab.refreshSpinner(playerfordifusion2);//mise a jour des positions de l'onglet du joueur selectionné
-//					} else {
-//						// Handle the case where the selected component is not of type tabInfosPlayer
-//						windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(getNumeroPlayer()+1);
-//						System.out.println("! Error: Selected component is not an instance of tabInfosPlayer");
-//					}				
-//				}
-				windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(0); //mets l'onglet correspondant au joueur
-				Component selectedComponent = windowConfigurationPlayerInfos.tabbedPane.getSelectedComponent();//recupere les infos de l'onglet
-				if (selectedComponent instanceof TabConfigurationPlayerInfos) {
-					TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;//
-					System.out.println(" Player draged : "+playerfordifusion2.nameLabel.getText()+" for window PLAYER");		
-					currentTab.refreshSpinner(playerfordifusion2);//mise a jour des positions de l'onglet du joueur selectionné
-				} else {
-					// Handle the case where the selected component is not of type tabInfosPlayer
-					windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(getNumeroPlayer()+1);
-					System.out.println("! Error: Selected component is not an instance of tabInfosPlayer");
-				}	
-				break;
-			}
-			case "game": {
-				//si fenetre differente de type player
-//				if(windowConfigurationPlayerInfos.getTypeFenetre() != typeFen) {
-//					windowConfigurationPlayerInfos.tabbedPane.removeAll();
-//					windowConfigurationPlayerInfos.tabbedPane.revalidate();
-//					windowConfigurationPlayerInfos.tabbedPane.repaint();
-//					windowConfigurationPlayerInfos.setTypeFenetre("game");
-//					ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
-//					for (Component layerComponent : frameForDiffusion.getLayeredPaneWindowBroadcastPublic().getComponentsInLayer(JLayeredPane.PALETTE_LAYER)) {
-//						if(layerComponent instanceof PlayerForDiffusion) {
-//							ListSelectedJoueur.add((PlayerForDiffusion)layerComponent);
-//						}
-//					}
-//					for (PlayerForDiffusion playerForDiffusion : ListSelectedJoueur) {
-//						TabConfigurationPlayerInfos tabPool = new TabConfigurationPlayerInfos(playerForDiffusion, playerForDiffusion.getJoueur(), frameForDiffusion, windowConfigurationPlayerInfos);
-//						windowConfigurationPlayerInfos.addTabJoueur(tabPool);
-//						System.out.println("    GAME player to display : "+playerForDiffusion.nameLabel.getText()+" "+playerForDiffusion.getNumeroPlayer());
-//					}	
-//					windowConfigurationPlayerInfos.setTabPolice(new TabPolice(ListSelectedJoueur, windowConfigurationPlayerInfos));
-//				}else {
-//					windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(getNumeroPlayer()); //mets l'onglet correspondant au joueur
-//					Component selectedComponent = windowConfigurationPlayerInfos.tabbedPane.getSelectedComponent();//recupere les infos de l'onglet
-//			        if (selectedComponent instanceof TabConfigurationPlayerInfos) {
-//			            TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;//
-//			    		System.out.println(" Player draged : "+playerfordifusion2.nameLabel.getText()+" for window GAME");		
-//			            currentTab.refreshSpinner(playerfordifusion2);//mise a jour des positions de l'onglet du joueur selectionné
-//			        } else {
-//			            // Handle the case where the selected component is not of type tabInfosPlayer
-//			        	windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(getNumeroPlayer()+1);
-//			            System.out.println("! Error: Selected component is not an instance of tabInfosPlayer");
-//			        }
-//				}
-				windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(getNumeroPlayer()); //mets l'onglet correspondant au joueur
-				Component selectedComponent = windowConfigurationPlayerInfos.tabbedPane.getSelectedComponent();//recupere les infos de l'onglet
-		        if (selectedComponent instanceof TabConfigurationPlayerInfos) {
-		            TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;//
-		    		System.out.println(" Player draged : "+playerfordifusion2.nameLabel.getText()+" for window GAME");		
-		            currentTab.refreshSpinner(playerfordifusion2);//mise a jour des positions de l'onglet du joueur selectionné
-		        } else {
-		            // Handle the case where the selected component is not of type tabInfosPlayer
-		        	windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(getNumeroPlayer()+1);
-		            System.out.println("! Error: Selected component is not an instance of tabInfosPlayer");
-		        }
-				break;
-			}
-			case "tab": {
-				windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(getNumeroPlayer()); //mets l'onglet correspondant au joueur
-				Component selectedComponent = windowConfigurationPlayerInfos.tabbedPane.getSelectedComponent();//recupere les infos de l'onglet
-		        if (selectedComponent instanceof TabConfigurationPlayerInfos) {
-		            TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;//
-		    		System.out.println(" Player draged : "+playerfordifusion2.nameLabel.getText()+" for window TAB");		
-		            currentTab.refreshSpinner(playerfordifusion2);//mise a jour des positions de l'onglet du joueur selectionné
-		        } else {
-		            // Handle the case where the selected component is not of type tabInfosPlayer
-		        	windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(getNumeroPlayer()+1);
-		            System.out.println("! Error: Selected component is not an instance of tabInfosPlayer");
-		        }
-                break;
-			}
-			case "full": {
-				joueurFullDragged();
-                break;
-			}
-			default:
-				throw new IllegalArgumentException("! Unexpected value: " + typeFen);
-			}
-			//placementFrame.refreshSpinner();
-			System.out.println("type de fenetre du joueur creer "+windowConfigurationPlayerInfos.getTypeFenetre());
+		    System.out.println("Type de fenetre du joueur créé : " + windowConfigurationPlayerInfos.getTypeFenetre());
 		}
 	}
 	
-	class JoueurDetails {
+	public class JoueurDetails {
 		public Map<JPanel, JLabel> joueurDetailsMap;
 
 		public JoueurDetails() {
@@ -923,6 +485,101 @@ public class PlayerForDiffusion extends JPanel{
 			return joueurDetailsMap;
 		}
 	}
+	private void handleStandardCase(String typeFen, int playerIndex) {
+	    int tabIndex = typeFen.equals("player") ? 0 : playerIndex;
+	    windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(tabIndex);
+	    updateSelectedTab(typeFen);
+	}
+
+	public void handleFullCase() {
+	    PlayerForDiffusion[] tableauPlayerDiffusionTree = frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree();
+	    ArrayList<PlayerForDiffusion> listPlayerDiffusionTree = new ArrayList<>();
+
+	    if (windowConfigurationPlayerInfos == null || !windowConfigurationPlayerInfos.isDisplayable()) {// la fenetre full n'existe pas
+	        createNewFullWindowConfig(tableauPlayerDiffusionTree, listPlayerDiffusionTree);
+	    } else if (windowConfigurationPlayerInfos.getTypeFenetre().equals("full")) {//la fenetre existe donc mettre a jour joueur electionne si il existe pas l'inserer
+	        updateExistingFullWindowConfig(listPlayerDiffusionTree);
+	    } else {// si arrive ici ca veut dire qu'il faut afficher tout les joueurs selectionne de l'arbre (btn full)
+	        recreateFullWindowConfig(tableauPlayerDiffusionTree, listPlayerDiffusionTree);
+	    }
+	    
+	    windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(findPlayerIndex(listPlayerDiffusionTree));
+	    updateSelectedTab("full");
+	}
+
+	private void createNewFullWindowConfig(PlayerForDiffusion[] tableauPlayerDiffusionTree, ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {
+	    windowConfigurationPlayerInfos = new WindowConfigurationPlayerInfos(frameForDiffusion, "full");
+	    for (PlayerForDiffusion player : tableauPlayerDiffusionTree) {
+	        if (player != null) {
+	            addPlayerToFullConfig(player, listPlayerDiffusionTree);
+	        }
+	    }
+	    finalizeFullWindowConfig(listPlayerDiffusionTree);
+	}
+
+	private void updateExistingFullWindowConfig(ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {
+	    for (int i = 0; i < windowConfigurationPlayerInfos.tabbedPane.getTabCount() - 1; i++) {
+	        Component selectedComponent = windowConfigurationPlayerInfos.tabbedPane.getComponentAt(i);
+	        if (selectedComponent instanceof TabConfigurationPlayerInfos) {
+	            TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;
+	            listPlayerDiffusionTree.add(currentTab.getInfosPlayerDetails());
+	        }
+	    }
+	    int playerIndex = findPlayerIndex(listPlayerDiffusionTree);
+	    if (playerIndex == -1) {
+	    	System.out.println("insertion d'un joeur");
+	    	insertPlayerToFullConfig(playerfordifusion2, listPlayerDiffusionTree);
+	    }
+	}
+
+	private void recreateFullWindowConfig(PlayerForDiffusion[] tableauPlayerDiffusionTree, ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {
+	    windowConfigurationPlayerInfos.tabbedPane.removeAll();
+	    windowConfigurationPlayerInfos.setTypeFenetre("full");
+	    for (PlayerForDiffusion player : tableauPlayerDiffusionTree) {
+	        if (player != null) {
+	            addPlayerToFullConfig(player, listPlayerDiffusionTree);
+	        }
+	    }
+	    finalizeFullWindowConfig(listPlayerDiffusionTree);
+	}
+
+	private void addPlayerToFullConfig(PlayerForDiffusion player, ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {
+	    listPlayerDiffusionTree.add(player);
+	    player.setPlacementFrameTwoPlayer(windowConfigurationPlayerInfos);
+	    TabConfigurationPlayerInfos tabFull = new TabConfigurationPlayerInfos(player, player.getJoueur(), frameForDiffusion, windowConfigurationPlayerInfos);
+	    windowConfigurationPlayerInfos.addTabJoueur(tabFull);
+//	    windowConfigurationPlayerInfos.insertTabJoueur(tabFull,listPlayerDiffusionTree.size());
+	    System.out.println("FULL player to display : " + player.getJoueur().getNom());
+	}
+	private void insertPlayerToFullConfig(PlayerForDiffusion player, ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {
+	    player.setPlacementFrameTwoPlayer(windowConfigurationPlayerInfos);
+	    TabConfigurationPlayerInfos tabFull = new TabConfigurationPlayerInfos(player, player.getJoueur(), frameForDiffusion, windowConfigurationPlayerInfos);
+	    windowConfigurationPlayerInfos.insertTabJoueur(tabFull,listPlayerDiffusionTree.size());
+	    listPlayerDiffusionTree.add(player);
+	    System.out.println("FULL player to display : " + player.getJoueur().getNom());
+	}
+
+	private void finalizeFullWindowConfig(ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {
+	    if (!listPlayerDiffusionTree.isEmpty()) {
+	        windowConfigurationPlayerInfos.setTabPolice(new TabPolice(listPlayerDiffusionTree, windowConfigurationPlayerInfos));
+	        windowConfigurationPlayerInfos.pack();
+	    }
+	    frameForDiffusion.getWindowTournamentTreeFromBroadcast().windowConfigPlayerFull = windowConfigurationPlayerInfos;
+	}
+
+	private void updateSelectedTab(String typeFen) {
+	    Component selectedComponent = windowConfigurationPlayerInfos.tabbedPane.getSelectedComponent();
+	    
+	    if (selectedComponent instanceof TabConfigurationPlayerInfos) {
+	        TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;
+	        System.out.println("Player dragged : " + playerfordifusion2.getJoueur().getNom() + " for window " + typeFen.toUpperCase());
+	        currentTab.refreshSpinner(playerfordifusion2);
+	    } else {
+	        System.out.println("Error: Selected component is not an instance of TabConfigurationPlayerInfos");
+	        windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(playerfordifusion2.getNumeroPlayer() + 1);
+	    }
+	}
+	
 	public void enegistrerDetailsJoueurs() {
 		mapJoueurDetails = new JoueurDetails();
 		mapJoueurDetails.addDetails(this.playerName, this.nameLabel);
@@ -946,128 +603,12 @@ public class PlayerForDiffusion extends JPanel{
 		this.windowConfigurationPlayerInfos.dispose();
 //		new Configuration().saveConfiguration(playerName.getX(), playerName.getY(), placementFrame.checkboxName.isSelected(), playerName.getFont().toString());
 	}
-	
-	public void joueurFullDragged() {
-		// tableau des joueur qui sont afficher a l'ecran
-		PlayerForDiffusion[] tableauPlayerDiffusionTree = frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree();//tableau des joueur full actuellement afficher
-		//liste des joueur a mettre dans la fenetre 
-		ArrayList<PlayerForDiffusion> listPlayerDiffusionTree = new ArrayList<PlayerForDiffusion>();
-		int indexTab = -1;
-		//si fenetre n'existe pas la creer
-		if (windowConfigurationPlayerInfos == null || !windowConfigurationPlayerInfos.isDisplayable()) {
-			windowConfigurationPlayerInfos = new WindowConfigurationPlayerInfos(frameForDiffusion, "full");
-			//ajout de tout les joueurs afficher a le fenetre de config
-			for (int i=0; i<tableauPlayerDiffusionTree.length;i++) {
-				if(tableauPlayerDiffusionTree[i] != null) {
-					listPlayerDiffusionTree.add(tableauPlayerDiffusionTree[i]);
-					tableauPlayerDiffusionTree[i].setPlacementFrameTwoPlayer(windowConfigurationPlayerInfos);
-					TabConfigurationPlayerInfos tabFull = new TabConfigurationPlayerInfos(tableauPlayerDiffusionTree[i], tableauPlayerDiffusionTree[i].getJoueur(), frameForDiffusion, windowConfigurationPlayerInfos);
-					windowConfigurationPlayerInfos.addTabJoueur(tabFull);
-					System.out.println("FULL player actually displyed : "+tableauPlayerDiffusionTree[i].nameLabel.getText());
-				}
-			}
-			//ajoute l'onglet de police
-			if(listPlayerDiffusionTree.size() != 0) {
-				windowConfigurationPlayerInfos.setTabPolice(new TabPolice(listPlayerDiffusionTree, windowConfigurationPlayerInfos));
-				windowConfigurationPlayerInfos.pack();
-			}
-			// recupere lindex de l'onglet du joueur 
-			for (int i = 0; i < listPlayerDiffusionTree.size(); i++) {
-				if(playerfordifusion2.getNumeroPlayer() == listPlayerDiffusionTree.get(i).getNumeroPlayer()) {
-					indexTab = i;
-				}						
-			}				
-			//selectionne de l'onglet de joueur clique et mettre a jour les spinner
-			windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(indexTab);
-			Component selectedComponent = windowConfigurationPlayerInfos.tabbedPane.getSelectedComponent();
-	        if (selectedComponent instanceof TabConfigurationPlayerInfos) {
-	            TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;
-	            System.out.println(" Player draged from FULL : "+playerfordifusion2.nameLabel.getText());	
-	            currentTab.refreshSpinner(playerfordifusion2);
-	        } else {
-	            // Handle the case where the selected component is not of type tabInfosPlayer
-	        	windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(getNumeroPlayer()+1);
-	            System.out.println("! Error: Selected component is not an instance of tabInfosPlayer");
-	        }
-	        frameForDiffusion.getWindowTournamentTreeFromBroadcast().windowConfigPlayerFull = windowConfigurationPlayerInfos;
-		} else {
-			//si la fenetre est de type full ca veut dire qu'il y a deja des joueur de full dans les onglets
-			if(this.windowConfigurationPlayerInfos.getTypeFenetre() == "full") {
-				// recupere lindex de l'onglet du joueur 
-				for (int i = 0; i < windowConfigurationPlayerInfos.tabbedPane.getTabCount()-1; i++) {
-					windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(i);
-	                Component selectedComponent = windowConfigurationPlayerInfos.tabbedPane.getSelectedComponent();
-			        if (selectedComponent instanceof TabConfigurationPlayerInfos) {
-						TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;
-			            PlayerForDiffusion infosTabDetails = currentTab.getInfosPlayerDetails();
-			            listPlayerDiffusionTree.add(infosTabDetails);
-			        } else {
-			            // Handle the case where the selected component is not of type tabInfosPlayer
-			            System.out.println("! Error: Selected component is not an instance of tabInfosPlayer");
-			        }
-	            }
-				for (int i = 0; i < listPlayerDiffusionTree.size(); i++) {
-					if(playerfordifusion2.getNumeroPlayer() == listPlayerDiffusionTree.get(i).getNumeroPlayer()) {
-						indexTab = i;
-					}
-				}	
-				//un joueur a ete trouve
-				if(indexTab != -1) {
-					//selectionne de l'onglet de joueur clique et mettre a jour les spinner
-					windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(indexTab);
-					Component selectedComponent = windowConfigurationPlayerInfos.tabbedPane.getSelectedComponent();
-					if (selectedComponent instanceof TabConfigurationPlayerInfos) {
-						TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;
-						System.out.println(" Player draged : "+playerfordifusion2.nameLabel.getText()+" for window FULL");	
-						currentTab.refreshSpinner(playerfordifusion2);
-					}				
-				}else { //pas de joueur trouve donc fen type full juste rajoute le joueur qui vient d'etre afficher
-					TabConfigurationPlayerInfos tabFull = new TabConfigurationPlayerInfos(this.playerfordifusion2, this.playerfordifusion2.getJoueur(), frameForDiffusion, windowConfigurationPlayerInfos);
-					windowConfigurationPlayerInfos.insertTabJoueur(tabFull, listPlayerDiffusionTree.size());
-					listPlayerDiffusionTree.add(this.playerfordifusion2);
-				}
-			}else {//si pqs de type full ca veut dire qu'il faut mettre tout les joueur selectionne meme si pas afficher depuis l'arbre
-				windowConfigurationPlayerInfos.tabbedPane.removeAll();
-				windowConfigurationPlayerInfos.tabbedPane.revalidate();
-				windowConfigurationPlayerInfos.tabbedPane.repaint();
-				windowConfigurationPlayerInfos.setTypeFenetre("full");
-				//ajout de tout les joueurs afficher a le fenetre de config
-				for (int i=0; i<tableauPlayerDiffusionTree.length;i++) {
-					if(tableauPlayerDiffusionTree[i] != null) {
-						listPlayerDiffusionTree.add(tableauPlayerDiffusionTree[i]);
-						tableauPlayerDiffusionTree[i].setPlacementFrameTwoPlayer(windowConfigurationPlayerInfos);
-						TabConfigurationPlayerInfos tabFull = new TabConfigurationPlayerInfos(tableauPlayerDiffusionTree[i], tableauPlayerDiffusionTree[i].getJoueur(), frameForDiffusion, windowConfigurationPlayerInfos);
-						windowConfigurationPlayerInfos.addTabJoueur(tabFull);
-						System.out.println("FULL player to display : "+tableauPlayerDiffusionTree[i].nameLabel.getText());
-					}
-				}
-				//ajoute l'onglet de police
-				if(listPlayerDiffusionTree.size() != 0) {
-					windowConfigurationPlayerInfos.setTabPolice(new TabPolice(listPlayerDiffusionTree, windowConfigurationPlayerInfos));
-					windowConfigurationPlayerInfos.pack();
-				}
-				// recupere lindex de l'onglet du joueur 
-				for (int i = 0; i < listPlayerDiffusionTree.size(); i++) {
-					if(playerfordifusion2.getNumeroPlayer() == listPlayerDiffusionTree.get(i).getNumeroPlayer()) {
-						indexTab = i;
-					}						
-				}				
-				//selectionne de l'onglet de joueur clique et mettre a jour les spinner
-				windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(indexTab);
-				Component selectedComponent = windowConfigurationPlayerInfos.tabbedPane.getSelectedComponent();
-		        if (selectedComponent instanceof TabConfigurationPlayerInfos) {
-		            TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;
-		            System.out.println(" Player draged : "+playerfordifusion2.nameLabel.getText()+" for window FULL");	
-		            currentTab.refreshSpinner(playerfordifusion2);
-		        } else {
-		            // Handle the case where the selected component is not of type tabInfosPlayer
-		        	windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(getNumeroPlayer()+1);
-		            System.out.println("! Error: Selected component is not an instance of tabInfosPlayer");
-		        }
-			}
-		}
+	private int findPlayerIndex(ArrayList<PlayerForDiffusion> players) {
+	    return IntStream.range(0, players.size())
+	            .filter(i -> playerfordifusion2.getNumeroPlayer() == players.get(i).getNumeroPlayer())
+	            .findFirst()
+	            .orElse(-1);
 	}
-	
 }
 class ZoomablePanel extends JPanel {
     /**

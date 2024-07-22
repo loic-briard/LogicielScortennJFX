@@ -59,11 +59,11 @@ public class WindowTournamentTree extends JFrame {
             @Override
             public void windowClosing(WindowEvent e) {
                 windowBroadcastPublic.close();
-                if (windowConfigPlayer != null) {
+                if (windowConfigPlayer != null) 
                     windowConfigPlayer.dispose();
-                    windowConfigPlayerFull.dispose();
-                    windowBroadcastPublic.getAnimationFrame().dispose();
-                }
+                if (windowConfigPlayerFull != null) 
+                	windowConfigPlayerFull.dispose();
+                windowBroadcastPublic.getAnimationFrame().dispose();
             }
         });
     }
@@ -220,7 +220,7 @@ public class WindowTournamentTree extends JFrame {
         			TabConfigurationPlayerInfos tabOnePlayer = new TabConfigurationPlayerInfos(soloPlayerDetails, soloPlayer, windowBroadcastPublic,windowConfigPlayer);
         			windowConfigPlayer.addTabJoueur(tabOnePlayer);
         			windowConfigPlayer.setTabPolice(new TabPolice(ListSelectedJoueur, windowConfigPlayer));
-        			System.out.println("    SOLO player to dislay : "+soloPlayerDetails.nameLabel.getText());
+        			System.out.println("    SOLO player to dislay : "+soloPlayerDetails.getJoueur().getNom());
         		}
 			} catch (ClassNotFoundException e1) {
 				e1.printStackTrace();
@@ -276,7 +276,7 @@ public class WindowTournamentTree extends JFrame {
 				playerForDiffusion.setPlacementFrameTwoPlayer(windowConfigPlayer);
 				TabConfigurationPlayerInfos tabPool = new TabConfigurationPlayerInfos(playerForDiffusion, playerForDiffusion.getJoueur(), windowBroadcastPublic, windowConfigPlayer);
 				windowConfigPlayer.addTabJoueur(tabPool);
-				System.out.println("    GAME player to display : "+playerForDiffusion.nameLabel.getText()+" "+playerForDiffusion.getNumeroPlayer());
+				System.out.println("    GAME player to display : "+playerForDiffusion.getJoueur().getNom()+" "+playerForDiffusion.getNumeroPlayer());
 			}	
 			windowConfigPlayer.setTabPolice(new TabPolice(ListSelectedJoueur, windowConfigPlayer));
 		} else
@@ -317,7 +317,7 @@ public class WindowTournamentTree extends JFrame {
 			playerForDiffusion.setPlacementFrameTwoPlayer(windowConfigPlayer);
 			TabConfigurationPlayerInfos tabPool = new TabConfigurationPlayerInfos(playerForDiffusion, playerForDiffusion.getJoueur(), windowBroadcastPublic, windowConfigPlayer);
 			windowConfigPlayer.addTabJoueur(tabPool);
-			System.out.println("    TAB player to display  : "+playerForDiffusion.nameLabel.getText());
+			System.out.println("    TAB player to display  : "+playerForDiffusion.getJoueur().getNom());
 		}	
 		windowConfigPlayer.setTabPolice(new TabPolice(ListSelectedJoueur, windowConfigPlayer));
 		windowConfigPlayer.pack();
@@ -369,7 +369,8 @@ public class WindowTournamentTree extends JFrame {
 	    }
 	    
 	    if(indexPlayer != -1) {
-	        tabPlayerForTree[indexPlayer].joueurFullDragged();
+	        tabPlayerForTree[indexPlayer].handleFullCase();
+//	        tabPlayerForTree[indexPlayer].joueurFullDragged();
 	    }
     }
 
