@@ -49,6 +49,7 @@ public class WindowConfigurationPlayerInfos extends JFrame {
 	}
 	public void setTypeFenetre(String typeFenetre) {
 		this.frameType = FrameType.valueOf(typeFenetre.toLowerCase());
+		setTitle("Configuration Player Information : "+typeFenetre);
 	}
 	public String getTypeFenetre() {
 		return this.frameType.toString().toLowerCase();

@@ -27,6 +27,7 @@ public class WindowTournamentTree extends JFrame {
     private final WindowBroadcastPublic windowBroadcastPublic;
     private final Evenement event;
     public WindowConfigurationPlayerInfos windowConfigPlayer;
+    public WindowConfigurationPlayerInfos windowConfigPlayerFull;
     private final PlayerForDiffusion[] tabPlayerForTree;
     private final JPanel[] playerPanel;
     private boolean blackButtonAppuyer = false;
@@ -60,6 +61,7 @@ public class WindowTournamentTree extends JFrame {
                 windowBroadcastPublic.close();
                 if (windowConfigPlayer != null) {
                     windowConfigPlayer.dispose();
+                    windowConfigPlayerFull.dispose();
                     windowBroadcastPublic.getAnimationFrame().dispose();
                 }
             }
@@ -191,7 +193,7 @@ public class WindowTournamentTree extends JFrame {
         		if(soloPlayer != null) {
         			//ajout du player dans le tableau pour l'arbre de tournoi
         			PlayerForDiffusion playerDetailsForTree = new PlayerForDiffusion(this.event.getNom(), windowBroadcastPublic, "full",ligne);
-        			playerDetailsForTree.setPlacementFrameTwoPlayer(windowConfigPlayer);
+        			playerDetailsForTree.setPlacementFrameTwoPlayer(windowConfigPlayerFull);
         			playerDetailsForTree.setPlayer(soloPlayer, ligne+1);
         			playerDetailsForTree.setVisible(false);
         			if(tabPlayerForTree[ligne] != null) {
@@ -204,7 +206,7 @@ public class WindowTournamentTree extends JFrame {
         			ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
         			ListSelectedJoueur.add(soloPlayerDetails);
         			
-        			if (windowConfigPlayer == null || !windowConfigPlayer.isDisplayable()) {
+        			if (windowConfigPlayer == null || !windowConfigPlayer.isDisplayable()|| windowConfigPlayer.getTypeFenetre() == "full" ) {
         				windowConfigPlayer = new WindowConfigurationPlayerInfos(windowBroadcastPublic, "player");
         			} else {
         				windowConfigPlayer.tabbedPane.removeAll();
@@ -261,7 +263,7 @@ public class WindowTournamentTree extends JFrame {
 				e1.printStackTrace();
 			}
 			//Si la fenetre est null on la creer
-			if(windowConfigPlayer == null) {
+			if(windowConfigPlayer == null|| !windowConfigPlayer.isDisplayable()|| windowConfigPlayer.getTypeFenetre() == "full" ) {
 				windowConfigPlayer = new WindowConfigurationPlayerInfos(windowBroadcastPublic, "game");
 			}else {
 				windowConfigPlayer.tabbedPane.removeAll();
@@ -302,7 +304,7 @@ public class WindowTournamentTree extends JFrame {
 				e1.printStackTrace();
 			}
 		}
-		if (windowConfigPlayer == null) {
+		if (windowConfigPlayer == null|| !windowConfigPlayer.isDisplayable()|| windowConfigPlayer.getTypeFenetre() == "full" ) {
 			windowConfigPlayer = new WindowConfigurationPlayerInfos(windowBroadcastPublic, "tab");
 		} else {
 			windowConfigPlayer.tabbedPane.removeAll();
@@ -325,7 +327,14 @@ public class WindowTournamentTree extends JFrame {
     	windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_4());
 	    windowBroadcastPublic.removeLayerContent(JLayeredPane.MODAL_LAYER);//nettoyage du layer
 		windowBroadcastPublic.removeLayerContent(JLayeredPane.PALETTE_LAYER);//nettoyage du layer
-		windowConfigPlayer.setTypeFenetre("autre");
+		if (windowConfigPlayerFull == null || !windowConfigPlayerFull.isDisplayable()|| windowConfigPlayerFull.getTypeFenetre() != "full" ) {
+			windowConfigPlayerFull = new WindowConfigurationPlayerInfos(windowBroadcastPublic, "autre");
+		} else {
+			windowConfigPlayerFull.tabbedPane.removeAll();
+			windowConfigPlayerFull.tabbedPane.revalidate();
+			windowConfigPlayerFull.tabbedPane.repaint();
+			windowConfigPlayerFull.setTypeFenetre("autre");
+		}
 	    int indexPlayer = -1;
 	    System.out.println("taille tableau " + playerPanel.length);
 	    
@@ -341,7 +350,7 @@ public class WindowTournamentTree extends JFrame {
 	            if (Player != null) {
 	                System.out.println(Player.getNom());
 	                PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.event.getNom(), windowBroadcastPublic, "full", y * 4 + i);
-	                PlayerDetails.setPlacementFrameTwoPlayer(windowConfigPlayer);
+	                PlayerDetails.setPlacementFrameTwoPlayer(windowConfigPlayerFull);
 	                int ligne = y * 4 + i + 1;
 	                
 	                try {
