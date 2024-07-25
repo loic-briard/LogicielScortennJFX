@@ -1,5 +1,3 @@
-/API/
-/Background/
 /Diffusion/
 /Event/
 /Flags/
@@ -8,8 +6,3 @@
 /Players/
 /Police/
 /Sauvegarde/
-/apachepoi/
-/hsqldb261.jar
-/jai_core-1.1.3.jar
-/java-json.jar
-/javaFX/

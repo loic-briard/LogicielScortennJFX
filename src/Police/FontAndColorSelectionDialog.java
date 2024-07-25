@@ -27,12 +27,11 @@ public class FontAndColorSelectionDialog extends JDialog {
         JButton colorButton2 = new JButton("Choose a color");
 //		Color selectedColor = Color.black;
         colorButton2.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
             	selectedColor = JColorChooser.showDialog(null, "Choose a color", Color.BLACK);
                 if (selectedColor != null) {
                     // Faites quelque chose avec la couleur s�lectionn�e
-                    System.out.println("++++ Couleur selectionnee : " + selectedColor);
+                    System.out.println("Couleur selectionnee : " + selectedColor);
                     if (selectedColor != null) {
                         textLabel.setForeground(selectedColor);
                     }

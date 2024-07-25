@@ -7,6 +7,7 @@ package Diffusion;
 import javax.swing.*;
 import Event.Evenement;
 import java.awt.*;
+import java.sql.SQLException;
 
 public class WindowBroadcastPublic extends JFrame {
     private static final long serialVersionUID = 1L;
@@ -14,7 +15,7 @@ public class WindowBroadcastPublic extends JFrame {
     private final JLayeredPane layeredPane;
     private final JLabel backgroundLabel;
     private WindowTournamentTree windowTournamentTree;
-    private final WindowAnimationConfiguration animationFrame;
+    private WindowAnimationConfiguration animationFrame;
 
     public WindowBroadcastPublic(Evenement eventChoosen, GraphicsDevice screen, Dimension windowDimension) {
     	this.actualEvent = eventChoosen;        
@@ -27,8 +28,6 @@ public class WindowBroadcastPublic extends JFrame {
         backgroundLabel.setBounds(0, 0, this.getWidth(), this.getHeight());
         setBackgroundImage("black.jpg"); // Mettre le chemin de l'image initiale
         layeredPane.add(backgroundLabel, JLayeredPane.DEFAULT_LAYER);
-        
-        animationFrame = new WindowAnimationConfiguration();
         
         this.add(layeredPane);
         this.setVisible(true);
@@ -102,7 +101,13 @@ public class WindowBroadcastPublic extends JFrame {
     public String getNameEvent() { return this.actualEvent.getNom(); }
 
     // Setter
-    public void setWindowTournamentTreeFromBroadcast(WindowTournamentTree windowTournamentTree) {
-        this.windowTournamentTree = windowTournamentTree;
-    }
+	public void setWindowTournamentTreeFromBroadcast(WindowTournamentTree windowTournamentTree) {
+		this.windowTournamentTree = windowTournamentTree;
+		try {
+			animationFrame = new WindowAnimationConfiguration(windowTournamentTree);
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

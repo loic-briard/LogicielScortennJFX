@@ -24,7 +24,7 @@ public class WindowTournamentTree extends JFrame {
     private static final long serialVersionUID = 1L;
 
     private final ArrayList<Joueur> selectedJoueurs;
-    private final WindowBroadcastPublic windowBroadcastPublic;
+    private WindowBroadcastPublic windowBroadcastPublic;
     private final Evenement event;
     public WindowConfigurationPlayerInfos windowConfigPlayer;
     public WindowConfigurationPlayerInfos windowConfigPlayerFull;
@@ -33,6 +33,8 @@ public class WindowTournamentTree extends JFrame {
     private boolean blackButtonAppuyer = false;
     private boolean fondButtonAppuyer = false;
     private final int nbJoueur;
+
+	private ArrayList<PlayerForDiffusion> playerForDifusionListInit;
 
     public WindowTournamentTree(ArrayList<Joueur> selectedJoueurs, Evenement event, WindowBroadcastPublic diffusionFrame, int nbJoueur) {
         this.selectedJoueurs = selectedJoueurs;
@@ -170,7 +172,14 @@ public class WindowTournamentTree extends JFrame {
         bottomPanel.add(fondButton);
 
         JButton blackButton = new JButton("Black");
-        blackButton.addActionListener(e -> toggleBlackBackground());
+        blackButton.addActionListener(e -> {
+			try {
+				toggleBlackBackground();
+			} catch (ClassNotFoundException | SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		});
         bottomPanel.add(blackButton);
 
         add(bottomPanel, BorderLayout.SOUTH);
@@ -205,6 +214,7 @@ public class WindowTournamentTree extends JFrame {
         			soloPlayerDetails.setPlayer(soloPlayer, ligne+1);
         			ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
         			ListSelectedJoueur.add(soloPlayerDetails);
+        			windowBroadcastPublic.getAnimationFrame().getPanelTournamentTree().highlightPlayerPath(ligne, Color.GREEN);
         			
         			if (windowConfigPlayer == null || !windowConfigPlayer.isDisplayable()|| windowConfigPlayer.getTypeFenetre() == "full" ) {
         				windowConfigPlayer = new WindowConfigurationPlayerInfos(windowBroadcastPublic, "player");
@@ -336,22 +346,25 @@ public class WindowTournamentTree extends JFrame {
 			windowConfigPlayerFull.setTypeFenetre("autre");
 		}
 	    int indexPlayer = -1;
-	    System.out.println("taille tableau " + playerPanel.length);
+//	    System.out.println("taille tableau " + playerPanel.length);
 	    
-	    int totalPlayers = Math.min(nbJoueur, playerPanel.length * 4);  // Assurez-vous de ne pas dépasser le nombre de panneaux disponibles
-	    
-	    for (int y = 0; y < playerPanel.length && y * 4 < totalPlayers; y++) {
-	        System.out.println("boucle sur tableau " + y);
+//	    int totalPlayers = Math.min(nbJoueur, playerPanel.length * 4);  // Assurez-vous de ne pas dépasser le nombre de panneaux disponibles
+	    int totalPlayers = nbJoueur;
+	    //iteration sur les 4 partie de la fenetre tournament tree
+	    System.out.println("nb panel : "+playerPanel.length+" nb player per panel "+totalPlayers/4);
+	    for (int y = 0; y < playerPanel.length; y++) {
 	        
-	        int playersInThisRow = Math.min(4, totalPlayers - y * 4);  // Calculez combien de joueurs doivent être traités dans cette rangée
+//	        int playersInThisRow = Math.min(4, totalPlayers - y * 4);  // Calculez combien de joueurs doivent être traités dans cette rangée
+	        int playersInThisRow = totalPlayers/4;  // Calculez combien de joueurs doivent être traités dans cette rangée
 	        
+	        //iteration sur le nombre de joueur dans la partie de l'arbre du tournoi
 	        for (int i = 0; i < playersInThisRow; i++) {
 	            Joueur Player = foundPlayer(getSelectedPlayerName(playerPanel[y], i));
 	            if (Player != null) {
-	                System.out.println(Player.getNom());
-	                PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.event.getNom(), windowBroadcastPublic, "full", y * 4 + i);
+	                PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.event.getNom(), windowBroadcastPublic, "full", y * (totalPlayers/4) + i);
 	                PlayerDetails.setPlacementFrameTwoPlayer(windowConfigPlayerFull);
-	                int ligne = y * 4 + i + 1;
+	                int ligne = y * (totalPlayers/4) + i + 1;
+	                System.out.println("-> boucle sur tableau " + y+", joueur index "+i+", "+Player.getNom()+", ligne: "+ligne);
 	                
 	                try {
 	                    PlayerDetails.setPlayer(Player, ligne);
@@ -382,12 +395,14 @@ public class WindowTournamentTree extends JFrame {
 		fondButtonAppuyer = !fondButtonAppuyer;
 	}
 
-    private void toggleBlackBackground() {
+    private void toggleBlackBackground() throws ClassNotFoundException, SQLException {
     	if(blackButtonAppuyer == false)
 			windowBroadcastPublic.setBackgroundImageLayered("black.jpg", JLayeredPane.POPUP_LAYER);
 		else
 			windowBroadcastPublic.removeLayerContent(JLayeredPane.POPUP_LAYER);
 		blackButtonAppuyer = !blackButtonAppuyer;
+	    
+//		initListPlayerForDiffusion(selectedJoueurs);
     }
 
     private Joueur foundPlayer(String nomJoueur) {
@@ -397,6 +412,17 @@ public class WindowTournamentTree extends JFrame {
 	        }
 	    }
 		return null;
+    }
+    public ArrayList<PlayerForDiffusion> initListPlayerForDiffusion() throws ClassNotFoundException, SQLException {
+    	playerForDifusionListInit = new ArrayList<PlayerForDiffusion>();
+    	int i=0;
+    	for (Joueur joueur : selectedJoueurs) {
+    		PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.event.getNom(), windowBroadcastPublic, "full",i);
+    		i++;
+    		PlayerDetails.setPlayer(joueur, i);
+    		playerForDifusionListInit.add(PlayerDetails);
+		}
+    	return playerForDifusionListInit;
     }
 
     private String getSelectedPlayerName(JPanel panel, int playerIndex) {
@@ -423,5 +449,8 @@ public class WindowTournamentTree extends JFrame {
 
     public int getNbJoueur() {
         return nbJoueur;
+    }
+    public WindowBroadcastPublic getWindowBroadcastPublic() {
+    	return windowBroadcastPublic;
     }
 }

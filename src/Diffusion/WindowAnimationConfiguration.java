@@ -1,8 +1,15 @@
 package Diffusion;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.sql.SQLException;
 import java.util.Arrays;
 
 public class WindowAnimationConfiguration extends JFrame {
@@ -12,22 +19,93 @@ public class WindowAnimationConfiguration extends JFrame {
     private final JSpinner zoomAnimationSpinner;
     private final JCheckBox labelAnimationCheckBox;
     private final JSpinner labelAnimationSpinner;
+    private final JCheckBox displayTreeCheckBox;
+    private final JSpinner xLeftSpinner;
+    private final JSpinner xRightSpinner;
+    private final JSpinner largeurTreeSpinner;
+    private final JSpinner epaisseurTreeSpinner;
+    private Color treeColor;
+    private final JButton treeColorButton;
+    private PanelTournamentTree tournamentTree;
+    private WindowTournamentTree windowTournamentTree;
 
-    public WindowAnimationConfiguration() {
+    public WindowAnimationConfiguration(WindowTournamentTree windowTournamentTreee) throws ClassNotFoundException, SQLException {
         setTitle("Animation Configuration");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(400, 200);
         setLayout(new GridBagLayout());
         setIconImage(new ImageIcon("icon.png").getImage());
         setLocationRelativeTo(null);
-
+        
+        this.windowTournamentTree = windowTournamentTreee;
+        
         zoomAnimationCheckBox = new JCheckBox("Zoom Animation");
         zoomAnimationSpinner = new JSpinner(new SpinnerNumberModel(1000, 0, 10000, 100));
         labelAnimationCheckBox = new JCheckBox("Label Animation");
         labelAnimationSpinner = new JSpinner(new SpinnerNumberModel(1000, 0, 10000, 100));
-
+        
+        displayTreeCheckBox = new JCheckBox("Display tournament tree");
+        xLeftSpinner = new JSpinner(new SpinnerNumberModel(600, 0, 10000, 1));
+        xRightSpinner = new JSpinner(new SpinnerNumberModel(1285, 0, 10000, 1));
+        largeurTreeSpinner = new JSpinner(new SpinnerNumberModel(20, 0, 10000, 1));
+        epaisseurTreeSpinner = new JSpinner(new SpinnerNumberModel(5, 0, 10000, 1));
+        treeColorButton = new JButton("Select a color");
+        treeColor = Color.BLACK;
+        treeColorButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	Color selectedColor = JColorChooser.showDialog(null, "Choose a color", treeColor);
+                if (selectedColor != null) {
+                    // Faites quelque chose avec la couleur s�lectionn�e
+                    System.out.println("Couleur selectionnee : " + selectedColor);
+                    if (selectedColor != null) {
+                    	treeColor = selectedColor;
+                    	tournamentTree.setTreeColor(treeColor);
+                    }
+                }
+            }
+        });
+        tournamentTree = new PanelTournamentTree(this,windowTournamentTree.initListPlayerForDiffusion(), getWidthTree(), getThicknessTree());
+        tournamentTree.setBounds(0, 0, windowTournamentTree.getWindowBroadcastPublic().getWidth(), windowTournamentTree.getWindowBroadcastPublic().getHeight());
+        windowTournamentTree.getWindowBroadcastPublic().addContent(250,tournamentTree);
+        tournamentTree.setTreeColor(treeColor);
+        tournamentTree.setVisible(isTournamentTreeEnabled());
+        displayTreeCheckBox.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    System.out.println("Checkbox cochée");
+                    tournamentTree.setVisible(true);
+                } else {
+                    System.out.println("Checkbox décochée");
+                    tournamentTree.setVisible(false);
+                }
+            }
+        });
+        xLeftSpinner.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				tournamentTree.setXLeftTree(getXLeftTree());				
+			}
+		});
+        xRightSpinner.addChangeListener(new ChangeListener() {
+        	public void stateChanged(ChangeEvent e) {
+        		tournamentTree.setXRightTree(getXRightTree());				
+        	}
+        });
+        largeurTreeSpinner.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				tournamentTree.setHorizontalSpacing(getWidthTree());				
+			}
+		});
+        epaisseurTreeSpinner.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+            	tournamentTree.setLineWidth(getThicknessTree());
+            }
+        });
+        
+            
         setupComponents();
         setVisible(true);
+        this.pack();
     }
 
     private void setupComponents() {
@@ -35,8 +113,10 @@ public class WindowAnimationConfiguration extends JFrame {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        addRow(gbc, 0, zoomAnimationCheckBox, zoomAnimationSpinner);
-        addRow(gbc, 1, labelAnimationCheckBox, labelAnimationSpinner);
+        addRow(gbc, 0, zoomAnimationCheckBox, zoomAnimationSpinner, new JLabel("ms"));
+        addRow(gbc, 1, labelAnimationCheckBox, labelAnimationSpinner,new JLabel("ms"));
+        addRow(gbc, 2, new JLabel(), new JLabel("Begining of tree Left"),new JLabel("Begining of tree Right"),new JLabel("Tree Width"),new JLabel("Tree thickness"));
+        addRow(gbc, 3, displayTreeCheckBox, xLeftSpinner,xRightSpinner,largeurTreeSpinner,epaisseurTreeSpinner,treeColorButton);
     }
 
     private void addRow(GridBagConstraints gbc, int row, JComponent... components) {
@@ -46,7 +126,6 @@ public class WindowAnimationConfiguration extends JFrame {
             add(component, gbc);
         });
         gbc.gridx = components.length;
-        add(new JLabel("ms"), gbc);
     }
 
     public boolean isZoomAnimationEnabled() {
@@ -63,6 +142,24 @@ public class WindowAnimationConfiguration extends JFrame {
 
     public int getLabelAnimationDuration() {
         return isLabelAnimationEnabled() ? (int) labelAnimationSpinner.getValue() : 0;
+    }
+    public boolean isTournamentTreeEnabled() {
+        return displayTreeCheckBox.isSelected();
+    }
+    public int getXLeftTree() {
+        return (int)xLeftSpinner.getValue();
+    }
+    public int getXRightTree() {
+        return (int)xRightSpinner.getValue();
+    }
+    public int getWidthTree() {
+    	return (int)largeurTreeSpinner.getValue();
+    }
+    public int getThicknessTree() {
+    	return (int)epaisseurTreeSpinner.getValue();
+    }
+    public PanelTournamentTree getPanelTournamentTree() {
+    	return tournamentTree;
     }
 
     public void animateLabel(JPanel panel, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, Integer layer, JLayeredPane layeredPane, Runnable onComplete) {

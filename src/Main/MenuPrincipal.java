@@ -49,11 +49,12 @@ public class MenuPrincipal extends JFrame {
         createMenuBar();
         createMainPanel();
         setVisible(true);
+        this.pack();
     }
 
     private void initializeFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+//        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         setTitle(TITLE);
         setIconImage(new ImageIcon(ICON_PATH).getImage());
         addWindowListener(new WindowAdapter() {

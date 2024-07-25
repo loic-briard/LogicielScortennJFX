@@ -120,6 +120,9 @@ public class PlayerForDiffusion extends JPanel{
 	public JPanel getPanelGlobal() {
 		return this.panelPlayerGlobal;
 	}
+	public WindowAnimationConfiguration getWindowAnimationConfiguration(){
+		return animationFrame;
+	}
 	
 	public PlayerForDiffusion(String nomEvent, WindowBroadcastPublic diffusionFrame,String typeFrame, int numeroPlayer) {
 		this.frameForDiffusion = diffusionFrame;
@@ -196,7 +199,7 @@ public class PlayerForDiffusion extends JPanel{
 	        default -> throw new IllegalArgumentException("Unexpected value: " + typeFen);
 	    };
 	}
-	public void setPlayer(Joueur joueur, int i) throws ClassNotFoundException, SQLException {
+	public void setPlayer(Joueur joueur, int ligne) throws ClassNotFoundException, SQLException {
 	    this.joueur = joueur;
 	    
 	    // Créer une map pour stocker les informations du joueur
@@ -213,7 +216,7 @@ public class PlayerForDiffusion extends JPanel{
 	    playerInfo.put(playerAge, new LabelInfo(String.valueOf(joueur.getAge()), policeAge));
 	    playerInfo.put(playerPrizetotal, new LabelInfo(joueur.getPrizetotal(), policePrizetotal));
 	    playerInfo.put(playerCityresidence, new LabelInfo(joueur.getCityResidence(), policeCityresidence));
-	    playerInfo.put(playerLine, new LabelInfo(String.valueOf(i), policeLine));
+	    playerInfo.put(playerLine, new LabelInfo(String.valueOf(ligne), policeLine));
 
 	    // Mettre à jour tous les panneaux de texte
 	    playerInfo.forEach((panel, info) -> updateTextPanel(panel, info));
@@ -505,6 +508,16 @@ public class PlayerForDiffusion extends JPanel{
 	    
 	    windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(findPlayerIndex(listPlayerDiffusionTree));
 	    updateSelectedTab("full");
+	    
+	    //affichage arbre du tournoi
+//	    if(this.animationFrame.isTournamentTreeEnabled()) {
+//	    	PanelTournamentTree tournamentTree = new PanelTournamentTree(listPlayerDiffusionTree, this.animationFrame.getWidthTree(), this.animationFrame.getThicknessTree());
+//	    	tournamentTree.setBounds(0, 0, this.frameForDiffusion.getWidth(), this.frameForDiffusion.getHeight());
+//	    	this.frameForDiffusion.addContent(JLayeredPane.PALETTE_LAYER,tournamentTree);
+//	    	this.frameForDiffusion.revalidate();
+//	    	this.frameForDiffusion.repaint();
+//	    	tournamentTree.setVisible(true);
+//	    }
 	}
 
 	private void createNewFullWindowConfig(PlayerForDiffusion[] tableauPlayerDiffusionTree, ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {
