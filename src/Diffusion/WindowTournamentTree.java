@@ -28,6 +28,7 @@ public class WindowTournamentTree extends JFrame {
     private final Evenement event;
     public WindowConfigurationPlayerInfos windowConfigPlayer;
     public WindowConfigurationPlayerInfos windowConfigPlayerFull;
+    private PanelAnimationConfiguration panelAnimationConfiguration;
     private final PlayerForDiffusion[] tabPlayerForTree;
     private final JPanel[] playerPanel;
     private boolean blackButtonAppuyer = false;
@@ -36,13 +37,15 @@ public class WindowTournamentTree extends JFrame {
 
 	private ArrayList<PlayerForDiffusion> playerForDifusionListInit;
 
-    public WindowTournamentTree(ArrayList<Joueur> selectedJoueurs, Evenement event, WindowBroadcastPublic diffusionFrame, int nbJoueur) {
+    public WindowTournamentTree(ArrayList<Joueur> selectedJoueurs, Evenement event, WindowBroadcastPublic diffusionFrame, int nbJoueur) throws ClassNotFoundException, SQLException {
         this.selectedJoueurs = selectedJoueurs;
         this.windowBroadcastPublic = diffusionFrame;
         this.event = event;
         this.nbJoueur = nbJoueur;
         this.tabPlayerForTree = new PlayerForDiffusion[nbJoueur];
         this.playerPanel = new JPanel[4];
+        
+        this.panelAnimationConfiguration = new PanelAnimationConfiguration(this);
 
         setupFrame();
         setupPanels();
@@ -65,7 +68,7 @@ public class WindowTournamentTree extends JFrame {
                     windowConfigPlayer.dispose();
                 if (windowConfigPlayerFull != null) 
                 	windowConfigPlayerFull.dispose();
-                windowBroadcastPublic.getAnimationFrame().dispose();
+//                windowBroadcastPublic.getAnimationFrame().dispose();
             }
         });
     }
@@ -161,15 +164,18 @@ public class WindowTournamentTree extends JFrame {
     }
 
     private void setupBottomPanel() {
-        JPanel bottomPanel = new JPanel();
+    	Border contour = BorderFactory.createLineBorder(Color.black);
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        JPanel bottomPanelButton = new JPanel();
+        bottomPanelButton.setBorder(contour);
         
         JButton playerButton = new JButton("Full Competition");
         playerButton.addActionListener(e -> handleFullCompetition());
-        bottomPanel.add(playerButton);
+        bottomPanelButton.add(playerButton);
 
         JButton fondButton = new JButton("background");
         fondButton.addActionListener(e -> toggleBackground());
-        bottomPanel.add(fondButton);
+        bottomPanelButton.add(fondButton);
 
         JButton blackButton = new JButton("Black");
         blackButton.addActionListener(e -> {
@@ -180,8 +186,10 @@ public class WindowTournamentTree extends JFrame {
 				e1.printStackTrace();
 			}
 		});
-        bottomPanel.add(blackButton);
+        bottomPanelButton.add(blackButton,BorderLayout.NORTH);
 
+        bottomPanel.add(bottomPanelButton, BorderLayout.NORTH);
+        bottomPanel.add(this.panelAnimationConfiguration, BorderLayout.SOUTH);
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
@@ -214,7 +222,9 @@ public class WindowTournamentTree extends JFrame {
         			soloPlayerDetails.setPlayer(soloPlayer, ligne+1);
         			ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
         			ListSelectedJoueur.add(soloPlayerDetails);
-        			windowBroadcastPublic.getAnimationFrame().getPanelTournamentTree().highlightPlayerPath(ligne, Color.GREEN);
+//        			windowBroadcastPublic.getAnimationFrame().getPanelTournamentTree().highlightPlayerPath(ligne, Color.GREEN);
+        			
+        			
         			
         			if (windowConfigPlayer == null || !windowConfigPlayer.isDisplayable()|| windowConfigPlayer.getTypeFenetre() == "full" ) {
         				windowConfigPlayer = new WindowConfigurationPlayerInfos(windowBroadcastPublic, "player");
@@ -452,5 +462,8 @@ public class WindowTournamentTree extends JFrame {
     }
     public WindowBroadcastPublic getWindowBroadcastPublic() {
     	return windowBroadcastPublic;
+    }
+    public PanelAnimationConfiguration getPanelAnimationConfiguration() {
+    	return panelAnimationConfiguration;
     }
 }

@@ -2,6 +2,7 @@ package Diffusion;
 
 import java.awt.*;
 import javax.swing.*;
+
 import java.util.HashMap;
 import java.util.Map;
 import Main.ImageUtility;

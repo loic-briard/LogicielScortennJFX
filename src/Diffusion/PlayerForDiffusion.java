@@ -96,7 +96,7 @@ public class PlayerForDiffusion extends JPanel{
 	private PlayerForDiffusion playerfordifusion2;
 	private String nomEvent;
 	private int numeroPlayer;
-	private WindowAnimationConfiguration animationFrame;
+	private PanelAnimationConfiguration animationFrame;
 	private ZoomablePanel panelPlayerGlobal;
 	private static final String CONFIG_DIR = "Config/";
 	private static final String JSON_EXT = ".json";
@@ -120,7 +120,7 @@ public class PlayerForDiffusion extends JPanel{
 	public JPanel getPanelGlobal() {
 		return this.panelPlayerGlobal;
 	}
-	public WindowAnimationConfiguration getWindowAnimationConfiguration(){
+	public PanelAnimationConfiguration getWindowAnimationConfiguration(){
 		return animationFrame;
 	}
 	
@@ -312,8 +312,7 @@ public class PlayerForDiffusion extends JPanel{
 	    Dimension endDimension = endPanel.getComponents()[0].getPreferredSize();
 	    animationFrame.animateImage(imagePanel, imageLabel, endPoint, endDimension,
 	            JLayeredPane.POPUP_LAYER, this.frameForDiffusion.getLayeredPane(),
-	            () -> this.frameForDiffusion.getWindowTournamentTreeFromBroadcast()
-	                    .getTabPlayerForTree()[this.numeroPlayer].setVisible(true));
+	            () -> displayPlayerFull());
 	}
 
 	private void animateTextElement(Component endComponent, Point endPoint) {
@@ -324,14 +323,23 @@ public class PlayerForDiffusion extends JPanel{
 	            Font endFont = endPanel.getComponents()[0].getFont();
 	            Color endColor = endPanel.getComponents()[0].getForeground();
 	            Dimension endDimension = endPanel.getPreferredSize();
-	            animationFrame.animateLabel(startPanel, endPoint, endDimension, endColor,
-	                    endFont, JLayeredPane.POPUP_LAYER,
-	                    this.frameForDiffusion.getLayeredPane(),
-	                    () -> this.frameForDiffusion.getWindowTournamentTreeFromBroadcast()
-	                            .getTabPlayerForTree()[this.numeroPlayer].setVisible(true));
+	            animationFrame.animateLabel(startPanel, endPoint, endDimension, endColor, endFont, JLayeredPane.POPUP_LAYER,this.frameForDiffusion.getLayeredPane(),
+	                    () -> displayPlayerFullAndTournamentTreeAnimation()
+	                    );
 	            break;
 	        }
 	    }
+	}
+	private void displayPlayerFull() {
+		if(animationFrame.isPlayerFullEnabled())
+			this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer].setVisible(true);
+		else
+			this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer].setVisible(false);
+	}
+	private void displayPlayerFullAndTournamentTreeAnimation() {
+		displayPlayerFull();
+		if(animationFrame.isPathTreeAnimationEnabled())
+			animationFrame.getPanelTournamentTree().animatePlayerPath(this.numeroPlayer, animationFrame.getAnimationPathTreeDuration(), animationFrame.getNbBlinkTreeDuration());
 	}
 
 	private static class LabelInfo {
@@ -509,15 +517,7 @@ public class PlayerForDiffusion extends JPanel{
 	    windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(findPlayerIndex(listPlayerDiffusionTree));
 	    updateSelectedTab("full");
 	    
-	    //affichage arbre du tournoi
-//	    if(this.animationFrame.isTournamentTreeEnabled()) {
-//	    	PanelTournamentTree tournamentTree = new PanelTournamentTree(listPlayerDiffusionTree, this.animationFrame.getWidthTree(), this.animationFrame.getThicknessTree());
-//	    	tournamentTree.setBounds(0, 0, this.frameForDiffusion.getWidth(), this.frameForDiffusion.getHeight());
-//	    	this.frameForDiffusion.addContent(JLayeredPane.PALETTE_LAYER,tournamentTree);
-//	    	this.frameForDiffusion.revalidate();
-//	    	this.frameForDiffusion.repaint();
-//	    	tournamentTree.setVisible(true);
-//	    }
+	    animationFrame.getPanelTournamentTree().setPlayer(numeroPlayer, playerfordifusion2);
 	}
 
 	private void createNewFullWindowConfig(PlayerForDiffusion[] tableauPlayerDiffusionTree, ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {

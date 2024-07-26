@@ -16,8 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-import Diffusion.WindowConfigurationPlayerInfos;
 import Diffusion.PlayerForDiffusion;
+import Diffusion.WindowConfigurationPlayerInfos;
 
 public class TabPolice extends JPanel {
 	private static final long serialVersionUID = 1L;

@@ -7,7 +7,6 @@ package Diffusion;
 import javax.swing.*;
 import Event.Evenement;
 import java.awt.*;
-import java.sql.SQLException;
 
 public class WindowBroadcastPublic extends JFrame {
     private static final long serialVersionUID = 1L;
@@ -15,7 +14,7 @@ public class WindowBroadcastPublic extends JFrame {
     private final JLayeredPane layeredPane;
     private final JLabel backgroundLabel;
     private WindowTournamentTree windowTournamentTree;
-    private WindowAnimationConfiguration animationFrame;
+    private PanelAnimationConfiguration animationFrame;
 
     public WindowBroadcastPublic(Evenement eventChoosen, GraphicsDevice screen, Dimension windowDimension) {
     	this.actualEvent = eventChoosen;        
@@ -96,18 +95,13 @@ public class WindowBroadcastPublic extends JFrame {
 
     // Getters
     public JLayeredPane getLayeredPaneWindowBroadcastPublic() { return layeredPane; }
-    public WindowAnimationConfiguration getAnimationFrame() { return animationFrame; }
+    public PanelAnimationConfiguration getAnimationFrame() { return animationFrame; }
     public WindowTournamentTree getWindowTournamentTreeFromBroadcast() { return windowTournamentTree; }
     public String getNameEvent() { return this.actualEvent.getNom(); }
 
     // Setter
-	public void setWindowTournamentTreeFromBroadcast(WindowTournamentTree windowTournamentTree) {
+	public void setWindowTournamentTreeFromBroadcast(WindowTournamentTree windowTournamentTree) throws ClassNotFoundException {
 		this.windowTournamentTree = windowTournamentTree;
-		try {
-			animationFrame = new WindowAnimationConfiguration(windowTournamentTree);
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		animationFrame = windowTournamentTree.getPanelAnimationConfiguration();
 	}
 }

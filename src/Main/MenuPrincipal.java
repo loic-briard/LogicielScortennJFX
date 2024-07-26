@@ -198,7 +198,14 @@ public class MenuPrincipal extends JFrame {
         selectAthleteButton.addActionListener(e -> openAthleteSelection());
         
         JButton diffusionButton = new JButton("For diffusion");
-        diffusionButton.addActionListener(e -> handleDiffusionButton());
+        diffusionButton.addActionListener(e -> {
+			try {
+				handleDiffusionButton();
+			} catch (ClassNotFoundException | SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		});
         
         panel.add(selectEventLabel);
         panel.add(eventComboBox);
@@ -258,7 +265,7 @@ public class MenuPrincipal extends JFrame {
         }
     }
 
-    private void handleDiffusionButton() {
+    private void handleDiffusionButton() throws ClassNotFoundException, SQLException {
         if (eventComboBox.getSelectedItem() == null) {
             blinkComponentBorder(eventComboBox, 3);
         } else if(bddPLayersComboBox.getSelectedItem() == null) {
@@ -280,7 +287,7 @@ public class MenuPrincipal extends JFrame {
         JOptionPane.showMessageDialog(null, playersInfo.toString(), "Selected players", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private void createDiffusionWindow(ArrayList<Joueur> selectedPlayers) {
+    private void createDiffusionWindow(ArrayList<Joueur> selectedPlayers) throws ClassNotFoundException, SQLException {
         String selectedEvent = (String) eventComboBox.getSelectedItem();
         Evenement eventChoosen = new Evenement(selectedEvent);
         try {

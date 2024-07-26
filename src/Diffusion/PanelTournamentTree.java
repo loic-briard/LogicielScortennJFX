@@ -26,8 +26,15 @@ public class PanelTournamentTree extends JPanel {
     private int lineWidth = 2;
     private Color treeColor = Color.BLACK; // Couleur par défaut
     private Color selectedPlayerPathColor = Color.RED;    
+    private Color pathColor = Color.RED;    
     private int xLeftPLayer = 10;
     private int xRightPLayer = 500;
+    private int nbJoueur;
+    private Timer animationTimer;
+    private int animationDuration;
+    private int blinkCount;
+    private int currentBlinkCount;
+    private boolean isBlinking = false;
     
     public void setXLeftTree(int x) {
     	xLeftPLayer = x;
@@ -38,8 +45,9 @@ public class PanelTournamentTree extends JPanel {
     	repaint();
     }
 
-    public PanelTournamentTree(WindowAnimationConfiguration windowAnimationConfiguration, ArrayList<PlayerForDiffusion> players2, int horizontalSpacing, int lineWidth) {
-        this.players = players2;
+    public PanelTournamentTree(int nbJoueurs, PanelAnimationConfiguration windowAnimationConfiguration, ArrayList<PlayerForDiffusion> players2, int horizontalSpacing, int lineWidth) {
+        this.nbJoueur = nbJoueurs;
+    	this.players = players2;
         this.horizontalSpacing = horizontalSpacing;
         this.lineWidth = lineWidth;
         this.xLeftPLayer = windowAnimationConfiguration.getXLeftTree();
@@ -54,7 +62,7 @@ public class PanelTournamentTree extends JPanel {
         g2.setStroke(new BasicStroke(lineWidth));
         g2.setColor(treeColor); // Définit la couleur pour le dessin
         
-        int numPlayers = players.size();
+        int numPlayers = this.nbJoueur;
         int halfNumPlayers = numPlayers / 2;
         int[] xPositionsLeft = new int[halfNumPlayers];
         int[] yPositionsLeft = new int[halfNumPlayers];
@@ -112,36 +120,30 @@ public class PanelTournamentTree extends JPanel {
             int midY = (y1 + y2) / 2;
 
             // Draw horizontal lines from players to mid
-//            g2.draw(new Line2D.Double(x1, y1, midX, y1));
-//            g2.draw(new Line2D.Double(x2, y2, midX, y2));
             if(i == indexPlayer && playerIndexInTree) {
-            	g2.setColor(selectedPlayerPathColor);
+            	g2.setColor(pathColor);
             	g2.draw(new Line2D.Double(x1, y1, midX, y1));
             	g2.setColor(treeColor);
             }else
             	g2.draw(new Line2D.Double(x1, y1, midX, y1));
             
             if(i+1 == indexPlayer && playerIndexInTree) {
-            	g2.setColor(selectedPlayerPathColor);
+            	g2.setColor(pathColor);
             	g2.draw(new Line2D.Double(x2, y2, midX, y2));
             	g2.setColor(treeColor);
             }else
             	g2.draw(new Line2D.Double(x2, y2, midX, y2));
             
             // Draw vertical line connecting two players
-//            g2.draw(new Line2D.Double(midX, y1, midX, y2));
-            //ou
-            //g2.draw(new Line2D.Double(midX, y1, midX, midY));
-            //g2.draw(new Line2D.Double(midX, y2, midX, midY));
             if(i == indexPlayer && playerIndexInTree) {
-            	g2.setColor(selectedPlayerPathColor);
+            	g2.setColor(pathColor);
             	g2.draw(new Line2D.Double(midX, y1, midX, midY));
             	g2.setColor(treeColor);
             }else
             	g2.draw(new Line2D.Double(midX, y1, midX, midY));
             
             if(i+1 == indexPlayer && playerIndexInTree) {
-            	g2.setColor(selectedPlayerPathColor);
+            	g2.setColor(pathColor);
             	g2.draw(new Line2D.Double(midX, y2, midX, midY));
             	g2.setColor(treeColor);
             }else
@@ -151,9 +153,8 @@ public class PanelTournamentTree extends JPanel {
             
             // Draw horizontal line from mid to the next round
             int nextX = isLeft ? midX + spacing : midX - spacing;
-//            g2.draw(new Line2D.Double(midX, midY, nextX, midY));
             if((i == indexPlayer || i+1 == indexPlayer) && playerIndexInTree) {
-            	g2.setColor(selectedPlayerPathColor);
+            	g2.setColor(pathColor);
             	g2.draw(new Line2D.Double(midX, midY, nextX, midY));
             	g2.setColor(treeColor);
             }else
@@ -177,9 +178,61 @@ public class PanelTournamentTree extends JPanel {
         this.horizontalSpacing = spacing;
         repaint(); // Redessine le panel avec le nouveau espacement horizontal
     }
+    public void setSelectedpathColor(Color selectedColor) {
+    	selectedPlayerPathColor = selectedColor;
+    }
     public void highlightPlayerPath(int player, Color pathColor) {
         this.selectedPlayerIndex = player;
-        this.selectedPlayerPathColor = pathColor;
+        this.pathColor = pathColor;
+        repaint();
+    }
+    public void setPlayer(int index,PlayerForDiffusion playerFD) {
+    	this.players.set(index, playerFD);
+    	repaint();
+    }
+    public void animatePlayerPath(int player,int durationAnimation,int blinkCounts) {
+    	this.selectedPlayerIndex = player;
+    	
+    	this.animationDuration = durationAnimation;
+        this.blinkCount = blinkCounts;
+        this.currentBlinkCount = 0;
+    	
+    	if (animationTimer != null) {
+            animationTimer.stop();
+        }
+    	if (blinkCount == 0) {
+            // Si blinkCount est 0, on change simplement la couleur pendant la durée spécifiée
+            isBlinking = false;
+            this.pathColor = selectedPlayerPathColor;
+            animationTimer = new Timer(animationDuration, e -> {
+            	this.pathColor = treeColor;
+//                selectedPlayerIndex = -10; // Reset l'index du joueur sélectionné
+                repaint();
+                ((Timer)e.getSource()).stop();
+            });
+            animationTimer.setRepeats(false);
+        }else {
+            // Sinon, on fait clignoter la branche
+            isBlinking = true;
+            this.pathColor = treeColor;
+            int blinkInterval = animationDuration / (2 * blinkCount);
+            animationTimer = new Timer(blinkInterval, e -> {
+                isBlinking = !isBlinking;
+                if(!isBlinking)
+                	this.pathColor = selectedPlayerPathColor;
+                else
+                	this.pathColor = treeColor;
+                repaint();
+                currentBlinkCount++;
+                if (currentBlinkCount >= 2 * blinkCount) {
+                	this.pathColor = treeColor;
+                	repaint();
+//                    selectedPlayerIndex = -10; // Reset l'index du joueur sélectionné
+                    ((Timer)e.getSource()).stop();
+                }
+            });
+        }        
+        animationTimer.start();
         repaint();
     }
 }
