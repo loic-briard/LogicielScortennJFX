@@ -62,8 +62,8 @@ public class TabPolice extends JPanel {
 		checkboxCityresidence = new JCheckBox("Display city residence",listPlayer.get(0).playerCityresidence.isVisible());
 		checkboxLine = new JCheckBox("Display line",listPlayer.get(0).playerLine.isVisible());
 		
-		TailleImg = new JSpinner(new SpinnerNumberModel(listPlayer.get(0).tailleImgJoueur, 0, 1980, 1));
-		TailleFlag = new JSpinner(new SpinnerNumberModel(listPlayer.get(0).tailleImgFlag, 0, 1980, 1));		
+		TailleImg = new JSpinner(new SpinnerNumberModel(listPlayer.get(0).tailleImgJoueur, 0, 10000, 1));
+		TailleFlag = new JSpinner(new SpinnerNumberModel(listPlayer.get(0).tailleImgFlag, 0, 10000, 1));		
 
 		JButton buttonFontName = new JButton("Choose Font");
 		JButton buttonFontSurname = new JButton("Choose Font");
@@ -81,131 +81,131 @@ public class TabPolice extends JPanel {
 		// --------------------------------------action des boutons--------------------------------------
 		buttonFontName.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FontSelector fontSelector = new FontSelector(listPlayer.get(0).nameLabel.getFont(), listPlayer.get(0).nameLabel.getForeground());
+				FontSelector fontSelector = new FontSelector(listPlayer.get(0).playerName.getComponents()[0].getFont(), listPlayer.get(0).playerName.getComponents()[0].getForeground());
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
-					playerForDiffusion.nameLabel.setFont(fontSelector.getPoliceComlet());
-					playerForDiffusion.nameLabel.setForeground(fontSelector.getChoosenColor());
-					playerForDiffusion.playerName.setSize(playerForDiffusion.nameLabel.getPreferredSize());
+					playerForDiffusion.playerName.getComponents()[0].setFont(fontSelector.getPoliceComlet());
+					playerForDiffusion.playerName.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.playerName.setSize(playerForDiffusion.playerName.getComponents()[0].getPreferredSize());
 				}
 			}
 		});
 		buttonFontSurname.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FontSelector fontSelector = new FontSelector(listPlayer.get(0).SurnameLabel.getFont(), listPlayer.get(0).SurnameLabel.getForeground());
+				FontSelector fontSelector = new FontSelector(listPlayer.get(0).playerSurname.getComponents()[0].getFont(), listPlayer.get(0).playerSurname.getComponents()[0].getForeground());
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
-					playerForDiffusion.SurnameLabel.setFont(fontSelector.getPoliceComlet());
-					playerForDiffusion.SurnameLabel.setForeground(fontSelector.getChoosenColor());
-					playerForDiffusion.playerSurname.setSize(playerForDiffusion.SurnameLabel.getPreferredSize());
+					playerForDiffusion.playerSurname.getComponents()[0].setFont(fontSelector.getPoliceComlet());
+					playerForDiffusion.playerSurname.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.playerSurname.setSize(playerForDiffusion.playerSurname.getComponents()[0].getPreferredSize());
 				}
 			}
 		});
 		buttonFontAcro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FontSelector fontSelector = new FontSelector(listPlayer.get(0).AcroLabel.getFont(), listPlayer.get(0).AcroLabel.getForeground());
+				FontSelector fontSelector = new FontSelector(listPlayer.get(0).playerAcro.getComponents()[0].getFont(), listPlayer.get(0).playerAcro.getComponents()[0].getForeground());
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
-					playerForDiffusion.AcroLabel.setFont(fontSelector.getPoliceComlet());
-					playerForDiffusion.AcroLabel.setForeground(fontSelector.getChoosenColor());
-					playerForDiffusion.playerAcro.setSize(playerForDiffusion.AcroLabel.getPreferredSize());
+					playerForDiffusion.playerAcro.getComponents()[0].setFont(fontSelector.getPoliceComlet());
+					playerForDiffusion.playerAcro.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.playerAcro.setSize(playerForDiffusion.playerAcro.getComponents()[0].getPreferredSize());
 				}
 			}
 		});
 		buttonFontRank.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FontSelector fontSelector = new FontSelector(listPlayer.get(0).RankLabel.getFont(), listPlayer.get(0).RankLabel.getForeground());
+				FontSelector fontSelector = new FontSelector(listPlayer.get(0).playerRank.getComponents()[0].getFont(), listPlayer.get(0).playerRank.getComponents()[0].getForeground());
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
-					playerForDiffusion.RankLabel.setFont(fontSelector.getPoliceComlet());
-					playerForDiffusion.RankLabel.setForeground(fontSelector.getChoosenColor());
-					playerForDiffusion.playerRank.setSize(playerForDiffusion.RankLabel.getPreferredSize());
+					playerForDiffusion.playerRank.getComponents()[0].setFont(fontSelector.getPoliceComlet());
+					playerForDiffusion.playerRank.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.playerRank.setSize(playerForDiffusion.playerRank.getComponents()[0].getPreferredSize());
 				}
 			}
 		});
 		buttonFontBirthDate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FontSelector fontSelector = new FontSelector(listPlayer.get(0).birthdateLabel.getFont(), listPlayer.get(0).birthdateLabel.getForeground());
+				FontSelector fontSelector = new FontSelector(listPlayer.get(0).playerBirthdate.getComponents()[0].getFont(), listPlayer.get(0).playerBirthdate.getComponents()[0].getForeground());
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
-					playerForDiffusion.birthdateLabel.setFont(fontSelector.getPoliceComlet());
-					playerForDiffusion.birthdateLabel.setForeground(fontSelector.getChoosenColor());
-					playerForDiffusion.playerBirthdate.setSize(playerForDiffusion.birthdateLabel.getPreferredSize());
+					playerForDiffusion.playerBirthdate.getComponents()[0].setFont(fontSelector.getPoliceComlet());
+					playerForDiffusion.playerBirthdate.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.playerBirthdate.setSize(playerForDiffusion.playerBirthdate.getComponents()[0].getPreferredSize());
 				}
 			}
 		});
 		buttonFontBirthPlace.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FontSelector fontSelector = new FontSelector(listPlayer.get(0).birthPlaceLabel.getFont(), listPlayer.get(0).birthPlaceLabel.getForeground());
+				FontSelector fontSelector = new FontSelector(listPlayer.get(0).playerBirthplace.getComponents()[0].getFont(), listPlayer.get(0).playerBirthplace.getComponents()[0].getForeground());
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
-					playerForDiffusion.birthPlaceLabel.setFont(fontSelector.getPoliceComlet());
-					playerForDiffusion.birthPlaceLabel.setForeground(fontSelector.getChoosenColor());
-					playerForDiffusion.playerBirthplace.setSize(playerForDiffusion.birthPlaceLabel.getPreferredSize());
+					playerForDiffusion.playerBirthplace.getComponents()[0].setFont(fontSelector.getPoliceComlet());
+					playerForDiffusion.playerBirthplace.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.playerBirthplace.setSize(playerForDiffusion.playerBirthplace.getComponents()[0].getPreferredSize());
 				}
 			}
 		});
 		buttonFontHeight.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FontSelector fontSelector = new FontSelector(listPlayer.get(0).heightLabel.getFont(), listPlayer.get(0).heightLabel.getForeground());
+				FontSelector fontSelector = new FontSelector(listPlayer.get(0).playerHeight.getComponents()[0].getFont(), listPlayer.get(0).playerHeight.getComponents()[0].getForeground());
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
-					playerForDiffusion.heightLabel.setFont(fontSelector.getPoliceComlet());
-					playerForDiffusion.heightLabel.setForeground(fontSelector.getChoosenColor());
-					playerForDiffusion.playerHeight.setSize(playerForDiffusion.heightLabel.getPreferredSize());
+					playerForDiffusion.playerHeight.getComponents()[0].setFont(fontSelector.getPoliceComlet());
+					playerForDiffusion.playerHeight.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.playerHeight.setSize(playerForDiffusion.playerHeight.getComponents()[0].getPreferredSize());
 				}
 			}
 		});
 		buttonFontWeigh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FontSelector fontSelector = new FontSelector(listPlayer.get(0).weightLabel.getFont(), listPlayer.get(0).weightLabel.getForeground());
+				FontSelector fontSelector = new FontSelector(listPlayer.get(0).playerWeight.getComponents()[0].getFont(), listPlayer.get(0).playerWeight.getComponents()[0].getForeground());
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
-					playerForDiffusion.weightLabel.setFont(fontSelector.getPoliceComlet());
-					playerForDiffusion.weightLabel.setForeground(fontSelector.getChoosenColor());
-					playerForDiffusion.playerWeight.setSize(playerForDiffusion.weightLabel.getPreferredSize());
+					playerForDiffusion.playerWeight.getComponents()[0].setFont(fontSelector.getPoliceComlet());
+					playerForDiffusion.playerWeight.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.playerWeight.setSize(playerForDiffusion.playerWeight.getComponents()[0].getPreferredSize());
 				}
 			}
 		});
 		buttonFontHand.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FontSelector fontSelector = new FontSelector(listPlayer.get(0).handLabel.getFont(), listPlayer.get(0).handLabel.getForeground());
+				FontSelector fontSelector = new FontSelector(listPlayer.get(0).playerHand.getComponents()[0].getFont(), listPlayer.get(0).playerHand.getComponents()[0].getForeground());
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
-					playerForDiffusion.handLabel.setFont(fontSelector.getPoliceComlet());
-					playerForDiffusion.handLabel.setForeground(fontSelector.getChoosenColor());
-					playerForDiffusion.playerHand.setSize(playerForDiffusion.handLabel.getPreferredSize());
+					playerForDiffusion.playerHand.getComponents()[0].setFont(fontSelector.getPoliceComlet());
+					playerForDiffusion.playerHand.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.playerHand.setSize(playerForDiffusion.playerHand.getComponents()[0].getPreferredSize());
 				}
 			}
 		});
 		buttonFontAge.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FontSelector fontSelector = new FontSelector(listPlayer.get(0).ageLabel.getFont(), listPlayer.get(0).ageLabel.getForeground());
+				FontSelector fontSelector = new FontSelector(listPlayer.get(0).playerAge.getComponents()[0].getFont(), listPlayer.get(0).playerAge.getComponents()[0].getForeground());
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
-					playerForDiffusion.ageLabel.setFont(fontSelector.getPoliceComlet());
-					playerForDiffusion.ageLabel.setForeground(fontSelector.getChoosenColor());
-					playerForDiffusion.playerAge.setSize(playerForDiffusion.ageLabel.getPreferredSize());
+					playerForDiffusion.playerAge.getComponents()[0].setFont(fontSelector.getPoliceComlet());
+					playerForDiffusion.playerAge.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.playerAge.setSize(playerForDiffusion.playerAge.getComponents()[0].getPreferredSize());
 				}
 			}
 		});
 		buttonFontPrizetotal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FontSelector fontSelector = new FontSelector(listPlayer.get(0).prizetotalLabel.getFont(), listPlayer.get(0).prizetotalLabel.getForeground());
+				FontSelector fontSelector = new FontSelector(listPlayer.get(0).playerPrizetotal.getComponents()[0].getFont(), listPlayer.get(0).playerPrizetotal.getComponents()[0].getForeground());
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
-					playerForDiffusion.prizetotalLabel.setFont(fontSelector.getPoliceComlet());
-					playerForDiffusion.prizetotalLabel.setForeground(fontSelector.getChoosenColor());
-					playerForDiffusion.playerPrizetotal.setSize(playerForDiffusion.prizetotalLabel.getPreferredSize());
+					playerForDiffusion.playerPrizetotal.getComponents()[0].setFont(fontSelector.getPoliceComlet());
+					playerForDiffusion.playerPrizetotal.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.playerPrizetotal.setSize(playerForDiffusion.playerPrizetotal.getComponents()[0].getPreferredSize());
 				}
 			}
 		});
 		buttonFontCityresidence.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FontSelector fontSelector = new FontSelector(listPlayer.get(0).cityresidenceLabel.getFont(), listPlayer.get(0).cityresidenceLabel.getForeground());
+				FontSelector fontSelector = new FontSelector(listPlayer.get(0).playerCityresidence.getComponents()[0].getFont(), listPlayer.get(0).playerCityresidence.getComponents()[0].getForeground());
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
-					playerForDiffusion.cityresidenceLabel.setFont(fontSelector.getPoliceComlet());
-					playerForDiffusion.cityresidenceLabel.setForeground(fontSelector.getChoosenColor());
-					playerForDiffusion.playerCityresidence.setSize(playerForDiffusion.cityresidenceLabel.getPreferredSize());
+					playerForDiffusion.playerCityresidence.getComponents()[0].setFont(fontSelector.getPoliceComlet());
+					playerForDiffusion.playerCityresidence.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.playerCityresidence.setSize(playerForDiffusion.playerCityresidence.getComponents()[0].getPreferredSize());
 				}
 			}
 		});
 		buttonFontLine.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FontSelector fontSelector = new FontSelector(listPlayer.get(0).lineLabel.getFont(), listPlayer.get(0).lineLabel.getForeground());
+				FontSelector fontSelector = new FontSelector(listPlayer.get(0).playerLine.getComponents()[0].getFont(), listPlayer.get(0).playerLine.getComponents()[0].getForeground());
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
-					playerForDiffusion.lineLabel.setFont(fontSelector.getPoliceComlet());
-					playerForDiffusion.lineLabel.setForeground(fontSelector.getChoosenColor());
-					playerForDiffusion.playerLine.setSize(playerForDiffusion.lineLabel.getPreferredSize());
+					playerForDiffusion.playerLine.getComponents()[0].setFont(fontSelector.getPoliceComlet());
+					playerForDiffusion.playerLine.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.playerLine.setSize(playerForDiffusion.playerLine.getComponents()[0].getPreferredSize());
 				}
 			}
 		});

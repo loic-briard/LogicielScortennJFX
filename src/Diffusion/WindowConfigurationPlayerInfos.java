@@ -149,8 +149,8 @@ public class WindowConfigurationPlayerInfos extends JFrame {
             }
         }
         
-        ElementJoueurFull testReadJson = ConfigurationSaveLoad.readJsonFileFull("Config/" + displayFrame.getNameEvent() + "/" + frameType.toString().toLowerCase() + ".json");
-        ConfigurationSaveLoad.updateElementJoueurFull(displayFrame.getNameEvent(), testReadJson, elementJoueurFull);
+        ElementJoueurFull ReadJson = ConfigurationSaveLoad.readJsonFileFull("Config/" + displayFrame.getNameEvent() + "/" + frameType.toString().toLowerCase() + ".json");
+        ConfigurationSaveLoad.updateElementJoueurFull(displayFrame.getNameEvent(), ReadJson, elementJoueurFull);
     }
     
     private ArrayList<Map<JPanel, JLabel>> getJoueurDetails() {

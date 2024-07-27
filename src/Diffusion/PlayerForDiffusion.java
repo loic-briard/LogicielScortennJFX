@@ -308,8 +308,10 @@ public class PlayerForDiffusion extends JPanel{
 
 	private void animateImageElement(JPanel endPanel, Point endPoint) {
 	    JPanel imagePanel = endPanel.getName().equals("ImgFlag") ? playerFlag : playerImg;
-	    JLabel imageLabel = endPanel.getName().equals("ImgFlag") ? FlagLabel : ImgLabel;
 	    Dimension endDimension = endPanel.getComponents()[0].getPreferredSize();
+	    JLabel imageLabel = endPanel.getName().equals("ImgFlag") ? new ImageUtility(FlagLabel.getImagePath(),(int) endDimension.getHeight()) : new ImageUtility(ImgLabel.getImagePath(), (int)endDimension.getHeight());
+//	    JLabel imageLabel = endPanel.getName().equals("ImgFlag") ? FlagLabel : ImgLabel;
+	    System.out.println("end dimension image : "+endDimension);
 	    animationFrame.animateImage(imagePanel, imageLabel, endPoint, endDimension,
 	            JLayeredPane.POPUP_LAYER, this.frameForDiffusion.getLayeredPane(),
 	            () -> displayPlayerFull());
@@ -323,7 +325,7 @@ public class PlayerForDiffusion extends JPanel{
 	            Font endFont = endPanel.getComponents()[0].getFont();
 	            Color endColor = endPanel.getComponents()[0].getForeground();
 	            Dimension endDimension = endPanel.getPreferredSize();
-	            animationFrame.animateLabel(startPanel, endPoint, endDimension, endColor, endFont, JLayeredPane.POPUP_LAYER,this.frameForDiffusion.getLayeredPane(),
+	            animationFrame.animateLABEL(startPanel, endPoint, endDimension, endColor, endFont, JLayeredPane.POPUP_LAYER,this.frameForDiffusion.getLayeredPane(),
 	                    () -> displayPlayerFullAndTournamentTreeAnimation()
 	                    );
 	            break;
@@ -477,7 +479,7 @@ public class PlayerForDiffusion extends JPanel{
 		            throw new IllegalArgumentException("Unexpected value: " + typeFen);
 		    }
 
-		    System.out.println("Type de fenetre du joueur créé : " + windowConfigurationPlayerInfos.getTypeFenetre());
+//		    System.out.println("Type de fenetre du joueur créé : " + windowConfigurationPlayerInfos.getTypeFenetre());
 		}
 	}
 	
@@ -507,10 +509,13 @@ public class PlayerForDiffusion extends JPanel{
 	    ArrayList<PlayerForDiffusion> listPlayerDiffusionTree = new ArrayList<>();
 
 	    if (windowConfigurationPlayerInfos == null || !windowConfigurationPlayerInfos.isDisplayable()) {// la fenetre full n'existe pas
+	    	System.out.println("Creation de la fenetre de config full");
 	        createNewFullWindowConfig(tableauPlayerDiffusionTree, listPlayerDiffusionTree);
 	    } else if (windowConfigurationPlayerInfos.getTypeFenetre().equals("full")) {//la fenetre existe donc mettre a jour joueur electionne si il existe pas l'inserer
+	    	System.out.println("Fen config full existe, update spinner selected joueur, si selected joueur doesn't exist l'inserer");
 	        updateExistingFullWindowConfig(listPlayerDiffusionTree);
 	    } else {// si arrive ici ca veut dire qu'il faut afficher tout les joueurs selectionne de l'arbre (btn full)
+	    	System.out.println("Creation fen configfull a partir des joueur selectione dans windows tournament tree");
 	        recreateFullWindowConfig(tableauPlayerDiffusionTree, listPlayerDiffusionTree);
 	    }
 	    
@@ -536,6 +541,7 @@ public class PlayerForDiffusion extends JPanel{
 	        if (selectedComponent instanceof TabConfigurationPlayerInfos) {
 	            TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;
 	            listPlayerDiffusionTree.add(currentTab.getInfosPlayerDetails());
+//	            listPlayerDiffusionTree.add(playerfordifusion2);
 	        }
 	    }
 	    int playerIndex = findPlayerIndex(listPlayerDiffusionTree);

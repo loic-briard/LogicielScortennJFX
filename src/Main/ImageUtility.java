@@ -27,9 +27,11 @@ public class ImageUtility extends JLabel {
         try {
             BufferedImage originalImage = null;//ImageIO.read(new File(this.imagePath));
             if(imagePath != "" || imagePath != "''") {
-            	System.out.println("  image existe, chemin vers l'image : "+this.imagePath);
             	originalImage = ImageIO.read(new File(this.imagePath));
-            }else originalImage = ImageIO.read(new File("clear.png"));
+            }else {
+            	System.out.println("  L'image n'existe pas, image transparente");
+            	originalImage = ImageIO.read(new File("clear.png"));
+            }
             	
             
             if(height>0) {

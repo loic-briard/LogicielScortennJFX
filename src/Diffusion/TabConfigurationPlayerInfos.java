@@ -12,11 +12,11 @@ import Police.TabPolice;
 public class TabConfigurationPlayerInfos extends JPanel {
     private static final long serialVersionUID = 1L;
 
-    private final Map<String, JSpinner> spinners = new HashMap<>();
-    private final WindowBroadcastPublic displayFrame;
-    private final Joueur joueur;
-    private final PlayerForDiffusion infosPlayerDetails;
-    private final WindowConfigurationPlayerInfos placementFrame;
+    private Map<String, JSpinner> spinners = new HashMap<>();
+    private WindowBroadcastPublic displayFrame;
+    private Joueur joueur;
+    private PlayerForDiffusion infosPlayerDetails;
+    private WindowConfigurationPlayerInfos placementFrame;
 
     public TabConfigurationPlayerInfos(PlayerForDiffusion infosPlayerDetail, Joueur joueur, WindowBroadcastPublic displayFrame, WindowConfigurationPlayerInfos placementFrame) {
         this.displayFrame = displayFrame;
@@ -182,7 +182,7 @@ public class TabConfigurationPlayerInfos extends JPanel {
             String key = entry.getKey();
             if (key.endsWith("X")) {
                 String element = key.substring(0, key.length() - 1);
-                JComponent component = getComponentByName(element);
+                JComponent component = getComponentByName(element, infosPlayerDetails);
                 if (component != null) {
                     ((SpinnerNumberModel) spinners.get(element + "X").getModel()).setValue(component.getLocation().x);
                     ((SpinnerNumberModel) spinners.get(element + "Y").getModel()).setValue(component.getLocation().y);
@@ -191,7 +191,7 @@ public class TabConfigurationPlayerInfos extends JPanel {
         }
     }
 
-    private JComponent getComponentByName(String name) {
+    private JComponent getComponentByName(String name, PlayerForDiffusion infosPlayerDetails) {
         switch (name) {
             case "name": return infosPlayerDetails.playerName;
             case "Surname": return infosPlayerDetails.playerSurname;
