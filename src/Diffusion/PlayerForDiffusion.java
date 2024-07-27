@@ -231,7 +231,7 @@ public class PlayerForDiffusion extends JPanel{
 	    setupGlobalPanel();
 
 	    // Mettre à jour l'affichage
-	    updateDisplay();
+	    updateDisplay();    
 	}
 
 	private void updateTextPanel(JPanel panel, LabelInfo info) {
@@ -504,11 +504,12 @@ public class PlayerForDiffusion extends JPanel{
 	    updateSelectedTab(typeFen);
 	}
 
+	//newPlayer = true quand player cliquer depuis window tournament tree
 	public void handleFullCase() {
 	    PlayerForDiffusion[] tableauPlayerDiffusionTree = frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree();
 	    ArrayList<PlayerForDiffusion> listPlayerDiffusionTree = new ArrayList<>();
 
-	    if (windowConfigurationPlayerInfos == null || !windowConfigurationPlayerInfos.isDisplayable()) {// la fenetre full n'existe pas
+	    if ((windowConfigurationPlayerInfos == null || !windowConfigurationPlayerInfos.isDisplayable())) {// la fenetre full n'existe pas
 	    	System.out.println("Creation de la fenetre de config full");
 	        createNewFullWindowConfig(tableauPlayerDiffusionTree, listPlayerDiffusionTree);
 	    } else if (windowConfigurationPlayerInfos.getTypeFenetre().equals("full")) {//la fenetre existe donc mettre a jour joueur electionne si il existe pas l'inserer
@@ -521,7 +522,7 @@ public class PlayerForDiffusion extends JPanel{
 	    
 	    windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(findPlayerIndex(listPlayerDiffusionTree));
 	    updateSelectedTab("full");
-	    
+	    windowConfigurationPlayerInfos.pack();
 	    animationFrame.getPanelTournamentTree().setPlayer(numeroPlayer, playerfordifusion2);
 	}
 
@@ -549,6 +550,7 @@ public class PlayerForDiffusion extends JPanel{
 	    	System.out.println("insertion d'un joeur");
 	    	insertPlayerToFullConfig(playerfordifusion2, listPlayerDiffusionTree);
 	    }
+	    windowConfigurationPlayerInfos.getTabPolice().setListPlayer(listPlayerDiffusionTree);
 	}
 
 	private void recreateFullWindowConfig(PlayerForDiffusion[] tableauPlayerDiffusionTree, ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {

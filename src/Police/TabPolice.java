@@ -41,10 +41,15 @@ public class TabPolice extends JPanel {
 	public JSpinner TailleImg;
 	public JSpinner TailleFlag;	
 	
+	private ArrayList<PlayerForDiffusion> listPlayer;
 	
+	public void setListPlayer(ArrayList<PlayerForDiffusion> listPlayerUpdate) {
+		this.listPlayer = listPlayerUpdate;
+	}
 
-	public TabPolice(ArrayList<PlayerForDiffusion> listPlayer, WindowConfigurationPlayerInfos placemenFenetre) {
+	public TabPolice(ArrayList<PlayerForDiffusion> listPlayerDisplay, WindowConfigurationPlayerInfos placemenFenetre) {
 		// Initialisation des JCheckBox pour chaque �l�ment
+		this.listPlayer = listPlayerDisplay;
 		listPlayer.get(0).playerAcro.isVisible();
 		checkboxName = new JCheckBox("Display name",listPlayer.get(0).playerName.isVisible());
 		checkboxSurname = new JCheckBox("Display surname",listPlayer.get(0).playerSurname.isVisible());

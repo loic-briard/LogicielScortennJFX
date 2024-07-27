@@ -213,18 +213,19 @@ public class WindowTournamentTree extends JFrame {
         			playerDetailsForTree.setPlacementFrameTwoPlayer(windowConfigPlayerFull);
         			playerDetailsForTree.setPlayer(soloPlayer, ligne+1);
         			playerDetailsForTree.setVisible(false);
+        			//ajouter a fenetre full si elle existe et si type joueur = full
+        			if(windowConfigPlayerFull != null)
+        				playerDetailsForTree.handleFullCase();
         			if(tabPlayerForTree[ligne] != null) {
         				tabPlayerForTree[ligne].removeAll();
         			}
         			tabPlayerForTree[ligne] = playerDetailsForTree;
+        			
         			//initialisation et affichage de player solo
         			PlayerForDiffusion soloPlayerDetails = new PlayerForDiffusion(this.event.getNom(), windowBroadcastPublic, "player",ligne);
         			soloPlayerDetails.setPlayer(soloPlayer, ligne+1);
         			ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
         			ListSelectedJoueur.add(soloPlayerDetails);
-//        			windowBroadcastPublic.getAnimationFrame().getPanelTournamentTree().highlightPlayerPath(ligne, Color.GREEN);
-        			
-        			
         			
         			if (windowConfigPlayer == null || !windowConfigPlayer.isDisplayable()|| windowConfigPlayer.getTypeFenetre() == "full" ) {
         				windowConfigPlayer = new WindowConfigurationPlayerInfos(windowBroadcastPublic, "player");
