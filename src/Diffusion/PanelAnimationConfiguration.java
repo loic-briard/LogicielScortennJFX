@@ -5,6 +5,8 @@ import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import Sauvegarde.ConfigurationSaveLoad;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,6 +29,7 @@ public class PanelAnimationConfiguration extends JPanel {
     private JSpinner largeurTreeSpinner;
     private JSpinner epaisseurTreeSpinner;
     private JCheckBox animationTreeCheckBox;
+    private JCheckBox beginingAnimationTreeCheckBox;
     private JSpinner animationTimeTreeSpinner;
     private JSpinner clignotementNumberTreeSpinner;
     private Color treeColor;
@@ -56,7 +59,7 @@ public class PanelAnimationConfiguration extends JPanel {
         labelAnimationCheckBox = new JCheckBox("Label Animation");
         labelAnimationSpinner = new JSpinner(new SpinnerNumberModel(1000, 0, 10000, 10));
         
-        displayJFullCheckBox = new JCheckBox("display player full");
+        displayJFullCheckBox = new JCheckBox("Display player tree");
 		displayJFullCheckBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -135,6 +138,7 @@ public class PanelAnimationConfiguration extends JPanel {
         });
         
         animationTreeCheckBox = new JCheckBox("Animation tournament tree");
+        beginingAnimationTreeCheckBox = new JCheckBox("start of animation");
         animationTimeTreeSpinner = new JSpinner(new SpinnerNumberModel(2000, 0, 10000, 1));
         clignotementNumberTreeSpinner = new JSpinner(new SpinnerNumberModel(3, 0, 100, 1));
         pathTreeColorButton = new JButton("Select a color");
@@ -150,7 +154,7 @@ public class PanelAnimationConfiguration extends JPanel {
                 }
             }
         });
-        
+        ConfigurationSaveLoad.setConfigAnimation();
     }
 
     private void setupComponents() {
@@ -161,10 +165,10 @@ public class PanelAnimationConfiguration extends JPanel {
         addRow(gbc, 0, displayJFullCheckBox);
         addRow(gbc, 1, zoomAnimationCheckBox, zoomAnimationSpinner, new JLabel("ms"));
         addRow(gbc, 2, labelAnimationCheckBox, labelAnimationSpinner,new JLabel("ms"));
-        addRow(gbc, 3, new JLabel(), new JLabel("Begining of tree Left"),new JLabel("Begining of tree Right"),new JLabel("Tree Width"),new JLabel("Tree thickness"));
+        addRow(gbc, 3, new JLabel(), new JLabel("Position tree Left"),new JLabel("Position tree Right"),new JLabel("Tree Width"),new JLabel("Tree thickness"));
         addRow(gbc, 4, displayTreeCheckBox, xLeftSpinner,xRightSpinner,largeurTreeSpinner,epaisseurTreeSpinner,treeColorButton);
-        addRow(gbc, 5, new JLabel(), new JLabel("Duration animation"),new JLabel(),new JLabel("number of blink"),new JLabel("Color path tree"));
-        addRow(gbc, 6, animationTreeCheckBox, animationTimeTreeSpinner,new JLabel("ms"),clignotementNumberTreeSpinner,pathTreeColorButton);
+        addRow(gbc, 5, new JLabel(),new JLabel(), new JLabel("Duration animation"),new JLabel(),new JLabel("Blink number"));
+        addRow(gbc, 6, animationTreeCheckBox, beginingAnimationTreeCheckBox, animationTimeTreeSpinner,new JLabel("ms"),clignotementNumberTreeSpinner,pathTreeColorButton);
     }
 
     private void addRow(GridBagConstraints gbc, int row, JComponent... components) {
@@ -189,6 +193,10 @@ public class PanelAnimationConfiguration extends JPanel {
 
     public boolean isLabelAnimationEnabled() {
         return labelAnimationCheckBox.isSelected();
+    }
+    //vrai = apres que le joueur de l'arbre sois en position faux apres que le joueur(zoom) soit fini
+    public boolean isbeginingAnimationTreeCheckBoxEnabled() {
+        return beginingAnimationTreeCheckBox.isSelected();
     }
 
     public int getLabelAnimationDuration() {
@@ -221,8 +229,13 @@ public class PanelAnimationConfiguration extends JPanel {
     public boolean isPathTreeAnimationEnabled() {
         return animationTreeCheckBox.isSelected();
     }
-
-    public void animateLABEL(JPanel panel, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, Integer layer, JLayeredPane layeredPane, Runnable onComplete) {
+    public Color getTreeColor() {
+		return treeColor;
+	}
+	public Color getPathTreeColor() {
+		return pathTreeColor;
+	}
+	public void animateLABEL(JPanel panel, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, Integer layer, JLayeredPane layeredPane, Runnable onComplete) {
     	System.out.println("Animation LABEL");
     	JLabel startLabel = (JLabel) panel.getComponents()[0];
         JLabel animatedLabel = new JLabel();
@@ -283,7 +296,7 @@ public class PanelAnimationConfiguration extends JPanel {
 
 
     private void animateLabel(JLabel label, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, int duration, JLayeredPane layeredPane, Integer layer, Runnable onComplete) {
-    	currentAnimationTimer  = createTimer(true, duration, (progress) -> {
+    	currentAnimationTimer  = createTimer(false, duration, (progress) -> {
             boolean targetReached = updateLabelProperties(label, targetLocation, targetSize, targetColor, targetFont, progress);
             if (progress >= 1.0 || targetReached) {
             	currentAnimationTimer.stop();

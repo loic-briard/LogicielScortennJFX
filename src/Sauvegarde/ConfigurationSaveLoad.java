@@ -24,6 +24,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
+import Diffusion.PanelAnimationConfiguration;
+
 class ElementOneJoueur {
 	private Map<String, ElementJoueur> player = new HashMap<>();
 	private Map<String, ElementPoliceJoueur> playerPolice = new HashMap<>();
@@ -836,4 +838,65 @@ public class ConfigurationSaveLoad {
         String[] rgb = color.split(",");
         return new Color(Integer.parseInt(rgb[0].trim()), Integer.parseInt(rgb[1].trim()), Integer.parseInt(rgb[2].trim()));
     }
+	public static void saveConfigAnimation(PanelAnimationConfiguration panelAnimation, String nomEvent) {
+		AnimationSave animationSave = new AnimationSave();
+		
+		animationSave.setCheckboxDisplayPlayerTree(panelAnimation.isPlayerFullEnabled());
+		
+		Map<String, Object> mapZoomAnimation = new HashMap<>();
+		mapZoomAnimation.put("checkbox", panelAnimation.isZoomAnimationEnabled());
+		mapZoomAnimation.put("duration", panelAnimation.getZoomAnimationDuration());
+		animationSave.setMapZoom(mapZoomAnimation);
+		
+		Map<String, Object> mapLabelAnimation = new HashMap<>();
+		mapLabelAnimation.put("checkbox", panelAnimation.isLabelAnimationEnabled());
+		mapLabelAnimation.put("duration", panelAnimation.getLabelAnimationDuration());
+		animationSave.setMapLabel(mapLabelAnimation);
+		
+		Map<String, Object> mapTournamentTree = new HashMap<>();
+		mapTournamentTree.put("checkbox", panelAnimation.isTournamentTreeEnabled());
+		mapTournamentTree.put("positionLeft", panelAnimation.getXLeftTree());
+		mapTournamentTree.put("positionRight", panelAnimation.getXRightTree());
+		mapTournamentTree.put("width", panelAnimation.getWidthTree());
+		mapTournamentTree.put("thickness", panelAnimation.getThicknessTree());
+		mapTournamentTree.put("color", ColorSerializer(panelAnimation.getTreeColor()));
+		animationSave.setMapTournamenTree(mapTournamentTree);
+		
+		Map<String, Object> mapAnimationTournamentTree = new HashMap<>();
+		mapAnimationTournamentTree.put("checkbox", panelAnimation.isPathTreeAnimationEnabled());
+		mapAnimationTournamentTree.put("checkboxBegining", panelAnimation.isbeginingAnimationTreeCheckBoxEnabled());
+		mapAnimationTournamentTree.put("duration", panelAnimation.getAnimationPathTreeDuration());
+		mapAnimationTournamentTree.put("blink", panelAnimation.getNbBlinkTreeDuration());
+		mapAnimationTournamentTree.put("color", ColorSerializer(panelAnimation.getPathTreeColor()));
+		animationSave.setMapAnimationTournamenTree(mapAnimationTournamentTree);		
+		
+		saveConfigAnimationToJson(animationSave,"Config/" + nomEvent, "animation.json");
+	}
+
+	// Méthode pour sauvegarder les données de configuration au format JSON
+	public static void saveConfigAnimationToJson(AnimationSave data, String filePath, String fileName) {
+		Gson gson = new Gson();
+		// Vérifiez si le dossier existe
+		File destination = new File(filePath);
+		if (!destination.exists()) {
+			// Si le dossier n'existe pas, essayez de le créer
+			if (destination.mkdirs()) {
+				System.out.println("  + Folder " + filePath + " has been created with success");
+			} else {
+				System.out.println("  ! Folder creation : " + filePath + " failed");
+				return; // Arrêtez l'exécution si la création du dossier échoue
+			}
+		}
+		try (FileWriter writer = new FileWriter(filePath + File.separator + fileName, false)) {
+			String json = gson.toJson(data);
+			writer.write(json);
+			System.out.println("  File : " + fileName + " in folder " + filePath + " has been modified");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	public static void setConfigAnimation() {
+		// TODO Auto-generated method stub
+		
+	}
 }

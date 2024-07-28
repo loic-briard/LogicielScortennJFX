@@ -286,6 +286,8 @@ public class PlayerForDiffusion extends JPanel{
 	            break;
 	        case "player":
 	            animationFrame.zoomPanel(panelPlayerGlobal, frameForDiffusion, this::animatePlayerElements);
+	            if(animationFrame.isPathTreeAnimationEnabled() && !animationFrame.isbeginingAnimationTreeCheckBoxEnabled())
+	    			animationFrame.getPanelTournamentTree().animatePlayerPath(this.numeroPlayer, animationFrame.getAnimationPathTreeDuration(), animationFrame.getNbBlinkTreeDuration());
 	            break;
 	        default:
 	            animationFrame.zoomPanel(panelPlayerGlobal, frameForDiffusion, null);
@@ -311,10 +313,8 @@ public class PlayerForDiffusion extends JPanel{
 	    Dimension endDimension = endPanel.getComponents()[0].getPreferredSize();
 	    JLabel imageLabel = endPanel.getName().equals("ImgFlag") ? new ImageUtility(FlagLabel.getImagePath(),(int) endDimension.getHeight()) : new ImageUtility(ImgLabel.getImagePath(), (int)endDimension.getHeight());
 //	    JLabel imageLabel = endPanel.getName().equals("ImgFlag") ? FlagLabel : ImgLabel;
-	    System.out.println("end dimension image : "+endDimension);
 	    animationFrame.animateImage(imagePanel, imageLabel, endPoint, endDimension,
-	            JLayeredPane.POPUP_LAYER, this.frameForDiffusion.getLayeredPane(),
-	            () -> displayPlayerFull());
+	            JLayeredPane.POPUP_LAYER, this.frameForDiffusion.getLayeredPane(),null);
 	}
 
 	private void animateTextElement(Component endComponent, Point endPoint) {
@@ -340,7 +340,7 @@ public class PlayerForDiffusion extends JPanel{
 	}
 	private void displayPlayerFullAndTournamentTreeAnimation() {
 		displayPlayerFull();
-		if(animationFrame.isPathTreeAnimationEnabled())
+		if(animationFrame.isPathTreeAnimationEnabled() && animationFrame.isbeginingAnimationTreeCheckBoxEnabled())
 			animationFrame.getPanelTournamentTree().animatePlayerPath(this.numeroPlayer, animationFrame.getAnimationPathTreeDuration(), animationFrame.getNbBlinkTreeDuration());
 	}
 

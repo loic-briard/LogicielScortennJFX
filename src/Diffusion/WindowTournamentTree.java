@@ -189,7 +189,10 @@ public class WindowTournamentTree extends JFrame {
         bottomPanelButton.add(blackButton,BorderLayout.NORTH);
 
         bottomPanel.add(bottomPanelButton, BorderLayout.NORTH);
-        bottomPanel.add(this.panelAnimationConfiguration, BorderLayout.SOUTH);
+        bottomPanel.add(this.panelAnimationConfiguration, BorderLayout.CENTER);
+        JButton btnSaveConfigAnimation = new JButton("Save config animation");
+        btnSaveConfigAnimation.addActionListener(e -> ConfigurationSaveLoad.saveConfigAnimation(panelAnimationConfiguration,this.event.getNom()));
+        bottomPanel.add(btnSaveConfigAnimation, BorderLayout.SOUTH);
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
