@@ -298,7 +298,7 @@ public class MenuPrincipal extends JFrame {
         WindowBroadcastPublic diffusionFrame = new WindowBroadcastPublic(eventChoosen, (GraphicsDevice) spinnerScreen.getValue(), new Dimension((int)sizeFenetreX.getValue(), (int)sizeFenetreY.getValue()));
         WindowTournamentTree windowTournamentTree = new WindowTournamentTree(selectedPlayers, eventChoosen, diffusionFrame, (int) spinnerNbJoueur.getValue());
         diffusionFrame.setWindowTournamentTreeFromBroadcast(windowTournamentTree);
-        System.out.println("-> Selected event : " + eventChoosen.getNom() + ", player list : " + bddPLayersComboBox.getSelectedItem() + ", number of players : " + (int) spinnerNbJoueur.getValue());
+        System.out.println("-> Selected event : " + eventChoosen.getNom() + ", player list : " + bddPLayersComboBox.getSelectedItem() + ", number of players : " + (int) spinnerNbJoueur.getValue()+" ,taille fenetre "+diffusionFrame.getSize().getWidth()+"x"+diffusionFrame.getSize().getHeight()+"<-");
     }
 
     public void refreshEventComboBox() {

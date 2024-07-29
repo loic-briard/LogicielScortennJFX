@@ -786,7 +786,6 @@ public class ConfigurationSaveLoad {
 			ArrayList<String> listFileName = new ArrayList<String>();
 			listFileName.add("player.json");
 			listFileName.add("game.json");
-			listFileName.add("tab.json");
 			Path targetPath = Paths.get("config" + File.separator + nomEvent);
 			// Créer le dossier destination s'il n'existe pas
 			if (!Files.exists(targetPath)) {
