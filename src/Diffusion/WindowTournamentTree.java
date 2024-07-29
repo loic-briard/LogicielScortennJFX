@@ -182,7 +182,6 @@ public class WindowTournamentTree extends JFrame {
 			try {
 				toggleBlackBackground();
 			} catch (ClassNotFoundException | SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		});
@@ -191,7 +190,7 @@ public class WindowTournamentTree extends JFrame {
         bottomPanel.add(bottomPanelButton, BorderLayout.NORTH);
         bottomPanel.add(this.panelAnimationConfiguration, BorderLayout.CENTER);
         JButton btnSaveConfigAnimation = new JButton("Save config animation");
-        btnSaveConfigAnimation.addActionListener(e -> ConfigurationSaveLoad.saveConfigAnimation(panelAnimationConfiguration,this.event.getNom()));
+        btnSaveConfigAnimation.addActionListener(e -> ConfigurationSaveLoad.saveConfigAnimation(panelAnimationConfiguration,this.eventName()));
         bottomPanel.add(btnSaveConfigAnimation, BorderLayout.SOUTH);
         add(bottomPanel, BorderLayout.SOUTH);
     }
@@ -199,7 +198,7 @@ public class WindowTournamentTree extends JFrame {
     private void finalizeSetup() {
         pack();
         setVisible(true);
-        ConfigurationSaveLoad.initJson(nbJoueur, event.getNom());
+        ConfigurationSaveLoad.initJson(nbJoueur, this.eventName());
     }
 
     private void handlePlayerSelection(JComboBox<String> comboBox, int playerIndex, int panelIndex) {
@@ -212,7 +211,7 @@ public class WindowTournamentTree extends JFrame {
         		int ligne = playerIndex + (nbJoueur/4)*panelIndex;
         		if(soloPlayer != null) {
         			//ajout du player dans le tableau pour l'arbre de tournoi
-        			PlayerForDiffusion playerDetailsForTree = new PlayerForDiffusion(this.event.getNom(), windowBroadcastPublic, "full",ligne);
+        			PlayerForDiffusion playerDetailsForTree = new PlayerForDiffusion(this.eventName(), windowBroadcastPublic, "full",ligne);
         			playerDetailsForTree.setPlacementFrameTwoPlayer(windowConfigPlayerFull);
         			playerDetailsForTree.setPlayer(soloPlayer, ligne+1);
         			playerDetailsForTree.setVisible(false);
@@ -225,7 +224,7 @@ public class WindowTournamentTree extends JFrame {
         			tabPlayerForTree[ligne] = playerDetailsForTree;
         			
         			//initialisation et affichage de player solo
-        			PlayerForDiffusion soloPlayerDetails = new PlayerForDiffusion(this.event.getNom(), windowBroadcastPublic, "player",ligne);
+        			PlayerForDiffusion soloPlayerDetails = new PlayerForDiffusion(this.eventName(), windowBroadcastPublic, "player",ligne);
         			soloPlayerDetails.setPlayer(soloPlayer, ligne+1);
         			ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
         			ListSelectedJoueur.add(soloPlayerDetails);
@@ -269,8 +268,8 @@ public class WindowTournamentTree extends JFrame {
 		if (playerIndex1 < selectedJoueurs.size() && playerIndex2 < selectedJoueurs.size()) {
 			Joueur Player1 = foundPlayer(getSelectedPlayerName(playerPanel[indexPanel], playerIndex1));
 			Joueur Player2 = foundPlayer(getSelectedPlayerName(playerPanel[indexPanel], playerIndex2));
-			PlayerForDiffusion PlayerDetails1 = new PlayerForDiffusion(this.event.getNom(), windowBroadcastPublic, "game",0);
-			PlayerForDiffusion PlayerDetails2 = new PlayerForDiffusion(this.event.getNom(), windowBroadcastPublic, "game",1);
+			PlayerForDiffusion PlayerDetails1 = new PlayerForDiffusion(this.eventName(), windowBroadcastPublic, "game",0);
+			PlayerForDiffusion PlayerDetails2 = new PlayerForDiffusion(this.eventName(), windowBroadcastPublic, "game",1);
 			int ligne1 = (2*buttonIndex+1)+((nbJoueur/4)*indexPanel);
 			int ligne2 = ((2*buttonIndex+1)+((nbJoueur/4)*indexPanel)+1);
 			ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
@@ -316,7 +315,7 @@ public class WindowTournamentTree extends JFrame {
 		for (int i = 0; i < (nbJoueur / 4); i++) {
 			//System.out.println((nbJoueur / 4) * indexPanel + i);
 			Joueur Player = foundPlayer(getSelectedPlayerName(playerPanel[indexPanel], i));
-			PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.event.getNom(), windowBroadcastPublic, "tab", i);
+			PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.eventName(), windowBroadcastPublic, "tab", i);
 			int ligne = (nbJoueur / 4) * indexPanel + i + 1;
 			try {
 				if(Player != null) {
@@ -375,7 +374,7 @@ public class WindowTournamentTree extends JFrame {
 	        for (int i = 0; i < playersInThisRow; i++) {
 	            Joueur Player = foundPlayer(getSelectedPlayerName(playerPanel[y], i));
 	            if (Player != null) {
-	                PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.event.getNom(), windowBroadcastPublic, "full", y * (totalPlayers/4) + i);
+	                PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.eventName(), windowBroadcastPublic, "full", y * (totalPlayers/4) + i);
 	                PlayerDetails.setPlacementFrameTwoPlayer(windowConfigPlayerFull);
 	                int ligne = y * (totalPlayers/4) + i + 1;
 	                System.out.println("-> boucle sur tableau " + y+", joueur index "+i+", "+Player.getNom()+", ligne: "+ligne);
@@ -431,7 +430,7 @@ public class WindowTournamentTree extends JFrame {
     	playerForDifusionListInit = new ArrayList<PlayerForDiffusion>();
     	int i=0;
     	for (Joueur joueur : selectedJoueurs) {
-    		PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.event.getNom(), windowBroadcastPublic, "full",i);
+    		PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.eventName(), windowBroadcastPublic, "full",i);
     		i++;
     		PlayerDetails.setPlayer(joueur, i);
     		playerForDifusionListInit.add(PlayerDetails);

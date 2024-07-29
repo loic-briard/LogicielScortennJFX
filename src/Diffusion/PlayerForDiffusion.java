@@ -286,8 +286,6 @@ public class PlayerForDiffusion extends JPanel{
 	            break;
 	        case "player":
 	            animationFrame.zoomPanel(panelPlayerGlobal, frameForDiffusion, this::animatePlayerElements);
-	            if(animationFrame.isPathTreeAnimationEnabled() && !animationFrame.isbeginingAnimationTreeCheckBoxEnabled())
-	    			animationFrame.getPanelTournamentTree().animatePlayerPath(this.numeroPlayer, animationFrame.getAnimationPathTreeDuration(), animationFrame.getNbBlinkTreeDuration());
 	            break;
 	        default:
 	            animationFrame.zoomPanel(panelPlayerGlobal, frameForDiffusion, null);
@@ -340,8 +338,10 @@ public class PlayerForDiffusion extends JPanel{
 	}
 	private void displayPlayerFullAndTournamentTreeAnimation() {
 		displayPlayerFull();
-		if(animationFrame.isPathTreeAnimationEnabled() && animationFrame.isbeginingAnimationTreeCheckBoxEnabled())
+		if(animationFrame.isPathTreeAnimationEnabled())// && animationFrame.isbeginingAnimationTreeCheckBoxEnabled()
 			animationFrame.getPanelTournamentTree().animatePlayerPath(this.numeroPlayer, animationFrame.getAnimationPathTreeDuration(), animationFrame.getNbBlinkTreeDuration());
+//		if(animationFrame.isPathTreeAnimationEnabled() && !animationFrame.isbeginingAnimationTreeCheckBoxEnabled())
+//			animationFrame.getPanelTournamentTree().animatePlayerPath(this.numeroPlayer, animationFrame.getAnimationPathTreeDuration(), animationFrame.getNbBlinkTreeDuration());
 	}
 
 	private static class LabelInfo {

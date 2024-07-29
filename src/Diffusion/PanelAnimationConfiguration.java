@@ -26,10 +26,9 @@ public class PanelAnimationConfiguration extends JPanel {
     private JCheckBox displayTreeCheckBox;
     private JSpinner xLeftSpinner;
     private JSpinner xRightSpinner;
-    private JSpinner largeurTreeSpinner;
-    private JSpinner epaisseurTreeSpinner;
+    private JSpinner widthTreeSpinner;
+    private JSpinner thicknessTreeSpinner;
     private JCheckBox animationTreeCheckBox;
-    private JCheckBox beginingAnimationTreeCheckBox;
     private JSpinner animationTimeTreeSpinner;
     private JSpinner clignotementNumberTreeSpinner;
     private Color treeColor;
@@ -48,7 +47,7 @@ public class PanelAnimationConfiguration extends JPanel {
         
         initFrame();
         setupComponents();
-        
+        ConfigurationSaveLoad.setConfigAnimation(windowTournamentTree.eventName(),this);
         setVisible(true);
 //        this.pack();
     }
@@ -83,10 +82,9 @@ public class PanelAnimationConfiguration extends JPanel {
         displayTreeCheckBox = new JCheckBox("Display tournament tree");
         xLeftSpinner = new JSpinner(new SpinnerNumberModel(600, 0, 10000, 1));
         xRightSpinner = new JSpinner(new SpinnerNumberModel(1285, 0, 10000, 1));
-        largeurTreeSpinner = new JSpinner(new SpinnerNumberModel(20, 0, 10000, 1));
-        epaisseurTreeSpinner = new JSpinner(new SpinnerNumberModel(5, 0, 10000, 1));
+        widthTreeSpinner = new JSpinner(new SpinnerNumberModel(20, 0, 10000, 1));
+        thicknessTreeSpinner = new JSpinner(new SpinnerNumberModel(5, 0, 10000, 1));
         treeColorButton = new JButton("Select a color");
-        treeColor = Color.BLACK;
         treeColorButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	Color selectedColor = JColorChooser.showDialog(null, "Choose a color", treeColor);
@@ -125,12 +123,12 @@ public class PanelAnimationConfiguration extends JPanel {
         		tournamentTree.setXRightTree(getXRightTree());				
         	}
         });
-        largeurTreeSpinner.addChangeListener(new ChangeListener() {
+        widthTreeSpinner.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				tournamentTree.setHorizontalSpacing(getWidthTree());				
 			}
 		});
-        epaisseurTreeSpinner.addChangeListener(new ChangeListener() {
+        thicknessTreeSpinner.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
             	tournamentTree.setLineWidth(getThicknessTree());
@@ -138,7 +136,6 @@ public class PanelAnimationConfiguration extends JPanel {
         });
         
         animationTreeCheckBox = new JCheckBox("Animation tournament tree");
-        beginingAnimationTreeCheckBox = new JCheckBox("start of animation");
         animationTimeTreeSpinner = new JSpinner(new SpinnerNumberModel(2000, 0, 10000, 1));
         clignotementNumberTreeSpinner = new JSpinner(new SpinnerNumberModel(3, 0, 100, 1));
         pathTreeColorButton = new JButton("Select a color");
@@ -154,7 +151,6 @@ public class PanelAnimationConfiguration extends JPanel {
                 }
             }
         });
-        ConfigurationSaveLoad.setConfigAnimation();
     }
 
     private void setupComponents() {
@@ -166,9 +162,9 @@ public class PanelAnimationConfiguration extends JPanel {
         addRow(gbc, 1, zoomAnimationCheckBox, zoomAnimationSpinner, new JLabel("ms"));
         addRow(gbc, 2, labelAnimationCheckBox, labelAnimationSpinner,new JLabel("ms"));
         addRow(gbc, 3, new JLabel(), new JLabel("Position tree Left"),new JLabel("Position tree Right"),new JLabel("Tree Width"),new JLabel("Tree thickness"));
-        addRow(gbc, 4, displayTreeCheckBox, xLeftSpinner,xRightSpinner,largeurTreeSpinner,epaisseurTreeSpinner,treeColorButton);
-        addRow(gbc, 5, new JLabel(),new JLabel(), new JLabel("Duration animation"),new JLabel(),new JLabel("Blink number"));
-        addRow(gbc, 6, animationTreeCheckBox, beginingAnimationTreeCheckBox, animationTimeTreeSpinner,new JLabel("ms"),clignotementNumberTreeSpinner,pathTreeColorButton);
+        addRow(gbc, 4, displayTreeCheckBox, xLeftSpinner,xRightSpinner,widthTreeSpinner,thicknessTreeSpinner,treeColorButton);
+        addRow(gbc, 5, new JLabel(), new JLabel("Duration animation"),new JLabel(),new JLabel("Blink number"));
+        addRow(gbc, 6, animationTreeCheckBox, animationTimeTreeSpinner,new JLabel("ms"),clignotementNumberTreeSpinner,pathTreeColorButton);
     }
 
     private void addRow(GridBagConstraints gbc, int row, JComponent... components) {
@@ -194,11 +190,6 @@ public class PanelAnimationConfiguration extends JPanel {
     public boolean isLabelAnimationEnabled() {
         return labelAnimationCheckBox.isSelected();
     }
-    //vrai = apres que le joueur de l'arbre sois en position faux apres que le joueur(zoom) soit fini
-    public boolean isbeginingAnimationTreeCheckBoxEnabled() {
-        return beginingAnimationTreeCheckBox.isSelected();
-    }
-
     public int getLabelAnimationDuration() {
         return isLabelAnimationEnabled() ? (int) labelAnimationSpinner.getValue() : 0;
     }
@@ -212,10 +203,10 @@ public class PanelAnimationConfiguration extends JPanel {
         return (int)xRightSpinner.getValue();
     }
     public int getWidthTree() {
-    	return (int)largeurTreeSpinner.getValue();
+    	return (int)widthTreeSpinner.getValue();
     }
     public int getThicknessTree() {
-    	return (int)epaisseurTreeSpinner.getValue();
+    	return (int)thicknessTreeSpinner.getValue();
     }
     public PanelTournamentTree getPanelTournamentTree() {
     	return tournamentTree;
@@ -235,6 +226,55 @@ public class PanelAnimationConfiguration extends JPanel {
 	public Color getPathTreeColor() {
 		return pathTreeColor;
 	}
+
+	public void setDisplayJFullCheckBox(boolean displayJFullCheckBox) {
+		this.displayJFullCheckBox.setSelected(displayJFullCheckBox);
+	}
+	public void setZoomAnimationCheckBox(boolean zoomAnimationCheckBox) {
+		this.zoomAnimationCheckBox.setSelected(zoomAnimationCheckBox);
+	}
+	public void setZoomAnimationSpinner(int zoomAnimationSpinner) {
+		this.zoomAnimationSpinner.setValue(zoomAnimationSpinner);
+	}
+	public void setLabelAnimationCheckBox(boolean labelAnimationCheckBox) {
+		this.labelAnimationCheckBox.setSelected(labelAnimationCheckBox);
+	}
+	public void setLabelAnimationSpinner(int labelAnimationSpinner) {
+		this.labelAnimationSpinner.setValue(labelAnimationSpinner);
+	}
+	public void setDisplayTreeCheckBox(boolean displayTreeCheckBox) {
+		this.displayTreeCheckBox.setSelected(displayTreeCheckBox);
+	}
+	public void setxLeftSpinner(int xLeftSpinner) {
+		this.xLeftSpinner.setValue(xLeftSpinner);
+	}
+	public void setxRightSpinner(int xRightSpinner) {
+		this.xRightSpinner.setValue(xRightSpinner);
+	}
+	public void setWidthTreeSpinner(int largeurTreeSpinner) {
+		this.widthTreeSpinner.setValue(largeurTreeSpinner);
+	}
+	public void setThicknessTreeSpinner(int epaisseurTreeSpinner) {
+		this.thicknessTreeSpinner.setValue(epaisseurTreeSpinner);
+	}
+	public void setAnimationTreeCheckBox(boolean animationTreeCheckBox) {
+		this.animationTreeCheckBox.setSelected(animationTreeCheckBox);
+	}
+	public void setAnimationTimeTreeSpinner(int animationTimeTreeSpinner) {
+		this.animationTimeTreeSpinner.setValue(animationTimeTreeSpinner); ;
+	}
+	public void setClignotementNumberTreeSpinner(int clignotementNumberTreeSpinner) {
+		this.clignotementNumberTreeSpinner.setValue(clignotementNumberTreeSpinner);
+	}
+	public void setTreeColor(Color treeColor) {
+		this.treeColor = treeColor;
+		tournamentTree.setTreeColor(this.treeColor);
+	}
+	public void setPathTreeColor(Color pathTreeColor) {
+		this.pathTreeColor = pathTreeColor;
+		tournamentTree.setSelectedpathColor(this.pathTreeColor);
+	}
+	
 	public void animateLABEL(JPanel panel, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, Integer layer, JLayeredPane layeredPane, Runnable onComplete) {
     	System.out.println("Animation LABEL");
     	JLabel startLabel = (JLabel) panel.getComponents()[0];

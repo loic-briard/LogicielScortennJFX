@@ -29,47 +29,57 @@ import Diffusion.PanelAnimationConfiguration;
 class ElementOneJoueur {
 	private Map<String, ElementJoueur> player = new HashMap<>();
 	private Map<String, ElementPoliceJoueur> playerPolice = new HashMap<>();
-	
+
 	public Map<String, ElementJoueur> getOnePlayer() {
 		return player;
 	}
+
 	public Map<String, ElementPoliceJoueur> getOnePlayerPolice() {
 		return playerPolice;
 	}
 }
+
 class ElementJoueurGame {
-	private ArrayList<Map<String,Map<String, ElementJoueur>>> game = new ArrayList<>();
+	private ArrayList<Map<String, Map<String, ElementJoueur>>> game = new ArrayList<>();
 	private Map<String, ElementPoliceJoueur> playerPolice = new HashMap<>();
-    
-    public ArrayList<Map<String, Map<String, ElementJoueur>>> getPlayer() {
-        return game;
-    }
-    public Map<String, ElementPoliceJoueur> getPlayerPolice() {
+
+	public ArrayList<Map<String, Map<String, ElementJoueur>>> getPlayer() {
+		return game;
+	}
+
+	public Map<String, ElementPoliceJoueur> getPlayerPolice() {
 		return playerPolice;
 	}
+
 	public void setPlayerPolice(Map<String, ElementPoliceJoueur> playerPolice) {
 		this.playerPolice = playerPolice;
 	}
+
 	public void setPlayer(ArrayList<Map<String, Map<String, ElementJoueur>>> playerList) {
-		game = playerList;	}
-}
-class ElementJoueurTab {
-	private ArrayList<Map<String,Map<String, ElementJoueur>>> tab = new ArrayList<>();
-	private Map<String, ElementPoliceJoueur> playerPolice = new HashMap<>();
-    
-    public ArrayList<Map<String, Map<String, ElementJoueur>>> getPlayer() {
-        return tab;
-    }
-    public Map<String, ElementPoliceJoueur> getPlayerPolice() {
-		return playerPolice;
+		game = playerList;
 	}
-	public void setPlayerPolice(Map<String, ElementPoliceJoueur> playerPolice) {
-		this.playerPolice = playerPolice;
-	}
-	public void setPlayer(ArrayList<Map<String, Map<String, ElementJoueur>>> playerList) {
-		tab = playerList;	}
 }
 
+class ElementJoueurTab {
+	private ArrayList<Map<String, Map<String, ElementJoueur>>> tab = new ArrayList<>();
+	private Map<String, ElementPoliceJoueur> playerPolice = new HashMap<>();
+
+	public ArrayList<Map<String, Map<String, ElementJoueur>>> getPlayer() {
+		return tab;
+	}
+
+	public Map<String, ElementPoliceJoueur> getPlayerPolice() {
+		return playerPolice;
+	}
+
+	public void setPlayerPolice(Map<String, ElementPoliceJoueur> playerPolice) {
+		this.playerPolice = playerPolice;
+	}
+
+	public void setPlayer(ArrayList<Map<String, Map<String, ElementJoueur>>> playerList) {
+		tab = playerList;
+	}
+}
 
 public class ConfigurationSaveLoad {
 	private Map<String, Object> locations = new HashMap<>();
@@ -77,31 +87,34 @@ public class ConfigurationSaveLoad {
 	public Map<String, Object> getLocations() {
 		return locations;
 	}
+
 	public void setLocations(Map<String, Object> map) {
 		this.locations = map;
 	}
+
 	// Méthode pour sauvegarder les données de configuration au format JSON
 	public static void saveConfigToFile(ElementOneJoueur data, String filePath, String fileName) {
-	    Gson gson = new Gson();
-	 // Vérifiez si le dossier existe
-	    File destination = new File(filePath);
-        if (!destination.exists()) {
-            // Si le dossier n'existe pas, essayez de le créer
-            if (destination.mkdirs()) {
-                System.out.println("  + Folder "+filePath+" has been created with success");
-            } else {
-                System.out.println("  ! Folder creation : "+filePath+" failed");
-                return; // Arrêtez l'exécution si la création du dossier échoue
-            }
-        }
-        try (FileWriter writer = new FileWriter(filePath + File.separator + fileName, false)) {
+		Gson gson = new Gson();
+		// Vérifiez si le dossier existe
+		File destination = new File(filePath);
+		if (!destination.exists()) {
+			// Si le dossier n'existe pas, essayez de le créer
+			if (destination.mkdirs()) {
+				System.out.println("  + Folder " + filePath + " has been created with success");
+			} else {
+				System.out.println("  ! Folder creation : " + filePath + " failed");
+				return; // Arrêtez l'exécution si la création du dossier échoue
+			}
+		}
+		try (FileWriter writer = new FileWriter(filePath + File.separator + fileName, false)) {
 			String json = gson.toJson(data);
 			writer.write(json);
-			System.out.println("  File : " + fileName+" in folder "+filePath+" has been modified");
+			System.out.println("  File : " + fileName + " in folder " + filePath + " has been modified");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+
 	// Méthode pour sauvegarder les données de configuration au format JSON
 	public static void saveConfigToFileGame(ElementJoueurGame elementsTwoPlayer, String filePath, String fileName) {
 		Gson gson = new Gson();
@@ -110,16 +123,16 @@ public class ConfigurationSaveLoad {
 		if (!destination.exists()) {
 			// Si le dossier n'existe pas, essayez de le créer
 			if (destination.mkdirs()) {
-				System.out.println("  File : " + fileName+" in folder "+filePath+" has been modified");
+				System.out.println("  File : " + fileName + " in folder " + filePath + " has been modified");
 			} else {
-				System.out.println("  ! Folder creation : "+filePath+" failed");
+				System.out.println("  ! Folder creation : " + filePath + " failed");
 				return; // Arrêtez l'exécution si la création du dossier échoue
 			}
 		}
 		try (FileWriter writer = new FileWriter(filePath + File.separator + fileName, false)) {
 			String json = gson.toJson(elementsTwoPlayer);
 			writer.write(json);
-			System.out.println("  File : " + fileName+" in folder "+filePath+" has been modified");
+			System.out.println("  File : " + fileName + " in folder " + filePath + " has been modified");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -133,16 +146,16 @@ public class ConfigurationSaveLoad {
 		if (!destination.exists()) {
 			// Si le dossier n'existe pas, essayez de le créer
 			if (destination.mkdirs()) {
-				System.out.println("  File : " + fileName+" in folder "+filePath+" has been modified");
+				System.out.println("  File : " + fileName + " in folder " + filePath + " has been modified");
 			} else {
-				System.out.println("  ! Folder creation : "+filePath+" failed");
+				System.out.println("  ! Folder creation : " + filePath + " failed");
 				return; // Arrêtez l'exécution si la création du dossier échoue
 			}
 		}
 		try (FileWriter writer = new FileWriter(filePath + File.separator + fileName, false)) {
 			String json = gson.toJson(data);
 			writer.write(json);
-			System.out.println("  File : " + fileName+" in folder "+filePath+" has been modified");
+			System.out.println("  File : " + fileName + " in folder " + filePath + " has been modified");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -156,9 +169,9 @@ public class ConfigurationSaveLoad {
 		if (!destination.exists()) {
 			// Si le dossier n'existe pas, essayez de le créer
 			if (destination.mkdirs()) {
-				System.out.println("  File : " + fileName+" in folder "+filePath+" has been modified");
+				System.out.println("  File : " + fileName + " in folder " + filePath + " has been modified");
 			} else {
-				System.out.println("  ! Folder creation : "+filePath+" failed");
+				System.out.println("  ! Folder creation : " + filePath + " failed");
 				return; // Arrêtez l'exécution si la création du dossier échoue
 			}
 		}
@@ -166,12 +179,12 @@ public class ConfigurationSaveLoad {
 			String json = gson.toJson(data);
 //			System.out.println(json);
 			writer.write(json);
-			System.out.println("  File : " + fileName+" in folder "+filePath+" has been modified");
+			System.out.println("  File : " + fileName + " in folder " + filePath + " has been modified");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static ConfigurationSaveLoad loadConfigFromFile(String filePath) {
 		Gson gson = new Gson();
 		ConfigurationSaveLoad data = null;
@@ -185,7 +198,8 @@ public class ConfigurationSaveLoad {
 					return null;
 				}
 				JsonObject configObject = jsonElement.getAsJsonObject();
-				// Mappez les propriétés du fichier JSON à votre structure de classe ConfigurationSaveLoad
+				// Mappez les propriétés du fichier JSON à votre structure de classe
+				// ConfigurationSaveLoad
 				data = gson.fromJson(configObject, ConfigurationSaveLoad.class);
 				// Reste du code
 			} else {
@@ -198,7 +212,8 @@ public class ConfigurationSaveLoad {
 		return data;
 	}
 
-	public static void saveWindows(String nomEvent, String typeWindows, Map<JPanel, JLabel> JoueurDetailsP1, Map<JPanel, JLabel> JoueurDetailsP2) {
+	public static void saveWindows(String nomEvent, String typeWindows, Map<JPanel, JLabel> JoueurDetailsP1,
+			Map<JPanel, JLabel> JoueurDetailsP2) {
 		ConfigurationSaveLoad eventData = loadConfigFromFile("Config/" + nomEvent + "/player.json");
 		if (eventData == null) {
 			System.out.println("Content from : " + "Config/" + nomEvent + "/player.json" + " is empty !");
@@ -206,7 +221,7 @@ public class ConfigurationSaveLoad {
 		} else {
 			System.out.println("Content from : " + "Config/" + nomEvent + "/player.json" + " is full !");
 		}
-		
+
 		switch (typeWindows) {
 		case "player":
 			ElementOneJoueur elementsOnePlayer = new ElementOneJoueur();
@@ -219,10 +234,10 @@ public class ConfigurationSaveLoad {
 				playerElement.setPositionY(panel.getY());
 				playerPolice.setVisible(panel.isVisible());
 				if (panel.getName().equals("ImgJoueur") || panel.getName().equals("ImgFlag")) {
-					//System.out.println("taille : " + panel.getName() + panel.getHeight());
+					// System.out.println("taille : " + panel.getName() + panel.getHeight());
 					playerPolice.setTaille((int) panel.getHeight());
 				}
-				if(panel.getComponents()[0] instanceof JLabel)
+				if (panel.getComponents()[0] instanceof JLabel)
 					label = (JLabel) panel.getComponents()[0];
 				playerPolice.setFont(FontSerializer(label.getFont()));
 				playerPolice.setColor(ColorSerializer(label.getForeground()));
@@ -238,49 +253,51 @@ public class ConfigurationSaveLoad {
 			break;
 		}
 	}
-	public static void saveWindowsMultiTab(String nomEvent, String typeWindows, ArrayList<Map<JPanel, JLabel>> JoueurDetails ) {
-		ConfigurationSaveLoad eventData = loadConfigFromFile("Config/" + nomEvent + "/"+typeWindows+".json");
+
+	public static void saveWindowsMultiTab(String nomEvent, String typeWindows,
+			ArrayList<Map<JPanel, JLabel>> JoueurDetails) {
+		ConfigurationSaveLoad eventData = loadConfigFromFile("Config/" + nomEvent + "/" + typeWindows + ".json");
 		if (eventData == null) {
-			System.out.println("Content from : " + "Config/" + nomEvent + "/"+typeWindows+".json" + " is empty !");
+			System.out.println("Content from : " + "Config/" + nomEvent + "/" + typeWindows + ".json" + " is empty !");
 			eventData = new ConfigurationSaveLoad();
 		} else {
-			System.out.println("Content from : " + "Config/" + nomEvent + "/"+typeWindows+".json" + " is full !");
+			System.out.println("Content from : " + "Config/" + nomEvent + "/" + typeWindows + ".json" + " is full !");
 		}
-		
+
 		switch (typeWindows) {
 		case "game":
 			int k = 0;
 			ElementJoueurGame elementsGamePlayer = new ElementJoueurGame();
-			
+
 			for (Map<JPanel, JLabel> map : JoueurDetails) {
-				
+
 				Map<String, Map<String, ElementJoueur>> playerList = new HashMap<>();
 				Map<String, ElementJoueur> player = new HashMap<String, ElementJoueur>();
-				
+
 				for (Map.Entry<JPanel, JLabel> entry : map.entrySet()) {
 					JPanel panel = entry.getKey();
 					JLabel label = entry.getValue();
-					
+
 					ElementJoueur playerElement = new ElementJoueur();
 					ElementPoliceJoueur playerPolice = new ElementPoliceJoueur();
-					
+
 					playerElement.setPositionX(panel.getX());
 					playerElement.setPositionY(panel.getY());
-					
+
 					playerPolice.setVisible(panel.isVisible());
 					if (panel.getName().equals("ImgJoueur") || panel.getName().equals("ImgFlag")) {
-						//System.out.println("taille : " + panel.getName() + panel.getHeight());
+						// System.out.println("taille : " + panel.getName() + panel.getHeight());
 						playerPolice.setTaille((int) panel.getHeight());
 					}
-					if(panel.getComponents()[0] instanceof JLabel)
+					if (panel.getComponents()[0] instanceof JLabel)
 						label = (JLabel) panel.getComponents()[0];
 					playerPolice.setFont(FontSerializer(label.getFont()));
 					playerPolice.setColor(ColorSerializer(label.getForeground()));
-					
+
 					player.put(panel.getName(), playerElement);
 					elementsGamePlayer.getPlayerPolice().put(panel.getName(), playerPolice);
 				}
-				playerList.put("player"+k, player);
+				playerList.put("player" + k, player);
 				elementsGamePlayer.getPlayer().add(playerList);
 				k++;
 			}
@@ -290,37 +307,37 @@ public class ConfigurationSaveLoad {
 		case "tab":
 			int i = 0;
 			ElementJoueurTab elementsTabPlayer = new ElementJoueurTab();
-			
+
 			for (Map<JPanel, JLabel> map : JoueurDetails) {
-				
+
 				Map<String, Map<String, ElementJoueur>> playerList = new HashMap<>();
 				Map<String, ElementJoueur> player = new HashMap<String, ElementJoueur>();
-				
+
 				for (Map.Entry<JPanel, JLabel> entry : map.entrySet()) {
 					JPanel panel = entry.getKey();
 					JLabel label = entry.getValue();
-					
+
 					ElementJoueur playerElement = new ElementJoueur();
 					ElementPoliceJoueur playerPolice = new ElementPoliceJoueur();
-					
+
 					playerElement.setPositionX(panel.getX());
 					playerElement.setPositionY(panel.getY());
-					
+
 					playerPolice.setVisible(panel.isVisible());
 					if (panel.getName().equals("ImgJoueur") || panel.getName().equals("ImgFlag")) {
-						//System.out.println("taille : " + panel.getName() + panel.getHeight());
+						// System.out.println("taille : " + panel.getName() + panel.getHeight());
 						playerPolice.setTaille((int) panel.getHeight());
 					}
-					if(panel.getComponents()[0] instanceof JLabel)
+					if (panel.getComponents()[0] instanceof JLabel)
 						label = (JLabel) panel.getComponents()[0];
-					
+
 					playerPolice.setFont(FontSerializer(label.getFont()));
 					playerPolice.setColor(ColorSerializer(label.getForeground()));
-					
+
 					player.put(panel.getName(), playerElement);
 					elementsTabPlayer.getPlayerPolice().put(panel.getName(), playerPolice);
 				}
-				playerList.put("player"+i, player);
+				playerList.put("player" + i, player);
 				elementsTabPlayer.getPlayer().add(playerList);
 				i++;
 			}
@@ -330,40 +347,40 @@ public class ConfigurationSaveLoad {
 		case "full":
 			int j = 0;
 			ElementJoueurFull elementsFullPlayer = new ElementJoueurFull();
-			
+
 			for (Map<JPanel, JLabel> map : JoueurDetails) {
-				
+
 				Map<String, Map<String, ElementJoueur>> playerList = new HashMap<>();
 				Map<String, ElementJoueur> player = new HashMap<String, ElementJoueur>();
-				
+
 				for (Map.Entry<JPanel, JLabel> entry : map.entrySet()) {
-					
+
 					JPanel panel = entry.getKey();
 					JLabel label = entry.getValue();
 					ElementJoueur playerElement = new ElementJoueur();
 					ElementPoliceJoueur playerPoliceFull = new ElementPoliceJoueur();
-					
+
 					playerElement.setPositionX(panel.getX());
 					playerElement.setPositionY(panel.getY());
-					
+
 					playerPoliceFull.setVisible(panel.isVisible());
 					if (panel.getName().equals("ImgJoueur") || panel.getName().equals("ImgFlag")) {
-						//System.out.println("taille : " + panel.getName() + panel.getHeight());
+						// System.out.println("taille : " + panel.getName() + panel.getHeight());
 						playerPoliceFull.setTaille((int) panel.getHeight());
 					}
-					if(panel.getComponents()[0] instanceof JLabel)
+					if (panel.getComponents()[0] instanceof JLabel)
 						label = (JLabel) panel.getComponents()[0];
 					playerPoliceFull.setFont(FontSerializer(label.getFont()));
 					playerPoliceFull.setColor(ColorSerializer(label.getForeground()));
-					
+
 					player.put(panel.getName(), playerElement);
 					elementsFullPlayer.getPlayerPolice().put(panel.getName(), playerPoliceFull);
 				}
-				playerList.put("player"+j, player);
+				playerList.put("player" + j, player);
 				elementsFullPlayer.getPlayer().add(playerList);
 				j++;
 			}
-			
+
 			break;
 
 		default:
@@ -373,86 +390,85 @@ public class ConfigurationSaveLoad {
 	}
 
 	public static ElementJoueurFull readJsonFileFull(String filePath) {
-        ElementJoueurFull elementJoueurFull = new ElementJoueurFull();
-        Gson gson = new Gson();
+		ElementJoueurFull elementJoueurFull = new ElementJoueurFull();
+		Gson gson = new Gson();
 
-        try (FileReader reader = new FileReader(filePath)) {
-            JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
+		try (FileReader reader = new FileReader(filePath)) {
+			JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
 
-            // Parse "full" array
-            JsonArray fullArray = jsonObject.getAsJsonArray("full");
-            for (JsonElement element : fullArray) {
-                JsonObject playerObject = element.getAsJsonObject();
-                String playerKey = playerObject.keySet().iterator().next();
-                JsonObject playerData = playerObject.getAsJsonObject(playerKey);
+			// Parse "full" array
+			JsonArray fullArray = jsonObject.getAsJsonArray("full");
+			for (JsonElement element : fullArray) {
+				JsonObject playerObject = element.getAsJsonObject();
+				String playerKey = playerObject.keySet().iterator().next();
+				JsonObject playerData = playerObject.getAsJsonObject(playerKey);
 
-                Map<String, Map<String, ElementJoueur>> playerMap = new HashMap<>();
-                Map<String, ElementJoueur> innerMap = new HashMap<>();
+				Map<String, Map<String, ElementJoueur>> playerMap = new HashMap<>();
+				Map<String, ElementJoueur> innerMap = new HashMap<>();
 
-                for (Map.Entry<String, JsonElement> entry : playerData.entrySet()) {
-                    ElementJoueur elementJoueur = new ElementJoueur();
-                    JsonObject positionObject = entry.getValue().getAsJsonObject();
-                    elementJoueur.setPositionX(positionObject.get("positionX").getAsInt());
-                    elementJoueur.setPositionY(positionObject.get("positionY").getAsInt());
-                    innerMap.put(entry.getKey(), elementJoueur);
-                }
+				for (Map.Entry<String, JsonElement> entry : playerData.entrySet()) {
+					ElementJoueur elementJoueur = new ElementJoueur();
+					JsonObject positionObject = entry.getValue().getAsJsonObject();
+					elementJoueur.setPositionX(positionObject.get("positionX").getAsInt());
+					elementJoueur.setPositionY(positionObject.get("positionY").getAsInt());
+					innerMap.put(entry.getKey(), elementJoueur);
+				}
 
-                playerMap.put(playerKey, innerMap);
-                elementJoueurFull.getPlayer().add(playerMap);
-            }
+				playerMap.put(playerKey, innerMap);
+				elementJoueurFull.getPlayer().add(playerMap);
+			}
 
-            // Parse "playerPolice"
-            JsonObject playerPoliceObject = jsonObject.getAsJsonObject("playerPolice");
-            Map<String, ElementPoliceJoueur> playerPoliceMap = new HashMap<>();
+			// Parse "playerPolice"
+			JsonObject playerPoliceObject = jsonObject.getAsJsonObject("playerPolice");
+			Map<String, ElementPoliceJoueur> playerPoliceMap = new HashMap<>();
 
-            for (Map.Entry<String, JsonElement> entry : playerPoliceObject.entrySet()) {
-                ElementPoliceJoueur elementPoliceJoueur = new ElementPoliceJoueur();
-                JsonObject policeData = entry.getValue().getAsJsonObject();
-                
-                elementPoliceJoueur.setVisible(policeData.get("visible").getAsBoolean());
-                elementPoliceJoueur.setFont(policeData.get("font").getAsString());
-                elementPoliceJoueur.setColor(policeData.get("color").getAsString());
-                elementPoliceJoueur.setTaille(policeData.get("taille").getAsInt());
+			for (Map.Entry<String, JsonElement> entry : playerPoliceObject.entrySet()) {
+				ElementPoliceJoueur elementPoliceJoueur = new ElementPoliceJoueur();
+				JsonObject policeData = entry.getValue().getAsJsonObject();
 
-                playerPoliceMap.put(entry.getKey(), elementPoliceJoueur);
-            }
+				elementPoliceJoueur.setVisible(policeData.get("visible").getAsBoolean());
+				elementPoliceJoueur.setFont(policeData.get("font").getAsString());
+				elementPoliceJoueur.setColor(policeData.get("color").getAsString());
+				elementPoliceJoueur.setTaille(policeData.get("taille").getAsInt());
 
-            elementJoueurFull.getPlayerPolice().putAll(playerPoliceMap);
+				playerPoliceMap.put(entry.getKey(), elementPoliceJoueur);
+			}
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+			elementJoueurFull.getPlayerPolice().putAll(playerPoliceMap);
 
-        return elementJoueurFull;
-    }
-	public static void updateElementJoueurFull(String nomEvent,ElementJoueurFull original, ElementJoueurFull partial) {
-        // Update players
-        for (Map<String, Map<String, ElementJoueur>> partialPlayerMap : partial.getPlayer()) {
-            String playerKey = partialPlayerMap.keySet().iterator().next();
-            Map<String, ElementJoueur> partialInnerMap = partialPlayerMap.get(playerKey);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-            // Find the corresponding player in the original ElementJoueurFull
-            Map<String, Map<String, ElementJoueur>> originalPlayerMap = original.getPlayer().stream()
-                .filter(map -> map.containsKey(playerKey))
-                .findFirst()
-                .orElse(null);
+		return elementJoueurFull;
+	}
 
-            if (originalPlayerMap == null) {
-                // If the player doesn't exist in the original, add it
-                original.getPlayer().add(partialPlayerMap);
-            } else {
-                // If the player exists, update its data
-                Map<String, ElementJoueur> originalInnerMap = originalPlayerMap.get(playerKey);
-                for (Map.Entry<String, ElementJoueur> entry : partialInnerMap.entrySet()) {
-                    originalInnerMap.put(entry.getKey(), entry.getValue());
-                }
-            }
-        }
+	public static void updateElementJoueurFull(String nomEvent, ElementJoueurFull original, ElementJoueurFull partial) {
+		// Update players
+		for (Map<String, Map<String, ElementJoueur>> partialPlayerMap : partial.getPlayer()) {
+			String playerKey = partialPlayerMap.keySet().iterator().next();
+			Map<String, ElementJoueur> partialInnerMap = partialPlayerMap.get(playerKey);
 
-        // Update playerPolice
-        for (Map.Entry<String, ElementPoliceJoueur> entry : partial.getPlayerPolice().entrySet()) {
-            original.getPlayerPolice().put(entry.getKey(), entry.getValue());
-        }
+			// Find the corresponding player in the original ElementJoueurFull
+			Map<String, Map<String, ElementJoueur>> originalPlayerMap = original.getPlayer().stream()
+					.filter(map -> map.containsKey(playerKey)).findFirst().orElse(null);
+
+			if (originalPlayerMap == null) {
+				// If the player doesn't exist in the original, add it
+				original.getPlayer().add(partialPlayerMap);
+			} else {
+				// If the player exists, update its data
+				Map<String, ElementJoueur> originalInnerMap = originalPlayerMap.get(playerKey);
+				for (Map.Entry<String, ElementJoueur> entry : partialInnerMap.entrySet()) {
+					originalInnerMap.put(entry.getKey(), entry.getValue());
+				}
+			}
+		}
+
+		// Update playerPolice
+		for (Map.Entry<String, ElementPoliceJoueur> entry : partial.getPlayerPolice().entrySet()) {
+			original.getPlayerPolice().put(entry.getKey(), entry.getValue());
+		}
 //        //affichage du elementJoueurFull to save
 //        System.out.println("--Elements in full from to save --:");
 //	    for (Map<String, Map<String, ElementJoueur>> playerMap : original.getPlayer()) {
@@ -470,14 +486,14 @@ public class ConfigurationSaveLoad {
 //	        ElementPoliceJoueur police = entry.getValue();
 //	        System.out.println("Element: " + entry.getKey() + " Visible: " + police.isVisible() + " Font: " + police.getFont() + " Color: " + police.getColor() + " Taille: " + police.getTaille());
 //	    }
-	    
-        saveConfigToFileFull(original, "Config/" + nomEvent, "full.json");
-	    System.out.println("FULL save completed");
-        
-    }
+
+		saveConfigToFileFull(original, "Config/" + nomEvent, "full.json");
+		System.out.println("FULL save completed");
+
+	}
 
 	public static void replacePlayerDataFull(String nomEvent, ElementJoueurFull source) {
-	    ElementJoueurFull target = readJsonFileFull("Config/" + nomEvent + "/" + "full.json");
+		ElementJoueurFull target = readJsonFileFull("Config/" + nomEvent + "/" + "full.json");
 //
 //	    System.out.println("--Elements in full from json:");
 //	    for (Map<String, Map<String, ElementJoueur>> playerMap : target.getPlayer()) {
@@ -495,33 +511,33 @@ public class ConfigurationSaveLoad {
 //	        System.out.println("Element: " + entry.getKey() + " Visible: " + police.isVisible() + " Font: " + police.getFont() + " Color: " + police.getColor() + " Taille: " + police.getTaille());
 //	    }
 
-	    // Replace "full" part
-	    ArrayList<Map<String, Map<String, ElementJoueur>>> targetFull = target.getPlayer();
-	    ArrayList<Map<String, Map<String, ElementJoueur>>> sourceFull = source.getPlayer();
+		// Replace "full" part
+		ArrayList<Map<String, Map<String, ElementJoueur>>> targetFull = target.getPlayer();
+		ArrayList<Map<String, Map<String, ElementJoueur>>> sourceFull = source.getPlayer();
 
-	    // Using a LinkedHashMap to preserve insertion order
-	    LinkedHashMap<String, Map<String, ElementJoueur>> targetMap = new LinkedHashMap<>();
-	    for (Map<String, Map<String, ElementJoueur>> playerMap : targetFull) {
-	        targetMap.putAll(playerMap);
-	    }
+		// Using a LinkedHashMap to preserve insertion order
+		LinkedHashMap<String, Map<String, ElementJoueur>> targetMap = new LinkedHashMap<>();
+		for (Map<String, Map<String, ElementJoueur>> playerMap : targetFull) {
+			targetMap.putAll(playerMap);
+		}
 
-	    for (Map<String, Map<String, ElementJoueur>> sourcePlayerMap : sourceFull) {
-	        for (String playerKey : sourcePlayerMap.keySet()) {
-	            targetMap.put(playerKey, sourcePlayerMap.get(playerKey));
-	        }
-	    }
+		for (Map<String, Map<String, ElementJoueur>> sourcePlayerMap : sourceFull) {
+			for (String playerKey : sourcePlayerMap.keySet()) {
+				targetMap.put(playerKey, sourcePlayerMap.get(playerKey));
+			}
+		}
 
-	    // Convert back to ArrayList for target
-	    targetFull.clear();
-	    targetFull.add(new LinkedHashMap<>(targetMap));
+		// Convert back to ArrayList for target
+		targetFull.clear();
+		targetFull.add(new LinkedHashMap<>(targetMap));
 
-	    // Replace "playerPolice" part
-	    Map<String, ElementPoliceJoueur> targetPlayerPolice = target.getPlayerPolice();
-	    Map<String, ElementPoliceJoueur> sourcePlayerPolice = source.getPlayerPolice();
+		// Replace "playerPolice" part
+		Map<String, ElementPoliceJoueur> targetPlayerPolice = target.getPlayerPolice();
+		Map<String, ElementPoliceJoueur> sourcePlayerPolice = source.getPlayerPolice();
 
-	    for (String key : sourcePlayerPolice.keySet()) {
-	        targetPlayerPolice.put(key, sourcePlayerPolice.get(key));
-	    }
+		for (String key : sourcePlayerPolice.keySet()) {
+			targetPlayerPolice.put(key, sourcePlayerPolice.get(key));
+		}
 
 //	    System.out.println("--Elements in full from to save --:");
 //	    for (Map<String, Map<String, ElementJoueur>> playerMap : target.getPlayer()) {
@@ -540,27 +556,30 @@ public class ConfigurationSaveLoad {
 //	        System.out.println("Element: " + entry.getKey() + " Visible: " + police.isVisible() + " Font: " + police.getFont() + " Color: " + police.getColor() + " Taille: " + police.getTaille());
 //	    }
 
-	    saveConfigToFileFull(target, "Config/" + nomEvent, "full.json");
-	    System.out.println("FULL save completed");
+		saveConfigToFileFull(target, "Config/" + nomEvent, "full.json");
+		System.out.println("FULL save completed");
 	}
 
 	/**
 	 * retourne la position d'un element d'un joueur (ex: position du label name) en
 	 * fonction du type d'evenement, de fenetre, le NOM DE L'ELEMENT, et l'INDEX du
-	 * joueur 
-	 * @param eventName Le nom de l'événement.
-	 * @param typeFenetre   Le type de fenêtre (par exemple, "full").
-	 * @param nomElement   l'element a recuperer (ex: name)
-	 * @param index  index du joueur a recuperer dans le fichier json
-	 * @return ElementJoueur  qui donne le X et Y de l'element recherche
+	 * joueur
+	 * 
+	 * @param eventName   Le nom de l'événement.
+	 * @param typeFenetre Le type de fenêtre (par exemple, "full").
+	 * @param nomElement  l'element a recuperer (ex: name)
+	 * @param index       index du joueur a recuperer dans le fichier json
+	 * @return ElementJoueur qui donne le X et Y de l'element recherche
 	 */
-	public ElementJoueur getElement(String emplacement, String eventName, String typeFenetre, String nomElement, int index) {		
+	public ElementJoueur getElement(String emplacement, String eventName, String typeFenetre, String nomElement,
+			int index) {
 		try (Reader reader = new FileReader(emplacement)) {
 			JsonElement jsonElement = JsonParser.parseReader(reader);
 			if (jsonElement.isJsonObject()) {
 				JsonObject configObject = jsonElement.getAsJsonObject();
-				JsonObject elementObject = new JsonObject();//configObject.getAsJsonObject(typeFenetre).getAsJsonObject(nomElement);
-				System.out.println(typeFenetre+" GET element : "+nomElement+" for player index : "+index+" from file : "+emplacement);
+				JsonObject elementObject = new JsonObject();// configObject.getAsJsonObject(typeFenetre).getAsJsonObject(nomElement);
+				System.out.println(typeFenetre + " GET element : " + nomElement + " for player index : " + index
+						+ " from file : " + emplacement);
 				switch (typeFenetre) {
 				case "player":
 					elementObject = configObject.getAsJsonObject("player").getAsJsonObject(nomElement);
@@ -570,15 +589,17 @@ public class ConfigurationSaveLoad {
 					if (configObject.has(typeFenetre) && configObject.get(typeFenetre).isJsonArray()) {
 						JsonArray tabArray = configObject.getAsJsonArray(typeFenetre);
 						// Vérifier si l'index spécifié est valide
-						if(index > tabArray.size()-1) {
-							System.out.println("! Player index superior to the number of elements in the "+typeFenetre+".json file");
+						if (index > tabArray.size() - 1) {
+							System.out.println("! Player index superior to the number of elements in the " + typeFenetre
+									+ ".json file");
 							index = 0;
 						}
 						if (index >= 0 && index < tabArray.size()) {
 							JsonObject playerObject = tabArray.get(index).getAsJsonObject();
 
 							// Vérifier si le joueur spécifié existe
-							if (playerObject.has("player" + index) && playerObject.get("player" + index).isJsonObject()) {
+							if (playerObject.has("player" + index)
+									&& playerObject.get("player" + index).isJsonObject()) {
 								JsonObject player = playerObject.getAsJsonObject("player" + index);
 								// Vérifier si "Prizetotal" existe
 								if (player.has(nomElement) && player.get(nomElement).isJsonObject()) {
@@ -592,15 +613,17 @@ public class ConfigurationSaveLoad {
 					if (configObject.has(typeFenetre) && configObject.get(typeFenetre).isJsonArray()) {
 						JsonArray tabArray = configObject.getAsJsonArray(typeFenetre);
 						// Vérifier si l'index spécifié est valide
-						if(index > tabArray.size()-1) {
-							System.out.println("! Player index superior to the number of elements in the "+typeFenetre+".json file");
+						if (index > tabArray.size() - 1) {
+							System.out.println("! Player index superior to the number of elements in the " + typeFenetre
+									+ ".json file");
 							index = 0;
 						}
 						if (index >= 0 && index < tabArray.size()) {
 							JsonObject playerObject = tabArray.get(index).getAsJsonObject();
 
 							// Vérifier si le joueur spécifié existe
-							if (playerObject.has("player" + index) && playerObject.get("player" + index).isJsonObject()) {
+							if (playerObject.has("player" + index)
+									&& playerObject.get("player" + index).isJsonObject()) {
 								JsonObject player = playerObject.getAsJsonObject("player" + index);
 								// Vérifier si "Prizetotal" existe
 								if (player.has(nomElement) && player.get(nomElement).isJsonObject()) {
@@ -614,16 +637,18 @@ public class ConfigurationSaveLoad {
 					if (configObject.has(typeFenetre) && configObject.get(typeFenetre).isJsonArray()) {
 						JsonArray tabArray = configObject.getAsJsonArray(typeFenetre);
 						// Vérifier si l'index spécifié est valide index = numero du joueur enregistrer
-						if(index > tabArray.size()-1) {
-							System.out.println("! Player index superior to the number of elements in the "+typeFenetre+".json file");
+						if (index > tabArray.size() - 1) {
+							System.out.println("! Player index superior to the number of elements in the " + typeFenetre
+									+ ".json file");
 							index = 0;
 						}
 						if (index >= 0 && index < tabArray.size()) {
-							
+
 							JsonObject playerObject = tabArray.get(index).getAsJsonObject();
-							
+
 							// Vérifier si le joueur spécifié existe
-							if (playerObject.has("player" + index) && playerObject.get("player" + index).isJsonObject()) {
+							if (playerObject.has("player" + index)
+									&& playerObject.get("player" + index).isJsonObject()) {
 								JsonObject player = playerObject.getAsJsonObject("player" + index);
 								// Vérifier si "Prizetotal" existe
 								if (player.has(nomElement) && player.get(nomElement).isJsonObject()) {
@@ -637,30 +662,32 @@ public class ConfigurationSaveLoad {
 				default:
 					break;
 				}
-		        
-		        ElementJoueur element = new ElementJoueur();
-		        if(elementObject != null) {
-		        // Set the properties based on the retrieved JSON data
-		        element.setPositionX(elementObject.getAsJsonPrimitive("positionX").getAsInt());
-		        element.setPositionY(elementObject.getAsJsonPrimitive("positionY").getAsInt());
-		        // Return the ElementJoueur instance
-		        return element;
-		        }else {
-		        	System.out.println("! PLAYER.json is empty !");
-				    return null;
-		        }
-			} else {
-			    System.out.println("! FILE empty or not JSON !");
-			    return null;
-			}
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
 
-	    return null;
-    }
-	public ElementPoliceJoueur getElementPolice(String emplacement, String eventName, String typeFenetre, String nomElement, int index) {
-		
+				ElementJoueur element = new ElementJoueur();
+				if (elementObject != null) {
+					// Set the properties based on the retrieved JSON data
+					element.setPositionX(elementObject.getAsJsonPrimitive("positionX").getAsInt());
+					element.setPositionY(elementObject.getAsJsonPrimitive("positionY").getAsInt());
+					// Return the ElementJoueur instance
+					return element;
+				} else {
+					System.out.println("! PLAYER.json is empty !");
+					return null;
+				}
+			} else {
+				System.out.println("! FILE empty or not JSON !");
+				return null;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public ElementPoliceJoueur getElementPolice(String emplacement, String eventName, String typeFenetre,
+			String nomElement, int index) {
+
 		try (Reader reader = new FileReader(emplacement)) {
 			JsonElement jsonElement = JsonParser.parseReader(reader);
 			if (jsonElement.isJsonObject()) {
@@ -668,11 +695,11 @@ public class ConfigurationSaveLoad {
 				JsonObject elementObject = new JsonObject();
 				switch (typeFenetre) {
 				case "player":
-					//System.out.println("recup player");
+					// System.out.println("recup player");
 					elementObject = configObject.getAsJsonObject("playerPolice").getAsJsonObject(nomElement);
 					break;
 				case "game":
-					//System.out.println("recup game");
+					// System.out.println("recup game");
 					elementObject = configObject.getAsJsonObject("playerPolice").getAsJsonObject(nomElement);
 					break;
 				case "tab":
@@ -681,23 +708,22 @@ public class ConfigurationSaveLoad {
 				case "full":
 					elementObject = configObject.getAsJsonObject("playerPolice").getAsJsonObject(nomElement);
 					break;
-					
+
 				default:
 					break;
 				}
-				
+
 				ElementPoliceJoueur elementPolice = new ElementPoliceJoueur();
-				if(elementObject != null) {
-		        elementPolice.setVisible(elementObject.getAsJsonPrimitive("visible").getAsBoolean());
-		        elementPolice.setFont(elementObject.getAsJsonPrimitive("font").getAsString());
-		        elementPolice.setColor(elementObject.getAsJsonPrimitive("color").getAsString());
-		        if(nomElement.equals("ImgJoueur") || nomElement.equals("ImgFlag"))
-		        {
-		        	elementPolice.setTaille(elementObject.getAsJsonPrimitive("taille").getAsInt());
-		        }
+				if (elementObject != null) {
+					elementPolice.setVisible(elementObject.getAsJsonPrimitive("visible").getAsBoolean());
+					elementPolice.setFont(elementObject.getAsJsonPrimitive("font").getAsString());
+					elementPolice.setColor(elementObject.getAsJsonPrimitive("color").getAsString());
+					if (nomElement.equals("ImgJoueur") || nomElement.equals("ImgFlag")) {
+						elementPolice.setTaille(elementObject.getAsJsonPrimitive("taille").getAsInt());
+					}
 					return elementPolice;
-				}else {
-					System.out.println("! POLICE is empty in file : "+emplacement);
+				} else {
+					System.out.println("! POLICE is empty in file : " + emplacement);
 					return null;
 				}
 			} else {
@@ -707,89 +733,96 @@ public class ConfigurationSaveLoad {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
-	public Map<String, Map<String, Object>> getAllElementVisible(int nbPlayer, String filePath) throws JsonIOException, JsonSyntaxException, IOException {
-	    Map<String, Map<String, Object>> playerData = new HashMap<>();
-	    try (Reader reader = new FileReader(filePath)) {
-	        JsonElement jsonElement = JsonParser.parseReader(reader);
-	        if (jsonElement.isJsonObject()) {
-	            JsonObject configObject = jsonElement.getAsJsonObject();
-	            JsonArray playersArray = configObject.getAsJsonArray("full");
 
-	            JsonObject playerPolice = configObject.getAsJsonObject("playerPolice");
+	public Map<String, Map<String, Object>> getAllElementVisible(int nbPlayer, String filePath)
+			throws JsonIOException, JsonSyntaxException, IOException {
+		Map<String, Map<String, Object>> playerData = new HashMap<>();
+		try (Reader reader = new FileReader(filePath)) {
+			JsonElement jsonElement = JsonParser.parseReader(reader);
+			if (jsonElement.isJsonObject()) {
+				JsonObject configObject = jsonElement.getAsJsonObject();
+				JsonArray playersArray = configObject.getAsJsonArray("full");
 
-	            //System.out.println();
-	            for (int i = 0; i < nbPlayer; i++) {
-	                //System.out.println("Get element visible for player " + i);
-	                JsonObject playerObject = playersArray.get(i).getAsJsonObject().getAsJsonObject("player" + i);
-	                Map<String, Object> elementsData = new HashMap<>();
+				JsonObject playerPolice = configObject.getAsJsonObject("playerPolice");
 
-	                for (String key : playerObject.keySet()) {
-	                    boolean isVisible = playerPolice.getAsJsonObject(key).get("visible").getAsBoolean();
+				// System.out.println();
+				for (int i = 0; i < nbPlayer; i++) {
+					// System.out.println("Get element visible for player " + i);
+					JsonObject playerObject = playersArray.get(i).getAsJsonObject().getAsJsonObject("player" + i);
+					Map<String, Object> elementsData = new HashMap<>();
 
-	                    if (isVisible) {
-	                        int positionX = playerObject.getAsJsonObject(key).getAsJsonPrimitive("positionX").getAsInt();
-	                        int positionY = playerObject.getAsJsonObject(key).getAsJsonPrimitive("positionY").getAsInt();
-	                        String font = playerPolice.getAsJsonObject(key).get("font").getAsString();
-	                        String color = playerPolice.getAsJsonObject(key).get("color").getAsString();
+					for (String key : playerObject.keySet()) {
+						boolean isVisible = playerPolice.getAsJsonObject(key).get("visible").getAsBoolean();
 
-	                        Map<String, Object> elementData = new HashMap<>();
-	                        elementData.put("position", new Point(positionX, positionY));
-	                        elementData.put("font", font);
-	                        elementData.put("color", parseColor(color));
-	                        elementData.put("taille", playerPolice.getAsJsonObject(key).get("taille").getAsInt());
+						if (isVisible) {
+							int positionX = playerObject.getAsJsonObject(key).getAsJsonPrimitive("positionX")
+									.getAsInt();
+							int positionY = playerObject.getAsJsonObject(key).getAsJsonPrimitive("positionY")
+									.getAsInt();
+							String font = playerPolice.getAsJsonObject(key).get("font").getAsString();
+							String color = playerPolice.getAsJsonObject(key).get("color").getAsString();
 
-	                        elementsData.put(key, elementData);
-	                    }
-	                }
-	                playerData.put("player" + i, elementsData);
-	            }
-	        }
-	    }
-	    return playerData;
+							Map<String, Object> elementData = new HashMap<>();
+							elementData.put("position", new Point(positionX, positionY));
+							elementData.put("font", font);
+							elementData.put("color", parseColor(color));
+							elementData.put("taille", playerPolice.getAsJsonObject(key).get("taille").getAsInt());
+
+							elementsData.put(key, elementData);
+						}
+					}
+					playerData.put("player" + i, elementsData);
+				}
+			}
+		}
+		return playerData;
 	}
-	
-	public static void initJson(int nbJoueur,String nomEvent) {
+
+	public static void initJson(int nbJoueur, String nomEvent) {
 		try {
 			ArrayList<String> listFileName = new ArrayList<String>();
 			listFileName.add("player.json");
 			listFileName.add("game.json");
+			listFileName.add("tab.json");
 			Path targetPath = Paths.get("config" + File.separator + nomEvent);
 			// Créer le dossier destination s'il n'existe pas
-            if (!Files.exists(targetPath)) {
-                Files.createDirectories(targetPath);
-                System.out.println("Dossier destination créé : " + targetPath);
-                for (String fileName : listFileName) {
-                	
-                	Path sourcePath = Paths.get("config" + File.separator + "default",fileName);			
-                	// Construire le chemin complet du fichier destination
-                	Path destinationFile = targetPath.resolve(sourcePath.getFileName());
-                	
-                	// Copier le fichier
-                	Files.copy(sourcePath, destinationFile, StandardCopyOption.REPLACE_EXISTING);
-                	System.out.println("Fichier copié avec succès : " + destinationFile);
-                }
-                ElementJoueurFull defaultData = createDefaultElementJoueurFull(nbJoueur);
-                saveConfigToFileFull(defaultData, "config" + File.separator + nomEvent, "full.json");
-            }
-            
+			if (!Files.exists(targetPath)) {
+				Files.createDirectories(targetPath);
+				System.out.println("Dossier destination créé : " + targetPath);
+				for (String fileName : listFileName) {
+
+					Path sourcePath = Paths.get("config" + File.separator + "default", fileName);
+					// Construire le chemin complet du fichier destination
+					Path destinationFile = targetPath.resolve(sourcePath.getFileName());
+
+					// Copier le fichier
+					Files.copy(sourcePath, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+					System.out.println("Fichier copié avec succès : " + destinationFile);
+				}
+				ElementJoueurFull defaultData = createDefaultElementJoueurFull(nbJoueur);
+				saveConfigToFileFull(defaultData, "config" + File.separator + nomEvent, "full.json");
+			}
+			
+
 		} catch (IOException e) {
 			System.err.println("Erreur lors de la copie du fichier : " + e.getMessage());
 		}
 	}
+
 	private static ElementJoueurFull createDefaultElementJoueurFull(int nbJoueur) {
-        ElementJoueurFull defaultData = new ElementJoueurFull();
+		ElementJoueurFull defaultData = new ElementJoueurFull();
 
-        // Initialiser les joueurs (par exemple, 2 joueurs)
-        for (int i = 0; i < nbJoueur; i++) {
-            Map<String, Map<String, ElementJoueur>> playerMap = new HashMap<>();
-            Map<String, ElementJoueur> elements = new HashMap<>();
+		// Initialiser les joueurs (par exemple, 2 joueurs)
+		for (int i = 0; i < nbJoueur; i++) {
+			Map<String, Map<String, ElementJoueur>> playerMap = new HashMap<>();
+			Map<String, ElementJoueur> elements = new HashMap<>();
 
-            String[] elementNames = {"Prizetotal", "Birthplace", "ImgJoueur", "Rank", "Birthdate", "Hand", "Weight", 
-                                     "Name", "Acronyme", "CityResidence", "Line", "Height", "ImgFlag", "Surname", "Age"};
-            int j=0;
+			String[] elementNames = { "Prizetotal", "Birthplace", "ImgJoueur", "Rank", "Birthdate", "Hand", "Weight",
+					"Name", "Acronyme", "CityResidence", "Line", "Height", "ImgFlag", "Surname", "Age" };
+			int j = 0;
 			for (String elementName : elementNames) {
 
 				ElementJoueur element = new ElementJoueur();
@@ -800,18 +833,18 @@ public class ConfigurationSaveLoad {
 
 			}
 
-            playerMap.put("player" + i, elements);
-            defaultData.getPlayer().add(playerMap);
-        }
+			playerMap.put("player" + i, elements);
+			defaultData.getPlayer().add(playerMap);
+		}
 
-        // Initialiser playerPolice
-        Map<String, ElementPoliceJoueur> playerPolice = new HashMap<>();
-        String[] elementNames = {"Prizetotal", "Birthplace", "ImgJoueur", "Rank", "Birthdate", "Hand", "Weight", 
-                                 "Name", "Acronyme", "CityResidence", "Line", "Height", "ImgFlag", "Surname", "Age"};
+		// Initialiser playerPolice
+		Map<String, ElementPoliceJoueur> playerPolice = new HashMap<>();
+		String[] elementNames = { "Prizetotal", "Birthplace", "ImgJoueur", "Rank", "Birthdate", "Hand", "Weight",
+				"Name", "Acronyme", "CityResidence", "Line", "Height", "ImgFlag", "Surname", "Age" };
 
 		for (String elementName : elementNames) {
 			ElementPoliceJoueur policeElement = new ElementPoliceJoueur();
-			if (elementName == "Name" || elementName == "Surname" || elementName == "Acronyme") 
+			if (elementName == "Name" || elementName == "Surname" || elementName == "Acronyme")
 				policeElement.setVisible(true);
 			else
 				policeElement.setVisible(false);
@@ -821,38 +854,45 @@ public class ConfigurationSaveLoad {
 			playerPolice.put(elementName, policeElement);
 		}
 
-        defaultData.getPlayerPolice().putAll(playerPolice);;
+		defaultData.getPlayerPolice().putAll(playerPolice);
+		;
 
-        return defaultData;
-    }
-			
+		return defaultData;
+	}
+
 	public static String FontSerializer(Font fontToSerialize) {
-		String SerializeFont = fontToSerialize.getName()+","+fontToSerialize.getStyle()+","+fontToSerialize.getSize();		
+		String SerializeFont = fontToSerialize.getName() + "," + fontToSerialize.getStyle() + ","
+				+ fontToSerialize.getSize();
 		return SerializeFont;
 	}
+
 	public static String ColorSerializer(Color colorToSerialize) {
-		String SerializeColor = colorToSerialize.getRed()+","+colorToSerialize.getGreen()+","+colorToSerialize.getBlue();		
+		String SerializeColor = colorToSerialize.getRed() + "," + colorToSerialize.getGreen() + ","
+				+ colorToSerialize.getBlue();
 		return SerializeColor;
 	}
+
 	private static Color parseColor(String color) {
-        String[] rgb = color.split(",");
-        return new Color(Integer.parseInt(rgb[0].trim()), Integer.parseInt(rgb[1].trim()), Integer.parseInt(rgb[2].trim()));
-    }
+		String[] rgb = color.split(",");
+		return new Color(Integer.parseInt(rgb[0].trim()), Integer.parseInt(rgb[1].trim()),
+				Integer.parseInt(rgb[2].trim()));
+	}
+
 	public static void saveConfigAnimation(PanelAnimationConfiguration panelAnimation, String nomEvent) {
 		AnimationSave animationSave = new AnimationSave();
-		
+
 		animationSave.setCheckboxDisplayPlayerTree(panelAnimation.isPlayerFullEnabled());
-		
+
 		Map<String, Object> mapZoomAnimation = new HashMap<>();
 		mapZoomAnimation.put("checkbox", panelAnimation.isZoomAnimationEnabled());
 		mapZoomAnimation.put("duration", panelAnimation.getZoomAnimationDuration());
 		animationSave.setMapZoom(mapZoomAnimation);
-		
+
 		Map<String, Object> mapLabelAnimation = new HashMap<>();
 		mapLabelAnimation.put("checkbox", panelAnimation.isLabelAnimationEnabled());
 		mapLabelAnimation.put("duration", panelAnimation.getLabelAnimationDuration());
 		animationSave.setMapLabel(mapLabelAnimation);
-		
+
 		Map<String, Object> mapTournamentTree = new HashMap<>();
 		mapTournamentTree.put("checkbox", panelAnimation.isTournamentTreeEnabled());
 		mapTournamentTree.put("positionLeft", panelAnimation.getXLeftTree());
@@ -861,16 +901,15 @@ public class ConfigurationSaveLoad {
 		mapTournamentTree.put("thickness", panelAnimation.getThicknessTree());
 		mapTournamentTree.put("color", ColorSerializer(panelAnimation.getTreeColor()));
 		animationSave.setMapTournamenTree(mapTournamentTree);
-		
+
 		Map<String, Object> mapAnimationTournamentTree = new HashMap<>();
 		mapAnimationTournamentTree.put("checkbox", panelAnimation.isPathTreeAnimationEnabled());
-		mapAnimationTournamentTree.put("checkboxBegining", panelAnimation.isbeginingAnimationTreeCheckBoxEnabled());
 		mapAnimationTournamentTree.put("duration", panelAnimation.getAnimationPathTreeDuration());
 		mapAnimationTournamentTree.put("blink", panelAnimation.getNbBlinkTreeDuration());
 		mapAnimationTournamentTree.put("color", ColorSerializer(panelAnimation.getPathTreeColor()));
-		animationSave.setMapAnimationTournamenTree(mapAnimationTournamentTree);		
-		
-		saveConfigAnimationToJson(animationSave,"Config/" + nomEvent, "animation.json");
+		animationSave.setMapAnimationTournamenTree(mapAnimationTournamentTree);
+
+		saveConfigAnimationToJson(animationSave, "Config/" + nomEvent, "animation.json");
 	}
 
 	// Méthode pour sauvegarder les données de configuration au format JSON
@@ -895,8 +934,34 @@ public class ConfigurationSaveLoad {
 			e.printStackTrace();
 		}
 	}
-	public static void setConfigAnimation() {
-		// TODO Auto-generated method stub
-		
+
+	public static void setConfigAnimation(String nomEvent, PanelAnimationConfiguration panelanimation) {
+		try (Reader reader = new FileReader("Config/" + nomEvent+ File.separator + "animation.json")) {
+			JsonElement jsonElement = JsonParser.parseReader(reader);
+			if (jsonElement.isJsonObject()) {
+				JsonObject configObject = jsonElement.getAsJsonObject();
+				panelanimation.setDisplayJFullCheckBox(configObject.getAsJsonPrimitive("checkboxDisplayPlayerTree").getAsBoolean());
+				
+				panelanimation.setZoomAnimationCheckBox(configObject.getAsJsonObject("mapZoom").getAsJsonPrimitive("checkbox").getAsBoolean());
+				panelanimation.setZoomAnimationSpinner(configObject.getAsJsonObject("mapZoom").getAsJsonPrimitive("duration").getAsInt());
+				
+				panelanimation.setLabelAnimationCheckBox(configObject.getAsJsonObject("mapLabel").getAsJsonPrimitive("checkbox").getAsBoolean());
+				panelanimation.setLabelAnimationSpinner(configObject.getAsJsonObject("mapLabel").getAsJsonPrimitive("duration").getAsInt());
+				
+				panelanimation.setxLeftSpinner(configObject.getAsJsonObject("mapTournamenTree").getAsJsonPrimitive("positionLeft").getAsInt());
+				panelanimation.setxRightSpinner(configObject.getAsJsonObject("mapTournamenTree").getAsJsonPrimitive("positionRight").getAsInt());
+				panelanimation.setTreeColor(parseColor(configObject.getAsJsonObject("mapTournamenTree").getAsJsonPrimitive("color").getAsString()));
+				panelanimation.setDisplayTreeCheckBox(configObject.getAsJsonObject("mapTournamenTree").getAsJsonPrimitive("checkbox").getAsBoolean());
+				panelanimation.setWidthTreeSpinner(configObject.getAsJsonObject("mapTournamenTree").getAsJsonPrimitive("width").getAsInt());
+				panelanimation.setThicknessTreeSpinner(configObject.getAsJsonObject("mapTournamenTree").getAsJsonPrimitive("thickness").getAsInt());
+				
+				panelanimation.setClignotementNumberTreeSpinner(configObject.getAsJsonObject("mapAnimationTournamenTree").getAsJsonPrimitive("blink").getAsInt());
+				panelanimation.setAnimationTimeTreeSpinner(configObject.getAsJsonObject("mapAnimationTournamenTree").getAsJsonPrimitive("duration").getAsInt());
+				panelanimation.setPathTreeColor(parseColor(configObject.getAsJsonObject("mapAnimationTournamenTree").getAsJsonPrimitive("color").getAsString()));
+				panelanimation.setAnimationTreeCheckBox(configObject.getAsJsonObject("mapAnimationTournamenTree").getAsJsonPrimitive("checkbox").getAsBoolean());				
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
