@@ -709,7 +709,7 @@ public class BDD_v2 {
 			ResultSet resultSet = checkStatement.executeQuery();
 			if (resultSet.next() && resultSet.getInt(1) > 0) {
 				// L'ancien fond est utilis� dans la table "Event"
-				int choice = JOptionPane.showConfirmDialog(null, "This background is used by events. Do you want to update the events to use the new background?", "YES",
+				int choice = JOptionPane.showConfirmDialog(null, "This background is used by events. Do you want to update the events to use the new background?", "Background modification",
 						JOptionPane.YES_NO_OPTION);
 				if (choice == JOptionPane.YES_OPTION) {
 					// Mettez � jour les enregistrements dans "Event" pour utiliser le nouveau fond
@@ -740,7 +740,7 @@ public class BDD_v2 {
 			ResultSet resultSet = checkStatement.executeQuery();
 			if (resultSet.next() && resultSet.getInt(1) > 0) {
 				// Le fond est utilis� dans la table "Event"
-				int choice = JOptionPane.showConfirmDialog(null, "This background is used by events. Do you want to update the events to use a different background?", "yes",
+				int choice = JOptionPane.showConfirmDialog(null, "This background is used by events. Do you want to update the events to use a different background?", "Background delete",
 						JOptionPane.YES_NO_OPTION);
 				if (choice == JOptionPane.YES_OPTION) {
 					// Mettez � jour les enregistrements dans "Event" pour utiliser un autre fond (par exemple, un fond par d�faut)
@@ -750,8 +750,16 @@ public class BDD_v2 {
 						updateStatement.setString(1, newBackgroundName);
 						updateStatement.setString(2, backgroundName);
 						updateStatement.executeUpdate();
+						System.out.println("  update evenet with defaut background");
 					}
-					System.out.println("  update evenet with defaut background");
+					String deleteQuery = "DELETE FROM Background WHERE Nom = ?";
+					try (PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery)) {
+						deleteStatement.setString(1, backgroundName);
+						deleteStatement.executeUpdate();
+						System.out.println("  - Background " + backgroundName + " has been deleted");
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
 				} else {
 					System.out.println("  ! events were not upadted");
 				}
@@ -786,7 +794,7 @@ public class BDD_v2 {
 	}
 
 	public static void deleteEvent(String eventName) throws SQLException {
-		int choice = JOptionPane.showConfirmDialog(null, "Do you really want to delete this event?", "YES", JOptionPane.YES_NO_OPTION);
+		int choice = JOptionPane.showConfirmDialog(null, "Do you really want to delete this event?", "Event delete", JOptionPane.YES_NO_OPTION);
 		if (choice == JOptionPane.YES_OPTION) {
 			String deleteQuery = "DELETE FROM event WHERE Nom = ?";
 			try (PreparedStatement updateStatement = connection.prepareStatement(deleteQuery)) {
@@ -800,7 +808,7 @@ public class BDD_v2 {
 	}
 
 	public static void deleteJoueur(String playertName, String bddname) throws SQLException {
-		int choice = JOptionPane.showConfirmDialog(null, "Do you really want to delete this player ?", "YES", JOptionPane.YES_NO_OPTION);
+		int choice = JOptionPane.showConfirmDialog(null, "Do you really want to delete this player ?", "Player delete", JOptionPane.YES_NO_OPTION);
 		if (choice == JOptionPane.YES_OPTION) {
 			String deleteQuery = "DELETE FROM " + bddname + " WHERE Nom = ?";
 			try (PreparedStatement updateStatement = connection.prepareStatement(deleteQuery)) {

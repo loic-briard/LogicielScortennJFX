@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -70,7 +71,7 @@ public class ListOfPlayersFrame extends JFrame {
         bddPLayersComboBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String selectedEventBDD = (String) bddPLayersComboBox.getSelectedItem();
-                System.out.println("++++ BDD selected : " + selectedEventBDD);
+                System.out.println("BDD selected to display : " + selectedEventBDD);
 
                 if (selectedEventBDD != null) {
                 	if (worker != null && !worker.isDone()) {
@@ -368,7 +369,6 @@ public class ListOfPlayersFrame extends JFrame {
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     // R�cup�rer le fichier s�lectionn� par l'utilisateur
                     File selectedFile = fileChooser.getSelectedFile();
-                    System.out.println("++++ donnes a importe du fichier : "+selectedFile.getName());
                     String filePath = selectedFile.getAbsolutePath();
                     fileName = selectedFile.getName().replace(".csv", "");
                     try {
@@ -382,21 +382,20 @@ public class ListOfPlayersFrame extends JFrame {
                 }
                 try {
 					BDD_v2.getAllListPlayerTableName();
-					System.out.println("++++ toute les bdd de joueur : "+BDD_v2.tabBdd.toString());
 					updateComboboxTable();
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				bddPLayersComboBox.setSelectedItem(fileName.toUpperCase());
-				// V�rification de la s�lection
 			    String selectedEventBDD = (String) bddPLayersComboBox.getSelectedItem();
-			    System.out.println("++++ creation de la bdd du fichier " + selectedEventBDD);
+			    System.out.println("Creation de la bdd du fichier " + selectedEventBDD);
 
                 if (selectedEventBDD != null) {
-                	if (worker != null && !worker.isDone()) {
-			            worker.cancel(true);
-			        }
+//                	if (worker != null && !worker.isDone()) {
+//                		System.out.println("! Chargement annulee dans import CSV !");
+//			            worker.cancel(true);
+//			        }
                     CustomTableModel model = (CustomTableModel) playersTable.getModel();
 					model.clearData();
 					model.fireTableDataChanged();
@@ -428,7 +427,7 @@ public class ListOfPlayersFrame extends JFrame {
 
 	private void loadMorePlayersData() {
 	    if (loadingData) {
-	        System.out.println("++++ Les donnees chargent deja.");
+	        System.out.println("Les donnees chargent...");
 	        return;
 	    }
 
@@ -441,6 +440,15 @@ public class ListOfPlayersFrame extends JFrame {
 	    }
 
 	    loadingData = true;
+	    
+	    // Attendre que le worker précédent soit terminé
+	    if (worker != null && !worker.isDone()) {
+	        try {
+	            worker.get(); // Attendre que le worker précédent se termine
+	        } catch (InterruptedException | ExecutionException e) {
+	            e.printStackTrace();
+	        }
+	    }
 
 	    worker = new SwingWorker<Void, Void>() {
 	        @Override
@@ -452,7 +460,7 @@ public class ListOfPlayersFrame extends JFrame {
 	                }
 
 	                int nbelemntBdd = BDD_v2.compterNbElementsBDD(selectedBDD);
-	                System.out.println("++++ Nombre d'elements dans la base de donnees : " + nbelemntBdd);
+	                System.out.println("Nombre d'elements dans la base de donnees "+selectedBDD+" : " + nbelemntBdd);
 	                if (nbelemntBdd < loadNbjoueur) {
 	                    loadNbjoueur = nbelemntBdd;
 	                }
@@ -462,18 +470,18 @@ public class ListOfPlayersFrame extends JFrame {
 	                }
 
 	                int startIndex = currentPage * PAGE_SIZE;
-	                System.out.println("++++ Chargement des joueurs de " + startIndex + " a " + loadNbjoueur);
+	                System.out.println("Chargement des joueurs de " + startIndex + " a " + loadNbjoueur);
 	                CustomTableModel model = (CustomTableModel) playersTable.getModel();
 	                List<String[]> playersData = BDD_v2.getData(selectedBDD, startIndex, loadNbjoueur);
 	                int i = 0;
 	                for (String[] data : playersData) {
 	                    if (isCancelled()) {
 	                        // Si l'annulation est demand�e, sortez de la boucle
-	                        System.out.println("Chargement annule.");
+	                        System.out.println("! Chargement annule.");
 	                        return null;
 	                    }
 
-	                    System.out.println("++++ Traitement des donn�es : " + Arrays.toString(data));
+	                    System.out.println("Traitement des donn�es : " + Arrays.toString(data));
 	                    String flagImagePath = BDD_v2.getFlagImagePathByAcronym(data[5]);
 	                    String playerImagePath = data[6];
 	                    if (playerImagePath == null)
@@ -481,7 +489,7 @@ public class ListOfPlayersFrame extends JFrame {
 	                    model.addRow(new Object[] { data[0], data[1], data[2], data[3], data[4], data[5],
 	                            new ImageUtility(flagImagePath, 55), new ImageUtility(playerImagePath, 55), data[7],
 	                            data[8], data[9], data[10], data[11], data[12], data[13], data[14], data[15] });
-	                    System.out.println("++++ "+i+" Donnees traitees : " + Arrays.toString(data));
+	                    System.out.println(""+i+" Donnees traitees : " + Arrays.toString(data));
 	                    i++;
 	                }
 	            } catch (SQLException e) {

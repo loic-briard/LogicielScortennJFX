@@ -6,6 +6,8 @@ import java.awt.FlowLayout;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -27,22 +29,23 @@ public class ListOfFlag extends JFrame {
     private JTextField searchField;
     private JButton modifyButton;
 	private JButton searchButton;
+	private SwingWorker<Void, Object[]> worker;
 
     public ListOfFlag() throws SQLException {
-        // Initialisation de la fenêtre
+        // Initialisation de la fenï¿½tre
         setTitle("List of Flags");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(800, 600);
         ImageIcon logoIcon = new ImageIcon("icon.png");
-        // Vérifiez si l'icône a été chargée avec succès
+        // Vï¿½rifiez si l'icï¿½ne a ï¿½tï¿½ chargï¿½e avec succï¿½s
         if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
             setIconImage(logoIcon.getImage());
         } else {
-            // Si l'icône n'a pas pu être chargée, affichez un message d'erreur
-            System.err.println("Impossible de charger l'icône.");
+            // Si l'icï¿½ne n'a pas pu ï¿½tre chargï¿½e, affichez un message d'erreur
+            System.err.println("Impossible de charger l'icï¿½ne.");
         }
 
-        // Créez un modèle de table
+        // Crï¿½ez un modï¿½le de table
         String[] columnNames = { "Acronym", "Flag" };
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
             private static final long serialVersionUID = 1L;
@@ -56,10 +59,10 @@ public class ListOfFlag extends JFrame {
                 }
             }
         };
-        // Créez un JTable avec le modèle de table
+        // Crï¿½ez un JTable avec le modï¿½le de table
         flagTable = new JTable(tableModel);
         flagTable.setRowHeight(60);
-        // Création d'un rendu personnalisé pour afficher les images
+        // Crï¿½ation d'un rendu personnalisï¿½ pour afficher les images
         DefaultTableCellRenderer imageRenderer = new DefaultTableCellRenderer() {
             private static final long serialVersionUID = 1L;
 
@@ -72,7 +75,7 @@ public class ListOfFlag extends JFrame {
                 return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             }
         };
-        // Appliquez le rendu personnalisé à la colonne des images
+        // Appliquez le rendu personnalisï¿½ ï¿½ la colonne des images
         flagTable.getColumnModel().getColumn(1).setCellRenderer(imageRenderer);
 
         // Champ de recherche
@@ -88,15 +91,15 @@ public class ListOfFlag extends JFrame {
         panel.add(modifyButton);
         add(panel,BorderLayout.NORTH);
 
-        // Ajout du gestionnaire d'événements pour le bouton "Search"
+        // Ajout du gestionnaire d'ï¿½vï¿½nements pour le bouton "Search"
         searchButton.addActionListener(e -> {
             String searchText = searchField.getText().trim().toUpperCase();
             if (!searchText.isEmpty()) {
                 for (int row = 0; row < flagTable.getRowCount(); row++) {
-                    String cellValue = flagTable.getValueAt(row, 0).toString(); // Assurez-vous d'adapter le numéro de colonne
+                    String cellValue = flagTable.getValueAt(row, 0).toString(); // Assurez-vous d'adapter le numï¿½ro de colonne
                     if (cellValue.equals(searchText)) {
                         flagTable.scrollRectToVisible(flagTable.getCellRect(row, 0, true));
-                        break; // Arrêtez la recherche après avoir trouvé la première correspondance
+                        break; // Arrï¿½tez la recherche aprï¿½s avoir trouvï¿½ la premiï¿½re correspondance
                     }
                 }
             }
@@ -107,38 +110,53 @@ public class ListOfFlag extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int selectedRow = flagTable.getSelectedRow();
 				if (selectedRow >= 0) {
-					// Obtenez les données de la ligne sélectionnée
+					// Obtenez les donnï¿½es de la ligne sï¿½lectionnï¿½e
 					String flagName = (String) flagTable.getValueAt(selectedRow, 0);
 					ImageUtility imageUtility = (ImageUtility) flagTable.getValueAt(selectedRow, 1);
 					String imgPath = imageUtility.getImagePath();
-					// Ouvrir une fenêtre de modification avec ces données
+					// Ouvrir une fenï¿½tre de modification avec ces donnï¿½es
 					new ModifyFlagFrame(ListOfFlag.this, flagName, imgPath);
 				}
 			}
 		});
 
-        // Ajout du JTable à la fenêtre
+        // Ajout du JTable ï¿½ la fenï¿½tre
         JScrollPane scrollPane = new JScrollPane(flagTable);
         add(scrollPane);
 
-        // Rendez la fenêtre visible
+        // Rendez la fenï¿½tre visible
         setVisible(true);
 
-        // Chargement des données en arrière-plan
+        // Chargement des donnï¿½es en arriï¿½re-plan
         loadFlagsInBackground();
+        
+		// Appel de l'annulation lorsque la fenï¿½tre est fermï¿½e
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				if (worker != null && !worker.isDone()) {
+					worker.cancel(true);
+				}
+			}
+		});
     }
 
     private void loadFlagsInBackground() {
-        SwingWorker<Void, Object[]> worker = new SwingWorker<Void, Object[]>() {
+    	worker = new SwingWorker<Void, Object[]>() {
             @Override
             protected Void doInBackground() throws Exception {
-                // Récupérez les données de la base de données
+                // Rï¿½cupï¿½rez les donnï¿½es de la base de donnï¿½es
                 String[][] flagData = BDD_v2.DataFlag();
 
-                // Ajoutez les données à la table après le chargement
+                // Ajoutez les donnï¿½es ï¿½ la table aprï¿½s le chargement
                 for (String[] data : flagData) {
+                	if (isCancelled()) {
+                        // Si l'annulation est demandï¿½e, sortez de la boucle
+                        System.out.println("! Chargement annule.");
+                        return null;
+                    }
                     Object[] rowData = new Object[]{data[0], new ImageUtility(data[1], 55)};
-                    publish(rowData); // Publiez les données pour les afficher dans l'EDT
+                    publish(rowData); // Publiez les donnï¿½es pour les afficher dans l'EDT
                 }
 
                 return null;
@@ -146,14 +164,15 @@ public class ListOfFlag extends JFrame {
 
             @Override
             protected void process(java.util.List<Object[]> chunks) {
-                // Ajoutez les données publiées à la table
+                // Ajoutez les donnï¿½es publiï¿½es ï¿½ la table
                 for (Object[] rowData : chunks) {
                     DefaultTableModel model = (DefaultTableModel) flagTable.getModel();
                     model.addRow(rowData);
+                    
                 }
             }
         };
-        // Démarrer le SwingWorker
+        // Dï¿½marrer le SwingWorker
         worker.execute();
     }
     
@@ -164,7 +183,7 @@ public class ListOfFlag extends JFrame {
             if (name.equals(oldName)) {
                 model.setValueAt(newName, row, 0);
                 model.setValueAt(new ImageUtility(newImage, 55), row, 1);
-                break; // Sortez de la boucle une fois que la ligne modifiée a été trouvée
+                break; // Sortez de la boucle une fois que la ligne modifiï¿½e a ï¿½tï¿½ trouvï¿½e
             }
         }
     }

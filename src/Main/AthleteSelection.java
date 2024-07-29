@@ -49,7 +49,7 @@ public class AthleteSelection extends JFrame {
     private DefaultTableModel modelRightTable;
     private String choosenBDD;
 
-    public AthleteSelection(String choosenBDD) throws SQLException, ClassNotFoundException {
+	public AthleteSelection(String choosenBDD) throws SQLException, ClassNotFoundException {
         setTitle("Selection of Players");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1050, 600); // Augmentez la largeur de la fen�tre pour mieux afficher les donn�es
@@ -70,12 +70,25 @@ public class AthleteSelection extends JFrame {
         Arrays.sort(playerDataList, (a, b) -> a[0].compareTo(b[0]));
         
         String[] columnNames = { "Display name", "ID"};
-        DefaultTableModel modelLeft = new DefaultTableModel(playerDataList, columnNames);
-        allPlayersTable = new JTable(modelLeft);
+//        DefaultTableModel modelLeft = new DefaultTableModel(playerDataList, columnNames);
+//        allPlayersTable = new JTable(modelLeft);
+        allPlayersTable = new JTable(playerDataList, columnNames) {
+			private static final long serialVersionUID = 1L;
+            public boolean isCellEditable(int row, int column) {
+                return false; // Rend toutes les cellules non éditables
+            }
+        };
 		JScrollPane allPlayersScrollPane = new JScrollPane(allPlayersTable);
 		
-        modelRightTable = new DefaultTableModel(null, columnNames);
-        selectedPlayersTable = new JTable(modelRightTable);
+//        modelRightTable = new DefaultTableModel(null, columnNames);
+//        selectedPlayersTable = new JTable(modelRightTable);
+		modelRightTable = new DefaultTableModel(columnNames, 0) {
+			private static final long serialVersionUID = 1L;
+		    public boolean isCellEditable(int row, int column) {
+		        return false; // Rend toutes les cellules non éditables
+		    }
+		};
+		selectedPlayersTable = new JTable(modelRightTable);
 		JScrollPane selectedPlayersScrollPane = new JScrollPane(selectedPlayersTable);
 		
 		addButton.addActionListener(new ActionListener() {

@@ -1,3 +1,4 @@
+
 package Diffusion;
 
 /*
@@ -428,11 +429,9 @@ public class WindowTournamentTree extends JFrame {
     }
     public ArrayList<PlayerForDiffusion> initListPlayerForDiffusion() throws ClassNotFoundException, SQLException {
     	playerForDifusionListInit = new ArrayList<PlayerForDiffusion>();
-    	int i=0;
-    	for (Joueur joueur : selectedJoueurs) {
+    	for (int i=0;i<this.nbJoueur;i++) {
     		PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.eventName(), windowBroadcastPublic, "full",i);
-    		i++;
-    		PlayerDetails.setPlayer(joueur, i);
+    		PlayerDetails.setPlayer(this.selectedJoueurs.get(i), i);
     		playerForDifusionListInit.add(PlayerDetails);
 		}
     	return playerForDifusionListInit;
