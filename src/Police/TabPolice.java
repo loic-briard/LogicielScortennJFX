@@ -90,6 +90,8 @@ public class TabPolice extends JPanel {
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
 					playerForDiffusion.playerName.getComponents()[0].setFont(fontSelector.getPoliceComlet());
 					playerForDiffusion.playerName.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.policeName.setNewfont(fontSelector.getPoliceComlet());
+					playerForDiffusion.policeName.setNewColor(fontSelector.getChoosenColor());
 					playerForDiffusion.playerName.setSize(playerForDiffusion.playerName.getComponents()[0].getPreferredSize());
 				}
 			}
@@ -100,6 +102,8 @@ public class TabPolice extends JPanel {
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
 					playerForDiffusion.playerSurname.getComponents()[0].setFont(fontSelector.getPoliceComlet());
 					playerForDiffusion.playerSurname.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.policeSurname.setNewfont(fontSelector.getPoliceComlet());
+					playerForDiffusion.policeSurname.setNewColor(fontSelector.getChoosenColor());
 					playerForDiffusion.playerSurname.setSize(playerForDiffusion.playerSurname.getComponents()[0].getPreferredSize());
 				}
 			}
@@ -110,6 +114,8 @@ public class TabPolice extends JPanel {
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
 					playerForDiffusion.playerAcro.getComponents()[0].setFont(fontSelector.getPoliceComlet());
 					playerForDiffusion.playerAcro.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.policeAcro.setNewfont(fontSelector.getPoliceComlet());
+					playerForDiffusion.policeAcro.setNewColor(fontSelector.getChoosenColor());
 					playerForDiffusion.playerAcro.setSize(playerForDiffusion.playerAcro.getComponents()[0].getPreferredSize());
 				}
 			}
@@ -120,6 +126,8 @@ public class TabPolice extends JPanel {
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
 					playerForDiffusion.playerRank.getComponents()[0].setFont(fontSelector.getPoliceComlet());
 					playerForDiffusion.playerRank.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.policeRank.setNewfont(fontSelector.getPoliceComlet());
+					playerForDiffusion.policeRank.setNewColor(fontSelector.getChoosenColor());
 					playerForDiffusion.playerRank.setSize(playerForDiffusion.playerRank.getComponents()[0].getPreferredSize());
 				}
 			}
@@ -130,6 +138,8 @@ public class TabPolice extends JPanel {
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
 					playerForDiffusion.playerBirthdate.getComponents()[0].setFont(fontSelector.getPoliceComlet());
 					playerForDiffusion.playerBirthdate.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.policeBirthDate.setNewfont(fontSelector.getPoliceComlet());
+					playerForDiffusion.policeBirthDate.setNewColor(fontSelector.getChoosenColor());
 					playerForDiffusion.playerBirthdate.setSize(playerForDiffusion.playerBirthdate.getComponents()[0].getPreferredSize());
 				}
 			}
@@ -140,6 +150,8 @@ public class TabPolice extends JPanel {
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
 					playerForDiffusion.playerBirthplace.getComponents()[0].setFont(fontSelector.getPoliceComlet());
 					playerForDiffusion.playerBirthplace.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.policeBirthPlace.setNewfont(fontSelector.getPoliceComlet());
+					playerForDiffusion.policeBirthPlace.setNewColor(fontSelector.getChoosenColor());
 					playerForDiffusion.playerBirthplace.setSize(playerForDiffusion.playerBirthplace.getComponents()[0].getPreferredSize());
 				}
 			}
@@ -150,6 +162,8 @@ public class TabPolice extends JPanel {
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
 					playerForDiffusion.playerHeight.getComponents()[0].setFont(fontSelector.getPoliceComlet());
 					playerForDiffusion.playerHeight.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.policeHeight.setNewfont(fontSelector.getPoliceComlet());
+					playerForDiffusion.policeHeight.setNewColor(fontSelector.getChoosenColor());
 					playerForDiffusion.playerHeight.setSize(playerForDiffusion.playerHeight.getComponents()[0].getPreferredSize());
 				}
 			}
@@ -160,6 +174,8 @@ public class TabPolice extends JPanel {
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
 					playerForDiffusion.playerWeight.getComponents()[0].setFont(fontSelector.getPoliceComlet());
 					playerForDiffusion.playerWeight.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.policeWeight.setNewfont(fontSelector.getPoliceComlet());
+					playerForDiffusion.policeWeight.setNewColor(fontSelector.getChoosenColor());
 					playerForDiffusion.playerWeight.setSize(playerForDiffusion.playerWeight.getComponents()[0].getPreferredSize());
 				}
 			}
@@ -170,6 +186,8 @@ public class TabPolice extends JPanel {
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
 					playerForDiffusion.playerHand.getComponents()[0].setFont(fontSelector.getPoliceComlet());
 					playerForDiffusion.playerHand.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.policeHand.setNewfont(fontSelector.getPoliceComlet());
+					playerForDiffusion.policeHand.setNewColor(fontSelector.getChoosenColor());
 					playerForDiffusion.playerHand.setSize(playerForDiffusion.playerHand.getComponents()[0].getPreferredSize());
 				}
 			}
@@ -180,6 +198,8 @@ public class TabPolice extends JPanel {
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
 					playerForDiffusion.playerAge.getComponents()[0].setFont(fontSelector.getPoliceComlet());
 					playerForDiffusion.playerAge.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.policeAge.setNewfont(fontSelector.getPoliceComlet());
+					playerForDiffusion.policeAge.setNewColor(fontSelector.getChoosenColor());
 					playerForDiffusion.playerAge.setSize(playerForDiffusion.playerAge.getComponents()[0].getPreferredSize());
 				}
 			}
@@ -190,6 +210,8 @@ public class TabPolice extends JPanel {
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
 					playerForDiffusion.playerPrizetotal.getComponents()[0].setFont(fontSelector.getPoliceComlet());
 					playerForDiffusion.playerPrizetotal.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.policePrizetotal.setNewfont(fontSelector.getPoliceComlet());
+					playerForDiffusion.policePrizetotal.setNewColor(fontSelector.getChoosenColor());
 					playerForDiffusion.playerPrizetotal.setSize(playerForDiffusion.playerPrizetotal.getComponents()[0].getPreferredSize());
 				}
 			}
@@ -200,6 +222,8 @@ public class TabPolice extends JPanel {
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
 					playerForDiffusion.playerCityresidence.getComponents()[0].setFont(fontSelector.getPoliceComlet());
 					playerForDiffusion.playerCityresidence.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.policeCityresidence.setNewfont(fontSelector.getPoliceComlet());
+					playerForDiffusion.policeCityresidence.setNewColor(fontSelector.getChoosenColor());
 					playerForDiffusion.playerCityresidence.setSize(playerForDiffusion.playerCityresidence.getComponents()[0].getPreferredSize());
 				}
 			}
@@ -210,6 +234,8 @@ public class TabPolice extends JPanel {
 				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
 					playerForDiffusion.playerLine.getComponents()[0].setFont(fontSelector.getPoliceComlet());
 					playerForDiffusion.playerLine.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.policeLine.setNewfont(fontSelector.getPoliceComlet());
+					playerForDiffusion.policeLine.setNewColor(fontSelector.getChoosenColor());
 					playerForDiffusion.playerLine.setSize(playerForDiffusion.playerLine.getComponents()[0].getPreferredSize());
 				}
 			}

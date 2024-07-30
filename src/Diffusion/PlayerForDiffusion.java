@@ -21,11 +21,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
+import javax.swing.SwingUtilities;
 
 import Main.BDD_v2;
 import Main.ImageUtility;
@@ -96,13 +95,16 @@ public class PlayerForDiffusion extends JPanel{
 	private PlayerForDiffusion playerfordifusion2;
 	private String nomEvent;
 	private int numeroPlayer;
-	private PanelAnimationConfiguration animationFrame;
+	private PanelAnimationConfiguration animationPanel;
 	private ZoomablePanel panelPlayerGlobal;
 	private static final String CONFIG_DIR = "Config/";
 	private static final String JSON_EXT = ".json";
 
 	public int getNumeroPlayer() {
 		return numeroPlayer;
+	}
+	public void setNumeroPlayer(int numeroPlayerIndex) {
+		this.numeroPlayer = numeroPlayerIndex;
 	}
 	public void setPlacementFrameTwoPlayer(WindowConfigurationPlayerInfos placementFrameTwoPlayer) {
 		this.windowConfigurationPlayerInfos = placementFrameTwoPlayer;
@@ -121,15 +123,16 @@ public class PlayerForDiffusion extends JPanel{
 		return this.panelPlayerGlobal;
 	}
 	public PanelAnimationConfiguration getWindowAnimationConfiguration(){
-		return animationFrame;
+		return animationPanel;
 	}
 	
-	public PlayerForDiffusion(String nomEvent, WindowBroadcastPublic diffusionFrame,String typeFrame, int numeroPlayer) {
+	public PlayerForDiffusion(String nomEvent, WindowBroadcastPublic diffusionFrame,PanelAnimationConfiguration panelAnimationConfig,String typeFrame, int numeroPlayer) {
 		this.frameForDiffusion = diffusionFrame;
 		this.typeFen = typeFrame;
 		this.nomEvent = nomEvent;
 		this.numeroPlayer = numeroPlayer;
-		this.animationFrame = frameForDiffusion.getAnimationFrame();
+//		this.animationFrame = frameForDiffusion.getAnimationFrame();
+		this.animationPanel = panelAnimationConfig;
 
 		initializePolice();
 		createPlayerPanels();
@@ -217,7 +220,6 @@ public class PlayerForDiffusion extends JPanel{
 	    playerInfo.put(playerPrizetotal, new LabelInfo(joueur.getPrizetotal(), policePrizetotal));
 	    playerInfo.put(playerCityresidence, new LabelInfo(joueur.getCityResidence(), policeCityresidence));
 	    playerInfo.put(playerLine, new LabelInfo(String.valueOf(ligne), policeLine));
-
 	    // Mettre à jour tous les panneaux de texte
 	    playerInfo.forEach((panel, info) -> updateTextPanel(panel, info));
 
@@ -231,7 +233,7 @@ public class PlayerForDiffusion extends JPanel{
 	    setupGlobalPanel();
 
 	    // Mettre à jour l'affichage
-	    updateDisplay();    
+	    updateDisplay(ligne);    
 	}
 
 	private void updateTextPanel(JPanel panel, LabelInfo info) {
@@ -263,16 +265,15 @@ public class PlayerForDiffusion extends JPanel{
 	                  playerLine, playerImg, playerFlag).forEach(panelPlayerGlobal::add);
 	}
 
-	private void updateDisplay() {
+	private void updateDisplay(int ligne) {
 	    this.setLayout(null);
 	    this.setOpaque(false);
-	    Border contour = BorderFactory.createLineBorder(Color.black);
-	    panelPlayerGlobal.setBorder(contour);
 	    this.add(panelPlayerGlobal);
 	    this.setSize(panelPlayerGlobal.getPreferredSize());
 	    this.setBounds(0, 0, this.frameForDiffusion.getWidth(), this.frameForDiffusion.getHeight());
 
-	    handleWindowTypeSpecificBehavior();
+	    if(ligne>0)
+	    	handleWindowTypeSpecificBehavior();
 
 	    this.frameForDiffusion.revalidate();
 	    this.frameForDiffusion.repaint();
@@ -285,25 +286,29 @@ public class PlayerForDiffusion extends JPanel{
 	            panelPlayerGlobal.setLocation(0, 0);
 	            break;
 	        case "player":
-	            animationFrame.zoomPanel(panelPlayerGlobal, frameForDiffusion, this::animatePlayerElements);
+	        	animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, this::animatePlayerElements);
 	            break;
 	        default:
-	            animationFrame.zoomPanel(panelPlayerGlobal, frameForDiffusion, null);
+	        	animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, null);
 	    }
 	}
 
 	private void animatePlayerElements() {
-	    PlayerForDiffusion endPlayer = this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer];
-	    for (Component endComponent : endPlayer.getPanelGlobal().getComponents()) {
-	        if (endComponent.isVisible()) {
-	            Point endPoint = endComponent.getLocation();
-	            if (endComponent.getName().equals("ImgFlag") || endComponent.getName().equals("ImgJoueur")) {
-	                animateImageElement((JPanel) endComponent, endPoint);
-	            } else {
-	                animateTextElement(endComponent, endPoint);
-	            }
-	        }
-	    }
+		SwingUtilities.invokeLater(() -> {
+			PlayerForDiffusion endPlayer = this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer];
+			if (endPlayer != null) {
+				for (Component endComponent : endPlayer.getPanelGlobal().getComponents()) {
+					if (endComponent.isVisible()) {
+						Point endPoint = endComponent.getLocation();
+						if (endComponent.getName().equals("ImgFlag") || endComponent.getName().equals("ImgJoueur")) {
+							animateImageElement((JPanel) endComponent, endPoint);
+						} else {
+							animateTextElement(endComponent, endPoint);
+						}
+					}
+				}
+			}
+		});
 	}
 
 	private void animateImageElement(JPanel endPanel, Point endPoint) {
@@ -311,7 +316,7 @@ public class PlayerForDiffusion extends JPanel{
 	    Dimension endDimension = endPanel.getComponents()[0].getPreferredSize();
 	    JLabel imageLabel = endPanel.getName().equals("ImgFlag") ? new ImageUtility(FlagLabel.getImagePath(),(int) endDimension.getHeight()) : new ImageUtility(ImgLabel.getImagePath(), (int)endDimension.getHeight());
 //	    JLabel imageLabel = endPanel.getName().equals("ImgFlag") ? FlagLabel : ImgLabel;
-	    animationFrame.animateImage(imagePanel, imageLabel, endPoint, endDimension,
+	    animationPanel.animateImage(imagePanel, imageLabel, endPoint, endDimension,
 	            JLayeredPane.POPUP_LAYER, this.frameForDiffusion.getLayeredPane(),null);
 	}
 
@@ -323,7 +328,7 @@ public class PlayerForDiffusion extends JPanel{
 	            Font endFont = endPanel.getComponents()[0].getFont();
 	            Color endColor = endPanel.getComponents()[0].getForeground();
 	            Dimension endDimension = endPanel.getPreferredSize();
-	            animationFrame.animateLABEL(startPanel, endPoint, endDimension, endColor, endFont, JLayeredPane.POPUP_LAYER,this.frameForDiffusion.getLayeredPane(),
+	            animationPanel.animateLABEL(startPanel, endPoint, endDimension, endColor, endFont, JLayeredPane.POPUP_LAYER,this.frameForDiffusion.getLayeredPane(),
 	                    () -> displayPlayerFullAndTournamentTreeAnimation()
 	                    );
 	            break;
@@ -331,15 +336,15 @@ public class PlayerForDiffusion extends JPanel{
 	    }
 	}
 	private void displayPlayerFull() {
-		if(animationFrame.isPlayerFullEnabled())
+		if(animationPanel.isPlayerFullEnabled())
 			this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer].setVisible(true);
 		else
 			this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer].setVisible(false);
 	}
 	private void displayPlayerFullAndTournamentTreeAnimation() {
 		displayPlayerFull();
-		if(animationFrame.isPathTreeAnimationEnabled())// && animationFrame.isbeginingAnimationTreeCheckBoxEnabled()
-			animationFrame.getPanelTournamentTree().animatePlayerPath(this.numeroPlayer, animationFrame.getAnimationPathTreeDuration(), animationFrame.getNbBlinkTreeDuration());
+		if(animationPanel.isPathTreeAnimationEnabled())// && animationFrame.isbeginingAnimationTreeCheckBoxEnabled()
+			animationPanel.getPanelTournamentTree().animatePlayerPath(this.numeroPlayer, animationPanel.getAnimationPathTreeDuration(), animationPanel.getNbBlinkTreeDuration());
 //		if(animationFrame.isPathTreeAnimationEnabled() && !animationFrame.isbeginingAnimationTreeCheckBoxEnabled())
 //			animationFrame.getPanelTournamentTree().animatePlayerPath(this.numeroPlayer, animationFrame.getAnimationPathTreeDuration(), animationFrame.getNbBlinkTreeDuration());
 	}
@@ -523,7 +528,7 @@ public class PlayerForDiffusion extends JPanel{
 	    windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(findPlayerIndex(listPlayerDiffusionTree));
 	    updateSelectedTab("full");
 	    windowConfigurationPlayerInfos.pack();
-	    animationFrame.getPanelTournamentTree().setPlayer(numeroPlayer, playerfordifusion2);
+	    animationPanel.getPanelTournamentTree().setPlayer(numeroPlayer, playerfordifusion2);
 	}
 
 	private void createNewFullWindowConfig(PlayerForDiffusion[] tableauPlayerDiffusionTree, ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {

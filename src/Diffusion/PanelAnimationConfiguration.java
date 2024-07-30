@@ -276,27 +276,34 @@ public class PanelAnimationConfiguration extends JPanel {
 	}
 	
 	public void animateLABEL(JPanel panel, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, Integer layer, JLayeredPane layeredPane, Runnable onComplete) {
-    	System.out.println("Animation LABEL");
-    	JLabel startLabel = (JLabel) panel.getComponents()[0];
-        JLabel animatedLabel = new JLabel();
-        if (startLabel.getIcon() != null && startLabel.getText() == null) {
-        	animatedLabel = new JLabel(startLabel.getIcon());
-        }else
-        	animatedLabel = new JLabel(startLabel.getText());
-        animatedLabel.setFont(targetFont);
-        setupAnimatedLabel(animatedLabel, startLabel, panel, layeredPane, layer);
-        animateLabel(animatedLabel, targetLocation, targetSize, targetColor, targetFont, getLabelAnimationDuration(), layeredPane, layer, onComplete);
+		if(!isLabelAnimationEnabled()) {
+			if(onComplete != null)
+				onComplete.run();
+		}else {
+	    	System.out.println("Animation LABEL");
+	    	JLabel startLabel = (JLabel) panel.getComponents()[0];
+	        JLabel animatedLabel = new JLabel();
+	        if (startLabel.getIcon() != null && startLabel.getText() == null) {
+	        	animatedLabel = new JLabel(startLabel.getIcon());
+	        }else
+	        	animatedLabel = new JLabel(startLabel.getText());
+	        animatedLabel.setFont(targetFont);
+	        setupAnimatedLabel(animatedLabel, startLabel, panel, layeredPane, layer);
+	        animateLabel(animatedLabel, targetLocation, targetSize, targetColor, targetFont, getLabelAnimationDuration(), layeredPane, layer, onComplete);
+		}
     }
     public void animateImage(JPanel imagePanel, JLabel imageLabel, Point targetLocation, Dimension targetSize, Integer layer, JLayeredPane layeredPane, Runnable onComplete) {
-    	System.out.println("Animation IMAGE");
-    	JLabel startLabel = imageLabel;
-        JLabel animatedLabel = imageLabel;
-        Font targetFont = new Font("Arial", 1, 25);
-        Color targetColor = Color.BLACK;
-        animatedLabel.setName("image");
-        animatedLabel.setSize(targetSize);
-        setupAnimatedLabel(animatedLabel, startLabel, imagePanel, layeredPane, layer);
-        animateLabel(animatedLabel, targetLocation, targetSize, targetColor, targetFont, getLabelAnimationDuration(), layeredPane, layer, onComplete);
+    	if(isLabelAnimationEnabled()) {
+			System.out.println("Animation IMAGE");
+	    	JLabel startLabel = imageLabel;
+	        JLabel animatedLabel = imageLabel;
+	        Font targetFont = new Font("Arial", 1, 25);
+	        Color targetColor = Color.BLACK;
+	        animatedLabel.setName("image");
+	        animatedLabel.setSize(targetSize);
+	        setupAnimatedLabel(animatedLabel, startLabel, imagePanel, layeredPane, layer);
+	        animateLabel(animatedLabel, targetLocation, targetSize, targetColor, targetFont, getLabelAnimationDuration(), layeredPane, layer, onComplete);
+		}
     }
 
     public void zoomPanel(JPanel panel, WindowBroadcastPublic frame, Runnable onComplete) {
@@ -308,30 +315,37 @@ public class PanelAnimationConfiguration extends JPanel {
         Point initialLocation = panel.getLocation();
         
         int duration = getZoomAnimationDuration();
+		if (!isZoomAnimationEnabled()) {
+			panel.setBounds(0, 0, targetWidth, targetHeight);
+			panel.revalidate();
+			panel.repaint();
+			if(onComplete != null)
+				onComplete.run();	
+		} else {
+			Timer timer = createTimer(true, duration, (progress) -> {
+				int newWidth = (int) (initialWidth + progress * (targetWidth - initialWidth));
+				int newHeight = (int) (initialHeight + progress * (targetHeight - initialHeight));
 
-        Timer timer = createTimer(true,duration, (progress) -> {
-            int newWidth = (int) (initialWidth + progress * (targetWidth - initialWidth));
-            int newHeight = (int) (initialHeight + progress * (targetHeight - initialHeight));
-            
-            // Calcul de la nouvelle position pour garder le panel centré
-            int newX = initialLocation.x + (initialWidth - newWidth) / 2;
-            int newY = initialLocation.y + (initialHeight - newHeight) / 2;
+				// Calcul de la nouvelle position pour garder le panel centré
+				int newX = initialLocation.x + (initialWidth - newWidth) / 2;
+				int newY = initialLocation.y + (initialHeight - newHeight) / 2;
 
-            panel.setBounds(newX, newY, newWidth, newHeight);
-            
-            if (panel instanceof ZoomablePanel) {
-                ((ZoomablePanel) panel).setScale(progress);
-            }
-            
-            panel.revalidate();
-            panel.repaint();
+				panel.setBounds(newX, newY, newWidth, newHeight);
 
-            if (progress >= 1.0 && onComplete != null) {
-                onComplete.run();
-            }
-        });
-        
-        timer.start();
+				if (panel instanceof ZoomablePanel) {
+					((ZoomablePanel) panel).setScale(progress);
+				}
+
+				panel.revalidate();
+				panel.repaint();
+
+				if (progress >= 1.0 && onComplete != null) {
+					onComplete.run();
+				}
+			});
+
+			timer.start();
+		}
     }
 
 

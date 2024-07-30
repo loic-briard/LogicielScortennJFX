@@ -65,6 +65,8 @@ public class WindowBroadcastPublic extends JFrame {
 		Image scaledImageBackground = imageBackground.getImage().getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_SMOOTH);
 		System.out.println("> switch background to : "+imagePath);
 		backgroundLabel.setIcon(new ImageIcon(scaledImageBackground));
+		layeredPane.revalidate();
+        layeredPane.repaint();		
     }
 
     public void setBackgroundImageLayered(String imagePath, Integer layer) {
@@ -86,6 +88,7 @@ public class WindowBroadcastPublic extends JFrame {
         for (Component component : layeredPane.getComponentsInLayer(layer)) {
             layeredPane.remove(component);
         }
+        layeredPane.revalidate();
         layeredPane.repaint();
     }
 
