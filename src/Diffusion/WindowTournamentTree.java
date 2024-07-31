@@ -49,9 +49,9 @@ public class WindowTournamentTree extends JFrame {
         this.tabPlayerForTree = new PlayerForDiffusion[nbJoueur];
         this.playerPanel = new JPanel[4];
         
-        this.panelAnimationConfiguration = new PanelAnimationConfiguration(this);
 
         setupFrame();
+        this.panelAnimationConfiguration = new PanelAnimationConfiguration(this);
         setupPanels();
         setupBottomPanel();
         finalizeSetup();
@@ -84,6 +84,8 @@ public class WindowTournamentTree extends JFrame {
 //                windowBroadcastPublic.getAnimationFrame().dispose();
             }
         });
+
+        ConfigurationSaveLoad.initJson(nbJoueur, this.eventName());
     }
 
     private void setupPanels() {
@@ -211,7 +213,6 @@ public class WindowTournamentTree extends JFrame {
     private void finalizeSetup() {
         pack();
         setVisible(true);
-        ConfigurationSaveLoad.initJson(nbJoueur, this.eventName());
     }
 
 	private void handlePlayerSelection(JComboBox<String> comboBox, int playerIndex, int panelIndex) {
@@ -366,8 +367,7 @@ public class WindowTournamentTree extends JFrame {
 			for (PlayerForDiffusion playerForDiffusion : ListSelectedJoueur) {
 				this.windowBroadcastPublic.addContent(JLayeredPane.MODAL_LAYER, playerForDiffusion);
 				playerForDiffusion.setPlacementFrameTwoPlayer(windowConfigPlayer);
-				TabConfigurationPlayerInfos tabPool = new TabConfigurationPlayerInfos(playerForDiffusion,
-						playerForDiffusion.getJoueur(), windowBroadcastPublic, windowConfigPlayer);
+				TabConfigurationPlayerInfos tabPool = new TabConfigurationPlayerInfos(playerForDiffusion, playerForDiffusion.getJoueur(), windowBroadcastPublic, windowConfigPlayer);
 				windowConfigPlayer.addTabJoueur(tabPool);
 				System.out.println("    TAB player to display  : " + playerForDiffusion.getJoueur().getNom());
 			}

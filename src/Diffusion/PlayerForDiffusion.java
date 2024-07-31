@@ -406,9 +406,10 @@ public class PlayerForDiffusion extends JPanel{
 
 	        ElementPoliceJoueur elementPolice = configData.getElementPolice(emplacementPlayer, nomEvent, typeFen, elementName, index);
 	        panel.setVisible(elementPolice.isVisible());
-	        if (elementPolice.isVisible()) {
-	            updateElement(configData, emplacementPlayer, index, elementName, panel, police, elementPolice);
-	        }
+//	        if (elementPolice.isVisible()) {
+//	            updateElement(configData, emplacementPlayer, index, elementName, panel, police, elementPolice);
+//	        }
+	        updateElement(configData, emplacementPlayer, index, elementName, panel, police, elementPolice);
 	    }
 
 	    updateImageElement(configData, emplacementPlayer, index, "ImgJoueur", playerImg);
@@ -430,7 +431,7 @@ public class PlayerForDiffusion extends JPanel{
 	private void updateImageElement(ConfigurationSaveLoad configData, String emplacementPlayer, int index, String elementName, JPanel panel) {
 	    ElementPoliceJoueur elementPolice = configData.getElementPolice(emplacementPlayer, nomEvent, typeFen, elementName, index);
 	    panel.setVisible(elementPolice.isVisible());
-	    if (elementPolice.isVisible()) {
+//	    if (elementPolice.isVisible()) {
 	        ElementJoueur element = configData.getElement(emplacementPlayer, nomEvent, typeFen, elementName, index);
 	        if (element != null) {
 	            panel.setLocation(element.getPositionX(), element.getPositionY());
@@ -440,7 +441,7 @@ public class PlayerForDiffusion extends JPanel{
 	                tailleImgFlag = elementPolice.getTaille();
 	            }
 	        }
-	    }
+//	    }
 	}
 
 	class MouseAdapterPanel extends MouseAdapter {

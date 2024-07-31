@@ -99,7 +99,7 @@ public class newPlayerFrame extends JFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-
+					selectedPLayerComboBox.removeAllItems();
 					// Ajoutez les éléments de la liste aux JComboBox
 					for (Joueur joueur : selectedJoueurs) {
 						selectedPLayerComboBox.addItem(joueur.getDisplay_name());
@@ -181,7 +181,6 @@ public class newPlayerFrame extends JFrame {
 		addComponent(contentPane, " ", new JLabel("Choose a list of players"), gbc, 2, row2);
 		addComponent(contentPane, " ", bddPLayersComboBox, gbc, 2, ++row2);
 		addComponent(contentPane, " ", new JLabel("Search a player"), gbc, 2, ++row2);
-		
 		addComponent(contentPane, " ", selectedPLayerComboBox, gbc, 2, ++row2);
 		JButton b_recupInfoPlayer = new JButton("<- add info");
 		addComponent(contentPane, " ", b_recupInfoPlayer, gbc, 2, ++row2);

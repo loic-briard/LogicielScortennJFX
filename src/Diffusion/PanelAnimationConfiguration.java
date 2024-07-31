@@ -31,9 +31,9 @@ public class PanelAnimationConfiguration extends JPanel {
     private JCheckBox animationTreeCheckBox;
     private JSpinner animationTimeTreeSpinner;
     private JSpinner clignotementNumberTreeSpinner;
-    private Color treeColor;
+    private Color treeColor = Color.BLACK;
     private JButton treeColorButton;
-    private Color pathTreeColor;
+    private Color pathTreeColor = Color.RED;
     private JButton pathTreeColorButton;
     private PanelTournamentTree tournamentTree;
     private WindowTournamentTree windowTournamentTree;

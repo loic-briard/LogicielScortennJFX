@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -786,6 +787,7 @@ public class ConfigurationSaveLoad {
 			ArrayList<String> listFileName = new ArrayList<String>();
 			listFileName.add("player.json");
 			listFileName.add("game.json");
+			listFileName.add("animation.json");
 			Path targetPath = Paths.get("config" + File.separator + nomEvent);
 			// Créer le dossier destination s'il n'existe pas
 			if (!Files.exists(targetPath)) {
@@ -813,7 +815,6 @@ public class ConfigurationSaveLoad {
 
 	private static ElementJoueurFull createDefaultElementJoueurFull(int nbJoueur) {
 		ElementJoueurFull defaultData = new ElementJoueurFull();
-
 		// Initialiser les joueurs (par exemple, 2 joueurs)
 		for (int i = 0; i < nbJoueur; i++) {
 			Map<String, Map<String, ElementJoueur>> playerMap = new HashMap<>();
@@ -823,10 +824,15 @@ public class ConfigurationSaveLoad {
 					"Name", "Acronyme", "CityResidence", "Line", "Height", "ImgFlag", "Surname", "Age" };
 			int j = 0;
 			for (String elementName : elementNames) {
-
+				int posY = 100+i*100;
+				if(i >= nbJoueur/2)
+					posY = (i-nbJoueur/2)*100;
+				int posX = j*20;
+				if(i >= nbJoueur/2)
+					posX =j*20+1500;
 				ElementJoueur element = new ElementJoueur();
-				element.setPositionX(0 + (j * 100));
-				element.setPositionY(0);
+				element.setPositionX(posX);
+				element.setPositionY(posY);
 				elements.put(elementName, element);
 				j++;
 
@@ -854,7 +860,6 @@ public class ConfigurationSaveLoad {
 		}
 
 		defaultData.getPlayerPolice().putAll(playerPolice);
-		;
 
 		return defaultData;
 	}
@@ -963,4 +968,20 @@ public class ConfigurationSaveLoad {
 			e.printStackTrace();
 		}
 	}
+	public static void deleteFolder(Path path) throws IOException {
+        Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                Files.delete(dir);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
 }

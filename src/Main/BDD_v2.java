@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -27,6 +29,7 @@ import Background.Background;
 import Event.Evenement;
 import Flags.Drapeau;
 import Players.Joueur;
+import Sauvegarde.ConfigurationSaveLoad;
 
 public class BDD_v2 {
 	static String url = "jdbc:hsqldb:file:database" + File.separator + "Tennis_BDD_v2;shutdown=true";
@@ -793,7 +796,7 @@ public class BDD_v2 {
 		}
 	}
 
-	public static void deleteEvent(String eventName) throws SQLException {
+	public static void deleteEvent(String eventName) throws SQLException, IOException {
 		int choice = JOptionPane.showConfirmDialog(null, "Do you really want to delete this event?", "Event delete", JOptionPane.YES_NO_OPTION);
 		if (choice == JOptionPane.YES_OPTION) {
 			String deleteQuery = "DELETE FROM event WHERE Nom = ?";
@@ -802,6 +805,8 @@ public class BDD_v2 {
 				updateStatement.executeUpdate();
 			}
 			System.out.println("  - event " + eventName + " has been deleted");
+			Path targetPath = Paths.get("config" + File.separator + eventName);
+			ConfigurationSaveLoad.deleteFolder(targetPath);
 		} else {
 			System.out.println("  ! event hasn't been deleted");
 		}

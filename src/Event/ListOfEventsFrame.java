@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.sql.SQLException;
 import javax.swing.*;
 import javax.swing.table.*;
@@ -139,7 +140,7 @@ public class ListOfEventsFrame extends JFrame {
 					try {
 						BDD_v2.deleteEvent(eventName);
 						refreshData();
-					} catch (SQLException e1) {
+					} catch (SQLException | IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}//a modifier pour event
