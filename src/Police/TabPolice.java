@@ -270,6 +270,10 @@ public class TabPolice extends JPanel {
 		addComponent(panelTab, gbc, checkboxAcro, 1, choixColonne);
 		addComponent(panelTab, gbc, buttonFontAcro, 2, choixColonne);
 		choixColonne++;
+		addComponent(panelTab, gbc, new JLabel("Line :"), 0, choixColonne);
+		addComponent(panelTab, gbc, checkboxLine, 1, choixColonne);
+		addComponent(panelTab, gbc, buttonFontLine, 2, choixColonne);
+		choixColonne++;
 		addComponent(panelTab, gbc, new JLabel("Rank :"), 0, choixColonne);
 		addComponent(panelTab, gbc, checkboxRank, 1, choixColonne);
 		addComponent(panelTab, gbc, buttonFontRank, 2, choixColonne);
@@ -306,10 +310,7 @@ public class TabPolice extends JPanel {
 		addComponent(panelTab, gbc, checkboxCityresidence, 1, choixColonne);
 		addComponent(panelTab, gbc, buttonFontCityresidence, 2, choixColonne);
 		choixColonne++;
-		addComponent(panelTab, gbc, new JLabel("Line :"), 0, choixColonne);
-		addComponent(panelTab, gbc, checkboxLine, 1, choixColonne);
-		addComponent(panelTab, gbc, buttonFontLine, 2, choixColonne);
-		choixColonne++;
+		
 		this.setLayout(new BorderLayout());
 		this.add(panelTab, BorderLayout.NORTH);// ,BorderLayout.NORTH);
 //		this.add(validationButtonAll, BorderLayout.SOUTH);

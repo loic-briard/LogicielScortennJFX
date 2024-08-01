@@ -73,12 +73,12 @@ public class WindowConfigurationPlayerInfos extends JFrame {
 	}
 	
 	public void addTabJoueur(TabConfigurationPlayerInfos tabInfos) {
-		this.tabbedPane.addTab(tabInfos.getJoueurName(), tabInfos);
+		this.tabbedPane.addTab(tabInfos.getEnteteTab(), tabInfos);
 		this.tabbedPane.revalidate();
 		this.tabbedPane.repaint();
 	}
 	public void insertTabJoueur(TabConfigurationPlayerInfos tabInfos, int indexTab) {
-		this.tabbedPane.insertTab(tabInfos.getJoueurName(), null, tabInfos, null, indexTab);
+		this.tabbedPane.insertTab(tabInfos.getEnteteTab(), null, tabInfos, null, indexTab);
 		this.tabbedPane.revalidate();
 		this.tabbedPane.repaint();
 	}

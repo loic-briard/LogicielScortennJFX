@@ -17,6 +17,7 @@ public class TabConfigurationPlayerInfos extends JPanel {
     private Joueur joueur;
     private PlayerForDiffusion infosPlayerDetails;
     private WindowConfigurationPlayerInfos placementFrame;
+    private String[] elements = {"name", "Surname", "Img", "Flag", "Acro", "Line", "Rank", "BirthDate", "BirthPlace", "Height", "Weight", "Hand", "Age", "Prizetotal", "Cityresidence"};
 
     public TabConfigurationPlayerInfos(PlayerForDiffusion infosPlayerDetail, Joueur joueur, WindowBroadcastPublic displayFrame, WindowConfigurationPlayerInfos placementFrame) {
         this.displayFrame = displayFrame;
@@ -30,7 +31,6 @@ public class TabConfigurationPlayerInfos extends JPanel {
     }
 
     private void initializeSpinners() {
-        String[] elements = {"name", "Surname", "Img", "Flag", "Acro", "Rank", "BirthDate", "BirthPlace", "Height", "Weight", "Hand", "Age", "Prizetotal", "Cityresidence", "Line"};
         for (String element : elements) {
             spinners.put(element + "X", createSpinner());
             spinners.put(element + "Y", createSpinner());
@@ -53,15 +53,11 @@ public class TabConfigurationPlayerInfos extends JPanel {
         addComponent(panelTab, gbc, new JLabel("Y"), 2, 0);
 
         int row = 1;
-        for (Map.Entry<String, JSpinner> entry : spinners.entrySet()) {
-            String key = entry.getKey();
-            if (key.endsWith("X")) {
-                String element = key.substring(0, key.length() - 1);
-                addComponent(panelTab, gbc, new JLabel(element + " :"), 0, row);
-                addComponent(panelTab, gbc, spinners.get(element + "X"), 1, row);
-                addComponent(panelTab, gbc, spinners.get(element + "Y"), 2, row);
-                row++;
-            }
+        for (String element : elements) {
+            addComponent(panelTab, gbc, new JLabel(element + " :"), 0, row);
+            addComponent(panelTab, gbc, spinners.get(element + "X"), 1, row);
+            addComponent(panelTab, gbc, spinners.get(element + "Y"), 2, row);
+            row++;
         }
 
         add(panelTab, BorderLayout.NORTH);
@@ -198,6 +194,7 @@ public class TabConfigurationPlayerInfos extends JPanel {
             case "Img": return infosPlayerDetails.playerImg;
             case "Flag": return infosPlayerDetails.playerFlag;
             case "Acro": return infosPlayerDetails.playerAcro;
+            case "Line": return infosPlayerDetails.playerLine;
             case "Rank": return infosPlayerDetails.playerRank;
             case "BirthDate": return infosPlayerDetails.playerBirthdate;
             case "BirthPlace": return infosPlayerDetails.playerBirthplace;
@@ -207,15 +204,12 @@ public class TabConfigurationPlayerInfos extends JPanel {
             case "Age": return infosPlayerDetails.playerAge;
             case "Prizetotal": return infosPlayerDetails.playerPrizetotal;
             case "Cityresidence": return infosPlayerDetails.playerCityresidence;
-            case "Line": return infosPlayerDetails.playerLine;
             default: return null;
         }
     }
-
-    public String getJoueurName() {
-        return joueur.getDisplay_name();
+    public String getEnteteTab() {
+    	return (infosPlayerDetails.getNumeroPlayer()+1)+", "+joueur.getDisplay_name();
     }
-
     public PlayerForDiffusion getInfosPlayerDetails() {
         return infosPlayerDetails;
     }

@@ -286,6 +286,7 @@ public class PlayerForDiffusion extends JPanel{
 	            panelPlayerGlobal.setLocation(0, 0);
 	            break;
 	        case "player":
+	        	
 	        	animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, this::animatePlayerElements);
 	            break;
 	        default:
@@ -300,24 +301,11 @@ public class PlayerForDiffusion extends JPanel{
 				for (Component endComponent : endPlayer.getPanelGlobal().getComponents()) {
 					if (endComponent.isVisible()) {
 						Point endPoint = endComponent.getLocation();
-						if (endComponent.getName().equals("ImgFlag") || endComponent.getName().equals("ImgJoueur")) {
-							animateImageElement((JPanel) endComponent, endPoint);
-						} else {
-							animateTextElement(endComponent, endPoint);
-						}
+						animateTextElement(endComponent, endPoint);
 					}
 				}
 			}
 		});
-	}
-
-	private void animateImageElement(JPanel endPanel, Point endPoint) {
-	    JPanel imagePanel = endPanel.getName().equals("ImgFlag") ? playerFlag : playerImg;
-	    Dimension endDimension = endPanel.getComponents()[0].getPreferredSize();
-	    JLabel imageLabel = endPanel.getName().equals("ImgFlag") ? new ImageUtility(FlagLabel.getImagePath(),(int) endDimension.getHeight()) : new ImageUtility(ImgLabel.getImagePath(), (int)endDimension.getHeight());
-//	    JLabel imageLabel = endPanel.getName().equals("ImgFlag") ? FlagLabel : ImgLabel;
-	    animationPanel.animateImage(imagePanel, imageLabel, endPoint, endDimension,
-	            JLayeredPane.POPUP_LAYER, this.frameForDiffusion.getLayeredPane(),null);
 	}
 
 	private void animateTextElement(Component endComponent, Point endPoint) {
@@ -328,6 +316,8 @@ public class PlayerForDiffusion extends JPanel{
 	            Font endFont = endPanel.getComponents()[0].getFont();
 	            Color endColor = endPanel.getComponents()[0].getForeground();
 	            Dimension endDimension = endPanel.getPreferredSize();
+	            
+	            
 	            animationPanel.animateLABEL(startPanel, endPoint, endDimension, endColor, endFont, JLayeredPane.POPUP_LAYER,this.frameForDiffusion.getLayeredPane(),
 	                    () -> displayPlayerFullAndTournamentTreeAnimation()
 	                    );

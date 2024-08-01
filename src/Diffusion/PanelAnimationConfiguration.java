@@ -5,6 +5,7 @@ import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import Main.ImageUtility;
 import Sauvegarde.ConfigurationSaveLoad;
 
 import java.awt.*;
@@ -274,38 +275,62 @@ public class PanelAnimationConfiguration extends JPanel {
 		this.pathTreeColor = pathTreeColor;
 		tournamentTree.setSelectedpathColor(this.pathTreeColor);
 	}
-	
 	public void animateLABEL(JPanel panel, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, Integer layer, JLayeredPane layeredPane, Runnable onComplete) {
-		if(!isLabelAnimationEnabled()) {
-			if(onComplete != null)
-				onComplete.run();
-		}else {
-	    	System.out.println("Animation LABEL");
-	    	JLabel startLabel = (JLabel) panel.getComponents()[0];
+	    if(!isLabelAnimationEnabled()) {
+	        if(onComplete != null)
+	            onComplete.run();
+	    } else {
+	        System.out.println("Animation LABEL");
+	        JLabel startLabel = (JLabel) panel.getComponents()[0];
 	        JLabel animatedLabel = new JLabel();
-	        if (startLabel.getIcon() != null && startLabel.getText() == null) {
-	        	animatedLabel = new JLabel(startLabel.getIcon());
-	        }else
-	        	animatedLabel = new JLabel(startLabel.getText());
-	        animatedLabel.setFont(targetFont);
+			if (panel.getName().equals("ImgFlag") || panel.getName().equals("ImgJoueur")) {
+				System.out.println("Animation IMAGE");
+				ImageUtility imageLabel = (ImageUtility) panel.getComponents()[0];
+				animatedLabel = new ImageUtility(imageLabel.getImagePath(),(int) targetSize.getHeight());
+				targetFont = new Font("Arial", 1, 25);
+				targetColor = Color.BLACK;
+				animatedLabel.setName("image");
+				animatedLabel.setSize(targetSize);
+			}else {
+				animatedLabel = new JLabel(startLabel.getText());
+				animatedLabel.setFont(targetFont);
+			}
+	        
 	        setupAnimatedLabel(animatedLabel, startLabel, panel, layeredPane, layer);
 	        animateLabel(animatedLabel, targetLocation, targetSize, targetColor, targetFont, getLabelAnimationDuration(), layeredPane, layer, onComplete);
-		}
-    }
-    public void animateImage(JPanel imagePanel, JLabel imageLabel, Point targetLocation, Dimension targetSize, Integer layer, JLayeredPane layeredPane, Runnable onComplete) {
-    	if(isLabelAnimationEnabled()) {
-			System.out.println("Animation IMAGE");
-	    	JLabel startLabel = imageLabel;
-	        JLabel animatedLabel = imageLabel;
-	        Font targetFont = new Font("Arial", 1, 25);
-	        Color targetColor = Color.BLACK;
-	        animatedLabel.setName("image");
-	        animatedLabel.setSize(targetSize);
-	        setupAnimatedLabel(animatedLabel, startLabel, imagePanel, layeredPane, layer);
-	        animateLabel(animatedLabel, targetLocation, targetSize, targetColor, targetFont, getLabelAnimationDuration(), layeredPane, layer, onComplete);
-		}
-    }
+	    }
+	}
 
+	private void animateLabel(JLabel label, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, int duration, JLayeredPane layeredPane, Integer layer, Runnable onComplete) {
+	    currentAnimationTimer = createTimer(false, duration, (progress) -> {
+	        boolean targetReached = updateLabelProperties(label, targetLocation, targetSize, targetColor, targetFont, progress);
+	        if (progress >= 1.0 || targetReached) {
+	            currentAnimationTimer.stop();
+	            if (onComplete != null) {
+	                onComplete.run();
+	            }
+	            cleanupAnimation(layeredPane, layer);
+	        }
+	    });
+	    currentAnimationTimer.start();
+	}
+
+	private boolean updateLabelProperties(JLabel label, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, double progress) {
+	    Point startLocation = label.getLocation();
+	    Color startColor = label.getForeground();
+	    
+	    Point newLocation = interpolatePoint(startLocation, targetLocation, progress);
+	    label.setLocation(newLocation);
+	    label.setForeground(interpolateColor(startColor, targetColor, progress));
+	    if (label.getName() != ("image")) 
+	        label.setSize(label.getPreferredSize());
+
+	    label.revalidate();
+	    label.repaint();
+
+	    // Vérifier si la position actuelle est égale à la position cible
+	    return newLocation.equals(targetLocation);
+	}
     public void zoomPanel(JPanel panel, WindowBroadcastPublic frame, Runnable onComplete) {
         System.out.println("Animation ZOOM");
         int initialWidth = panel.getWidth();
@@ -315,53 +340,67 @@ public class PanelAnimationConfiguration extends JPanel {
         Point initialLocation = panel.getLocation();
         
         int duration = getZoomAnimationDuration();
-		if (!isZoomAnimationEnabled()) {
-			panel.setBounds(0, 0, targetWidth, targetHeight);
-			panel.revalidate();
-			panel.repaint();
-			if(onComplete != null)
-				onComplete.run();	
-		} else {
-			Timer timer = createTimer(true, duration, (progress) -> {
-				int newWidth = (int) (initialWidth + progress * (targetWidth - initialWidth));
-				int newHeight = (int) (initialHeight + progress * (targetHeight - initialHeight));
+        if (!isZoomAnimationEnabled()) {
+            panel.setBounds(0, 0, targetWidth, targetHeight);
+            panel.revalidate();
+            panel.repaint();
+            if(onComplete != null)
+                onComplete.run();   
+        } else {
+            final long startTime = System.currentTimeMillis();
+            final int widthDiff = targetWidth - initialWidth;
+            final int heightDiff = targetHeight - initialHeight;
 
-				// Calcul de la nouvelle position pour garder le panel centré
-				int newX = initialLocation.x + (initialWidth - newWidth) / 2;
-				int newY = initialLocation.y + (initialHeight - newHeight) / 2;
+            Timer timer = new Timer(5, null); // Réduire le délai à 5ms pour plus de fluidité
+            timer.addActionListener(e -> {
+                long elapsedTime = System.currentTimeMillis() - startTime;
+                double progress = Math.min((double) elapsedTime / duration, 1.0);
+                double easedProgress = easeInOutCubic(progress);
 
-				panel.setBounds(newX, newY, newWidth, newHeight);
+                int newWidth = (int) (initialWidth + easedProgress * widthDiff);
+                int newHeight = (int) (initialHeight + easedProgress * heightDiff);
 
-				if (panel instanceof ZoomablePanel) {
-					((ZoomablePanel) panel).setScale(progress);
-				}
+                // Calcul de la nouvelle position pour garder le panel centré
+                int newX = initialLocation.x + (initialWidth - newWidth) / 2;
+                int newY = initialLocation.y + (initialHeight - newHeight) / 2;
 
-				panel.revalidate();
-				panel.repaint();
+                SwingUtilities.invokeLater(() -> {
+                    panel.setBounds(newX, newY, newWidth, newHeight);
 
-				if (progress >= 1.0 && onComplete != null) {
-					onComplete.run();
-				}
-			});
+                    if (panel instanceof ZoomablePanel) {
+                        ((ZoomablePanel) panel).setScale(easedProgress);
+                    }
 
-			timer.start();
-		}
-    }
+                    panel.revalidate();
+                    panel.repaint();
+                });
 
-
-    private void animateLabel(JLabel label, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, int duration, JLayeredPane layeredPane, Integer layer, Runnable onComplete) {
-    	currentAnimationTimer  = createTimer(false, duration, (progress) -> {
-            boolean targetReached = updateLabelProperties(label, targetLocation, targetSize, targetColor, targetFont, progress);
-            if (progress >= 1.0 || targetReached) {
-            	currentAnimationTimer.stop();
-                if (onComplete != null) {
-                    onComplete.run();
+                if (progress >= 1.0) {
+                    timer.stop();
+                    if (onComplete != null) {
+                        SwingUtilities.invokeLater(onComplete);
+                    }
                 }
-                cleanupAnimation(layeredPane, layer);
-            }
-        });
-    	currentAnimationTimer.start();
+            });
+
+            timer.start();
+        }
     }
+
+
+//    private void animateLabel(JLabel label, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, int duration, JLayeredPane layeredPane, Integer layer, Runnable onComplete) {
+//    	currentAnimationTimer  = createTimer(false, duration, (progress) -> {
+//            boolean targetReached = updateLabelProperties(label, targetLocation, targetSize, targetColor, targetFont, progress);
+//            if (progress >= 1.0 || targetReached) {
+//            	currentAnimationTimer.stop();
+//                if (onComplete != null) {
+//                    onComplete.run();
+//                }
+//                cleanupAnimation(layeredPane, layer);
+//            }
+//        });
+//    	currentAnimationTimer.start();
+//    }
     private Point interpolatePoint(Point start, Point end, double progress) {
         int newX = (int) (start.x + progress * (end.x - start.x));
         int newY = (int) (start.y + progress * (end.y - start.y));
@@ -392,24 +431,6 @@ public class PanelAnimationConfiguration extends JPanel {
     
     private interface ProgressCallback {
         void onProgress(double progress);
-    }
-
-    private boolean updateLabelProperties(JLabel label, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, double progress) {
-        Point startLocation = label.getLocation();
-        Color startColor = label.getForeground();
-        
-        label.setLocation(interpolatePoint(startLocation, targetLocation, progress));
-        label.setForeground(interpolateColor(startColor, targetColor, progress));
-        if (label.getName() != ("image")) 
-        	label.setSize(label.getPreferredSize());
-
-        label.revalidate();
-        label.repaint();
-        // Vérifier si la position actuelle est égale à la position cible
-        if(startLocation.x == targetLocation.x && startLocation.y == targetLocation.y)
-        	return true;
-        else
-        	return false;
     }
 
     private void setupAnimatedLabel(JLabel animatedLabel, JLabel startLabel, JPanel panel, JLayeredPane layeredPane, Integer layer) {

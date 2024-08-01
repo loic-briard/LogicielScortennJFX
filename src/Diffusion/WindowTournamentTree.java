@@ -221,58 +221,55 @@ public class WindowTournamentTree extends JFrame {
 			windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_1()); // changer le fond de la
 			windowBroadcastPublic.removeLayerContent(JLayeredPane.MODAL_LAYER);// nettoyage du layer
 																							// fenetre
+			Joueur soloPlayer = foundPlayer(selectedItem);
+			ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
 			SwingUtilities.invokeLater(() -> {
-				try {
-					Joueur soloPlayer = foundPlayer(selectedItem);
 					int ligne = playerIndex + (nbJoueur / 4) * panelIndex;
 					if (soloPlayer != null) {
-						PlayerForDiffusion playerDetailsForTree = new PlayerForDiffusion(this.eventName(),
-								windowBroadcastPublic, panelAnimationConfiguration, "full", ligne);
+						//create player for tournament tree
+						PlayerForDiffusion playerDetailsForTree = new PlayerForDiffusion(this.eventName(),windowBroadcastPublic, panelAnimationConfiguration, "full", ligne);
 						if (tabPlayerForTree[ligne] != null) {
 							tabPlayerForTree[ligne].removeAll();
 						}
 						tabPlayerForTree[ligne] = playerDetailsForTree;
 						tabPlayerForTree[ligne].setPlacementFrameTwoPlayer(windowConfigPlayerFull);
-						tabPlayerForTree[ligne].setPlayer(soloPlayer, ligne + 1);
+						try {
+							tabPlayerForTree[ligne].setPlayer(soloPlayer, ligne + 1);
+						} catch (ClassNotFoundException | SQLException e) {
+							e.printStackTrace();
+						}
 						tabPlayerForTree[ligne].setVisible(false);
-						// ajouter a fenetre full si elle existe et si type joueur = full
+						this.windowBroadcastPublic.addContent(JLayeredPane.PALETTE_LAYER, tabPlayerForTree[ligne]);
+						// add this player to window config full if it exists
 						if (windowConfigPlayerFull != null)
 							tabPlayerForTree[ligne].handleFullCase();
 
-						// initialisation et affichage de player solo
-//        			PlayerForDiffusion soloPlayerDetails = new PlayerForDiffusion(this.eventName(), windowBroadcastPublic, "player",ligne);
-//        			soloPlayerDetails.setPlayer(soloPlayer, ligne+1);
+						// initialisation and display of player solo
 						playerForDifusionSolo.setNumeroPlayer(ligne);
-						playerForDifusionSolo.setPlayer(soloPlayer, ligne + 1);
-						ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
-						ListSelectedJoueur.add(playerForDifusionSolo);
-
-						if (windowConfigPlayer == null || !windowConfigPlayer.isDisplayable()
-								|| windowConfigPlayer.getTypeFenetre() == "full") {
-							windowConfigPlayer = new WindowConfigurationPlayerInfos(windowBroadcastPublic, "player");
-						} else {
-							windowConfigPlayer.tabbedPane.removeAll();
-							windowConfigPlayer.tabbedPane.revalidate();
-							windowConfigPlayer.tabbedPane.repaint();
-							windowConfigPlayer.setTypeFenetre("player");
+						try {
+							playerForDifusionSolo.setPlayer(soloPlayer, ligne + 1);
+						} catch (ClassNotFoundException | SQLException e) {
+							e.printStackTrace();
 						}
-						this.windowBroadcastPublic.addContent(JLayeredPane.PALETTE_LAYER, tabPlayerForTree[ligne]);
-						playerForDifusionSolo.setPlacementFrameTwoPlayer(windowConfigPlayer);
 						this.windowBroadcastPublic.addContent(JLayeredPane.MODAL_LAYER, playerForDifusionSolo);
-						TabConfigurationPlayerInfos tabOnePlayer = new TabConfigurationPlayerInfos(
-								playerForDifusionSolo, soloPlayer, windowBroadcastPublic, windowConfigPlayer);
-						windowConfigPlayer.addTabJoueur(tabOnePlayer);
-						windowConfigPlayer.setTabPolice(new TabPolice(ListSelectedJoueur, windowConfigPlayer));
-						System.out.println("    SOLO player to dislay : " + playerForDifusionSolo.getJoueur().getNom());
 					}
-				} catch (ClassNotFoundException e1) {
-					e1.printStackTrace();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-
 			});
-//        placementFrameTwoPlayer.refreshAllTab();
+			if (windowConfigPlayer == null || !windowConfigPlayer.isDisplayable()
+					|| windowConfigPlayer.getTypeFenetre() == "full") {
+				windowConfigPlayer = new WindowConfigurationPlayerInfos(windowBroadcastPublic, "player");
+			} else {
+				windowConfigPlayer.tabbedPane.removeAll();
+				windowConfigPlayer.tabbedPane.revalidate();
+				windowConfigPlayer.tabbedPane.repaint();
+				windowConfigPlayer.setTypeFenetre("player");
+			}
+			playerForDifusionSolo.setPlacementFrameTwoPlayer(windowConfigPlayer);
+			ListSelectedJoueur.add(playerForDifusionSolo);
+			TabConfigurationPlayerInfos tabOnePlayer = new TabConfigurationPlayerInfos(playerForDifusionSolo, soloPlayer, windowBroadcastPublic, windowConfigPlayer);
+			windowConfigPlayer.addTabJoueur(tabOnePlayer);
+			windowConfigPlayer.setTabPolice(new TabPolice(ListSelectedJoueur, windowConfigPlayer));
+			System.out.println("    SOLO player to dislay : " + playerForDifusionSolo.getJoueur().getNom());
+			
 			if (windowConfigPlayer != null) {
 				windowConfigPlayer.pack();
 			}
@@ -321,11 +318,9 @@ public class WindowTournamentTree extends JFrame {
 				for (PlayerForDiffusion playerForDiffusion : ListSelectedJoueur) {
 					this.windowBroadcastPublic.addContent(JLayeredPane.MODAL_LAYER, playerForDiffusion);
 					playerForDiffusion.setPlacementFrameTwoPlayer(windowConfigPlayer);
-					TabConfigurationPlayerInfos tabPool = new TabConfigurationPlayerInfos(playerForDiffusion,
-							playerForDiffusion.getJoueur(), windowBroadcastPublic, windowConfigPlayer);
+					TabConfigurationPlayerInfos tabPool = new TabConfigurationPlayerInfos(playerForDiffusion, playerForDiffusion.getJoueur(), windowBroadcastPublic, windowConfigPlayer);
 					windowConfigPlayer.addTabJoueur(tabPool);
-					System.out.println("    GAME player to display : " + playerForDiffusion.getJoueur().getNom() + " "
-							+ playerForDiffusion.getNumeroPlayer());
+					System.out.println("    GAME player to display : " + playerForDiffusion.getJoueur().getNom() + " "+ playerForDiffusion.getNumeroPlayer());
 				}
 				windowConfigPlayer.setTabPolice(new TabPolice(ListSelectedJoueur, windowConfigPlayer));
 			} else
@@ -380,16 +375,9 @@ public class WindowTournamentTree extends JFrame {
     	windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_4());
 	    windowBroadcastPublic.removeLayerContent(JLayeredPane.MODAL_LAYER);//nettoyage du layer
 		windowBroadcastPublic.removeLayerContent(JLayeredPane.PALETTE_LAYER);//nettoyage du layer
-		if (windowConfigPlayerFull == null || !windowConfigPlayerFull.isDisplayable()) {
-			windowConfigPlayerFull = new WindowConfigurationPlayerInfos(windowBroadcastPublic, "autre");
-		} else {
-			windowConfigPlayerFull.tabbedPane.removeAll();
-			windowConfigPlayerFull.tabbedPane.revalidate();
-			windowConfigPlayerFull.tabbedPane.repaint();
-			windowConfigPlayerFull.setTypeFenetre("autre");
-		}
+		
 		indexPlayer = -1;
-		SwingUtilities.invokeLater(() -> {
+//		SwingUtilities.invokeLater(() -> {
 			int totalPlayers = nbJoueur;
 			// iteration sur les 4 partie de la fenetre tournament tree
 			System.out.println("nb panel : " + playerPanel.length + " nb player per panel " + totalPlayers / 4);
@@ -417,9 +405,9 @@ public class WindowTournamentTree extends JFrame {
 					}
 				}
 			}
-			SwingUtilities.invokeLater(() -> {
-				tabPlayerForTree[indexPlayer].handleFullCase();
-			});
+//		});
+		SwingUtilities.invokeLater(() -> {
+			tabPlayerForTree[indexPlayer].handleFullCase();
 		});
     }
 
