@@ -1,4 +1,4 @@
-package Diffusion;
+package DiffusionPlayers;
 
 /*
  * permet de placer tout les elements du joueur sur la fenetre de diffusion et de les deplacer
@@ -6,30 +6,26 @@ package Diffusion;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.event.*;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.stream.IntStream;
-
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import Diffusion.PanelAnimationConfiguration;
+import Diffusion.WindowBroadcastPublic;
+import Diffusion.WindowConfigurationPlayerInfos;
+import Event.Evenement;
 import Main.BDD_v2;
 import Main.ImageUtility;
 import Players.Joueur;
-import Police.TabPolice;
 import Police.chosenPolice;
 import Sauvegarde.ConfigurationSaveLoad;
 import Sauvegarde.ElementJoueur;
@@ -99,7 +95,12 @@ public class PlayerForDiffusion extends JPanel{
 	private ZoomablePanel panelPlayerGlobal;
 	private static final String CONFIG_DIR = "Config/";
 	private static final String JSON_EXT = ".json";
-
+	private MouseAdapterPanel mouseAdapterPanel;
+	private Evenement event;
+	
+	public MouseAdapterPanel getMouseAdapterPanel() {
+		return mouseAdapterPanel;
+	}
 	public int getNumeroPlayer() {
 		return numeroPlayer;
 	}
@@ -126,10 +127,11 @@ public class PlayerForDiffusion extends JPanel{
 		return animationPanel;
 	}
 	
-	public PlayerForDiffusion(String nomEvent, WindowBroadcastPublic diffusionFrame,PanelAnimationConfiguration panelAnimationConfig,String typeFrame, int numeroPlayer) {
+	public PlayerForDiffusion(Evenement nomEvent, WindowBroadcastPublic diffusionFrame,PanelAnimationConfiguration panelAnimationConfig,String typeFrame, int numeroPlayer) {
 		this.frameForDiffusion = diffusionFrame;
 		this.typeFen = typeFrame;
-		this.nomEvent = nomEvent;
+		this.nomEvent = nomEvent.getNom();
+		this.event = nomEvent;
 		this.numeroPlayer = numeroPlayer;
 //		this.animationFrame = frameForDiffusion.getAnimationFrame();
 		this.animationPanel = panelAnimationConfig;
@@ -138,6 +140,7 @@ public class PlayerForDiffusion extends JPanel{
 		createPlayerPanels();
 		recupInfosPlayer(getEmplacementPlayer());
 		playerfordifusion2 = this;
+		mouseAdapterPanel = new MouseAdapterPanel(playerfordifusion2, playerfordifusion2, diffusionFrame, windowConfigurationPlayerInfos);
 	}
 	
 	private void initializePolice() {
@@ -188,7 +191,8 @@ public class PlayerForDiffusion extends JPanel{
 	    JPanel panel = new JPanel();
 	    panel.setOpaque(false);
 	    panel.setName(name);
-	    MouseAdapterPanel mouseAdapter = new MouseAdapterPanel(panel);
+//	    MouseAdapterPanel mouseAdapter = new MouseAdapterPanel(panel);
+	    MouseAdapterPanel mouseAdapter = new MouseAdapterPanel(panel, playerfordifusion2, frameForDiffusion, windowConfigurationPlayerInfos);
 	    panel.addMouseListener(mouseAdapter);
 	    panel.addMouseMotionListener(mouseAdapter);
 	    return panel;
@@ -253,7 +257,7 @@ public class PlayerForDiffusion extends JPanel{
 
 	private void setupGlobalPanel() {
 	    panelPlayerGlobal = new ZoomablePanel();
-	    panelPlayerGlobal.setSize(50, 50);
+	    panelPlayerGlobal.setSize(1,1);
 	    panelPlayerGlobal.setLocation(this.frameForDiffusion.getWidth()/2-panelPlayerGlobal.getWidth()/2, 
 	                                  this.frameForDiffusion.getHeight()/2-panelPlayerGlobal.getHeight()/2);
 	    panelPlayerGlobal.setLayout(null);
@@ -280,22 +284,29 @@ public class PlayerForDiffusion extends JPanel{
 	}
 
 	private void handleWindowTypeSpecificBehavior() {
+		frameForDiffusion.removeLayerContent(55);
+    	BackgroundPanel backgroundPanel = new BackgroundPanel(event.getBackground().getImage_2());
+    	backgroundPanel.setOpaque(false);
+    	backgroundPanel.setSize(5, 5);
+    	backgroundPanel.setLocation(this.frameForDiffusion.getWidth()/2-backgroundPanel.getWidth()/2,this.frameForDiffusion.getHeight()/2-backgroundPanel.getHeight()/2);
+    	frameForDiffusion.addContent(55, backgroundPanel);
+//    	panelAnimationConfiguration.zoomPanel(backgroundPanel, this.windowBroadcastPublic, null);
 	    switch (typeFen) {
 	        case "full":
 	            panelPlayerGlobal.setSize(this.frameForDiffusion.getWidth(), this.frameForDiffusion.getHeight());
 	            panelPlayerGlobal.setLocation(0, 0);
 	            break;
 	        case "player":
-	        	
-	        	animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, this::animatePlayerElements);
+//	        	animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, this::animatePlayerElements);
+	        	animationPanel.zoomPanel2(panelPlayerGlobal, frameForDiffusion, this::animatePlayerElements);
 	            break;
 	        default:
-	        	animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, null);
+	        	animationPanel.zoomPanel2(panelPlayerGlobal, frameForDiffusion, null);
 	    }
 	}
 
 	private void animatePlayerElements() {
-		SwingUtilities.invokeLater(() -> {
+//		SwingUtilities.invokeLater(() -> {
 			PlayerForDiffusion endPlayer = this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer];
 			if (endPlayer != null) {
 				for (Component endComponent : endPlayer.getPanelGlobal().getComponents()) {
@@ -305,7 +316,7 @@ public class PlayerForDiffusion extends JPanel{
 					}
 				}
 			}
-		});
+//		});
 	}
 
 	private void animateTextElement(Component endComponent, Point endPoint) {
@@ -433,52 +444,6 @@ public class PlayerForDiffusion extends JPanel{
 	        }
 //	    }
 	}
-
-	class MouseAdapterPanel extends MouseAdapter {
-		private JPanel panel;
-		private Point prevPos;
-
-		public MouseAdapterPanel(JPanel panel) {
-			this.panel = panel;
-		}
-
-		public void mousePressed(MouseEvent e) {
-			prevPos = e.getPoint();
-			frameForDiffusion.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-		}
-
-		public void mouseDragged(MouseEvent e) {
-			int thisX = panel.getLocation().x;
-			int thisY = panel.getLocation().y;
-
-			int xMoved = thisX + (e.getX() - prevPos.x);
-			
-			int yMoved = thisY + (e.getY() - prevPos.y);
-//			System.out.println("composant : "+panel.getName()+"|"+xMoved+"|"+yMoved);
-			panel.setLocation(xMoved, yMoved);
-		}
-
-		public void mouseReleased(MouseEvent e) {
-		    String typeFen = playerfordifusion2.getTypeFen();
-		    int playerIndex = playerfordifusion2.getNumeroPlayer();
-
-		    switch (typeFen) {
-		        case "player":
-		        case "game":
-		        case "tab":
-		            handleStandardCase(typeFen, playerIndex);
-		            break;
-		        case "full":
-		            handleFullCase();
-		            break;
-		        default:
-		            throw new IllegalArgumentException("Unexpected value: " + typeFen);
-		    }
-
-//		    System.out.println("Type de fenetre du joueur créé : " + windowConfigurationPlayerInfos.getTypeFenetre());
-		}
-	}
-	
 	public class JoueurDetails {
 		public Map<JPanel, JLabel> joueurDetailsMap;
 
@@ -494,109 +459,6 @@ public class PlayerForDiffusion extends JPanel{
 			return joueurDetailsMap;
 		}
 	}
-	private void handleStandardCase(String typeFen, int playerIndex) {
-	    int tabIndex = typeFen.equals("player") ? 0 : playerIndex;
-	    windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(tabIndex);
-	    updateSelectedTab(typeFen);
-	}
-
-	//newPlayer = true quand player cliquer depuis window tournament tree
-	public void handleFullCase() {
-	    PlayerForDiffusion[] tableauPlayerDiffusionTree = frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree();
-	    ArrayList<PlayerForDiffusion> listPlayerDiffusionTree = new ArrayList<>();
-
-	    if ((windowConfigurationPlayerInfos == null || !windowConfigurationPlayerInfos.isDisplayable())) {// la fenetre full n'existe pas
-	    	System.out.println("Creation de la fenetre de config full");
-	        createNewFullWindowConfig(tableauPlayerDiffusionTree, listPlayerDiffusionTree);
-	    } else if (windowConfigurationPlayerInfos.getTypeFenetre().equals("full")) {//la fenetre existe donc mettre a jour joueur electionne si il existe pas l'inserer
-	    	System.out.println("Fen config full existe, update spinner selected joueur, si selected joueur doesn't exist l'inserer");
-	        updateExistingFullWindowConfig(listPlayerDiffusionTree);
-	    } else {// si arrive ici ca veut dire qu'il faut afficher tout les joueurs selectionne de l'arbre (btn full)
-	    	System.out.println("Creation fen configfull a partir des joueur selectione dans windows tournament tree");
-	        recreateFullWindowConfig(tableauPlayerDiffusionTree, listPlayerDiffusionTree);
-	    }
-	    
-	    windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(findPlayerIndex(listPlayerDiffusionTree));
-	    updateSelectedTab("full");
-	    windowConfigurationPlayerInfos.pack();
-	    animationPanel.getPanelTournamentTree().setPlayer(numeroPlayer, playerfordifusion2);
-	}
-
-	private void createNewFullWindowConfig(PlayerForDiffusion[] tableauPlayerDiffusionTree, ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {
-	    windowConfigurationPlayerInfos = new WindowConfigurationPlayerInfos(frameForDiffusion, "full");
-	    for (PlayerForDiffusion player : tableauPlayerDiffusionTree) {
-	        if (player != null) {
-	            addPlayerToFullConfig(player, listPlayerDiffusionTree);
-	        }
-	    }
-	    finalizeFullWindowConfig(listPlayerDiffusionTree);
-	}
-
-	private void updateExistingFullWindowConfig(ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {
-	    for (int i = 0; i < windowConfigurationPlayerInfos.tabbedPane.getTabCount() - 1; i++) {
-	        Component selectedComponent = windowConfigurationPlayerInfos.tabbedPane.getComponentAt(i);
-	        if (selectedComponent instanceof TabConfigurationPlayerInfos) {
-	            TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;
-	            listPlayerDiffusionTree.add(currentTab.getInfosPlayerDetails());
-//	            listPlayerDiffusionTree.add(playerfordifusion2);
-	        }
-	    }
-	    int playerIndex = findPlayerIndex(listPlayerDiffusionTree);
-	    if (playerIndex == -1) {
-	    	System.out.println("insertion d'un joeur");
-	    	insertPlayerToFullConfig(playerfordifusion2, listPlayerDiffusionTree);
-	    }
-	    windowConfigurationPlayerInfos.getTabPolice().setListPlayer(listPlayerDiffusionTree);
-	}
-
-	private void recreateFullWindowConfig(PlayerForDiffusion[] tableauPlayerDiffusionTree, ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {
-	    windowConfigurationPlayerInfos.tabbedPane.removeAll();
-	    windowConfigurationPlayerInfos.setTypeFenetre("full");
-	    for (PlayerForDiffusion player : tableauPlayerDiffusionTree) {
-	        if (player != null) {
-	            addPlayerToFullConfig(player, listPlayerDiffusionTree);
-	        }
-	    }
-	    finalizeFullWindowConfig(listPlayerDiffusionTree);
-	}
-
-	private void addPlayerToFullConfig(PlayerForDiffusion player, ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {
-	    listPlayerDiffusionTree.add(player);
-	    player.setPlacementFrameTwoPlayer(windowConfigurationPlayerInfos);
-	    TabConfigurationPlayerInfos tabFull = new TabConfigurationPlayerInfos(player, player.getJoueur(), frameForDiffusion, windowConfigurationPlayerInfos);
-	    windowConfigurationPlayerInfos.addTabJoueur(tabFull);
-//	    windowConfigurationPlayerInfos.insertTabJoueur(tabFull,listPlayerDiffusionTree.size());
-	    System.out.println("FULL player to display : " + player.getJoueur().getNom());
-	}
-	private void insertPlayerToFullConfig(PlayerForDiffusion player, ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {
-	    player.setPlacementFrameTwoPlayer(windowConfigurationPlayerInfos);
-	    TabConfigurationPlayerInfos tabFull = new TabConfigurationPlayerInfos(player, player.getJoueur(), frameForDiffusion, windowConfigurationPlayerInfos);
-	    windowConfigurationPlayerInfos.insertTabJoueur(tabFull,listPlayerDiffusionTree.size());
-	    listPlayerDiffusionTree.add(player);
-	    System.out.println("FULL player to display : " + player.getJoueur().getNom());
-	}
-
-	private void finalizeFullWindowConfig(ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {
-	    if (!listPlayerDiffusionTree.isEmpty()) {
-	        windowConfigurationPlayerInfos.setTabPolice(new TabPolice(listPlayerDiffusionTree, windowConfigurationPlayerInfos));
-	        windowConfigurationPlayerInfos.pack();
-	    }
-	    frameForDiffusion.getWindowTournamentTreeFromBroadcast().windowConfigPlayerFull = windowConfigurationPlayerInfos;
-	}
-
-	private void updateSelectedTab(String typeFen) {
-	    Component selectedComponent = windowConfigurationPlayerInfos.tabbedPane.getSelectedComponent();
-	    
-	    if (selectedComponent instanceof TabConfigurationPlayerInfos) {
-	        TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;
-	        System.out.println("Player dragged : " + playerfordifusion2.getJoueur().getNom() + " for window " + typeFen.toUpperCase());
-	        currentTab.refreshSpinner(playerfordifusion2);
-	    } else {
-	        System.out.println("Error: Selected component is not an instance of TabConfigurationPlayerInfos");
-	        windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(playerfordifusion2.getNumeroPlayer() + 1);
-	    }
-	}
-	
 	public void enegistrerDetailsJoueurs() {
 		mapJoueurDetails = new JoueurDetails();
 		mapJoueurDetails.addDetails(this.playerName, this.nameLabel);
@@ -620,33 +482,5 @@ public class PlayerForDiffusion extends JPanel{
 		this.windowConfigurationPlayerInfos.dispose();
 //		new Configuration().saveConfiguration(playerName.getX(), playerName.getY(), placementFrame.checkboxName.isSelected(), playerName.getFont().toString());
 	}
-	private int findPlayerIndex(ArrayList<PlayerForDiffusion> players) {
-	    return IntStream.range(0, players.size())
-	            .filter(i -> playerfordifusion2.getNumeroPlayer() == players.get(i).getNumeroPlayer())
-	            .findFirst()
-	            .orElse(-1);
-	}
 }
-class ZoomablePanel extends JPanel {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private double scale = 1.0;
 
-    public void setScale(double scale) {
-        this.scale = scale;
-    }
-
-    public void addComponent(Component comp) {
-        add(comp);
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.scale(scale, scale);
-        super.paintChildren(g2d);
-    }
-}

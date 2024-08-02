@@ -1,6 +1,8 @@
 package Diffusion;
 import javax.swing.*;
 
+import DiffusionPlayers.PlayerForDiffusion;
+
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;

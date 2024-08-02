@@ -3,6 +3,8 @@ package Diffusion;
 import java.awt.*;
 import javax.swing.*;
 
+import DiffusionPlayers.PlayerForDiffusion;
+
 import java.util.HashMap;
 import java.util.Map;
 import Main.ImageUtility;

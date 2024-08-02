@@ -6,7 +6,6 @@ package Diffusion;
  * et les actions a afficher
  */
 
-
 import Players.Joueur;
 import Police.TabPolice;
 import Sauvegarde.ConfigurationSaveLoad;
@@ -15,6 +14,10 @@ import Event.Evenement;
 import javax.swing.*;
 import javax.swing.border.Border;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
+import DiffusionPlayers.BackgroundPanel;
+import DiffusionPlayers.PlayerForDiffusion;
+
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -22,81 +25,86 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class WindowTournamentTree extends JFrame {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private final ArrayList<Joueur> selectedJoueurs;
-    private WindowBroadcastPublic windowBroadcastPublic;
-    private final Evenement event;
-    public WindowConfigurationPlayerInfos windowConfigPlayer;
-    public WindowConfigurationPlayerInfos windowConfigPlayerFull;
-    private PanelAnimationConfiguration panelAnimationConfiguration;
-    private final PlayerForDiffusion[] tabPlayerForTree;
-    private final JPanel[] playerPanel;
-    private boolean blackButtonAppuyer = false;
-    private boolean fondButtonAppuyer = false;
-    private final int nbJoueur;
+	private final ArrayList<Joueur> selectedJoueurs;
+	private WindowBroadcastPublic windowBroadcastPublic;
+	private final Evenement event;
+	public WindowConfigurationPlayerInfos windowConfigPlayer;
+	public WindowConfigurationPlayerInfos windowConfigPlayerFull;
+	private PanelAnimationConfiguration panelAnimationConfiguration;
+	private final PlayerForDiffusion[] tabPlayerForTree;
+	private final JPanel[] playerPanel;
+	private boolean blackButtonAppuyer = false;
+	private boolean fondButtonAppuyer = false;
+	private final int nbJoueur;
 
 	private ArrayList<PlayerForDiffusion> playerForDifusionListInit;
 	private PlayerForDiffusion playerForDifusionSolo;
 	private PlayerForDiffusion playerForDifusionGame1;
 	private PlayerForDiffusion playerForDifusionGame2;
 
-    public WindowTournamentTree(ArrayList<Joueur> selectedJoueurs, Evenement event, WindowBroadcastPublic diffusionFrame, int nbJoueur) throws ClassNotFoundException, SQLException {
-        this.selectedJoueurs = selectedJoueurs;
-        this.windowBroadcastPublic = diffusionFrame;
-        this.event = event;
-        this.nbJoueur = nbJoueur;
-        this.tabPlayerForTree = new PlayerForDiffusion[nbJoueur];
-        this.playerPanel = new JPanel[4];
-        this.selectedJoueurs.add(this.selectedJoueurs.size(), new Joueur(0, "men", "QUALIFIER", " ", "QUALIFIER", " ", " ", "clear.png", 0, 0, " ", 0, 0, " ", " ", " "));
+	public WindowTournamentTree(ArrayList<Joueur> selectedJoueurs, Evenement event,
+			WindowBroadcastPublic diffusionFrame, int nbJoueur) throws ClassNotFoundException, SQLException {
+		this.selectedJoueurs = selectedJoueurs;
+		this.windowBroadcastPublic = diffusionFrame;
+		this.event = event;
+		this.nbJoueur = nbJoueur;
+		this.tabPlayerForTree = new PlayerForDiffusion[nbJoueur];
+		this.playerPanel = new JPanel[4];
+		this.selectedJoueurs.add(this.selectedJoueurs.size(), new Joueur(0, "men", "QUALIFIER", " ", "QUALIFIER", " ",
+				" ", "clear.png", 0, 0, " ", 0, 0, " ", " ", " "));
 
-        setupFrame();
-        this.panelAnimationConfiguration = new PanelAnimationConfiguration(this);
-        setupPanels();
-        setupBottomPanel();
-        finalizeSetup();
-        
-    	playerForDifusionSolo = new PlayerForDiffusion(this.eventName(), windowBroadcastPublic, panelAnimationConfiguration, "player",0);
-    	playerForDifusionGame1 = new PlayerForDiffusion(this.eventName(), windowBroadcastPublic, panelAnimationConfiguration, "game",0);
-    	playerForDifusionGame2 = new PlayerForDiffusion(this.eventName(), windowBroadcastPublic, panelAnimationConfiguration, "game",1);
-        playerForDifusionSolo.setPlayer(this.selectedJoueurs.get(0), -1);
-        playerForDifusionGame1.setPlayer(this.selectedJoueurs.get(0), -1);
-        playerForDifusionGame1.setPlayer(this.selectedJoueurs.get(0), -1);
+		setupFrame();
+		this.panelAnimationConfiguration = new PanelAnimationConfiguration(this);
+		setupPanels();
+		setupBottomPanel();
+		finalizeSetup();
+
+		playerForDifusionSolo = new PlayerForDiffusion(this.event, windowBroadcastPublic, panelAnimationConfiguration,
+				"player", 0);
+		playerForDifusionGame1 = new PlayerForDiffusion(this.event, windowBroadcastPublic, panelAnimationConfiguration,
+				"game", 0);
+		playerForDifusionGame2 = new PlayerForDiffusion(this.event, windowBroadcastPublic, panelAnimationConfiguration,
+				"game", 1);
+		playerForDifusionSolo.setPlayer(this.selectedJoueurs.get(0), -1);
+		playerForDifusionGame1.setPlayer(this.selectedJoueurs.get(0), -1);
+		playerForDifusionGame1.setPlayer(this.selectedJoueurs.get(0), -1);
 //        initListPlayerForDiffusionTab();    
 //        initListPlayerForDiffusionFull();
-    }
+	}
 
-    private void setupFrame() {
-        setTitle("Broadcast configuration");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(800, 800);
-        setLocationRelativeTo(null);
-        setIconImage(new ImageIcon("icon.png").getImage());
-        
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                windowBroadcastPublic.close();
-                if (windowConfigPlayer != null) 
-                    windowConfigPlayer.dispose();
-                if (windowConfigPlayerFull != null) 
-                	windowConfigPlayerFull.dispose();
+	private void setupFrame() {
+		setTitle("Broadcast configuration");
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setSize(800, 800);
+		setLocationRelativeTo(null);
+		setIconImage(new ImageIcon("icon.png").getImage());
+
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				windowBroadcastPublic.close();
+				if (windowConfigPlayer != null)
+					windowConfigPlayer.dispose();
+				if (windowConfigPlayerFull != null)
+					windowConfigPlayerFull.dispose();
 //                windowBroadcastPublic.getAnimationFrame().dispose();
-            }
-        });
+			}
+		});
 
-        ConfigurationSaveLoad.initJson(nbJoueur, this.eventName());
-    }
+		ConfigurationSaveLoad.initJson(nbJoueur, this.eventName());
+	}
 
-    private void setupPanels() {
-        Border contour = BorderFactory.createLineBorder(Color.black);
+	private void setupPanels() {
+		Border contour = BorderFactory.createLineBorder(Color.black);
 		// Créez un conteneur pour les sections supérieures
 		JPanel topSectionsPanel = new JPanel();
 		topSectionsPanel.setLayout(new GridLayout(1, 2));
 
 		// Créez un conteneur pour chaque section supérieure
-		JPanel topLeftPanel = createSectionPanel("En haut gauche",0);
-		JPanel topRightPanel = createSectionPanel("En haut droite",2);
+		JPanel topLeftPanel = createSectionPanel("En haut gauche", 0);
+		JPanel topRightPanel = createSectionPanel("En haut droite", 2);
 		topLeftPanel.setBorder(contour);
 		topRightPanel.setBorder(contour);
 		// Ajoutez les sections supérieures é leur conteneur
@@ -108,8 +116,8 @@ public class WindowTournamentTree extends JFrame {
 		bottomSectionsPanel.setLayout(new GridLayout(1, 2));
 
 		// Créez un conteneur pour chaque section inférieure
-		JPanel bottomLeftPanel = createSectionPanel("En bas gauche",1);
-		JPanel bottomRightPanel = createSectionPanel("En bas droite",3);
+		JPanel bottomLeftPanel = createSectionPanel("En bas gauche", 1);
+		JPanel bottomRightPanel = createSectionPanel("En bas droite", 3);
 		bottomLeftPanel.setBorder(contour);
 		bottomRightPanel.setBorder(contour);
 		// Ajoutez les sections inférieures é leur conteneur
@@ -120,161 +128,166 @@ public class WindowTournamentTree extends JFrame {
 		setLayout(new BorderLayout());
 		add(topSectionsPanel, BorderLayout.NORTH);
 		add(bottomSectionsPanel, BorderLayout.CENTER);
-    }
+	}
 
-    private JPanel createSectionPanel(String sectionName, int indexPanel) {
-        JPanel panel = new JPanel(new GridBagLayout());
-        playerPanel[indexPanel] = new JPanel();
-        playerPanel[indexPanel].setLayout(new BoxLayout(playerPanel[indexPanel], BoxLayout.Y_AXIS));
+	private JPanel createSectionPanel(String sectionName, int indexPanel) {
+		JPanel panel = new JPanel(new GridBagLayout());
+		playerPanel[indexPanel] = new JPanel();
+		playerPanel[indexPanel].setLayout(new BoxLayout(playerPanel[indexPanel], BoxLayout.Y_AXIS));
 
-        for (int i = 0; i < (nbJoueur / 4); i++) {
-            addPlayerSelection(playerPanel[indexPanel], i, indexPanel);
-        }
+		for (int i = 0; i < (nbJoueur / 4); i++) {
+			addPlayerSelection(playerPanel[indexPanel], i, indexPanel);
+		}
 
-        JPanel gamePanel = createGamePanel(indexPanel);
-        JButton tabButton = createTabButton(indexPanel);
+		JPanel gamePanel = createGamePanel(indexPanel);
+		JButton tabButton = createTabButton(indexPanel);
 
-        panel.add(playerPanel[indexPanel]);
-        panel.add(gamePanel);
-        panel.add(tabButton);
+		panel.add(playerPanel[indexPanel]);
+		panel.add(gamePanel);
+		panel.add(tabButton);
 
-        return panel;
-    }
+		return panel;
+	}
 
-    private void addPlayerSelection(JPanel panel, int playerIndex, int panelIndex) {
-        JComboBox<String> comboBox = new JComboBox<>(selectedJoueurs.stream()
-                .map(Joueur::getDisplay_name)
-                .toArray(String[]::new));
-        comboBox.setEditable(true);
-        AutoCompleteDecorator.decorate(comboBox);
-        comboBox.setSelectedIndex(-1);
+	private void addPlayerSelection(JPanel panel, int playerIndex, int panelIndex) {
+		JComboBox<String> comboBox = new JComboBox<>(
+				selectedJoueurs.stream().map(Joueur::getDisplay_name).toArray(String[]::new));
+		comboBox.setEditable(true);
+		AutoCompleteDecorator.decorate(comboBox);
+		comboBox.setSelectedIndex(-1);
 
-        JButton playerButton = new JButton("Player");
-        playerButton.addActionListener(e -> handlePlayerSelection(comboBox, playerIndex, panelIndex));
+		JButton playerButton = new JButton("Player");
+		playerButton.addActionListener(e -> handlePlayerSelection(comboBox, playerIndex, panelIndex));
 
-        JPanel comboButtonPanel = new JPanel();
-        comboButtonPanel.add(comboBox);
-        comboButtonPanel.add(playerButton);
-        panel.add(comboButtonPanel);
-    }
+		JPanel comboButtonPanel = new JPanel();
+		comboButtonPanel.add(comboBox);
+		comboButtonPanel.add(playerButton);
+		panel.add(comboButtonPanel);
+	}
 
-    private JPanel createGamePanel(int indexPanel) {
-        JPanel gamePanel = new JPanel();
-        gamePanel.setLayout(new BoxLayout(gamePanel, BoxLayout.Y_AXIS));
-        
-        for (int i = 0; i < (nbJoueur / 8); i++) {
-            JButton gameButton = new JButton("Game");
-            int buttonIndex = i;
-            gameButton.addActionListener(e -> handleGameSelection(buttonIndex, indexPanel));
-            gamePanel.add(gameButton);
-        }
-        
-        return gamePanel;
-    }
+	private JPanel createGamePanel(int indexPanel) {
+		JPanel gamePanel = new JPanel();
+		gamePanel.setLayout(new BoxLayout(gamePanel, BoxLayout.Y_AXIS));
 
-    private JButton createTabButton(int indexPanel) {
-        JButton tabButton = new JButton("Tab");
-        tabButton.addActionListener(e -> handleTabSelection(indexPanel));
-        return tabButton;
-    }
+		for (int i = 0; i < (nbJoueur / 8); i++) {
+			JButton gameButton = new JButton("Game");
+			int buttonIndex = i;
+			gameButton.addActionListener(e -> handleGameSelection(buttonIndex, indexPanel));
+			gamePanel.add(gameButton);
+		}
 
-    private void setupBottomPanel() {
-    	Border contour = BorderFactory.createLineBorder(Color.black);
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        JPanel bottomPanelButton = new JPanel();
-        bottomPanelButton.setBorder(contour);
-        
-        JButton playerButton = new JButton("Full Competition");
-        playerButton.addActionListener(e -> handleFullCompetition());
-        bottomPanelButton.add(playerButton);
+		return gamePanel;
+	}
 
-        JButton fondButton = new JButton("background");
-        fondButton.addActionListener(e -> toggleBackground());
-        bottomPanelButton.add(fondButton);
+	private JButton createTabButton(int indexPanel) {
+		JButton tabButton = new JButton("Tab");
+		tabButton.addActionListener(e -> handleTabSelection(indexPanel));
+		return tabButton;
+	}
 
-        JButton blackButton = new JButton("Black");
-        blackButton.addActionListener(e -> {
+	private void setupBottomPanel() {
+		Border contour = BorderFactory.createLineBorder(Color.black);
+		JPanel bottomPanel = new JPanel(new BorderLayout());
+		JPanel bottomPanelButton = new JPanel();
+		bottomPanelButton.setBorder(contour);
+
+		JButton playerButton = new JButton("Full Competition");
+		playerButton.addActionListener(e -> handleFullCompetition());
+		bottomPanelButton.add(playerButton);
+
+		JButton fondButton = new JButton("background");
+		fondButton.addActionListener(e -> toggleBackground());
+		bottomPanelButton.add(fondButton);
+
+		JButton blackButton = new JButton("Black");
+		blackButton.addActionListener(e -> {
 			try {
 				toggleBlackBackground();
 			} catch (ClassNotFoundException | SQLException e1) {
 				e1.printStackTrace();
 			}
 		});
-        bottomPanelButton.add(blackButton,BorderLayout.NORTH);
+		bottomPanelButton.add(blackButton, BorderLayout.NORTH);
 
-        bottomPanel.add(bottomPanelButton, BorderLayout.NORTH);
-        bottomPanel.add(this.panelAnimationConfiguration, BorderLayout.CENTER);
-        JButton btnSaveConfigAnimation = new JButton("Save config animation");
-        btnSaveConfigAnimation.addActionListener(e -> ConfigurationSaveLoad.saveConfigAnimation(panelAnimationConfiguration,this.eventName()));
-        bottomPanel.add(btnSaveConfigAnimation, BorderLayout.SOUTH);
-        add(bottomPanel, BorderLayout.SOUTH);
-    }
+		bottomPanel.add(bottomPanelButton, BorderLayout.NORTH);
+		bottomPanel.add(this.panelAnimationConfiguration, BorderLayout.CENTER);
+		JButton btnSaveConfigAnimation = new JButton("Save config animation");
+		btnSaveConfigAnimation.addActionListener(
+				e -> ConfigurationSaveLoad.saveConfigAnimation(panelAnimationConfiguration, this.eventName()));
+		bottomPanel.add(btnSaveConfigAnimation, BorderLayout.SOUTH);
+		add(bottomPanel, BorderLayout.SOUTH);
+	}
 
-    private void finalizeSetup() {
-        pack();
-        setVisible(true);
-    }
+	private void finalizeSetup() {
+		pack();
+		setVisible(true);
+	}
 
 	private void handlePlayerSelection(JComboBox<String> comboBox, int playerIndex, int panelIndex) {
 		String selectedItem = (String) comboBox.getSelectedItem();
 		if (selectedItem != null) {
 			windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_1()); // changer le fond de la
-//			windowBroadcastPublic.		(event.getBackground().getImage_2(), 55); // changer le fond de la fenetre
-			windowBroadcastPublic.removeLayerContent(JLayeredPane.MODAL_LAYER);// nettoyage du layer
 																							// fenetre
+			windowBroadcastPublic.removeLayerContent(JLayeredPane.MODAL_LAYER);// nettoyage du layer du joueur
 			Joueur soloPlayer = foundPlayer(selectedItem);
 			ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
-			SwingUtilities.invokeLater(() -> {
-					int ligne = playerIndex + (nbJoueur / 4) * panelIndex;
-					if (soloPlayer != null) {
-						//create player for tournament tree
-						PlayerForDiffusion playerDetailsForTree = new PlayerForDiffusion(this.eventName(),windowBroadcastPublic, panelAnimationConfiguration, "full", ligne);
-						if (tabPlayerForTree[ligne] != null) {
-							tabPlayerForTree[ligne].removeAll();
-						}
-						tabPlayerForTree[ligne] = playerDetailsForTree;
-						tabPlayerForTree[ligne].setPlacementFrameTwoPlayer(windowConfigPlayerFull);
-						try {
-							tabPlayerForTree[ligne].setPlayer(soloPlayer, ligne + 1);
-						} catch (ClassNotFoundException | SQLException e) {
-							e.printStackTrace();
-						}
-						tabPlayerForTree[ligne].setVisible(false);
-						this.windowBroadcastPublic.addContent(JLayeredPane.PALETTE_LAYER, tabPlayerForTree[ligne]);
-						// add this player to window config full if it exists
-						if (windowConfigPlayerFull != null)
-							tabPlayerForTree[ligne].handleFullCase();
 
-						// initialisation and display of player solo
-						playerForDifusionSolo.setNumeroPlayer(ligne);
-						try {
-							playerForDifusionSolo.setPlayer(soloPlayer, ligne + 1);
-						} catch (ClassNotFoundException | SQLException e) {
-							e.printStackTrace();
-						}
-						if(soloPlayer.getNom() != "QUALIFIER")
-							this.windowBroadcastPublic.addContent(JLayeredPane.MODAL_LAYER, playerForDifusionSolo);
+			int ligne = playerIndex + (nbJoueur / 4) * panelIndex;
+			SwingUtilities.invokeLater(() -> {
+				if (soloPlayer != null) {
+					// create player for tournament tree
+					if (tabPlayerForTree[ligne] == null) {
+						tabPlayerForTree[ligne] = new PlayerForDiffusion(this.event, windowBroadcastPublic,
+								panelAnimationConfiguration, "full", ligne);
 					}
+					tabPlayerForTree[ligne].setPlacementFrameTwoPlayer(windowConfigPlayerFull);
+					try {
+						tabPlayerForTree[ligne].setPlayer(soloPlayer, ligne + 1);
+					} catch (ClassNotFoundException | SQLException e) {
+						e.printStackTrace();
+					}
+					tabPlayerForTree[ligne].setVisible(false);
+					this.windowBroadcastPublic.addContent(JLayeredPane.PALETTE_LAYER, tabPlayerForTree[ligne]);
+
+					// initialisation and display of player solo
+					playerForDifusionSolo.setNumeroPlayer(ligne);
+					try {
+						playerForDifusionSolo.setPlayer(soloPlayer, ligne + 1);
+					} catch (ClassNotFoundException | SQLException e) {
+						e.printStackTrace();
+					}
+					if (soloPlayer.getNom() != "QUALIFIER")
+						this.windowBroadcastPublic.addContent(JLayeredPane.MODAL_LAYER, playerForDifusionSolo);
+				}
 			});
-			if (windowConfigPlayer == null || !windowConfigPlayer.isDisplayable()
-					|| windowConfigPlayer.getTypeFenetre() == "full") {
-				windowConfigPlayer = new WindowConfigurationPlayerInfos(windowBroadcastPublic, "player");
-			} else {
-				windowConfigPlayer.tabbedPane.removeAll();
-				windowConfigPlayer.tabbedPane.revalidate();
-				windowConfigPlayer.tabbedPane.repaint();
-				windowConfigPlayer.setTypeFenetre("player");
-			}
-			playerForDifusionSolo.setPlacementFrameTwoPlayer(windowConfigPlayer);
-			ListSelectedJoueur.add(playerForDifusionSolo);
-			TabConfigurationPlayerInfos tabOnePlayer = new TabConfigurationPlayerInfos(playerForDifusionSolo, soloPlayer, windowBroadcastPublic, windowConfigPlayer);
-			windowConfigPlayer.addTabJoueur(tabOnePlayer);
-			windowConfigPlayer.setTabPolice(new TabPolice(ListSelectedJoueur, windowConfigPlayer));
-			System.out.println("    SOLO player to dislay : " + playerForDifusionSolo.getJoueur().getNom());
-			
-			if (windowConfigPlayer != null) {
-				windowConfigPlayer.pack();
-			}
+			SwingUtilities.invokeLater(() -> {
+				if (soloPlayer != null) {
+					// add this player to window config full if it exists
+					if (windowConfigPlayerFull != null)
+						tabPlayerForTree[ligne].getMouseAdapterPanel().handleFullCase();
+
+					if (windowConfigPlayer == null || !windowConfigPlayer.isDisplayable()
+							|| windowConfigPlayer.getTypeFenetre() == "full") {
+						windowConfigPlayer = new WindowConfigurationPlayerInfos(windowBroadcastPublic, "player");
+					} else {
+						windowConfigPlayer.tabbedPane.removeAll();
+						windowConfigPlayer.tabbedPane.revalidate();
+						windowConfigPlayer.tabbedPane.repaint();
+						windowConfigPlayer.setTypeFenetre("player");
+					}
+					playerForDifusionSolo.setPlacementFrameTwoPlayer(windowConfigPlayer);
+					ListSelectedJoueur.add(playerForDifusionSolo);
+					TabConfigurationPlayerInfos tabOnePlayer = new TabConfigurationPlayerInfos(playerForDifusionSolo,
+							soloPlayer, windowBroadcastPublic, windowConfigPlayer);
+					windowConfigPlayer.addTabJoueur(tabOnePlayer);
+					windowConfigPlayer.setTabPolice(new TabPolice(ListSelectedJoueur, windowConfigPlayer));
+					System.out.println("    SOLO player to dislay : " + playerForDifusionSolo.getJoueur().getNom());
+
+					if (windowConfigPlayer != null) {
+						windowConfigPlayer.pack();
+					}
+				}
+			});
 		}
 	}
 
@@ -320,9 +333,11 @@ public class WindowTournamentTree extends JFrame {
 				for (PlayerForDiffusion playerForDiffusion : ListSelectedJoueur) {
 					this.windowBroadcastPublic.addContent(JLayeredPane.MODAL_LAYER, playerForDiffusion);
 					playerForDiffusion.setPlacementFrameTwoPlayer(windowConfigPlayer);
-					TabConfigurationPlayerInfos tabPool = new TabConfigurationPlayerInfos(playerForDiffusion, playerForDiffusion.getJoueur(), windowBroadcastPublic, windowConfigPlayer);
+					TabConfigurationPlayerInfos tabPool = new TabConfigurationPlayerInfos(playerForDiffusion,
+							playerForDiffusion.getJoueur(), windowBroadcastPublic, windowConfigPlayer);
 					windowConfigPlayer.addTabJoueur(tabPool);
-					System.out.println("    GAME player to display : " + playerForDiffusion.getJoueur().getNom() + " "+ playerForDiffusion.getNumeroPlayer());
+					System.out.println("    GAME player to display : " + playerForDiffusion.getJoueur().getNom() + " "
+							+ playerForDiffusion.getNumeroPlayer());
 				}
 				windowConfigPlayer.setTabPolice(new TabPolice(ListSelectedJoueur, windowConfigPlayer));
 			} else
@@ -340,7 +355,7 @@ public class WindowTournamentTree extends JFrame {
 			for (int i = 0; i < (nbJoueur / 4); i++) {
 				// System.out.println((nbJoueur / 4) * indexPanel + i);
 				Joueur Player = foundPlayer(getSelectedPlayerName(playerPanel[indexPanel], i));
-				PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.eventName(), windowBroadcastPublic,
+				PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.event, windowBroadcastPublic,
 						panelAnimationConfiguration, "tab", i);
 				int ligne = (nbJoueur / 4) * indexPanel + i + 1;
 				try {
@@ -364,7 +379,8 @@ public class WindowTournamentTree extends JFrame {
 			for (PlayerForDiffusion playerForDiffusion : ListSelectedJoueur) {
 				this.windowBroadcastPublic.addContent(JLayeredPane.MODAL_LAYER, playerForDiffusion);
 				playerForDiffusion.setPlacementFrameTwoPlayer(windowConfigPlayer);
-				TabConfigurationPlayerInfos tabPool = new TabConfigurationPlayerInfos(playerForDiffusion, playerForDiffusion.getJoueur(), windowBroadcastPublic, windowConfigPlayer);
+				TabConfigurationPlayerInfos tabPool = new TabConfigurationPlayerInfos(playerForDiffusion,
+						playerForDiffusion.getJoueur(), windowBroadcastPublic, windowConfigPlayer);
 				windowConfigPlayer.addTabJoueur(tabPool);
 				System.out.println("    TAB player to display  : " + playerForDiffusion.getJoueur().getNom());
 			}
@@ -372,113 +388,128 @@ public class WindowTournamentTree extends JFrame {
 			windowConfigPlayer.pack();
 		});
 	}
-	private int indexPlayer =-1;
-    private void handleFullCompetition() {
-    	windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_4());
-	    windowBroadcastPublic.removeLayerContent(JLayeredPane.MODAL_LAYER);//nettoyage du layer
-		windowBroadcastPublic.removeLayerContent(JLayeredPane.PALETTE_LAYER);//nettoyage du layer
-		
+
+	private int indexPlayer = -1;
+
+	private void handleFullCompetition() {
+		windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_4());
+		windowBroadcastPublic.removeLayerContent(JLayeredPane.MODAL_LAYER);// nettoyage du layer
+		windowBroadcastPublic.removeLayerContent(JLayeredPane.PALETTE_LAYER);// nettoyage du layer
+
 		indexPlayer = -1;
 //		SwingUtilities.invokeLater(() -> {
-			int totalPlayers = nbJoueur;
-			// iteration sur les 4 partie de la fenetre tournament tree
-			System.out.println("nb panel : " + playerPanel.length + " nb player per panel " + totalPlayers / 4);
-			for (int y = 0; y < playerPanel.length; y++) {
-				// Calculez combien de joueurs doivent être traités dans cette ranger
-				int playersInThisRow = totalPlayers / 4; 
-				// iteration sur le nombre de joueur dans la partie de l'arbre du tournoi
-				for (int i = 0; i < playersInThisRow; i++) {
-					Joueur Player = foundPlayer(getSelectedPlayerName(playerPanel[y], i));
-					if (Player != null) {
-						int ligne = y * (totalPlayers / 4) + i + 1;
-						if (tabPlayerForTree[ligne - 1] == null){
-							PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.eventName(),windowBroadcastPublic, panelAnimationConfiguration, "full", y * (totalPlayers / 4) + i);
-							tabPlayerForTree[ligne - 1] = PlayerDetails;
-						}
-						try {
-							tabPlayerForTree[ligne - 1].setPlayer(Player, ligne);
-						} catch (ClassNotFoundException | SQLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						tabPlayerForTree[ligne - 1].setPlacementFrameTwoPlayer(windowConfigPlayerFull);
-						indexPlayer = ligne - 1;
-						this.windowBroadcastPublic.addContent(JLayeredPane.PALETTE_LAYER,tabPlayerForTree[ligne - 1]);
+		int totalPlayers = nbJoueur;
+		// iteration sur les 4 partie de la fenetre tournament tree
+		System.out.println("nb panel : " + playerPanel.length + " nb player per panel " + totalPlayers / 4);
+		for (int y = 0; y < playerPanel.length; y++) {
+			// Calculez combien de joueurs doivent être traités dans cette ranger
+			int playersInThisRow = totalPlayers / 4;
+			// iteration sur le nombre de joueur dans la partie de l'arbre du tournoi
+			for (int i = 0; i < playersInThisRow; i++) {
+				Joueur Player = foundPlayer(getSelectedPlayerName(playerPanel[y], i));
+				if (Player != null) {
+					int ligne = y * (totalPlayers / 4) + i + 1;
+					if (tabPlayerForTree[ligne - 1] == null) {
+						PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.event, windowBroadcastPublic,
+								panelAnimationConfiguration, "full", y * (totalPlayers / 4) + i);
+						tabPlayerForTree[ligne - 1] = PlayerDetails;
 					}
+					try {
+						tabPlayerForTree[ligne - 1].setPlayer(Player, ligne);
+					} catch (ClassNotFoundException | SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					tabPlayerForTree[ligne - 1].setPlacementFrameTwoPlayer(windowConfigPlayerFull);
+					indexPlayer = ligne - 1;
+					this.windowBroadcastPublic.addContent(JLayeredPane.PALETTE_LAYER, tabPlayerForTree[ligne - 1]);
 				}
 			}
+		}
 //		});
 		SwingUtilities.invokeLater(() -> {
-			if(indexPlayer != -1)
-				tabPlayerForTree[indexPlayer].handleFullCase();
+			if (indexPlayer != -1)
+				tabPlayerForTree[indexPlayer].getMouseAdapterPanel().handleFullCase();
 		});
-    }
-
-    private void toggleBackground() {
-    	if(fondButtonAppuyer == false)
-			windowBroadcastPublic.setBackgroundImageLayered(event.getBackground().getImage_5(), JLayeredPane.POPUP_LAYER);
-		else
-			windowBroadcastPublic.removeLayerContent(JLayeredPane.POPUP_LAYER);
-		fondButtonAppuyer = !fondButtonAppuyer;
 	}
 
-    private void toggleBlackBackground() throws ClassNotFoundException, SQLException {
-    	if(blackButtonAppuyer == false)
+	private void toggleBackground() {
+		windowBroadcastPublic.removeLayerContent(55);
+		BackgroundPanel backgroundPanel = new BackgroundPanel(event.getBackground().getImage_2());
+		backgroundPanel.setOpaque(false);
+		backgroundPanel.setSize(50, 50);
+		backgroundPanel.setLocation(this.windowBroadcastPublic.getWidth() / 2 - backgroundPanel.getWidth() / 2,
+				this.windowBroadcastPublic.getHeight() / 2 - backgroundPanel.getHeight() / 2);
+		windowBroadcastPublic.addContent(55, backgroundPanel);
+		panelAnimationConfiguration.zoomPanel2(backgroundPanel, this.windowBroadcastPublic, null);
+//    	if(fondButtonAppuyer == false)
+//			windowBroadcastPublic.setBackgroundImageLayered(event.getBackground().getImage_5(), JLayeredPane.POPUP_LAYER);
+//		else
+//			windowBroadcastPublic.removeLayerContent(JLayeredPane.POPUP_LAYER);
+//		fondButtonAppuyer = !fondButtonAppuyer;
+	}
+
+	private void toggleBlackBackground() throws ClassNotFoundException, SQLException {
+		if (blackButtonAppuyer == false)
 			windowBroadcastPublic.setBackgroundImageLayered("black.jpg", JLayeredPane.POPUP_LAYER);
 		else
 			windowBroadcastPublic.removeLayerContent(JLayeredPane.POPUP_LAYER);
 		blackButtonAppuyer = !blackButtonAppuyer;
-	    
+
 //		initListPlayerForDiffusion(selectedJoueurs);
-    }
+	}
 
-    private Joueur foundPlayer(String nomJoueur) {
-    	for (Joueur joueur : selectedJoueurs) {
-	        if (joueur.getDisplay_name().equals(nomJoueur)) {
-	            return joueur;
-	        }
-	    }
-		return null;
-    }
-    public ArrayList<PlayerForDiffusion> initListPlayerForDiffusion() throws ClassNotFoundException, SQLException {
-    	playerForDifusionListInit = new ArrayList<PlayerForDiffusion>();
-    	for (int i=0;i<this.nbJoueur;i++) {
-    		PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.eventName(), windowBroadcastPublic, panelAnimationConfiguration, "full",i);
-    		PlayerDetails.setPlayer(this.selectedJoueurs.get(0), i);
-    		playerForDifusionListInit.add(PlayerDetails);
+	private Joueur foundPlayer(String nomJoueur) {
+		for (Joueur joueur : selectedJoueurs) {
+			if (joueur.getDisplay_name().equals(nomJoueur)) {
+				return joueur;
+			}
 		}
-    	return playerForDifusionListInit;
-    }
+		return null;
+	}
 
-    private String getSelectedPlayerName(JPanel panel, int playerIndex) {
-    	Component[] components = panel.getComponents();
-	    if (playerIndex < components.length && components[playerIndex] instanceof JPanel) {
-	        JPanel comboButtonPanel = (JPanel) components[playerIndex];
-	        Component[] subComponents = comboButtonPanel.getComponents();
-	        if (subComponents.length == 2 && subComponents[0] instanceof JComboBox) {
-	            @SuppressWarnings("unchecked")
+	public ArrayList<PlayerForDiffusion> initListPlayerForDiffusion() throws ClassNotFoundException, SQLException {
+		playerForDifusionListInit = new ArrayList<PlayerForDiffusion>();
+		for (int i = 0; i < this.nbJoueur; i++) {
+			PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.event, windowBroadcastPublic,
+					panelAnimationConfiguration, "full", i);
+			PlayerDetails.setPlayer(this.selectedJoueurs.get(0), i);
+			playerForDifusionListInit.add(PlayerDetails);
+		}
+		return playerForDifusionListInit;
+	}
+
+	private String getSelectedPlayerName(JPanel panel, int playerIndex) {
+		Component[] components = panel.getComponents();
+		if (playerIndex < components.length && components[playerIndex] instanceof JPanel) {
+			JPanel comboButtonPanel = (JPanel) components[playerIndex];
+			Component[] subComponents = comboButtonPanel.getComponents();
+			if (subComponents.length == 2 && subComponents[0] instanceof JComboBox) {
+				@SuppressWarnings("unchecked")
 				JComboBox<String> comboBox = (JComboBox<String>) subComponents[0];
-	            return (String) comboBox.getSelectedItem();
-	        }
-	    }
-	    return null;
-    }
+				return (String) comboBox.getSelectedItem();
+			}
+		}
+		return null;
+	}
 
-    public String eventName() {
-        return this.event.getNom();
-    }
+	public String eventName() {
+		return this.event.getNom();
+	}
 
-    public PlayerForDiffusion[] getTabPlayerForTree() {
-        return tabPlayerForTree;
-    }
+	public PlayerForDiffusion[] getTabPlayerForTree() {
+		return tabPlayerForTree;
+	}
 
-    public int getNbJoueur() {
-        return nbJoueur;
-    }
-    public WindowBroadcastPublic getWindowBroadcastPublic() {
-    	return windowBroadcastPublic;
-    }
-    public PanelAnimationConfiguration getPanelAnimationConfiguration() {
-    	return panelAnimationConfiguration;
-    }
+	public int getNbJoueur() {
+		return nbJoueur;
+	}
+
+	public WindowBroadcastPublic getWindowBroadcastPublic() {
+		return windowBroadcastPublic;
+	}
+
+	public PanelAnimationConfiguration getPanelAnimationConfiguration() {
+		return panelAnimationConfiguration;
+	}
 }

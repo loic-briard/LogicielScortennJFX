@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import DiffusionPlayers.PlayerForDiffusion;
 import Police.TabPolice;
 import Sauvegarde.ConfigurationSaveLoad;
 import Sauvegarde.ElementJoueur;
