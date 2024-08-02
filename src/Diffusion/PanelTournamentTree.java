@@ -85,8 +85,13 @@ public class PanelTournamentTree extends JPanel {
 
         drawTournamentTree(g2, xPositionsLeft, yPositionsLeft, halfNumPlayers, horizontalSpacing, true,selectedPlayerIndex);
         drawTournamentTree(g2, xPositionsRight, yPositionsRight, halfNumPlayers, horizontalSpacing, false,selectedPlayerIndex);
+        g2.draw(new Line2D.Double(lastXLeft, lastYLeft, lastXRight, lastYRight));
+        
     }
-
+    private int lastXLeft;
+    private int lastXRight;
+    private int lastYLeft;
+    private int lastYRight;
     private void drawTournamentTree(Graphics2D g2, int[] xPositions, int[] yPositions, int numPlayers, int spacing, boolean isLeft,int playerIndex) {
     	g2.setColor(treeColor); // Assurez-vous que la couleur est définie ici aussi
         if (numPlayers <= 1) return;
@@ -162,6 +167,14 @@ public class PanelTournamentTree extends JPanel {
 
             newXPositions[i / 2] = nextX;
             newYPositions[i / 2] = midY;
+            if(isLeft)
+            	lastXLeft = nextX;
+            else 
+            	lastXRight = nextX;
+            if(isLeft)
+            	lastYLeft = midY;
+            else 
+            	lastYRight = midY;
         }
         
         drawTournamentTree(g2, newXPositions, newYPositions, numPlayers / 2, spacing, isLeft,playerIndex/2);

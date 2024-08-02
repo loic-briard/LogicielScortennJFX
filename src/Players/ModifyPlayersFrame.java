@@ -51,6 +51,7 @@ public class ModifyPlayersFrame extends JFrame{
     private String bddchoosen;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     private  Object[] joueurModifier;
+    private JDateChooser birthdateChooser;
     
 	public ModifyPlayersFrame(ListOfPlayersFrame parentFrame, String iD, String sexe, String playerName, String playerSurname, String displayName, 
 			String acroNat, ImageUtility flag, String bithdate, ImageUtility imgJoueur, String ranking, String height, String hand, String age, 
@@ -89,7 +90,7 @@ public class ModifyPlayersFrame extends JFrame{
         nationalityComboBox.setSelectedItem(acroNat);
         flagLabel = new JLabel(new ImageUtility(currentFlag,75).getIcon());
      // Utilisez JDateChooser pour choisir la date de naissance
-        JDateChooser birthdateChooser = new JDateChooser(); // Assurez-vous que la date est correctement format�e
+        birthdateChooser = new JDateChooser(); // Assurez-vous que la date est correctement format�e
         try {
             Date dateNaissance = dateFormat.parse(bithdate);
             birthdateChooser.setDate(dateNaissance);
@@ -164,45 +165,49 @@ public class ModifyPlayersFrame extends JFrame{
         JButton validateButton = new JButton("Valider");
         validateButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	String sexe = sexComboBox.getSelectedItem().toString();
-            	String playerName = nameField.getText();
-            	String playerSurname = surnameField.getText();
-            	String displayName = displayNameField.getText();
-            	String acroNat = nationalityComboBox.getSelectedItem().toString();
-            	String flag = currentFlag;
-            	String imgJoueur = currentImage;
-            	String ranking = rankingField.getText();
-            	String height = heightField.getText();
-            	String hand = handComboBox.getSelectedItem().toString();
-            	String age = ageField.getText();
-            	String weight = weightField.getText();
-            	String prize = prizeField.getText();
-            	String birthplace = birthplaceField.getText();
-            	String cityResidence = cityResidenceField.getText();
-            	
-            	BDD_v2.updatePlayersInDatabase(Integer.parseUnsignedInt(iD), sexe, playerName, playerSurname, displayName, acroNat, flag, getDate(birthdateChooser), imgJoueur,
-            			Integer.parseUnsignedInt(ranking), height,hand,age, weight,prize,birthplace,cityResidence, bddchoosen);
-            	dispose();
-            	
-            	joueurModifier = new Object[] {Integer.parseUnsignedInt(iD), sexe, playerName, playerSurname, displayName, acroNat, flag, imgJoueur,
-            			Integer.parseUnsignedInt(ranking),prize,height,hand,age, weight, getDate(birthdateChooser),birthplace,cityResidence};
-            	CustomTableModel model = (CustomTableModel) parentFrame.playersTable.getModel();
-	            model.updateRow(selectedRow, joueurModifier);
-	            DefaultTableCellRenderer imageRenderer = new DefaultTableCellRenderer() {
-	    			private static final long serialVersionUID = 1L;
+                if (validateFields()) {
+                    String sexe = sexComboBox.getSelectedItem().toString();
+                    String playerName = nameField.getText();
+                    String playerSurname = surnameField.getText();
+                    String displayName = displayNameField.getText();
+                    String acroNat = nationalityComboBox.getSelectedItem().toString();
+                    String flag = currentFlag;
+                    String imgJoueur = currentImage;
+                    String ranking = rankingField.getText();
+                    String height = heightField.getText();
+                    String hand = handComboBox.getSelectedItem().toString();
+                    String age = ageField.getText();
+                    String weight = weightField.getText();
+                    String prize = prizeField.getText();
+                    String birthplace = birthplaceField.getText();
+                    String cityResidence = cityResidenceField.getText();
+                    
+                    BDD_v2.updatePlayersInDatabase(Integer.parseUnsignedInt(iD), sexe, playerName, playerSurname, displayName, acroNat, flag, getDate(birthdateChooser), imgJoueur,
+                            Integer.parseUnsignedInt(ranking), height,hand,age, weight,prize,birthplace,cityResidence, bddchoosen);
+                    dispose();
+                    
+                    joueurModifier = new Object[] {Integer.parseUnsignedInt(iD), sexe, playerName, playerSurname, displayName, acroNat, flag, imgJoueur,
+                            Integer.parseUnsignedInt(ranking),prize,height,hand,age, weight, getDate(birthdateChooser),birthplace,cityResidence};
+                    CustomTableModel model = (CustomTableModel) parentFrame.playersTable.getModel();
+                    model.updateRow(selectedRow, joueurModifier);
+                    DefaultTableCellRenderer imageRenderer = new DefaultTableCellRenderer() {
+                        private static final long serialVersionUID = 1L;
 
-	    			@Override
-	                public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-	                    if (value instanceof ImageUtility) {
-	                        ImageUtility imageUtility = (ImageUtility) value;
-	                        return imageUtility;
-	                    }
-	                    return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-	                }
-	            };
+                        @Override
+                        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                            if (value instanceof ImageUtility) {
+                                ImageUtility imageUtility = (ImageUtility) value;
+                                return imageUtility;
+                            }
+                            return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                        }
+                    };
 
-	            parentFrame.playersTable.getColumnModel().getColumn(6).setCellRenderer(imageRenderer);
-	            parentFrame.playersTable.getColumnModel().getColumn(7).setCellRenderer(imageRenderer);
+                    parentFrame.playersTable.getColumnModel().getColumn(6).setCellRenderer(imageRenderer);
+                    parentFrame.playersTable.getColumnModel().getColumn(7).setCellRenderer(imageRenderer);
+                } else {
+                    JOptionPane.showMessageDialog(ModifyPlayersFrame.this, "Please complete all fields", "Incomplete fields", JOptionPane.WARNING_MESSAGE);
+                }
             }
         });
         gbc.gridx = 0;
@@ -241,5 +246,19 @@ public class ModifyPlayersFrame extends JFrame{
     	String formattedDate = dateFormat.format(birthdate);
     	System.out.println("++++ date de naissance formater : "+formattedDate);
 		return formattedDate;
+    }
+    private boolean validateFields() {
+        return !nameField.getText().isEmpty() &&
+               !surnameField.getText().isEmpty() &&
+               !displayNameField.getText().isEmpty() &&
+               nationalityComboBox.getSelectedIndex() != -1 &&
+               birthdateChooser.getDate() != null &&
+               !rankingField.getText().isEmpty() &&
+               !heightField.getText().isEmpty() &&
+               !ageField.getText().isEmpty() &&
+               !weightField.getText().isEmpty() &&
+               !prizeField.getText().isEmpty() &&
+               !birthplaceField.getText().isEmpty() &&
+               !cityResidenceField.getText().isEmpty();
     }
 }

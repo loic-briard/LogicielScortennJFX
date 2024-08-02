@@ -55,11 +55,13 @@ public class MainJFX {
         BDD_v2.deconnexionBDD();
 		BDD_v2.connexionBDD();
 		
+		
 //		BDD_v2.suppressionsDesTables();
 		//BDD_v2.creationdesTables();
 		BDD_v2.verifierEtCreerTables();
 		BDD_v2.getAllListPlayerTableName();
 //		API.TAB_WTA();
+//		BDD_v2.insertionDrapeauDansBDD(new Drapeau("clear", "clear.png"));
 		
 		SwingUtilities.invokeLater(new Runnable() {
             public void run() {

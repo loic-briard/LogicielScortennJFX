@@ -48,7 +48,7 @@ public class WindowTournamentTree extends JFrame {
         this.nbJoueur = nbJoueur;
         this.tabPlayerForTree = new PlayerForDiffusion[nbJoueur];
         this.playerPanel = new JPanel[4];
-        
+        this.selectedJoueurs.add(this.selectedJoueurs.size(), new Joueur(0, "men", "QUALIFIER", " ", "QUALIFIER", " ", " ", "clear.png", 0, 0, " ", 0, 0, " ", " ", " "));
 
         setupFrame();
         this.panelAnimationConfiguration = new PanelAnimationConfiguration(this);
@@ -219,6 +219,7 @@ public class WindowTournamentTree extends JFrame {
 		String selectedItem = (String) comboBox.getSelectedItem();
 		if (selectedItem != null) {
 			windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_1()); // changer le fond de la
+//			windowBroadcastPublic.		(event.getBackground().getImage_2(), 55); // changer le fond de la fenetre
 			windowBroadcastPublic.removeLayerContent(JLayeredPane.MODAL_LAYER);// nettoyage du layer
 																							// fenetre
 			Joueur soloPlayer = foundPlayer(selectedItem);
@@ -251,7 +252,8 @@ public class WindowTournamentTree extends JFrame {
 						} catch (ClassNotFoundException | SQLException e) {
 							e.printStackTrace();
 						}
-						this.windowBroadcastPublic.addContent(JLayeredPane.MODAL_LAYER, playerForDifusionSolo);
+						if(soloPlayer.getNom() != "QUALIFIER")
+							this.windowBroadcastPublic.addContent(JLayeredPane.MODAL_LAYER, playerForDifusionSolo);
 					}
 			});
 			if (windowConfigPlayer == null || !windowConfigPlayer.isDisplayable()
@@ -407,7 +409,8 @@ public class WindowTournamentTree extends JFrame {
 			}
 //		});
 		SwingUtilities.invokeLater(() -> {
-			tabPlayerForTree[indexPlayer].handleFullCase();
+			if(indexPlayer != -1)
+				tabPlayerForTree[indexPlayer].handleFullCase();
 		});
     }
 

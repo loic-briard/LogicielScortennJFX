@@ -100,7 +100,7 @@ public class PanelAnimationConfiguration extends JPanel {
         });
         tournamentTree = new PanelTournamentTree(windowTournamentTree.getNbJoueur(),this,windowTournamentTree.initListPlayerForDiffusion(), getWidthTree(), getThicknessTree());
         tournamentTree.setBounds(0, 0, windowTournamentTree.getWindowBroadcastPublic().getWidth(), windowTournamentTree.getWindowBroadcastPublic().getHeight());
-        windowTournamentTree.getWindowBroadcastPublic().addContent(250,tournamentTree);
+        windowTournamentTree.getWindowBroadcastPublic().addContent(50,tournamentTree);
         tournamentTree.setTreeColor(treeColor);
         tournamentTree.setVisible(isTournamentTreeEnabled());
         displayTreeCheckBox.addItemListener(new ItemListener() {

@@ -221,48 +221,45 @@ public class newPlayerFrame extends JFrame {
 		// Create a "Valider" button at the bottom
 		JButton validateButton = new JButton("Valider");
 		validateButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String sexe = sexComboBox.getSelectedItem().toString();
-				String playerName = nameField.getText();
-				String playerSurname = surnameField.getText();
-				String displayName = displayNameField.getText();
-				String acroNat = nationalityComboBox.getSelectedItem().toString();
-				// String flag = currentFlag;
-				String imgJoueur = currentImage;
-				String ranking = rankingField.getText();
-				String height = heightField.getText();
-				String hand = handComboBox.getSelectedItem().toString();
-				String age = ageField.getText();
-				String weight = weightField.getText();
-				String prize = prizeField.getText();
-				String birthplace = birthplaceField.getText();
-				String cityResidence = cityResidenceField.getText();
+		    public void actionPerformed(ActionEvent e) {
+		        if (validateFields()) {
+		            String sexe = sexComboBox.getSelectedItem().toString();
+		            String playerName = nameField.getText();
+		            String playerSurname = surnameField.getText();
+		            String displayName = displayNameField.getText();
+		            String acroNat = nationalityComboBox.getSelectedItem().toString();
+		            String imgJoueur = currentImage;
+		            String ranking = rankingField.getText();
+		            String height = heightField.getText();
+		            String hand = handComboBox.getSelectedItem().toString();
+		            String age = ageField.getText();
+		            String weight = weightField.getText();
+		            String prize = prizeField.getText();
+		            String birthplace = birthplaceField.getText();
+		            String cityResidence = cityResidenceField.getText();
 
-				Joueur player = new Joueur(iD, sexe, playerName, playerSurname, displayName, acroNat, getDate(birthdateChooser), imgJoueur, Integer.parseUnsignedInt(ranking),
-						Integer.parseUnsignedInt(height), hand, Integer.parseUnsignedInt(age), Integer.parseUnsignedInt(weight), prize, birthplace, cityResidence);
-				try {
-					BDD_v2.insertionJoueurDansBDD(player, bddChoosen);
+		            Joueur player = new Joueur(iD, sexe, playerName, playerSurname, displayName, acroNat, getDate(birthdateChooser), imgJoueur, Integer.parseUnsignedInt(ranking),
+		                    Integer.parseUnsignedInt(height), hand, Integer.parseUnsignedInt(age), Integer.parseUnsignedInt(weight), prize, birthplace, cityResidence);
+		            try {
+		                BDD_v2.insertionJoueurDansBDD(player, bddChoosen);
 
-					String[] data = BDD_v2.getObjectJoueur(bddChoosen, player.getNom());
-					String flagImagePath = BDD_v2.getFlagImagePathByAcronym(data[5]);
-					String playerImagePath = data[6];
-					if (playerImagePath == null)
-						playerImagePath = "clear.png";
-					CustomTableModel model = (CustomTableModel) parentFrame.playersTable.getModel();
-					model.addRow(new Object[] { data[0], data[1], data[2], data[3], data[4], data[5], new ImageUtility(flagImagePath, 55), new ImageUtility(playerImagePath, 55), data[7], data[8],
-							data[9], data[10], data[11], data[12], data[13], data[14], data[15] });
-					System.out.println("++++ Donn�es trait�es : " + Arrays.toString(data));
-				} catch (ClassNotFoundException | SQLException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
-				}
-				dispose();
-//                try {
-//					parentFrame.refreshData();
-//				} catch (SQLException | ClassNotFoundException e1) {
-//					e1.printStackTrace();
-//				}
-			}
+		                String[] data = BDD_v2.getObjectJoueur(bddChoosen, player.getNom());
+		                String flagImagePath = BDD_v2.getFlagImagePathByAcronym(data[5]);
+		                String playerImagePath = data[6];
+		                if (playerImagePath == null)
+		                    playerImagePath = "clear.png";
+		                CustomTableModel model = (CustomTableModel) parentFrame.playersTable.getModel();
+		                model.addRow(new Object[] { data[0], data[1], data[2], data[3], data[4], data[5], new ImageUtility(flagImagePath, 55), new ImageUtility(playerImagePath, 55), data[7], data[8],
+		                        data[9], data[10], data[11], data[12], data[13], data[14], data[15] });
+		                System.out.println("++++ Données traitées : " + Arrays.toString(data));
+		            } catch (ClassNotFoundException | SQLException e2) {
+		                e2.printStackTrace();
+		            }
+		            dispose();
+		        } else {
+		            JOptionPane.showMessageDialog(newPlayerFrame.this, "Please complete all fields", "Incomplete fields", JOptionPane.WARNING_MESSAGE);
+		        }
+		    }
 		});
 		gbc.gridx = 0;
 		gbc.gridy = ++row;
@@ -380,5 +377,18 @@ public class newPlayerFrame extends JFrame {
 		this.pack();
 		setSize(600, this.getHeight());
 	}
-
+	private boolean validateFields() {
+	    return !nameField.getText().isEmpty() &&
+	           !surnameField.getText().isEmpty() &&
+	           !displayNameField.getText().isEmpty() &&
+	           nationalityComboBox.getSelectedIndex() != -1 &&
+	           birthdateChooser.getDate() != null &&
+	           !rankingField.getText().isEmpty() &&
+	           !heightField.getText().isEmpty() &&
+	           !ageField.getText().isEmpty() &&
+	           !weightField.getText().isEmpty() &&
+	           !prizeField.getText().isEmpty() &&
+	           !birthplaceField.getText().isEmpty() &&
+	           !cityResidenceField.getText().isEmpty();
+	}
 }

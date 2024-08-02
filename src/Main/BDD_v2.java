@@ -524,15 +524,18 @@ public class BDD_v2 {
 	}
 
 	public static String getFlagImagePathByAcronym(String acroNat) throws SQLException, ClassNotFoundException {
-
 		String imagePath = null;
-		String requete = "SELECT ImgFlag FROM Flag WHERE NomAcro = ?";
-		try (PreparedStatement preparedStatement = connection.prepareStatement(requete)) {
-			preparedStatement.setString(1, acroNat);
-			ResultSet resultSet = preparedStatement.executeQuery();
-			if (resultSet.next()) {
-				imagePath = resultSet.getString("ImgFlag");
+		if(acroNat != " ") {
+			String requete = "SELECT ImgFlag FROM Flag WHERE NomAcro = ?";
+			try (PreparedStatement preparedStatement = connection.prepareStatement(requete)) {
+				preparedStatement.setString(1, acroNat);
+				ResultSet resultSet = preparedStatement.executeQuery();
+				if (resultSet.next()) {
+					imagePath = resultSet.getString("ImgFlag");
+				}
 			}
+		}else {
+			imagePath = "clear.png";
 		}
 		return imagePath;
 	}

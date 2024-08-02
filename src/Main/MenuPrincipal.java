@@ -10,6 +10,7 @@ package Main;
  */
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
@@ -43,6 +44,7 @@ public class MenuPrincipal extends JFrame {
     private JSpinner spinnerScreen;
     private JSpinner sizeFenetreX;
     private JSpinner sizeFenetreY;
+    private JButton selectAthleteButton;
 
     public MenuPrincipal() {
         initializeFrame();
@@ -194,7 +196,7 @@ public class MenuPrincipal extends JFrame {
         bddPLayersComboBox = new JComboBox<>(new DefaultComboBoxModel<>(BDD_v2.tabBdd.toArray(new String[0])));
         bddPLayersComboBox.setSelectedIndex(-1);
         
-        JButton selectAthleteButton = new JButton("Athlete select");
+        selectAthleteButton = new JButton("Athlete select");
         selectAthleteButton.addActionListener(e -> openAthleteSelection());
         
         JButton diffusionButton = new JButton("For diffusion");
@@ -270,10 +272,12 @@ public class MenuPrincipal extends JFrame {
             blinkComponentBorder(eventComboBox, 3);
         } else if(bddPLayersComboBox.getSelectedItem() == null) {
             blinkComponentBorder(bddPLayersComboBox, 3);
+        } else if(athleteSelection == null) {
+        	makeButtonBlink(selectAthleteButton, 3);
         } else if((int) spinnerNbJoueur.getValue() == 0) {
             blinkComponentBorder(spinnerNbJoueur, 3);
         } else {
-            ArrayList<Joueur> selectedPlayers = athleteSelection.getSelectedPlayers();
+        	ArrayList<Joueur> selectedPlayers = athleteSelection.getSelectedPlayers();
             displaySelectedPlayers(selectedPlayers);
             createDiffusionWindow(selectedPlayers);
         }
@@ -346,6 +350,39 @@ public class MenuPrincipal extends JFrame {
 	        }
 	    });
 
+	    timer.start();
+	}
+	public void makeButtonBlink(JButton button, int times) {
+	    final int[] count = {0};
+	    final Border originalBorder = button.getBorder();
+	    final Insets originalInsets = originalBorder.getBorderInsets(button);
+	    
+	    Border redBorder = new CompoundBorder(
+	        BorderFactory.createLineBorder(Color.RED, 2),
+	        BorderFactory.createEmptyBorder(
+	            originalInsets.top - 2,
+	            originalInsets.left - 2,
+	            originalInsets.bottom - 2,
+	            originalInsets.right - 2
+	        )
+	    );
+
+	    Timer timer = new Timer(250, new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            if (count[0] >= times * 2) {
+	                ((Timer)e.getSource()).stop();
+	                button.setBorder(originalBorder);
+	            } else {
+	                if (count[0] % 2 == 0) {
+	                    button.setBorder(redBorder);
+	                } else {
+	                    button.setBorder(originalBorder);
+	                }
+	                count[0]++;
+	            }
+	        }
+	    });
 	    timer.start();
 	}
 }
