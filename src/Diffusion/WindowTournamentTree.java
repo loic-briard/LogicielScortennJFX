@@ -10,13 +10,14 @@ import Players.Joueur;
 import Police.TabPolice;
 import Sauvegarde.ConfigurationSaveLoad;
 import Event.Evenement;
+import Main.ImageUtility;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
-import DiffusionPlayers.BackgroundPanel;
 import DiffusionPlayers.PlayerForDiffusion;
+import DiffusionPlayers.ZoomablePanel;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -43,6 +44,8 @@ public class WindowTournamentTree extends JFrame {
 	private PlayerForDiffusion playerForDifusionSolo;
 	private PlayerForDiffusion playerForDifusionGame1;
 	private PlayerForDiffusion playerForDifusionGame2;
+	
+	private ZoomablePanel zoomBackground;
 
 	public WindowTournamentTree(ArrayList<Joueur> selectedJoueurs, Evenement event,
 			WindowBroadcastPublic diffusionFrame, int nbJoueur) throws ClassNotFoundException, SQLException {
@@ -61,17 +64,16 @@ public class WindowTournamentTree extends JFrame {
 		setupBottomPanel();
 		finalizeSetup();
 
-		playerForDifusionSolo = new PlayerForDiffusion(this.event, windowBroadcastPublic, panelAnimationConfiguration,
-				"player", 0);
-		playerForDifusionGame1 = new PlayerForDiffusion(this.event, windowBroadcastPublic, panelAnimationConfiguration,
-				"game", 0);
-		playerForDifusionGame2 = new PlayerForDiffusion(this.event, windowBroadcastPublic, panelAnimationConfiguration,
-				"game", 1);
+		playerForDifusionSolo = new PlayerForDiffusion(this.event, windowBroadcastPublic, panelAnimationConfiguration,"player", 0);
+		playerForDifusionGame1 = new PlayerForDiffusion(this.event, windowBroadcastPublic, panelAnimationConfiguration,"game", 0);
+		playerForDifusionGame2 = new PlayerForDiffusion(this.event, windowBroadcastPublic, panelAnimationConfiguration,"game", 1);
 		playerForDifusionSolo.setPlayer(this.selectedJoueurs.get(0), -1);
 		playerForDifusionGame1.setPlayer(this.selectedJoueurs.get(0), -1);
 		playerForDifusionGame1.setPlayer(this.selectedJoueurs.get(0), -1);
-//        initListPlayerForDiffusionTab();    
-//        initListPlayerForDiffusionFull();
+		
+		zoomBackground= new ZoomablePanel();
+		zoomBackground.setLayout(null);
+		zoomBackground.setOpaque(false);
 	}
 
 	private void setupFrame() {
@@ -226,9 +228,21 @@ public class WindowTournamentTree extends JFrame {
 	private void handlePlayerSelection(JComboBox<String> comboBox, int playerIndex, int panelIndex) {
 		String selectedItem = (String) comboBox.getSelectedItem();
 		if (selectedItem != null) {
-			windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_1()); // changer le fond de la
-																							// fenetre
-			windowBroadcastPublic.removeLayerContent(JLayeredPane.MODAL_LAYER);// nettoyage du layer du joueur
+			// changer le fond de la fenetre
+			windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_1()); 
+			// nettoyage du layer du joueur
+			windowBroadcastPublic.removeLayerContent(JLayeredPane.MODAL_LAYER);
+						
+//			ImageUtility imageFond = new ImageUtility("Background/fondPourSolo.png", 0);
+//			imageFond.setLocation(0, 0);
+//			imageFond.setSize(imageFond.getPreferredSize());
+//			zoomBackground.add(imageFond);
+//			zoomBackground.setLocation(this.windowBroadcastPublic.getWidth() / 2,this.windowBroadcastPublic.getHeight() / 2 );
+//			zoomBackground.setSize(10,10);
+//			windowBroadcastPublic.addContent(55, zoomBackground);
+			
+			displayFondJoueur("player");
+			
 			Joueur soloPlayer = foundPlayer(selectedItem);
 			ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
 
@@ -243,6 +257,8 @@ public class WindowTournamentTree extends JFrame {
 					tabPlayerForTree[ligne].setPlacementFrameTwoPlayer(windowConfigPlayerFull);
 					try {
 						tabPlayerForTree[ligne].setPlayer(soloPlayer, ligne + 1);
+
+						panelAnimationConfiguration.zoomPanel(zoomBackground, this.windowBroadcastPublic, null);
 					} catch (ClassNotFoundException | SQLException e) {
 						e.printStackTrace();
 					}
@@ -295,10 +311,12 @@ public class WindowTournamentTree extends JFrame {
 		// Retrieve the selected players from the corresponding section
 		int playerIndex1 = buttonIndex * 2; // Calculate the index of the first player
 		int playerIndex2 = playerIndex1 + 1; // Calculate the index of the second player
-		windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_2());
+		windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_1());
 		windowBroadcastPublic.removeLayerContent(JLayeredPane.MODAL_LAYER);// nettoyage du layer
 		// Check if the indices are within bounds before accessing the list
 //		System.out.println(" index Button: " + buttonIndex + ", index P1: " + playerIndex1 + ", index P2: " + playerIndex2);
+		displayFondJoueur("game");
+
 		SwingUtilities.invokeLater(() -> {
 			if (playerIndex1 < selectedJoueurs.size() && playerIndex2 < selectedJoueurs.size()) {
 				Joueur Player1 = foundPlayer(getSelectedPlayerName(playerPanel[indexPanel], playerIndex1));
@@ -317,6 +335,7 @@ public class WindowTournamentTree extends JFrame {
 						playerForDifusionGame2.setPlayer(Player2, ligne2);
 						ListSelectedJoueur.add(playerForDifusionGame2);
 					}
+					panelAnimationConfiguration.zoomPanel(zoomBackground, this.windowBroadcastPublic, null);
 				} catch (ClassNotFoundException | SQLException e1) {
 					e1.printStackTrace();
 				}
@@ -347,10 +366,14 @@ public class WindowTournamentTree extends JFrame {
 	}
 
 	private void handleTabSelection(int indexPanel) {
-		windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_3());
+		windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_1());
 		// cr�ation d'une liste de PlayerForDiffusion pour aficher les pool
 		ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
 		windowBroadcastPublic.removeLayerContent(JLayeredPane.MODAL_LAYER);// nettoyage du layer
+		
+		displayFondJoueur("tab");
+
+		
 		SwingUtilities.invokeLater(() -> {
 			for (int i = 0; i < (nbJoueur / 4); i++) {
 				// System.out.println((nbJoueur / 4) * indexPanel + i);
@@ -367,6 +390,7 @@ public class WindowTournamentTree extends JFrame {
 					e1.printStackTrace();
 				}
 			}
+			panelAnimationConfiguration.zoomPanel(zoomBackground, this.windowBroadcastPublic, null);
 			if (windowConfigPlayer == null || !windowConfigPlayer.isDisplayable()
 					|| windowConfigPlayer.getTypeFenetre() == "full") {
 				windowConfigPlayer = new WindowConfigurationPlayerInfos(windowBroadcastPublic, "tab");
@@ -435,18 +459,23 @@ public class WindowTournamentTree extends JFrame {
 
 	private void toggleBackground() {
 		windowBroadcastPublic.removeLayerContent(55);
-		BackgroundPanel backgroundPanel = new BackgroundPanel(event.getBackground().getImage_2());
-		backgroundPanel.setOpaque(false);
-		backgroundPanel.setSize(50, 50);
-		backgroundPanel.setLocation(this.windowBroadcastPublic.getWidth() / 2 - backgroundPanel.getWidth() / 2,
-				this.windowBroadcastPublic.getHeight() / 2 - backgroundPanel.getHeight() / 2);
-		windowBroadcastPublic.addContent(55, backgroundPanel);
-		panelAnimationConfiguration.zoomPanel2(backgroundPanel, this.windowBroadcastPublic, null);
-//    	if(fondButtonAppuyer == false)
-//			windowBroadcastPublic.setBackgroundImageLayered(event.getBackground().getImage_5(), JLayeredPane.POPUP_LAYER);
-//		else
-//			windowBroadcastPublic.removeLayerContent(JLayeredPane.POPUP_LAYER);
-//		fondButtonAppuyer = !fondButtonAppuyer;
+		ZoomablePanel testBackground = new ZoomablePanel();
+		testBackground.setLayout(null);
+		testBackground.setOpaque(false);
+		ImageUtility imageFond = new ImageUtility("Background/fondPourSolo.png", 0);
+		imageFond.setLocation(0, 0);
+		imageFond.setSize(imageFond.getPreferredSize());
+		testBackground.add(imageFond);
+		testBackground.setLocation(this.windowBroadcastPublic.getWidth() / 2,this.windowBroadcastPublic.getHeight() / 2 );
+		testBackground.setSize(10,10);
+		windowBroadcastPublic.addContent(55, testBackground);
+		panelAnimationConfiguration.zoomPanel(testBackground, this.windowBroadcastPublic, null);
+		
+    	if(fondButtonAppuyer == false)
+			windowBroadcastPublic.setBackgroundImageLayered(event.getBackground().getImage_5(), JLayeredPane.POPUP_LAYER);
+		else
+			windowBroadcastPublic.removeLayerContent(JLayeredPane.POPUP_LAYER);
+		fondButtonAppuyer = !fondButtonAppuyer;
 	}
 
 	private void toggleBlackBackground() throws ClassNotFoundException, SQLException {
@@ -491,6 +520,47 @@ public class WindowTournamentTree extends JFrame {
 			}
 		}
 		return null;
+	}
+	private void displayFondJoueur(String typeJoueur) {
+		// nettoyage du layer du fond du joueur
+		windowBroadcastPublic.removeLayerContent(55);
+		zoomBackground.removeAll();
+		switch (typeJoueur) {
+		case "player":
+			System.out.println("-- fond pour joueur solo --");
+			ImageUtility imageFond = new ImageUtility(event.getBackground().getImage_2(), 0);
+			imageFond.setLocation(0, 0);
+			imageFond.setSize(imageFond.getPreferredSize());
+			zoomBackground.add(imageFond);
+			zoomBackground.setLocation(this.windowBroadcastPublic.getWidth() / 2,this.windowBroadcastPublic.getHeight() / 2 );
+			zoomBackground.setSize(10,10);
+			windowBroadcastPublic.addContent(55, zoomBackground);
+			break;
+		case "game":
+			System.out.println("-- fond pour joueur game --");
+			ImageUtility imageFond2= new ImageUtility(event.getBackground().getImage_3(), 0);
+			imageFond2.setLocation(0, 0);
+			imageFond2.setSize(imageFond2.getPreferredSize());
+			zoomBackground.add(imageFond2);
+			zoomBackground.setLocation(this.windowBroadcastPublic.getWidth() / 2,this.windowBroadcastPublic.getHeight() / 2 );
+			zoomBackground.setSize(10,10);
+			windowBroadcastPublic.addContent(55, zoomBackground);
+			break;
+		case "tab":
+			System.out.println("-- fond pour joueur tab --");
+			ImageUtility imageFond3 = new ImageUtility(event.getBackground().getImage_4(), 0);
+			imageFond3.setLocation(0, 0);
+			imageFond3.setSize(imageFond3.getPreferredSize());
+			zoomBackground.add(imageFond3);
+			zoomBackground.setLocation(this.windowBroadcastPublic.getWidth() / 2,this.windowBroadcastPublic.getHeight() / 2 );
+			zoomBackground.setSize(10,10);
+			windowBroadcastPublic.addContent(55, zoomBackground);
+			break;
+
+		default:
+			break;
+		}
+		
 	}
 
 	public String eventName() {

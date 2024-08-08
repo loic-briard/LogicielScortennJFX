@@ -187,14 +187,15 @@ public class MenuPrincipal extends JFrame {
         
         eventComboBox = new JComboBox<>(BDD_v2.getNamesFromDatabase("event"));
         refreshEventComboBox();
-        eventComboBox.setSelectedIndex(-1);
+        eventComboBox.setSelectedIndex(1);
         
-        Integer[] allowedValues = {0, 8, 16, 32, 64};
+//        Integer[] allowedValues = {0, 8, 16, 32, 64};
+        Integer[] allowedValues = {8, 16, 32, 64};
         SpinnerListModel spinnerInitNbJoueur = new SpinnerListModel(allowedValues);
         spinnerNbJoueur = new JSpinner(spinnerInitNbJoueur);
         
         bddPLayersComboBox = new JComboBox<>(new DefaultComboBoxModel<>(BDD_v2.tabBdd.toArray(new String[0])));
-        bddPLayersComboBox.setSelectedIndex(-1);
+        bddPLayersComboBox.setSelectedIndex(2);
         
         selectAthleteButton = new JButton("Athlete select");
         selectAthleteButton.addActionListener(e -> openAthleteSelection());

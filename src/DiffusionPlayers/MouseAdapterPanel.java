@@ -22,11 +22,11 @@ public class MouseAdapterPanel extends MouseAdapter {
 	private WindowBroadcastPublic frameForDiffusion;
 	private WindowConfigurationPlayerInfos windowConfigurationPlayerInfos;
 
-	public MouseAdapterPanel(JPanel panel, PlayerForDiffusion playerfordifusion, WindowBroadcastPublic diffusionWindow,WindowConfigurationPlayerInfos windowConfigurationPlayer) {
+	public MouseAdapterPanel(JPanel panel, PlayerForDiffusion playerfordifusion, WindowBroadcastPublic diffusionWindow) {
 		this.panel = panel;
 		this.playerfordifusion2 = playerfordifusion;
 		this.frameForDiffusion = diffusionWindow;
-		this.windowConfigurationPlayerInfos = windowConfigurationPlayer;
+//		this.windowConfigurationPlayerInfos = windowConfigurationPlayer;
 	}
 
 	public void mousePressed(MouseEvent e) {
@@ -48,7 +48,7 @@ public class MouseAdapterPanel extends MouseAdapter {
 	public void mouseReleased(MouseEvent e) {
 	    String typeFen = playerfordifusion2.getTypeFen();
 	    int playerIndex = playerfordifusion2.getNumeroPlayer();
-
+	    this.windowConfigurationPlayerInfos = playerfordifusion2.getPlacementFrameTwoPlayer();
 	    switch (typeFen) {
 	        case "player":
 	        case "game":

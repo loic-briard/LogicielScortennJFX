@@ -1,4 +1,7 @@
+/API/
+/Background/
 /Diffusion/
+/DiffusionPlayers/
 /Event/
 /Flags/
 /JFX_test/
@@ -6,6 +9,3 @@
 /Players/
 /Police/
 /Sauvegarde/
-/PlayerForDiffusion/
-/DiffusionPlayer/
-/DiffusionPlayers/

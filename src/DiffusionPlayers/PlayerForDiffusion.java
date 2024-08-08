@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -96,7 +97,8 @@ public class PlayerForDiffusion extends JPanel{
 	private static final String CONFIG_DIR = "Config/";
 	private static final String JSON_EXT = ".json";
 	private MouseAdapterPanel mouseAdapterPanel;
-	private Evenement event;
+//	private Evenement event;
+//	private BackgroundPanel backgroundPanel;
 	
 	public MouseAdapterPanel getMouseAdapterPanel() {
 		return mouseAdapterPanel;
@@ -131,16 +133,24 @@ public class PlayerForDiffusion extends JPanel{
 		this.frameForDiffusion = diffusionFrame;
 		this.typeFen = typeFrame;
 		this.nomEvent = nomEvent.getNom();
-		this.event = nomEvent;
+//		this.event = nomEvent;
 		this.numeroPlayer = numeroPlayer;
 //		this.animationFrame = frameForDiffusion.getAnimationFrame();
 		this.animationPanel = panelAnimationConfig;
+		playerfordifusion2 = this;
 
 		initializePolice();
 		createPlayerPanels();
 		recupInfosPlayer(getEmplacementPlayer());
-		playerfordifusion2 = this;
-		mouseAdapterPanel = new MouseAdapterPanel(playerfordifusion2, playerfordifusion2, diffusionFrame, windowConfigurationPlayerInfos);
+		mouseAdapterPanel = new MouseAdapterPanel(playerfordifusion2, playerfordifusion2, diffusionFrame);
+		
+//		this.frameForDiffusion.removeLayerContent(55);
+//		backgroundPanel = new BackgroundPanel(event.getBackground().getImage_2());
+//		backgroundPanel.setOpaque(false);
+//		backgroundPanel.setSize(0, 0);
+//		backgroundPanel.setLocation(this.frameForDiffusion.getWidth() / 2 - backgroundPanel.getWidth() / 2,this.frameForDiffusion.getHeight() / 2 - backgroundPanel.getHeight() / 2);
+//		frameForDiffusion.addContent(55, backgroundPanel);
+//		backgroundPanel.setVisible(false);		
 	}
 	
 	private void initializePolice() {
@@ -191,8 +201,9 @@ public class PlayerForDiffusion extends JPanel{
 	    JPanel panel = new JPanel();
 	    panel.setOpaque(false);
 	    panel.setName(name);
+	    panel.setDoubleBuffered(true);
 //	    MouseAdapterPanel mouseAdapter = new MouseAdapterPanel(panel);
-	    MouseAdapterPanel mouseAdapter = new MouseAdapterPanel(panel, playerfordifusion2, frameForDiffusion, windowConfigurationPlayerInfos);
+	    MouseAdapterPanel mouseAdapter = new MouseAdapterPanel(panel, this.playerfordifusion2, this.frameForDiffusion);
 	    panel.addMouseListener(mouseAdapter);
 	    panel.addMouseMotionListener(mouseAdapter);
 	    return panel;
@@ -257,12 +268,9 @@ public class PlayerForDiffusion extends JPanel{
 
 	private void setupGlobalPanel() {
 	    panelPlayerGlobal = new ZoomablePanel();
-	    panelPlayerGlobal.setSize(1,1);
-	    panelPlayerGlobal.setLocation(this.frameForDiffusion.getWidth()/2-panelPlayerGlobal.getWidth()/2, 
-	                                  this.frameForDiffusion.getHeight()/2-panelPlayerGlobal.getHeight()/2);
+	    panelPlayerGlobal.setLocation(this.frameForDiffusion.getWidth()/2-panelPlayerGlobal.getWidth()/2,this.frameForDiffusion.getHeight()/2-panelPlayerGlobal.getHeight()/2);
 	    panelPlayerGlobal.setLayout(null);
 	    panelPlayerGlobal.setOpaque(false);
-
 	    // Ajouter tous les panneaux au panneau global
 	    Arrays.asList(playerName, playerSurname, playerAcro, playerRank, playerBirthdate, playerBirthplace,
 	                  playerHeight, playerWeight, playerHand, playerAge, playerPrizetotal, playerCityresidence,
@@ -273,7 +281,7 @@ public class PlayerForDiffusion extends JPanel{
 	    this.setLayout(null);
 	    this.setOpaque(false);
 	    this.add(panelPlayerGlobal);
-	    this.setSize(panelPlayerGlobal.getPreferredSize());
+	    this.setSize(this.frameForDiffusion.getPreferredSize());
 	    this.setBounds(0, 0, this.frameForDiffusion.getWidth(), this.frameForDiffusion.getHeight());
 
 	    if(ligne>0)
@@ -284,12 +292,6 @@ public class PlayerForDiffusion extends JPanel{
 	}
 
 	private void handleWindowTypeSpecificBehavior() {
-		frameForDiffusion.removeLayerContent(55);
-    	BackgroundPanel backgroundPanel = new BackgroundPanel(event.getBackground().getImage_2());
-    	backgroundPanel.setOpaque(false);
-    	backgroundPanel.setSize(5, 5);
-    	backgroundPanel.setLocation(this.frameForDiffusion.getWidth()/2-backgroundPanel.getWidth()/2,this.frameForDiffusion.getHeight()/2-backgroundPanel.getHeight()/2);
-    	frameForDiffusion.addContent(55, backgroundPanel);
 //    	panelAnimationConfiguration.zoomPanel(backgroundPanel, this.windowBroadcastPublic, null);
 	    switch (typeFen) {
 	        case "full":
@@ -298,15 +300,17 @@ public class PlayerForDiffusion extends JPanel{
 	            break;
 	        case "player":
 //	        	animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, this::animatePlayerElements);
-	        	animationPanel.zoomPanel2(panelPlayerGlobal, frameForDiffusion, this::animatePlayerElements);
+//	        	backgroundPanel.setVisible(true);
+//	        	this.animationPanel.zoomPanel(backgroundPanel, this.frameForDiffusion, null);
+	        	this.animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, this::animatePlayerElements);
 	            break;
 	        default:
-	        	animationPanel.zoomPanel2(panelPlayerGlobal, frameForDiffusion, null);
+	        	animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, null);
 	    }
 	}
 
 	private void animatePlayerElements() {
-//		SwingUtilities.invokeLater(() -> {
+		SwingUtilities.invokeLater(() -> {
 			PlayerForDiffusion endPlayer = this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer];
 			if (endPlayer != null) {
 				for (Component endComponent : endPlayer.getPanelGlobal().getComponents()) {
@@ -316,7 +320,7 @@ public class PlayerForDiffusion extends JPanel{
 					}
 				}
 			}
-//		});
+		});
 	}
 
 	private void animateTextElement(Component endComponent, Point endPoint) {
