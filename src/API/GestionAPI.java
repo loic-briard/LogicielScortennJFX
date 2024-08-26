@@ -1,10 +1,12 @@
 package API;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -17,6 +19,7 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
@@ -24,7 +27,6 @@ import javax.swing.JOptionPane;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 import Main.BDD_v2;
 import Players.Joueur;
@@ -310,25 +312,64 @@ public class GestionAPI {
 		return null;
 	}
 	//permet de recuperer le classement des 500 premiers joueur du WTA
-	private String ConnexionWTA() throws IOException, InterruptedException {
-		HttpRequest request = HttpRequest.newBuilder().GET()
-				.uri(URI.create("https://allsportsapi2.p.rapidapi.com/api/tennis/rankings/wta/live")) 
-				.setHeader("X-RapidAPI-Key", s_cleAPI)
-				.setHeader("X-RapidAPI-Host", "allsportsapi2.p.rapidapi.com")
-				.build();
-		
-		HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-	
-		System.out.println("> Conexion API WTA "+response.statusCode());
-		System.out.println(response.body());
-		if(!(response.statusCode() == 401)) {
-//			s_reponse = response.body();
-			return (response.body());
-		}else {
-			JOptionPane.showMessageDialog(null, "erreur cle api : "+response.statusCode(), "Erreur", JOptionPane.ERROR_MESSAGE);
-		}
-		return null;
-	}
+	 private static String ConnexionWTA() throws IOException, InterruptedException {
+	        HttpRequest request = HttpRequest.newBuilder()
+	                .GET()
+	                .uri(URI.create("https://allsportsapi2.p.rapidapi.com/api/tennis/rankings/wta/live"))
+	                .setHeader("X-RapidAPI-Key", s_cleAPI)
+	                .setHeader("X-RapidAPI-Host", "allsportsapi2.p.rapidapi.com")
+	                .build();
+	        
+	        HttpResponse<InputStream> response = httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream());
+	        
+	        System.out.println("> Conexion API WTA " + response.statusCode());
+	        System.out.println("Headers: " + response.headers());
+	        
+	        // Vérifier si la réponse est compressée
+	        if ("gzip".equals(response.headers().firstValue("content-encoding").orElse(""))) {
+	            try (GZIPInputStream gzipInputStream = new GZIPInputStream(response.body());
+	                 BufferedReader reader = new BufferedReader(new InputStreamReader(gzipInputStream))) {
+	                StringBuilder responseBody = new StringBuilder();
+	                String line;
+	                while ((line = reader.readLine()) != null) {
+	                    responseBody.append(line);
+	                }
+	                System.out.println(responseBody.toString());
+	                return responseBody.toString();
+	            }
+	        } else {
+	            // Si la réponse n'est pas compressée
+	            try (BufferedReader reader = new BufferedReader(new InputStreamReader(response.body()))) {
+	                StringBuilder responseBody = new StringBuilder();
+	                String line;
+	                while ((line = reader.readLine()) != null) {
+	                    responseBody.append(line);
+	                }
+	                return responseBody.toString();
+	            }
+	        }
+	    }
+//	private String ConnexionWTA() throws IOException, InterruptedException {
+//		HttpRequest request = HttpRequest.newBuilder().GET()
+//				.uri(URI.create("https://allsportsapi2.p.rapidapi.com/api/tennis/rankings/wta/live")) 
+//				.setHeader("X-RapidAPI-Key", s_cleAPI)
+//				.setHeader("X-RapidAPI-Host", "allsportsapi2.p.rapidapi.com")
+//				.build();
+//		
+//		HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+//	
+//		System.out.println("> Conexion API WTA "+response.statusCode());
+//		System.out.println("Headers: " + response.headers());
+//		System.out.println(response.body().toString());
+//		
+//		if(!(response.statusCode() == 401)) {
+////			s_reponse = response.body();
+//			return (response.body());
+//		}else {
+//			JOptionPane.showMessageDialog(null, "erreur cle api : "+response.statusCode(), "Erreur", JOptionPane.ERROR_MESSAGE);
+//		}
+//		return null;
+//	}
 	//mise en forme des donées recu du tableau de l'atp et insertion dans la bdd
 	public void TAB_ATP() throws JSONException, IOException, InterruptedException, ClassNotFoundException, SQLException {
 		String s_imgTemp = "clear.png";
@@ -426,7 +467,8 @@ public class GestionAPI {
 				if (teamID.has("country")) {
 			        JSONObject countryObject = teamID.getJSONObject("country");
 			        String s_alpha2 = countryObject.optString("alpha2"); //!\\ a modifier car ici que deux carracteres pour le pays
-			        s_alpha3 = correspondanceDrapeaux.get(s_alpha2.toLowerCase()); //!\\ a modifier car ici que deux carracteres pour le pays
+			        s_alpha3 = countryObject.optString("alpha3");
+//			        s_alpha3 = correspondanceDrapeaux.get(s_alpha2.toLowerCase()); //!\\ a modifier car ici que deux carracteres pour le pays
 			    }
 				int i_ID = teamID.getInt("id");
 				//les valeurs "" et 0 seront ajouter une fois le joueur choisit sinon on atteint la limite de requete de l'api
