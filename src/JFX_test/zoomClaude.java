@@ -9,6 +9,10 @@ import java.io.File;
 import java.io.IOException;
 
 public class zoomClaude extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private BufferedImage image;
     private double progress = 0;
     private long lastTime;

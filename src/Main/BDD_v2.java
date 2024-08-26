@@ -78,10 +78,10 @@ public class BDD_v2 {
 		// nom des tales � d�finir
 		String requete = "";
 //		requete += "DROP TABLE CUSTOM IF EXISTS;";
-//		requete += "DROP TABLE WTA IF EXISTS;";
+		requete += "DROP TABLE WTA IF EXISTS;";
 //		requete += "DROP TABLE ATP IF EXISTS;";
-		requete += "DROP TABLE Background IF EXISTS;";
-		requete += "DROP TABLE Event IF EXISTS;";
+//		requete += "DROP TABLE Background IF EXISTS;";
+//		requete += "DROP TABLE Event IF EXISTS;";
 //		requete += "DROP TABLE Flag IF EXISTS;";
 
 		executerRequeteSQL(requete);

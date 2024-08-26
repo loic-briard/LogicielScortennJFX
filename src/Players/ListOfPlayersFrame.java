@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.*;
@@ -38,7 +39,8 @@ public class ListOfPlayersFrame extends JFrame {
 	private JTextField searchField = new JTextField();
 	private JComboBox<String> bddPLayersComboBox;
 	private static boolean clignotementActif = false;
-	SwingWorker<Void, Void> worker;
+	private final Object workerLock = new Object();
+	SwingWorker<Void, Void> currentWorker;
 	
 
 	public ListOfPlayersFrame() throws SQLException, ClassNotFoundException {
@@ -68,27 +70,50 @@ public class ListOfPlayersFrame extends JFrame {
 		//menu deroulant des bdd des joueurs
 		bddPLayersComboBox = new JComboBox<>(new DefaultComboBoxModel<>(BDD_v2.tabBdd.toArray(new String[0])));
         // Ajoutez un �couteur d'�v�nements au JComboBox pour g�rer la s�lection
-        bddPLayersComboBox.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String selectedEventBDD = (String) bddPLayersComboBox.getSelectedItem();
-                System.out.println("BDD selected to display : " + selectedEventBDD);
+//		bddPLayersComboBox.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				String selectedEventBDD = (String) bddPLayersComboBox.getSelectedItem();
+//				System.out.println("BDD selected to display : " + selectedEventBDD);
+//
+//				if (selectedEventBDD != null) {
+//					if (currentWorker != null && !currentWorker.isDone()) {
+//						currentWorker.cancel(true);
+//					} else {
+//						CustomTableModel model = (CustomTableModel) playersTable.getModel();
+//						model.clearData();
+//						model.fireTableDataChanged();
+//						currentPage = 0; // R�initialiser la page actuelle � z�ro
+//						loadMorePlayersData();  // Ajoutez cette ligne pour charger les nouvelles donn�es
+//						buttonsAndSearchPanel.setVisible(true);
+//						scrollPane.setVisible(true);
+//						deleteTableButton.setVisible(true);
+//						exportButton.setVisible(true);
+//					}
+//				}
+//			}
+//		});
+		bddPLayersComboBox.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        String selectedEventBDD = (String) bddPLayersComboBox.getSelectedItem();
+		        System.out.println("BDD selected to display : " + selectedEventBDD);
 
-                if (selectedEventBDD != null) {
-                	if (worker != null && !worker.isDone()) {
-			            worker.cancel(true);
-			        }
-                    CustomTableModel model = (CustomTableModel) playersTable.getModel();
-					model.clearData();
-					model.fireTableDataChanged();
-					currentPage = 0; // R�initialiser la page actuelle � z�ro
-					loadMorePlayersData();  // Ajoutez cette ligne pour charger les nouvelles donn�es
-					buttonsAndSearchPanel.setVisible(true);
-					scrollPane.setVisible(true);	
-					deleteTableButton.setVisible(true);
-					exportButton.setVisible(true);
-                }
-            }
-        });
+		        if (selectedEventBDD != null) {
+		            stopCurrentWorker().thenRun(() -> {
+		                SwingUtilities.invokeLater(() -> {
+		                	CustomTableModel model = (CustomTableModel) playersTable.getModel();
+							model.clearData();
+							model.fireTableDataChanged();
+							currentPage = 0; // R�initialiser la page actuelle � z�ro
+							loadMorePlayersData();  // Ajoutez cette ligne pour charger les nouvelles donn�es
+							buttonsAndSearchPanel.setVisible(true);
+							scrollPane.setVisible(true);
+							deleteTableButton.setVisible(true);
+							exportButton.setVisible(true);
+		                });
+		            });
+		        }
+		    }
+		});
         bddPLayersComboBox.setSelectedIndex(-1);
 
 		// ---------------------------------------------creation du tableau des joueurs--------------------------------------------------------------------------
@@ -248,8 +273,8 @@ public class ListOfPlayersFrame extends JFrame {
 					    System.out.println("++++ bdd cree : " + selectedEventBDD);
 
 		                if (selectedEventBDD != null) {
-		                	if (worker != null && !worker.isDone()) {
-					            worker.cancel(true);
+		                	if (currentWorker != null && !currentWorker.isDone()) {
+					            currentWorker.cancel(true);
 					        }
 		                    CustomTableModel model = (CustomTableModel) playersTable.getModel();
 							model.clearData();
@@ -412,8 +437,8 @@ public class ListOfPlayersFrame extends JFrame {
 		addWindowListener(new WindowAdapter() {
 		    @Override
 		    public void windowClosing(WindowEvent e) {
-		        if (worker != null && !worker.isDone()) {
-		            worker.cancel(true);
+		        if (currentWorker != null && !currentWorker.isDone()) {
+		            currentWorker.cancel(true);
 		        }
 		        try {
 					Main.MenuPrincipal.refreshPlayerTableCombobox();
@@ -430,6 +455,10 @@ public class ListOfPlayersFrame extends JFrame {
 	        System.out.println("Les donnees chargent...");
 	        return;
 	    }
+	    if (currentWorker != null && !currentWorker.isDone()) {
+	        System.out.println("Une tâche de chargement est déjà en cours.");
+	        return;
+	    }
 
 	    String selectedBDD = (String) bddPLayersComboBox.getSelectedItem();
 	    if (selectedBDD == null) {
@@ -442,15 +471,15 @@ public class ListOfPlayersFrame extends JFrame {
 	    loadingData = true;
 	    
 	    // Attendre que le worker précédent soit terminé
-	    if (worker != null && !worker.isDone()) {
+	    if (currentWorker != null && !currentWorker.isDone()) {
 	        try {
-	            worker.get(); // Attendre que le worker précédent se termine
+	            currentWorker.get(); // Attendre que le worker précédent se termine
 	        } catch (InterruptedException | ExecutionException e) {
 	            e.printStackTrace();
 	        }
 	    }
 
-	    worker = new SwingWorker<Void, Void>() {
+	    currentWorker = new SwingWorker<Void, Void>() {
 	        @Override
 	        protected Void doInBackground() throws Exception {
 	            try {
@@ -504,9 +533,31 @@ public class ListOfPlayersFrame extends JFrame {
 	            loadingData = false;
 	        }
 	    };
-
-	    worker.execute();
+	    
+	    currentWorker.execute();
 	}
+	
+	private CompletableFuture<Void> stopCurrentWorker() {
+	    CompletableFuture<Void> future = new CompletableFuture<>();
+	    
+	    synchronized (workerLock) {
+	        if (currentWorker != null && !currentWorker.isDone()) {
+	            currentWorker.cancel(true);
+	            currentWorker.addPropertyChangeListener(evt -> {
+	                if ("state".equals(evt.getPropertyName()) && 
+	                    SwingWorker.StateValue.DONE == evt.getNewValue()) {
+	                    future.complete(null);
+	                }
+	            });
+	        } else {
+	            future.complete(null);
+	        }
+	        currentWorker = null;
+	    }
+	    
+	    return future;
+	}
+	
 	private static void changerContourTemporaire(JComboBox<?> comboBox) {
 	    // Sauvegarde de la bordure d'origine
 	    Border bordureOriginale = comboBox.getBorder();

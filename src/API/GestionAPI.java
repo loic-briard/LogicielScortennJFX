@@ -32,7 +32,7 @@ import Players.Joueur;
 public class GestionAPI {
 
 	public static String s_reponse = "";
-	public static String s_cleAPI = "c837b75253mshe24f11571463ee5p17f8b3jsn31aa86731177";//c837b75253mshe24f11571463ee5p17f8b3jsn31aa86731177 | 7fb7968a03mshd012795cea9a38bp1a4c84jsn2816ff2c7b61
+	public static String s_cleAPI = "7fb7968a03mshd012795cea9a38bp1a4c84jsn2816ff2c7b61";//c837b75253mshe24f11571463ee5p17f8b3jsn31aa86731177 | 7fb7968a03mshd012795cea9a38bp1a4c84jsn2816ff2c7b61
 	private static final HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1).connectTimeout(Duration.ofSeconds(10)).build();
 	Map<String, String> correspondanceDrapeaux = new HashMap<>();
     	
@@ -318,8 +318,9 @@ public class GestionAPI {
 				.build();
 		
 		HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-		
+	
 		System.out.println("> Conexion API WTA "+response.statusCode());
+		System.out.println(response.body());
 		if(!(response.statusCode() == 401)) {
 //			s_reponse = response.body();
 			return (response.body());
