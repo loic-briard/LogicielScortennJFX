@@ -25,7 +25,7 @@ public class ListOfPlayersFrame extends JFrame {
 //    private boolean loadingData = false;  // Indique si les donn�es sont actuellement en cours de chargement
 
     public JTable playersTable;
-    private CustomTableModel2 tableModel;
+    private CustomTableModelJoueur tableModel;
     private JScrollPane scrollPane;
     Object[][] tableData = null;
 	private JTextField searchField = new JTextField();
@@ -92,7 +92,7 @@ public class ListOfPlayersFrame extends JFrame {
 
 		// ---------------------------------------------creation du tableau des joueurs--------------------------------------------------------------------------
         
-        tableModel = new CustomTableModel2(new Object[][]{});
+        tableModel = new CustomTableModelJoueur(new Object[][]{});
         playersTable = new JTable(tableModel){
 			private static final long serialVersionUID = 1L;
 
@@ -132,7 +132,7 @@ public class ListOfPlayersFrame extends JFrame {
 
             private void updateSelection() {
                 String searchText = searchField.getText().trim().toLowerCase();
-                CustomTableModel model = (CustomTableModel) playersTable.getModel(); // Utilisez CustomTableModel ici
+                CustomTableModelJoueur model = (CustomTableModelJoueur) playersTable.getModel(); // Utilisez CustomTableModel ici
 
                 for (int row = 0; row < model.getRowCount(); row++) {
                     String playerName = (String) model.getValueAt(row, 4).toString().toLowerCase();
@@ -313,7 +313,7 @@ public class ListOfPlayersFrame extends JFrame {
 					try {
 						BDD_v2.deleteJoueur(playerName, (String) bddPLayersComboBox.getSelectedItem());
 						// Supprimez la ligne du mod�le de tableau
-			            CustomTableModel2 model = (CustomTableModel2) playersTable.getModel();
+			            CustomTableModelJoueur model = (CustomTableModelJoueur) playersTable.getModel();
 			            model.removeRow(selectedRow);
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block

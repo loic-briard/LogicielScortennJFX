@@ -1,4 +1,4 @@
-package Players;
+package Flags;
 
 import java.awt.Image;
 import java.io.File;
@@ -12,16 +12,16 @@ import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 
 
-public class CustomTableModel2 extends AbstractTableModel {
+public class CustomTableModelFlag extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
-    private String[] columnNames = { "ID", "Sex", "Name", "Surname", "Display name", "Nationality", "Flag", "Player image", "Ranking", "Prize Total", "Height", "Hand", "Age", "Weight", "Birthdate", "Birthplace", "City Residence"};
+    private String[] columnNames = { "Acronym", "Flag" };
     private List<Object[]> data;
     private ExecutorService imageLoader = Executors.newFixedThreadPool(2);
     private ImageIcon loadingIcon = new ImageIcon("loading.png");
     private ConcurrentHashMap<String, ImageIcon> imageCache = new ConcurrentHashMap<>();
     private static final int IMAGE_HEIGHT = 60;
 
-    public CustomTableModel2(Object[][] data) {
+    public CustomTableModelFlag(Object[][] data) {
         this.data = new ArrayList<>();
         for (Object[] row : data) {
             this.data.add(row);
@@ -43,7 +43,7 @@ public class CustomTableModel2 extends AbstractTableModel {
     @Override
     public Object getValueAt(int row, int col) {
         Object value = data.get(row)[col];
-        if ((col == 6 || col == 7) && value instanceof String) {
+        if (col == 1 && value instanceof String) {
             String imagePath = (String) value;
             if (imageCache.containsKey(imagePath)) {
                 return imageCache.get(imagePath);
@@ -72,7 +72,7 @@ public class CustomTableModel2 extends AbstractTableModel {
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        if (columnIndex == 6 || columnIndex == 7) {
+        if (columnIndex == 1 ) {
             return ImageIcon.class;
         }
         return super.getColumnClass(columnIndex);
@@ -80,12 +80,11 @@ public class CustomTableModel2 extends AbstractTableModel {
 
     public void loadImages() {
         imageLoader.shutdownNow(); // Arrête les tâches de chargement précédentes
-        imageLoader = Executors.newFixedThreadPool(2); // Crée un nouveau pool de threads
+        imageLoader = Executors.newFixedThreadPool(1); // Crée un nouveau pool de threads
         for (int row = 0; row < getRowCount(); row++) {
             final int finalRow = row;
             imageLoader.submit(() -> {
-                loadImageForCell(finalRow, 6); // Flag
-                loadImageForCell(finalRow, 7); // Player image
+                loadImageForCell(finalRow, 1); // Flag
             });
         }
     }

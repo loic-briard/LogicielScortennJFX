@@ -1,13 +1,10 @@
 package Flags;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -16,20 +13,21 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.SwingWorker;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-
+import javax.swing.SwingUtilities;
 import Main.BDD_v2;
-import Main.ImageUtility;
 
 public class ListOfFlag extends JFrame {
     private static final long serialVersionUID = 1L;
-    private JTable flagTable;
     private JTextField searchField;
     private JButton modifyButton;
 	private JButton searchButton;
-	private SwingWorker<Void, Object[]> worker;
+//	private SwingWorker<Void, Object[]> worker;
+	
+	public JTable flagTable;
+    public CustomTableModelFlag tableModelFlag;
+    private JScrollPane scrollPaneFlag;
+    Object[][] tableData = null;
+	private static final int IMAGE_HEIGHT = 60;
 
     public ListOfFlag() throws SQLException {
         // Initialisation de la fen�tre
@@ -45,39 +43,25 @@ public class ListOfFlag extends JFrame {
             System.err.println("Impossible de charger l'ic�ne.");
         }
 
-        // Cr�ez un mod�le de table
-        String[] columnNames = { "Acronym", "Flag" };
-        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
-            private static final long serialVersionUID = 1L;
+        // Cr�ez un mod�le de table -------------------------------------------------------------------------------------------------------------------------
+        tableModelFlag = new CustomTableModelFlag(new Object[][]{});
+        flagTable = new JTable(tableModelFlag){
+			private static final long serialVersionUID = 1L;
 
-            @Override
-            public Class<?> getColumnClass(int column) {
-                if (column == 1) {
-                    return ImageUtility.class; // La colonne des images utilise la classe ImageUtility
-                } else {
-                    return Object.class; // Les autres colonnes sont de type Object
-                }
-            }
-        };
-        // Cr�ez un JTable avec le mod�le de table
-        flagTable = new JTable(tableModel);
-        flagTable.setRowHeight(60);
-        // Cr�ation d'un rendu personnalis� pour afficher les images
-        DefaultTableCellRenderer imageRenderer = new DefaultTableCellRenderer() {
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                if (value instanceof ImageUtility) {
-                    ImageUtility imageUtility = (ImageUtility) value;
-                    return imageUtility;
-                }
-                return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            }
-        };
-        // Appliquez le rendu personnalis� � la colonne des images
-        flagTable.getColumnModel().getColumn(1).setCellRenderer(imageRenderer);
-
+			@Override
+    	    public boolean getScrollableTracksViewportHeight() {
+    	        return getPreferredSize().height < getParent().getHeight();
+    	    }
+    	};
+    	flagTable.setRowHeight(IMAGE_HEIGHT);
+        flagTable.setDefaultRenderer(ImageIcon.class, new ImageRendererFlags());
+        scrollPaneFlag = new JScrollPane(flagTable);
+        tableData = BDD_v2.DataFlag();
+        SwingUtilities.invokeLater(() -> {
+            tableModelFlag.setNewData(tableData);
+            tableModelFlag.loadImages();
+        });
+        //------------------------------------------------------------------------------------------------------------------------------------------------
         // Champ de recherche
         searchField = new JTextField(20);
         // Bouton "Modifier"
@@ -112,79 +96,67 @@ public class ListOfFlag extends JFrame {
 				if (selectedRow >= 0) {
 					// Obtenez les donn�es de la ligne s�lectionn�e
 					String flagName = (String) flagTable.getValueAt(selectedRow, 0);
-					ImageUtility imageUtility = (ImageUtility) flagTable.getValueAt(selectedRow, 1);
-					String imgPath = imageUtility.getImagePath();
+//					ImageUtility imageUtility = (ImageUtility) flagTable.getValueAt(selectedRow, 1);
+					ImageIcon img_flag = (ImageIcon) flagTable.getValueAt(selectedRow, 1);
+					String string_flag = img_flag.getDescription();
+//					String imgPath = imageUtility.getImagePath();
 					// Ouvrir une fen�tre de modification avec ces donn�es
-					new ModifyFlagFrame(ListOfFlag.this, flagName, imgPath);
+					new ModifyFlagFrame(ListOfFlag.this, flagName, string_flag,selectedRow);
 				}
 			}
 		});
 
         // Ajout du JTable � la fen�tre
-        JScrollPane scrollPane = new JScrollPane(flagTable);
-        add(scrollPane);
+        add(scrollPaneFlag);
 
         // Rendez la fen�tre visible
         setVisible(true);
-
-        // Chargement des donn�es en arri�re-plan
-        loadFlagsInBackground();
-        
-		// Appel de l'annulation lorsque la fen�tre est ferm�e
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				if (worker != null && !worker.isDone()) {
-					worker.cancel(true);
-				}
-			}
-		});
     }
-
-    private void loadFlagsInBackground() {
-    	worker = new SwingWorker<Void, Object[]>() {
-            @Override
-            protected Void doInBackground() throws Exception {
-                // R�cup�rez les donn�es de la base de donn�es
-                String[][] flagData = BDD_v2.DataFlag();
-
-                // Ajoutez les donn�es � la table apr�s le chargement
-                for (String[] data : flagData) {
-                	if (isCancelled()) {
-                        // Si l'annulation est demand�e, sortez de la boucle
-                        System.out.println("! Chargement annule.");
-                        return null;
-                    }
-                    Object[] rowData = new Object[]{data[0], new ImageUtility(data[1], 55)};
-                    publish(rowData); // Publiez les donn�es pour les afficher dans l'EDT
-                }
-
-                return null;
-            }
-
-            @Override
-            protected void process(java.util.List<Object[]> chunks) {
-                // Ajoutez les donn�es publi�es � la table
-                for (Object[] rowData : chunks) {
-                    DefaultTableModel model = (DefaultTableModel) flagTable.getModel();
-                    model.addRow(rowData);
-                    
-                }
-            }
-        };
-        // D�marrer le SwingWorker
-        worker.execute();
-    }
-    
-    public void refreshModifiedRow(String oldName, String newName, String newImage) throws SQLException {
-        DefaultTableModel model = (DefaultTableModel) flagTable.getModel();
-        for (int row = 0; row < model.getRowCount(); row++) {
-            String name = (String) model.getValueAt(row, 0);
-            if (name.equals(oldName)) {
-                model.setValueAt(newName, row, 0);
-                model.setValueAt(new ImageUtility(newImage, 55), row, 1);
-                break; // Sortez de la boucle une fois que la ligne modifi�e a �t� trouv�e
-            }
-        }
-    }
+//
+//    private void loadFlagsInBackground() {
+//    	worker = new SwingWorker<Void, Object[]>() {
+//            @Override
+//            protected Void doInBackground() throws Exception {
+//                // R�cup�rez les donn�es de la base de donn�es
+//                String[][] flagData = BDD_v2.DataFlag();
+//
+//                // Ajoutez les donn�es � la table apr�s le chargement
+//                for (String[] data : flagData) {
+//                	if (isCancelled()) {
+//                        // Si l'annulation est demand�e, sortez de la boucle
+//                        System.out.println("! Chargement annule.");
+//                        return null;
+//                    }
+//                    Object[] rowData = new Object[]{data[0], new ImageUtility(data[1], 55)};
+//                    publish(rowData); // Publiez les donn�es pour les afficher dans l'EDT
+//                }
+//
+//                return null;
+//            }
+//
+//            @Override
+//            protected void process(java.util.List<Object[]> chunks) {
+//                // Ajoutez les donn�es publi�es � la table
+//                for (Object[] rowData : chunks) {
+//                    DefaultTableModel model = (DefaultTableModel) flagTable.getModel();
+//                    model.addRow(rowData);
+//                    
+//                }
+//            }
+//        };
+//        // D�marrer le SwingWorker
+//        worker.execute();
+//    }
+//    
+//    public void refreshModifiedRow(String oldName, String newName, String newImage) throws SQLException {
+//        DefaultTableModel model = (DefaultTableModel) flagTable.getModel();
+//        for (int row = 0; row < model.getRowCount(); row++) {
+//            String name = (String) model.getValueAt(row, 0);
+//            if (name.equals(oldName)) {
+//                model.setValueAt(newName, row, 0);
+//                model.setValueAt(new ImageUtility(newImage, 55), row, 1);
+//                break; // Sortez de la boucle une fois que la ligne modifi�e a �t� trouv�e
+//            }
+//        }
+//    }
 }

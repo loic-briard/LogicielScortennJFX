@@ -185,7 +185,7 @@ public class ModifyPlayersFrame extends JFrame{
                     
                     joueurModifier = new Object[] {iD, sexe, playerName, playerSurname, displayName, acroNat, flag, imgJoueur,
                             ranking,prize,height,hand,age, weight, getDate(birthdateChooser),birthplace,cityResidence};
-                    CustomTableModel2 model = (CustomTableModel2) parentFrame.playersTable.getModel();
+                    CustomTableModelJoueur model = (CustomTableModelJoueur) parentFrame.playersTable.getModel();
                     model.updateRow(selectedRow, joueurModifier);
                     model.loadImages();
 //                    DefaultTableCellRenderer imageRenderer = new DefaultTableCellRenderer() {

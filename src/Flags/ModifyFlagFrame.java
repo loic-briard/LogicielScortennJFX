@@ -9,7 +9,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.sql.SQLException;
 
 public class ModifyFlagFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -25,7 +24,7 @@ public class ModifyFlagFrame extends JFrame {
     
     private JButton loadButton;
 
-    public ModifyFlagFrame(ListOfFlag parentFrame, String currentName, String imgPath) {
+    public ModifyFlagFrame(ListOfFlag parentFrame, String currentName, String imgPath, int selectedRow) {
 		//this.parentFrame = parentFrame;
     	this.currentName = currentName;
         this.currentImage = imgPath;
@@ -62,15 +61,14 @@ public class ModifyFlagFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 newName = nameField.getText();
                 String newFlag[] = {newName, currentImage};
+                Object newFlagObj[] = {newName, currentImage};
                 BDD_v2.updateFlagInDatabase(currentName, newFlag);
                 // Fermez la fen�tre de modification
                 dispose();
-                //mettre a jour la ligne qui a �t� moddifi� ici 
-                try {
-                    parentFrame.refreshModifiedRow(currentName, newName, currentImage);
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
+                CustomTableModelFlag model = (CustomTableModelFlag) parentFrame.flagTable.getModel();
+				model.updateRow(selectedRow, newFlagObj);
+				model.loadImages();
+//                    parentFrame.refreshModifiedRow(currentName, newName, currentImage);
             }
         });
         

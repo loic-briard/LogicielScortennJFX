@@ -248,7 +248,7 @@ public class newPlayerFrame extends JFrame {
 		                String playerImagePath = data[6];
 		                if (playerImagePath == null)
 		                    playerImagePath = "clear.png";
-		                CustomTableModel2 model = (CustomTableModel2) parentFrame.playersTable.getModel();
+		                CustomTableModelJoueur model = (CustomTableModelJoueur) parentFrame.playersTable.getModel();
 		                model.addRow(new Object[] { data[0], data[1], data[2], data[3], data[4], data[5], flagImagePath, playerImagePath, data[7], data[8],
 		                        data[9], data[10], data[11], data[12], data[13], data[14], data[15] });
 		                System.out.println("++++ Données traitées : " + Arrays.toString(data));
