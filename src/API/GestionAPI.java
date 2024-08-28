@@ -466,13 +466,13 @@ public class GestionAPI {
 			    String s_alpha3 = "";
 				if (teamID.has("country")) {
 			        JSONObject countryObject = teamID.getJSONObject("country");
-			        String s_alpha2 = countryObject.optString("alpha2"); //!\\ a modifier car ici que deux carracteres pour le pays
+//			        String s_alpha2 = countryObject.optString("alpha2"); //!\\ a modifier car ici que deux carracteres pour le pays
 			        s_alpha3 = countryObject.optString("alpha3");
 //			        s_alpha3 = correspondanceDrapeaux.get(s_alpha2.toLowerCase()); //!\\ a modifier car ici que deux carracteres pour le pays
 			    }
 				int i_ID = teamID.getInt("id");
 				//les valeurs "" et 0 seront ajouter une fois le joueur choisit sinon on atteint la limite de requete de l'api
-				Joueur joueur = new Joueur(i_ID, "femme",s_name, s_surname, s_displayName, s_alpha3, "", s_imgTemp, i_rankingValue, 0, "", 0, 0, "", "", "");
+				Joueur joueur = new Joueur(i_ID, "women",s_name, s_surname, s_displayName, s_alpha3, "", s_imgTemp, i_rankingValue, 0, "", 0, 0, "", "", "");
 				
 				System.out.println("  + player added in WTA, name : "+s_name+", surname : "+s_surname);
 				//insertion dans la base de données

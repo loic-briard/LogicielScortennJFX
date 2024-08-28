@@ -69,7 +69,6 @@ public class MainJFX {
                 app.setVisible(true);
             }
         });
-		
 		//BDD_v2.deconnexionBDD();
 	}
  // M�thode pour tester si un dossier existe dans le JAR

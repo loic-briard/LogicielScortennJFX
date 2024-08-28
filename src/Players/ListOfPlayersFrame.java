@@ -2,45 +2,38 @@ package Players;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
-import javax.swing.table.*;
-
 import Main.BDD_v2;
 import Main.ImageUtility;
 
 public class ListOfPlayersFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
-	private static final int PAGE_SIZE = 5;  // Ajustez selon vos besoins
+//	private static final int PAGE_SIZE = 5;  // Ajustez selon vos besoins
 //	private static final int MAX_PLAYERS = 100; // Limite de joueurs � charger
-    private int currentPage = 0;
-    private boolean loadingData = false;  // Indique si les donn�es sont actuellement en cours de chargement
+//    private int currentPage = 0;
+//    private boolean loadingData = false;  // Indique si les donn�es sont actuellement en cours de chargement
 
     public JTable playersTable;
+    private CustomTableModel2 tableModel;
     private JScrollPane scrollPane;
+    Object[][] tableData = null;
 	private JTextField searchField = new JTextField();
 	private JComboBox<String> bddPLayersComboBox;
 	private static boolean clignotementActif = false;
-	private final Object workerLock = new Object();
-	SwingWorker<Void, Void> currentWorker;
+//	private final Object workerLock = new Object();
+//	SwingWorker<Void, Void> currentWorker;
+	private static final int IMAGE_HEIGHT = 60;
 	
 
 	public ListOfPlayersFrame() throws SQLException, ClassNotFoundException {
@@ -69,48 +62,29 @@ public class ListOfPlayersFrame extends JFrame {
 		
 		//menu deroulant des bdd des joueurs
 		bddPLayersComboBox = new JComboBox<>(new DefaultComboBoxModel<>(BDD_v2.tabBdd.toArray(new String[0])));
-        // Ajoutez un �couteur d'�v�nements au JComboBox pour g�rer la s�lection
-//		bddPLayersComboBox.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				String selectedEventBDD = (String) bddPLayersComboBox.getSelectedItem();
-//				System.out.println("BDD selected to display : " + selectedEventBDD);
-//
-//				if (selectedEventBDD != null) {
-//					if (currentWorker != null && !currentWorker.isDone()) {
-//						currentWorker.cancel(true);
-//					} else {
-//						CustomTableModel model = (CustomTableModel) playersTable.getModel();
-//						model.clearData();
-//						model.fireTableDataChanged();
-//						currentPage = 0; // R�initialiser la page actuelle � z�ro
-//						loadMorePlayersData();  // Ajoutez cette ligne pour charger les nouvelles donn�es
-//						buttonsAndSearchPanel.setVisible(true);
-//						scrollPane.setVisible(true);
-//						deleteTableButton.setVisible(true);
-//						exportButton.setVisible(true);
-//					}
-//				}
-//			}
-//		});
 		bddPLayersComboBox.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		        String selectedEventBDD = (String) bddPLayersComboBox.getSelectedItem();
 		        System.out.println("BDD selected to display : " + selectedEventBDD);
-
+		        
 		        if (selectedEventBDD != null) {
-		            stopCurrentWorker().thenRun(() -> {
-		                SwingUtilities.invokeLater(() -> {
-		                	CustomTableModel model = (CustomTableModel) playersTable.getModel();
-							model.clearData();
-							model.fireTableDataChanged();
-							currentPage = 0; // R�initialiser la page actuelle � z�ro
-							loadMorePlayersData();  // Ajoutez cette ligne pour charger les nouvelles donn�es
-							buttonsAndSearchPanel.setVisible(true);
-							scrollPane.setVisible(true);
-							deleteTableButton.setVisible(true);
-							exportButton.setVisible(true);
-		                });
+		        	try {
+						tableData = BDD_v2.DataJoueur(selectedEventBDD);
+					} catch (ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+		        	SwingUtilities.invokeLater(() -> {
+		                tableModel.setNewData(tableData);
+		                tableModel.loadImages();
 		            });
+		        	buttonsAndSearchPanel.setVisible(true);
+					scrollPane.setVisible(true);
+					deleteTableButton.setVisible(true);
+					exportButton.setVisible(true);
 		        }
 		    }
 		});
@@ -118,27 +92,19 @@ public class ListOfPlayersFrame extends JFrame {
 
 		// ---------------------------------------------creation du tableau des joueurs--------------------------------------------------------------------------
         
-        CustomTableModel tableModel = new CustomTableModel();
-        playersTable = new JTable(tableModel);
-        playersTable.setRowHeight(60);
-        
-        DefaultTableCellRenderer imageRenderer = new DefaultTableCellRenderer() {
+        tableModel = new CustomTableModel2(new Object[][]{});
+        playersTable = new JTable(tableModel){
 			private static final long serialVersionUID = 1L;
 
 			@Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                if (value instanceof ImageUtility) {
-                    ImageUtility imageUtility = (ImageUtility) value;
-                    return imageUtility;
-                }
-                return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            }
-        };
-
-        playersTable.getColumnModel().getColumn(6).setCellRenderer(imageRenderer);
-        playersTable.getColumnModel().getColumn(7).setCellRenderer(imageRenderer);
-
-
+    	    public boolean getScrollableTracksViewportHeight() {
+    	        return getPreferredSize().height < getParent().getHeight();
+    	    }
+    	};
+    	playersTable.setRowHeight(IMAGE_HEIGHT);
+        playersTable.setDefaultRenderer(ImageUtility.class, new ImageRenderer());
+        scrollPane = new JScrollPane(playersTable);
+        
 		//-----------------------------------------------------------------------------------------------------------------------------------------
 		// Cr�er un panneau pour le champ de recherche
 		JPanel searchPanel = new JPanel();
@@ -233,28 +199,10 @@ public class ListOfPlayersFrame extends JFrame {
         // Ajoutez le panneau principal en haut de la fen�tre
         add(mainPanel, BorderLayout.NORTH);
 		// ajout du tableau defilant
-		scrollPane = new JScrollPane(playersTable);
+		
 	    add(scrollPane);
 	    scrollPane.setVisible(false);
 		setVisible(true);
-		
-		/*//ajout d'un ecouteur d'event sur la barre de defilement verticale, chragement lorsque on atteint le bas
-		JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
-		verticalScrollBar.addAdjustmentListener(new AdjustmentListener() {
-		    @Override
-		    public void adjustmentValueChanged(AdjustmentEvent e) {
-		        // V�rifier si la barre de d�filement est en bas
-//		        if (e.getValueIsAdjusting() && e.getAdjustable().getValue() == e.getAdjustable().getMaximum() - e.getAdjustable().getVisibleAmount()) {
-//		            loadMorePlayersData();
-//		        }
-
-//		        // V�rifier si la barre de d�filement est d�sactiv�e (en bas et ne peut pas descendre davantage)
-//		        if (e.getValue() == e.getAdjustable().getMaximum() - e.getAdjustable().getVisibleAmount()) {
-//		            System.out.println("La barre de d�filement est en bas et ne peut pas descendre davantage.");
-//		            loadMorePlayersData();
-//		        }
-		    }
-		});*/
 		
 		createButton.addActionListener(new ActionListener() {
 			@Override
@@ -273,14 +221,19 @@ public class ListOfPlayersFrame extends JFrame {
 					    System.out.println("++++ bdd cree : " + selectedEventBDD);
 
 		                if (selectedEventBDD != null) {
-		                	if (currentWorker != null && !currentWorker.isDone()) {
-					            currentWorker.cancel(true);
-					        }
-		                    CustomTableModel model = (CustomTableModel) playersTable.getModel();
-							model.clearData();
-							model.fireTableDataChanged();
-							currentPage = 0; // R�initialiser la page actuelle � z�ro
-							loadMorePlayersData();  // Ajoutez cette ligne pour charger les nouvelles donn�es
+		                	try {
+								tableData = BDD_v2.DataJoueur(selectedEventBDD);
+							} catch (ClassNotFoundException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+				        	SwingUtilities.invokeLater(() -> {
+				                tableModel.setNewData(tableData);
+				                tableModel.loadImages();
+				            });
 							buttonsAndSearchPanel.setVisible(true);
 							scrollPane.setVisible(true);
 							deleteTableButton.setVisible(true);
@@ -329,8 +282,12 @@ public class ListOfPlayersFrame extends JFrame {
 					String playerSurname = (String) playersTable.getValueAt(selectedRow, 3);
 					String DisplayName = (String) playersTable.getValueAt(selectedRow, 4);
 					String acroNat = (String) playersTable.getValueAt(selectedRow, 5);
-					ImageUtility flag = (ImageUtility) playersTable.getValueAt(selectedRow, 6);
-					ImageUtility imgJoueur = (ImageUtility) playersTable.getValueAt(selectedRow, 7);
+					ImageIcon img_flag = (ImageIcon) playersTable.getValueAt(selectedRow, 6);
+					String string_flag = img_flag.getDescription();
+//					ImageUtility flag = (ImageUtility) playersTable.getValueAt(selectedRow, 6);
+					ImageIcon img_Joueur = (ImageIcon) playersTable.getValueAt(selectedRow, 7);
+					String string_joueur = img_Joueur.getDescription();
+//					ImageUtility imgJoueur = (ImageUtility) playersTable.getValueAt(selectedRow, 7);
 					String ranking = (String) playersTable.getValueAt(selectedRow, 8);
 					String prize = (String) playersTable.getValueAt(selectedRow, 9);
 					String height = (String) playersTable.getValueAt(selectedRow, 10);
@@ -341,7 +298,7 @@ public class ListOfPlayersFrame extends JFrame {
 					String birthplace = (String) playersTable.getValueAt(selectedRow, 15);
 					String cityResidence = (String) playersTable.getValueAt(selectedRow, 16);
 
-					new ModifyPlayersFrame(ListOfPlayersFrame.this, ID, sexe, playerName, playerSurname, DisplayName, acroNat, flag, bithdate, imgJoueur, ranking, height, hand, age, weight, prize,
+					new ModifyPlayersFrame(ListOfPlayersFrame.this, ID, sexe, playerName, playerSurname, DisplayName, acroNat, string_flag, bithdate, string_joueur, ranking, height, hand, age, weight, prize,
 							birthplace, cityResidence, (String) bddPLayersComboBox.getSelectedItem(),selectedRow);
 				}
 			}
@@ -356,7 +313,7 @@ public class ListOfPlayersFrame extends JFrame {
 					try {
 						BDD_v2.deleteJoueur(playerName, (String) bddPLayersComboBox.getSelectedItem());
 						// Supprimez la ligne du mod�le de tableau
-			            CustomTableModel model = (CustomTableModel) playersTable.getModel();
+			            CustomTableModel2 model = (CustomTableModel2) playersTable.getModel();
 			            model.removeRow(selectedRow);
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
@@ -417,15 +374,19 @@ public class ListOfPlayersFrame extends JFrame {
 			    System.out.println("Creation de la bdd du fichier " + selectedEventBDD);
 
                 if (selectedEventBDD != null) {
-//                	if (worker != null && !worker.isDone()) {
-//                		System.out.println("! Chargement annulee dans import CSV !");
-//			            worker.cancel(true);
-//			        }
-                    CustomTableModel model = (CustomTableModel) playersTable.getModel();
-					model.clearData();
-					model.fireTableDataChanged();
-					currentPage = 0; // R�initialiser la page actuelle � z�ro
-					loadMorePlayersData();  // Ajoutez cette ligne pour charger les nouvelles donn�es
+					try {
+						tableData = BDD_v2.DataJoueur(selectedEventBDD);
+					} catch (ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					SwingUtilities.invokeLater(() -> {
+						tableModel.setNewData(tableData);
+						tableModel.loadImages();
+					});
 					buttonsAndSearchPanel.setVisible(true);
 					scrollPane.setVisible(true);
 					deleteTableButton.setVisible(true);
@@ -434,23 +395,23 @@ public class ListOfPlayersFrame extends JFrame {
 			}
 		});
 		// Appel de l'annulation lorsque la fen�tre est ferm�e
-		addWindowListener(new WindowAdapter() {
-		    @Override
-		    public void windowClosing(WindowEvent e) {
-		        if (currentWorker != null && !currentWorker.isDone()) {
-		            currentWorker.cancel(true);
-		        }
-		        try {
-					Main.MenuPrincipal.refreshPlayerTableCombobox();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-		    }
-		});
+//		addWindowListener(new WindowAdapter() {
+//		    @Override
+//		    public void windowClosing(WindowEvent e) {
+//		        if (currentWorker != null && !currentWorker.isDone()) {
+//		            currentWorker.cancel(true);
+//		        }
+//		        try {
+//					Main.MenuPrincipal.refreshPlayerTableCombobox();
+//				} catch (SQLException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//		    }
+//		});
 	}
 
-	private void loadMorePlayersData() {
+	/*private void loadMorePlayersData() {
 	    if (loadingData) {
 	        System.out.println("Les donnees chargent...");
 	        return;
@@ -535,9 +496,9 @@ public class ListOfPlayersFrame extends JFrame {
 	    };
 	    
 	    currentWorker.execute();
-	}
+	}*/
 	
-	private CompletableFuture<Void> stopCurrentWorker() {
+	/*private CompletableFuture<Void> stopCurrentWorker() {
 	    CompletableFuture<Void> future = new CompletableFuture<>();
 	    
 	    synchronized (workerLock) {
@@ -556,7 +517,7 @@ public class ListOfPlayersFrame extends JFrame {
 	    }
 	    
 	    return future;
-	}
+	}*/
 	
 	private static void changerContourTemporaire(JComboBox<?> comboBox) {
 	    // Sauvegarde de la bordure d'origine

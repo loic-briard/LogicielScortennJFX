@@ -1,6 +1,5 @@
 package Players;
 
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -17,8 +16,6 @@ import java.util.Date;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-
 import Main.BDD_v2;
 import Main.ImageUtility;
 
@@ -54,10 +51,10 @@ public class ModifyPlayersFrame extends JFrame{
     private JDateChooser birthdateChooser;
     
 	public ModifyPlayersFrame(ListOfPlayersFrame parentFrame, String iD, String sexe, String playerName, String playerSurname, String displayName, 
-			String acroNat, ImageUtility flag, String bithdate, ImageUtility imgJoueur, String ranking, String height, String hand, String age, 
+			String acroNat, String flag, String bithdate, String imgJoueur, String ranking, String height, String hand, String age, 
 			String weight, String prize, String birthplace, String cityResidence, String bddChoosen, int selectedRow) {
-		this.currentImage = imgJoueur.getImagePath();
-		this.currentFlag = flag.getImagePath();
+		this.currentImage = imgJoueur;
+		this.currentFlag = flag;
 		this.bddchoosen = bddChoosen;
 		
 		setTitle("Modify players : "+playerName +" "+playerSurname);
@@ -186,25 +183,26 @@ public class ModifyPlayersFrame extends JFrame{
                             Integer.parseUnsignedInt(ranking), height,hand,age, weight,prize,birthplace,cityResidence, bddchoosen);
                     dispose();
                     
-                    joueurModifier = new Object[] {Integer.parseUnsignedInt(iD), sexe, playerName, playerSurname, displayName, acroNat, flag, imgJoueur,
-                            Integer.parseUnsignedInt(ranking),prize,height,hand,age, weight, getDate(birthdateChooser),birthplace,cityResidence};
-                    CustomTableModel model = (CustomTableModel) parentFrame.playersTable.getModel();
+                    joueurModifier = new Object[] {iD, sexe, playerName, playerSurname, displayName, acroNat, flag, imgJoueur,
+                            ranking,prize,height,hand,age, weight, getDate(birthdateChooser),birthplace,cityResidence};
+                    CustomTableModel2 model = (CustomTableModel2) parentFrame.playersTable.getModel();
                     model.updateRow(selectedRow, joueurModifier);
-                    DefaultTableCellRenderer imageRenderer = new DefaultTableCellRenderer() {
-                        private static final long serialVersionUID = 1L;
+                    model.loadImages();
+//                    DefaultTableCellRenderer imageRenderer = new DefaultTableCellRenderer() {
+//                        private static final long serialVersionUID = 1L;
+//
+//                        @Override
+//                        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+//                            if (value instanceof ImageUtility) {
+//                                ImageUtility imageUtility = (ImageUtility) value;
+//                                return imageUtility;
+//                            }
+//                            return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+//                        }
+//                    };
 
-                        @Override
-                        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                            if (value instanceof ImageUtility) {
-                                ImageUtility imageUtility = (ImageUtility) value;
-                                return imageUtility;
-                            }
-                            return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                        }
-                    };
-
-                    parentFrame.playersTable.getColumnModel().getColumn(6).setCellRenderer(imageRenderer);
-                    parentFrame.playersTable.getColumnModel().getColumn(7).setCellRenderer(imageRenderer);
+//                    parentFrame.playersTable.getColumnModel().getColumn(6).setCellRenderer(imageRenderer);
+//                    parentFrame.playersTable.getColumnModel().getColumn(7).setCellRenderer(imageRenderer);
                 } else {
                     JOptionPane.showMessageDialog(ModifyPlayersFrame.this, "Please complete all fields", "Incomplete fields", JOptionPane.WARNING_MESSAGE);
                 }

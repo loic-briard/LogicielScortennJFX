@@ -12,6 +12,7 @@ import javax.swing.table.*;
 		private String[] columnNames = {
 	            "ID", "Sex", "Name", "Surname", "Display name", "Nationality", "Flag", "Player image", "Ranking", "Prize Total", "Height",
 	            "Hand", "Age", "Weight", "Birthdate", "Birthplace", "City Residence"};
+		
 	    @Override
 	    public int getRowCount() {
 	        return data.size();
@@ -25,7 +26,7 @@ import javax.swing.table.*;
 	    @Override
 	    public Object getValueAt(int rowIndex, int columnIndex) {
 	        if (columnIndex == 6 || columnIndex == 7) {
-	            return data.get(rowIndex)[columnIndex]; // La valeur de la cellule est déjà une instance d'ImageUtility
+	            return data.get(rowIndex)[columnIndex]; // La valeur de la cellule est dï¿½jï¿½ une instance d'ImageUtility
 	        } else {
 	            return data.get(rowIndex)[columnIndex];
 	        }
@@ -60,12 +61,12 @@ import javax.swing.table.*;
 	        if (rowIndex >= 0 && rowIndex < data.size()) {
 	            for (int columnIndex = 0; columnIndex < newData.length; columnIndex++) {
 	                if (columnIndex == 6 || columnIndex == 7) {
-	                    // Si la colonne contient un ImageUtility, assurez-vous que la nouvelle donnée est également un ImageUtility
+	                    // Si la colonne contient un ImageUtility, assurez-vous que la nouvelle donnï¿½e est ï¿½galement un ImageUtility
 	                    if (newData[columnIndex] instanceof ImageUtility) {
 	                        data.get(rowIndex)[columnIndex] = newData[columnIndex];
 	                    }
 	                } else {
-	                    // Pour les autres colonnes, remplacez simplement les données
+	                    // Pour les autres colonnes, remplacez simplement les donnï¿½es
 	                    data.get(rowIndex)[columnIndex] = newData[columnIndex];
 	                }
 	            }

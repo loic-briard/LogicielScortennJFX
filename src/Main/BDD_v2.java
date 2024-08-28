@@ -516,9 +516,11 @@ public class BDD_v2 {
 				String birthplace = resultSet.getString("BIRTHPLACE");
 				String cityresidence = resultSet.getString("CITYRESIDENCE");
 				// Stocker les donn�es dans la matrice
-				data[rowCount - 1] = new String[] { String.valueOf(id), sexe, nom, prenom, nomAfficher, nat, flagImagePath, birthdate, imgJoueur, String.valueOf(ranking), height, hand, age, weight,
-						prizetotal, birthplace, cityresidence };
+				data[rowCount - 1] = new String[] { String.valueOf(id), sexe, nom, prenom, nomAfficher, nat,
+						flagImagePath, imgJoueur, String.valueOf(ranking), prizetotal, height, hand, age, weight,
+						birthdate, birthplace, cityresidence };
 			}
+//			System.out.println(data[1][6]+" | "+data[1][7]);
 		}
 		return data;
 	}
