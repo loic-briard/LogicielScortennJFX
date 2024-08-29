@@ -247,7 +247,7 @@ public class WindowTournamentTree extends JFrame {
 			ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
 
 			int ligne = playerIndex + (nbJoueur / 4) * panelIndex;
-			SwingUtilities.invokeLater(() -> {
+//			SwingUtilities.invokeLater(() -> {
 				if (soloPlayer != null) {
 					// create player for tournament tree
 					if (tabPlayerForTree[ligne] == null) {
@@ -275,7 +275,7 @@ public class WindowTournamentTree extends JFrame {
 					if (soloPlayer.getNom() != "QUALIFIER")
 						this.windowBroadcastPublic.addContent(JLayeredPane.MODAL_LAYER, playerForDifusionSolo);
 				}
-			});
+//			});
 			SwingUtilities.invokeLater(() -> {
 				if (soloPlayer != null) {
 					// add this player to window config full if it exists
@@ -317,7 +317,7 @@ public class WindowTournamentTree extends JFrame {
 //		System.out.println(" index Button: " + buttonIndex + ", index P1: " + playerIndex1 + ", index P2: " + playerIndex2);
 		displayFondJoueur("game");
 
-		SwingUtilities.invokeLater(() -> {
+//		SwingUtilities.invokeLater(() -> {
 			if (playerIndex1 < selectedJoueurs.size() && playerIndex2 < selectedJoueurs.size()) {
 				Joueur Player1 = foundPlayer(getSelectedPlayerName(playerPanel[indexPanel], playerIndex1));
 				Joueur Player2 = foundPlayer(getSelectedPlayerName(playerPanel[indexPanel], playerIndex2));
@@ -362,7 +362,7 @@ public class WindowTournamentTree extends JFrame {
 			} else
 				System.out.println("    ERROR find the to player for game");
 			windowConfigPlayer.pack();
-		});
+//		});
 	}
 
 	private void handleTabSelection(int indexPanel) {
@@ -374,7 +374,7 @@ public class WindowTournamentTree extends JFrame {
 		displayFondJoueur("tab");
 
 		
-		SwingUtilities.invokeLater(() -> {
+//		SwingUtilities.invokeLater(() -> {
 			for (int i = 0; i < (nbJoueur / 4); i++) {
 				// System.out.println((nbJoueur / 4) * indexPanel + i);
 				Joueur Player = foundPlayer(getSelectedPlayerName(playerPanel[indexPanel], i));
@@ -410,7 +410,7 @@ public class WindowTournamentTree extends JFrame {
 			}
 			windowConfigPlayer.setTabPolice(new TabPolice(ListSelectedJoueur, windowConfigPlayer));
 			windowConfigPlayer.pack();
-		});
+//		});
 	}
 
 	private int indexPlayer = -1;

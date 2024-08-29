@@ -485,23 +485,45 @@ public class GestionAPI {
 //		Object o_infosJoueur[] = new Object[8]; 
 		// verification si il n'y a pas deja les infos
 		if (BDD_v2.verifInfosManquante(id,bddname) == true) {
-			System.out.println("  ! infos manquante !");
-
-			HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create("https://allsportsapi2.p.rapidapi.com/api/tennis/player/" + id)) // "https://allsportsapi2.p.rapidapi.com/api/tennis/player/37785"))//
-					.setHeader("X-RapidAPI-Key", s_cleAPI).setHeader("X-RapidAPI-Host", "allsportsapi2.p.rapidapi.com").build();
-
-			HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+			System.out.println("  ! infos manquante !");			
+			HttpRequest request = HttpRequest.newBuilder()
+	                .GET()
+	                .uri(URI.create("https://allsportsapi2.p.rapidapi.com/api/tennis/player/" + id))
+	                .setHeader("X-RapidAPI-Key", s_cleAPI)
+	                .setHeader("X-RapidAPI-Host", "allsportsapi2.p.rapidapi.com")
+	                .build();
+	        
+	        HttpResponse<InputStream> response = httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream());
 
 			System.out.println("  statut code API : " + response.statusCode());
 			if (response.statusCode() == 403 || response.statusCode() == 401) {
-				s_reponse = response.body();
 				JOptionPane.showMessageDialog(null, "le nom de la clé API n'est pas correct : "+s_cleAPI, "Erreur", JOptionPane.ERROR_MESSAGE);
 			} else if (response.statusCode() == 429) {
-				s_reponse = response.body();
 				JOptionPane.showMessageDialog(null, "le nombre de requete max à était atteint : "+s_cleAPI, "Erreur", JOptionPane.ERROR_MESSAGE);
 			} else {
 				recupIMGJ(id, bddname);
-				s_reponse = response.body();
+				// Vérifier si la réponse est compressée
+		        if ("gzip".equals(response.headers().firstValue("content-encoding").orElse(""))) {
+		            try (GZIPInputStream gzipInputStream = new GZIPInputStream(response.body());
+		                 BufferedReader reader = new BufferedReader(new InputStreamReader(gzipInputStream))) {
+		                StringBuilder responseBody = new StringBuilder();
+		                String line;
+		                while ((line = reader.readLine()) != null) {
+		                    responseBody.append(line);
+		                }
+		                s_reponse = responseBody.toString();
+		            }
+		        } else {
+		            // Si la réponse n'est pas compressée
+		            try (BufferedReader reader = new BufferedReader(new InputStreamReader(response.body()))) {
+		                StringBuilder responseBody = new StringBuilder();
+		                String line;
+		                while ((line = reader.readLine()) != null) {
+		                    responseBody.append(line);
+		                }
+		                s_reponse = responseBody.toString();
+		            }
+		        }
 				//System.out.println(s_reponse);
 				JSONObject json = new JSONObject(s_reponse);
 //				System.out.println(s_reponse);

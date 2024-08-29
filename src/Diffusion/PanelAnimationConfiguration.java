@@ -17,7 +17,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class PanelAnimationConfiguration extends JPanel {
@@ -341,7 +340,9 @@ public class PanelAnimationConfiguration extends JPanel {
     }
 	private double easeInOutCubic(double t) {
         return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-        
+    }
+	private double easeInOutQuad(double t) {
+        return t < 0.5f ? 2 * t * t : -1 + (4 - 2 * t) * t;
     }
 	public void zoomPanel(JPanel panel, WindowBroadcastPublic frame, Runnable onComplete) {
 		System.out.println("Animation ZOOM");
@@ -363,14 +364,18 @@ public class PanelAnimationConfiguration extends JPanel {
             final long startTime = System.currentTimeMillis();
             final int widthDiff = targetWidth - initialWidth;
             final int heightDiff = targetHeight - initialHeight;
+            
+            // Désactiver le double buffering
+            panel.setDoubleBuffered(false);
 
-            Timer timer = new Timer(16, null); // Augmentation de la fréquence des mises à jour
+            Timer timer = new Timer(16, null); // Augmentation de la fréquence des mises à jour 16 = 60fps, 25 = 40fps
             timer.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     long elapsedTime = System.currentTimeMillis() - startTime;
                     double progress = Math.min((double) elapsedTime / duration, 1.0);
-                    double easedProgress = easeInOutCubic(progress); // Utilisation d'une autre fonction d'easing
+//                    double easedProgress = easeInOutCubic(progress); // Utilisation d'une autre fonction d'easing
+                    double easedProgress = easeInOutQuad(progress); // Utilisation d'une autre fonction d'easing
 
                     int newWidth = (int) (initialWidth + easedProgress * widthDiff);
                     int newHeight = (int) (initialHeight + easedProgress * heightDiff);
@@ -389,92 +394,25 @@ public class PanelAnimationConfiguration extends JPanel {
                             ((BackgroundPanel) panel).setScale(easedProgress);
                         }
 
-                        panel.revalidate();
-                        panel.repaint();
+//                        panel.revalidate();
+//                        panel.repaint();
                     });
 
                     if (progress >= 1.0) {
                         timer.stop();
                         if (onComplete != null) {
+                        	panel.setDoubleBuffered(true);
                             SwingUtilities.invokeLater(onComplete);
                         }
                     }
                 }
             });
-
-            timer.start();
+            timer.setCoalesce(true); // Combine les événements en retard
+            SwingUtilities.invokeLater(() -> {
+            	timer.start();
+            });
         }
 	}
-	public void zoom2Panels(ArrayList<JPanel> panels, JFrame frame, Runnable onComplete) {
-		System.out.println("Animation ZOOM");
-
-        int duration = getZoomAnimationDuration();
-        if (!isZoomAnimationEnabled()) {
-            panels.forEach(panel -> {
-                int targetWidth = frame.getWidth();
-                int targetHeight = frame.getHeight();
-                panel.setBounds(0, 0, targetWidth, targetHeight);
-                panel.revalidate();
-                panel.repaint();
-            });
-            if (onComplete != null) {
-                onComplete.run();
-            }
-        } else {
-            final long startTime = System.currentTimeMillis();
-            ArrayList<AnimationData> animationDataList = new ArrayList<>();
-
-            for (JPanel panel : panels) {
-                int initialWidth = panel.getWidth();
-                int initialHeight = panel.getHeight();
-                int targetWidth = frame.getWidth();
-                int targetHeight = frame.getHeight();
-                Point initialLocation = panel.getLocation();
-
-                AnimationData data = new AnimationData(initialWidth, initialHeight, targetWidth, targetHeight, initialLocation);
-                animationDataList.add(data);
-            }
-
-            Timer timer = new Timer(1, null); // Intervalle du Timer réglé à 1 ms
-            timer.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    long elapsedTime = System.currentTimeMillis() - startTime;
-                    double progress = Math.min((double) elapsedTime / duration, 1.0);
-                    double easedProgress = easeInOutCubic(progress);
-
-                    SwingUtilities.invokeLater(() -> {
-                        for (int i = 0; i < panels.size(); i++) {
-                            JPanel panel = panels.get(i);
-                            AnimationData data = animationDataList.get(i);
-
-                            int newWidth = (int) (data.initialWidth + easedProgress * (data.targetWidth - data.initialWidth));
-                            int newHeight = (int) (data.initialHeight + easedProgress * (data.targetHeight - data.initialHeight));
-
-                            int newX = data.initialLocation.x + (data.initialWidth - newWidth) / 2;
-                            int newY = data.initialLocation.y + (data.initialHeight - newHeight) / 2;
-
-                            panel.setBounds(newX, newY, newWidth, newHeight);
-                            if (panel instanceof ZoomablePanel) {
-                                ((ZoomablePanel) panel).setScale(easedProgress);
-                            }
-                            panel.revalidate();
-                            panel.repaint();
-                        }
-                    });
-
-                    if (progress >= 1.0) {
-                        timer.stop();
-                        if (onComplete != null) {
-                            SwingUtilities.invokeLater(onComplete);
-                        }
-                    }
-                }
-            });
-
-            timer.start();
-        }
-    }
 
     private Point interpolatePoint(Point start, Point end, double progress) {
         int newX = (int) (start.x + progress * (end.x - start.x));
@@ -489,8 +427,10 @@ public class PanelAnimationConfiguration extends JPanel {
         ActionListener listener = e -> {
             long elapsed = System.currentTimeMillis() - startTime;
             double progress = Math.min((double) elapsed / duration, 1.0);
-            if(zoom)
-            	progress = easeInOutCubic(progress); // Fonction d'interpolation plus douce
+            if(zoom) {
+//            	progress = easeInOutCubic(progress); // Fonction d'interpolation plus douce
+            	progress = easeInOutQuad(progress); // Fonction d'interpolation plus douce
+            }
             callback.onProgress(progress);
             if (progress >= 1.0) {
                 timer.stop();

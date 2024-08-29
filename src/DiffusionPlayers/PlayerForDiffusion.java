@@ -18,8 +18,6 @@ import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-
 import Diffusion.PanelAnimationConfiguration;
 import Diffusion.WindowBroadcastPublic;
 import Diffusion.WindowConfigurationPlayerInfos;
@@ -303,6 +301,7 @@ public class PlayerForDiffusion extends JPanel{
 //	        	backgroundPanel.setVisible(true);
 //	        	this.animationPanel.zoomPanel(backgroundPanel, this.frameForDiffusion, null);
 	        	this.animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, this::animatePlayerElements);
+	        	
 	            break;
 	        default:
 	        	animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, null);
@@ -310,7 +309,7 @@ public class PlayerForDiffusion extends JPanel{
 	}
 
 	private void animatePlayerElements() {
-		SwingUtilities.invokeLater(() -> {
+//		SwingUtilities.invokeLater(() -> {
 			PlayerForDiffusion endPlayer = this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer];
 			if (endPlayer != null) {
 				for (Component endComponent : endPlayer.getPanelGlobal().getComponents()) {
@@ -320,7 +319,7 @@ public class PlayerForDiffusion extends JPanel{
 					}
 				}
 			}
-		});
+//		});
 	}
 
 	private void animateTextElement(Component endComponent, Point endPoint) {
