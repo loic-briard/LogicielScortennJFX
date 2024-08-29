@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.image.BufferedImage;
 import java.sql.SQLException;
 import java.util.Arrays;
 
@@ -361,7 +362,7 @@ public class PanelAnimationConfiguration extends JPanel {
                 onComplete.run();
             }
         } else {
-            final long startTime = System.currentTimeMillis();
+            final long startTime = System.nanoTime();
             final int widthDiff = targetWidth - initialWidth;
             final int heightDiff = targetHeight - initialHeight;
             
@@ -372,8 +373,11 @@ public class PanelAnimationConfiguration extends JPanel {
             timer.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    long elapsedTime = System.currentTimeMillis() - startTime;
-                    double progress = Math.min((double) elapsedTime / duration, 1.0);
+//                    long elapsedTime = System.currentTimeMillis() - startTime;
+//                    double progress = Math.min((double) elapsedTime / duration, 1.0);
+                    long elapsedTime = (System.nanoTime() - startTime) / 1_000_000;
+                    double progress = Math.min(1.0,(double) elapsedTime / duration);
+                    
 //                    double easedProgress = easeInOutCubic(progress); // Utilisation d'une autre fonction d'easing
                     double easedProgress = easeInOutQuad(progress); // Utilisation d'une autre fonction d'easing
 

@@ -242,10 +242,9 @@ public class WindowTournamentTree extends JFrame {
 //			windowBroadcastPublic.addContent(55, zoomBackground);
 			
 			displayFondJoueur("player");
-			
+			System.gc();
 			Joueur soloPlayer = foundPlayer(selectedItem);
 			ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
-
 			int ligne = playerIndex + (nbJoueur / 4) * panelIndex;
 //			SwingUtilities.invokeLater(() -> {
 				if (soloPlayer != null) {

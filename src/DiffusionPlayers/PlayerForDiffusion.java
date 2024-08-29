@@ -301,7 +301,6 @@ public class PlayerForDiffusion extends JPanel{
 //	        	backgroundPanel.setVisible(true);
 //	        	this.animationPanel.zoomPanel(backgroundPanel, this.frameForDiffusion, null);
 	        	this.animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, this::animatePlayerElements);
-	        	
 	            break;
 	        default:
 	        	animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, null);
