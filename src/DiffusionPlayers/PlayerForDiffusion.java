@@ -18,6 +18,8 @@ import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
+
 import Diffusion.PanelAnimationConfiguration;
 import Diffusion.WindowBroadcastPublic;
 import Diffusion.WindowConfigurationPlayerInfos;
@@ -140,7 +142,7 @@ public class PlayerForDiffusion extends JPanel{
 		initializePolice();
 		createPlayerPanels();
 		recupInfosPlayer(getEmplacementPlayer());
-		mouseAdapterPanel = new MouseAdapterPanel(playerfordifusion2, playerfordifusion2, diffusionFrame);
+		mouseAdapterPanel = new MouseAdapterPanel(playerfordifusion2, playerfordifusion2, this.frameForDiffusion);
 		
 //		this.frameForDiffusion.removeLayerContent(55);
 //		backgroundPanel = new BackgroundPanel(event.getBackground().getImage_2());
@@ -199,7 +201,7 @@ public class PlayerForDiffusion extends JPanel{
 	    JPanel panel = new JPanel();
 	    panel.setOpaque(false);
 	    panel.setName(name);
-	    panel.setDoubleBuffered(true);
+//	    panel.setDoubleBuffered(true);
 //	    MouseAdapterPanel mouseAdapter = new MouseAdapterPanel(panel);
 	    MouseAdapterPanel mouseAdapter = new MouseAdapterPanel(panel, this.playerfordifusion2, this.frameForDiffusion);
 	    panel.addMouseListener(mouseAdapter);
@@ -269,10 +271,11 @@ public class PlayerForDiffusion extends JPanel{
 	    panelPlayerGlobal.setLocation(this.frameForDiffusion.getWidth()/2-panelPlayerGlobal.getWidth()/2,this.frameForDiffusion.getHeight()/2-panelPlayerGlobal.getHeight()/2);
 	    panelPlayerGlobal.setLayout(null);
 	    panelPlayerGlobal.setOpaque(false);
+	    panelPlayerGlobal.setName(this.joueur.getNom());
 	    // Ajouter tous les panneaux au panneau global
 	    Arrays.asList(playerName, playerSurname, playerAcro, playerRank, playerBirthdate, playerBirthplace,
 	                  playerHeight, playerWeight, playerHand, playerAge, playerPrizetotal, playerCityresidence,
-	                  playerLine, playerImg, playerFlag).forEach(panelPlayerGlobal::add);
+	                  playerLine, playerImg, playerFlag).forEach(panelPlayerGlobal::addComponent);
 	}
 
 	private void updateDisplay(int ligne) {
@@ -297,12 +300,27 @@ public class PlayerForDiffusion extends JPanel{
 	            panelPlayerGlobal.setLocation(0, 0);
 	            break;
 	        case "player":
-//	        	animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, this::animatePlayerElements);
-//	        	backgroundPanel.setVisible(true);
-//	        	this.animationPanel.zoomPanel(backgroundPanel, this.frameForDiffusion, null);
-	        	this.animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, this::animatePlayerElements);
+	        	if(joueur.getNom()!="QUALIFIER") {
+//	        		this.setOpaque(true);
+//	        		this.setBackground(Color.cyan);
+	        		panelPlayerGlobal.setSize(frameForDiffusion.getWidth() / 10, frameForDiffusion.getHeight() / 10);
+	        		panelPlayerGlobal.setLocation((this.frameForDiffusion.getWidth() / 2) - (panelPlayerGlobal.getWidth() / 2), (this.frameForDiffusion.getHeight() / 2) - (panelPlayerGlobal.getHeight() / 2));
+//	        		panelPlayerGlobal.setOpaque(true);
+//	        		panelPlayerGlobal.setBackground(new Color(255, 125, 50, 50));
+//	        		panelPlayerGlobal.setBounds(0, 0, this.frameForDiffusion.getWidth(), this.frameForDiffusion.getHeight());
+	        		// Assurez-vous que la taille est appliquée immédiatement
+	        		panelPlayerGlobal.revalidate();
+	        		panelPlayerGlobal.repaint();
+
+	        		System.out.println("Player taille panel depart zoom : " + panelPlayerGlobal.getWidth() + "x" + panelPlayerGlobal.getHeight() + ", position : " + panelPlayerGlobal.getLocation().x + "x" + panelPlayerGlobal.getLocation().y);
+
+	        		this.animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, this::animatePlayerElements);
+	        	}else
+	        		displayPlayerFull();
+	        	
 	            break;
 	        default:
+	        	System.out.println("default animation player");
 	        	animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, null);
 	    }
 	}

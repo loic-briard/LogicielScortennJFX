@@ -16,7 +16,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.image.BufferedImage;
 import java.sql.SQLException;
 import java.util.Arrays;
 
@@ -339,6 +338,7 @@ public class PanelAnimationConfiguration extends JPanel {
 	private double easeInOutSine(double t) {
         return -(Math.cos(Math.PI * t) - 1) / 2;
     }
+	@SuppressWarnings("unused")
 	private double easeInOutCubic(double t) {
         return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
     }
@@ -346,13 +346,13 @@ public class PanelAnimationConfiguration extends JPanel {
         return t < 0.5f ? 2 * t * t : -1 + (4 - 2 * t) * t;
     }
 	public void zoomPanel(JPanel panel, WindowBroadcastPublic frame, Runnable onComplete) {
-		System.out.println("Animation ZOOM");
+		System.out.println("Animation ZOOM "+panel.getName());
         int initialWidth = panel.getWidth();
         int initialHeight = panel.getHeight();
         int targetWidth = frame.getWidth();
         int targetHeight = frame.getHeight();
         Point initialLocation = panel.getLocation();
-
+        System.out.println("intial location "+initialLocation.toString()+", taille intial "+initialWidth+"x"+initialHeight);
         int duration = getZoomAnimationDuration();
         if (!isZoomAnimationEnabled()) {
             panel.setBounds(0, 0, targetWidth, targetHeight);
@@ -369,7 +369,7 @@ public class PanelAnimationConfiguration extends JPanel {
             // Désactiver le double buffering
             panel.setDoubleBuffered(false);
 
-            Timer timer = new Timer(16, null); // Augmentation de la fréquence des mises à jour 16 = 60fps, 25 = 40fps
+            Timer timer = new Timer(10, null); // Augmentation de la fréquence des mises à jour 16 = 60fps, 25 = 40fps
             timer.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -379,7 +379,11 @@ public class PanelAnimationConfiguration extends JPanel {
                     double progress = Math.min(1.0,(double) elapsedTime / duration);
                     
 //                    double easedProgress = easeInOutCubic(progress); // Utilisation d'une autre fonction d'easing
-                    double easedProgress = easeInOutQuad(progress); // Utilisation d'une autre fonction d'easing
+//                    double easedProgress = easeInOutQuad(progress); // Utilisation d'une autre fonction d'easing
+                    double easedProgress = 0.15 + 0.85 * easeInOutQuad(progress);
+//                    double easedProgress = 0.15 + 0.85 * easeInOutCubic(progress);
+//                    double easedProgress = 0.15 + 0.85 * easeInOutSine(progress);
+//                    double easedProgress = 0.15 + 0.85 * progress;
 
                     int newWidth = (int) (initialWidth + easedProgress * widthDiff);
                     int newHeight = (int) (initialHeight + easedProgress * heightDiff);
@@ -388,11 +392,12 @@ public class PanelAnimationConfiguration extends JPanel {
                     int newX = initialLocation.x + (initialWidth - newWidth) / 2;
                     int newY = initialLocation.y + (initialHeight - newHeight) / 2;
 
+
                     SwingUtilities.invokeLater(() -> {
                         panel.setBounds(newX, newY, newWidth, newHeight);
 
                         if (panel instanceof ZoomablePanel) {
-                            ((ZoomablePanel) panel).setScale(easedProgress);
+                        	((ZoomablePanel) panel).setScale(easedProgress);
                         }
                         if (panel instanceof BackgroundPanel) {
                             ((BackgroundPanel) panel).setScale(easedProgress);

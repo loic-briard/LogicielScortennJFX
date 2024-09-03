@@ -56,7 +56,7 @@ public class MouseAdapterPanel extends MouseAdapter {
 	            handleStandardCase(typeFen, playerIndex);
 	            break;
 	        case "full":
-	            handleFullCase();
+	            handleFullCase(false);
 	            break;
 	        default:
 	            throw new IllegalArgumentException("Unexpected value: " + typeFen);
@@ -71,17 +71,18 @@ public class MouseAdapterPanel extends MouseAdapter {
 	}
 
 	//newPlayer = true quand player cliquer depuis window tournament tree
-	public void handleFullCase() {
+	public void handleFullCase(boolean full) {
+		this.windowConfigurationPlayerInfos = playerfordifusion2.getPlacementFrameTwoPlayer();
 	    PlayerForDiffusion[] tableauPlayerDiffusionTree = frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree();
 	    ArrayList<PlayerForDiffusion> listPlayerDiffusionTree = new ArrayList<>();
 
 	    if ((windowConfigurationPlayerInfos == null || !windowConfigurationPlayerInfos.isDisplayable())) {// la fenetre full n'existe pas
 	    	System.out.println("Creation de la fenetre de config full");
 	        createNewFullWindowConfig(tableauPlayerDiffusionTree, listPlayerDiffusionTree);
-	    } else if (windowConfigurationPlayerInfos.getTypeFenetre().equals("full")) {//la fenetre existe donc mettre a jour joueur electionne si il existe pas l'inserer
+	    } else if (windowConfigurationPlayerInfos.getTypeFenetre().equals("full") && !full) {//la fenetre existe donc mettre a jour joueur electionne si il existe pas l'inserer
 	    	System.out.println("Fen config full existe, update spinner selected joueur, si selected joueur doesn't exist l'inserer");
 	        updateExistingFullWindowConfig(listPlayerDiffusionTree);
-	    } else {// si arrive ici ca veut dire qu'il faut afficher tout les joueurs selectionne de l'arbre (btn full)
+	    } else if(full){// si arrive ici ca veut dire qu'il faut afficher tout les joueurs selectionne de l'arbre (btn full)
 	    	System.out.println("Creation fen configfull a partir des joueur selectione dans windows tournament tree");
 	        recreateFullWindowConfig(tableauPlayerDiffusionTree, listPlayerDiffusionTree);
 	    }
@@ -152,7 +153,8 @@ public class MouseAdapterPanel extends MouseAdapter {
 	        windowConfigurationPlayerInfos.setTabPolice(new TabPolice(listPlayerDiffusionTree, windowConfigurationPlayerInfos));
 	        windowConfigurationPlayerInfos.pack();
 	    }
-	    frameForDiffusion.getWindowTournamentTreeFromBroadcast().windowConfigPlayerFull = windowConfigurationPlayerInfos;
+	    frameForDiffusion.getWindowTournamentTreeFromBroadcast().setWindowConfigPlayerFull(windowConfigurationPlayerInfos);
+	    System.out.println("!!init windows config full");
 	}
 	private void updateSelectedTab(String typeFen) {
 	    Component selectedComponent = windowConfigurationPlayerInfos.tabbedPane.getSelectedComponent();

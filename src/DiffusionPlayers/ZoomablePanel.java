@@ -14,7 +14,7 @@ public class ZoomablePanel extends JPanel {
         this.scale = scale;
     }
     public ZoomablePanel() {
-        setDoubleBuffered(true);
+//        setDoubleBuffered(true);
     }
 
     public void addComponent(Component comp) {

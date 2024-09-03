@@ -55,9 +55,10 @@ public class WindowTournamentTree extends JFrame {
 		this.nbJoueur = nbJoueur;
 		this.tabPlayerForTree = new PlayerForDiffusion[nbJoueur];
 		this.playerPanel = new JPanel[4];
-		this.selectedJoueurs.add(this.selectedJoueurs.size(), new Joueur(0, "men", "QUALIFIER", " ", "QUALIFIER", " ",
+		if(this.selectedJoueurs.get(this.selectedJoueurs.size()-1).getNom() != "QUALIFIER")
+			this.selectedJoueurs.add(this.selectedJoueurs.size(), new Joueur(0, "men", "QUALIFIER", " ", "QUALIFIER", " ",
 				" ", "clear.png", 0, 0, " ", 0, 0, " ", " ", " "));
-
+		
 		setupFrame();
 		this.panelAnimationConfiguration = new PanelAnimationConfiguration(this);
 		setupPanels();
@@ -250,20 +251,20 @@ public class WindowTournamentTree extends JFrame {
 				if (soloPlayer != null) {
 					// create player for tournament tree
 					if (tabPlayerForTree[ligne] == null) {
-						tabPlayerForTree[ligne] = new PlayerForDiffusion(this.event, windowBroadcastPublic,
-								panelAnimationConfiguration, "full", ligne);
+						tabPlayerForTree[ligne] = new PlayerForDiffusion(this.event, windowBroadcastPublic,panelAnimationConfiguration, "full", ligne);
 					}
-					tabPlayerForTree[ligne].setPlacementFrameTwoPlayer(windowConfigPlayerFull);
+					
 					try {
 						tabPlayerForTree[ligne].setPlayer(soloPlayer, ligne + 1);
-
 						panelAnimationConfiguration.zoomPanel(zoomBackground, this.windowBroadcastPublic, null);
 					} catch (ClassNotFoundException | SQLException e) {
 						e.printStackTrace();
 					}
+					
 					tabPlayerForTree[ligne].setVisible(false);
 					this.windowBroadcastPublic.addContent(JLayeredPane.PALETTE_LAYER, tabPlayerForTree[ligne]);
-
+					playerForDifusionSolo.removeAll();
+					
 					// initialisation and display of player solo
 					playerForDifusionSolo.setNumeroPlayer(ligne);
 					try {
@@ -278,9 +279,11 @@ public class WindowTournamentTree extends JFrame {
 			SwingUtilities.invokeLater(() -> {
 				if (soloPlayer != null) {
 					// add this player to window config full if it exists
-					if (windowConfigPlayerFull != null)
-						tabPlayerForTree[ligne].getMouseAdapterPanel().handleFullCase();
-
+					if (windowConfigPlayerFull != null) {
+						tabPlayerForTree[ligne].setPlacementFrameTwoPlayer(windowConfigPlayerFull);
+						tabPlayerForTree[ligne].getMouseAdapterPanel().handleFullCase(false);
+					}
+					
 					if (windowConfigPlayer == null || !windowConfigPlayer.isDisplayable()
 							|| windowConfigPlayer.getTypeFenetre() == "full") {
 						windowConfigPlayer = new WindowConfigurationPlayerInfos(windowBroadcastPublic, "player");
@@ -452,7 +455,7 @@ public class WindowTournamentTree extends JFrame {
 //		});
 		SwingUtilities.invokeLater(() -> {
 			if (indexPlayer != -1)
-				tabPlayerForTree[indexPlayer].getMouseAdapterPanel().handleFullCase();
+				tabPlayerForTree[indexPlayer].getMouseAdapterPanel().handleFullCase(true);
 		});
 	}
 
@@ -531,8 +534,8 @@ public class WindowTournamentTree extends JFrame {
 			imageFond.setLocation(0, 0);
 			imageFond.setSize(imageFond.getPreferredSize());
 			zoomBackground.add(imageFond);
-			zoomBackground.setLocation(this.windowBroadcastPublic.getWidth() / 2,this.windowBroadcastPublic.getHeight() / 2 );
-			zoomBackground.setSize(10,10);
+			zoomBackground.setSize(this.windowBroadcastPublic.getWidth()/10,this.windowBroadcastPublic.getHeight()/10);
+			zoomBackground.setLocation((this.windowBroadcastPublic.getWidth()/2)-(zoomBackground.getWidth()/2), (this.windowBroadcastPublic.getHeight()/2)-(zoomBackground.getHeight()/2));
 			windowBroadcastPublic.addContent(55, zoomBackground);
 			break;
 		case "game":
@@ -581,4 +584,9 @@ public class WindowTournamentTree extends JFrame {
 	public PanelAnimationConfiguration getPanelAnimationConfiguration() {
 		return panelAnimationConfiguration;
 	}
+
+	public void setWindowConfigPlayerFull(WindowConfigurationPlayerInfos windowConfigPlayerFull) {
+		this.windowConfigPlayerFull = windowConfigPlayerFull;
+	}
+	
 }

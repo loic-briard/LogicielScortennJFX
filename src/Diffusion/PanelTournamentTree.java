@@ -87,7 +87,21 @@ public class PanelTournamentTree extends JPanel {
 
         drawTournamentTree(g2, xPositionsLeft, yPositionsLeft, halfNumPlayers, horizontalSpacing, true,selectedPlayerIndex);
         drawTournamentTree(g2, xPositionsRight, yPositionsRight, halfNumPlayers, horizontalSpacing, false,selectedPlayerIndex);
-        g2.draw(new Line2D.Double(lastXLeft, lastYLeft, lastXRight, lastYRight));
+//        g2.draw(new Line2D.Double(lastXLeft, lastYLeft, lastXRight, lastYRight));
+        // Dessiner la ligne divisée en deux parties
+        int middleX = (lastXLeft + lastXRight) / 2;  // Point de séparation de la ligne
+        g2.draw(new Line2D.Double(lastXLeft, lastYLeft, middleX, lastYLeft));
+        g2.draw(new Line2D.Double(middleX, lastYRight, lastXRight, lastYRight));
+        
+     // Draw the selected player's path
+        if (selectedPlayerIndex >= 0) {
+            g2.setColor(pathColor);
+            if (selectedPlayerIndex < halfNumPlayers) {
+                g2.draw(new Line2D.Double(lastXLeft, lastYLeft, middleX, lastYLeft)); // Color the left half
+            } else {
+                g2.draw(new Line2D.Double(middleX, lastYRight, lastXRight, lastYRight)); // Color the right half
+            }
+        }
         
     }
     private int lastXLeft;
@@ -156,7 +170,6 @@ public class PanelTournamentTree extends JPanel {
             }else
             	g2.draw(new Line2D.Double(midX, y2, midX, midY));
 
-            
             
             // Draw horizontal line from mid to the next round
             int nextX = isLeft ? midX + spacing : midX - spacing;

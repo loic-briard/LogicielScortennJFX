@@ -21,19 +21,15 @@ public class ImageUtility extends JLabel {
     private int width; // Largeur de l'image redimensionn�e
     private String imagePath;
     private BufferedImage rezizedImage;
-    private static File lastDirectory = null; // Variable pour stocker le dernier répertoire utilisé
-
 
     public ImageUtility(String imagePath, int height) {
         this.imagePath = imagePath;
         try {
             BufferedImage originalImage = null;//ImageIO.read(new File(this.imagePath));
             if(imagePath != "" || imagePath != "''") {
+            	System.out.println("  image existe, chemin vers l'image : "+this.imagePath);
             	originalImage = ImageIO.read(new File(this.imagePath));
-            }else {
-            	System.out.println("  L'image n'existe pas, image transparente");
-            	originalImage = ImageIO.read(new File("clear.png"));
-            }
+            }else originalImage = ImageIO.read(new File("clear.png"));
             	
             
             if(height>0) {
@@ -78,20 +74,13 @@ public class ImageUtility extends JLabel {
     
     public static String chargerFichier() {
 		JFileChooser fileChooser = new JFileChooser();
-		// Utiliser le dernier répertoire si disponible, sinon utiliser le répertoire par défaut
-        if (lastDirectory != null && lastDirectory.exists()) {
-            fileChooser.setCurrentDirectory(lastDirectory);
-        } else {
-            fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-        }
+		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 		fileChooser.setFileFilter(new FileNameExtensionFilter("Images/xls", "jpg", "png", "gif","xls"));
 		int returnValue = fileChooser.showOpenDialog(null);
 
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = fileChooser.getSelectedFile();
 			String filePath = selectedFile.getAbsolutePath();
-			// Mettre à jour le dernier répertoire utilisé
-            lastDirectory = selectedFile.getParentFile();
 			System.out.println("++ file Path : " + filePath + ", selected File : " + selectedFile);
 			return filePath;
 		} else

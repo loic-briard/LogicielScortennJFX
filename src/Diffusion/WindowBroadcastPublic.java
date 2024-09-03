@@ -83,6 +83,9 @@ public class WindowBroadcastPublic extends JFrame {
     public void addContent(Integer layer, JPanel panelContent) {
         layeredPane.add(panelContent, layer);
     }
+    public void addContentLabel(Integer layer, JLabel Content) {
+    	layeredPane.add(Content, layer);
+    }
 
     public void removeLayerContent(int layer) {
         for (Component component : layeredPane.getComponentsInLayer(layer)) {
