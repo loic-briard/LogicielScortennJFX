@@ -1,5 +1,6 @@
 package Main;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +12,7 @@ import java.security.ProtectionDomain;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.LineBorder;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 
@@ -47,7 +49,22 @@ public class MainJFX {
         } 
         // Installer FlatLaf
         try {
-            UIManager.setLookAndFeel(new FlatDarkLaf());
+        	UIManager.setLookAndFeel(new FlatDarkLaf());
+//        	Color colorLineBorder = new Color(150, 150, 150);
+//        	Color colorBackground = new Color(40, 43, 43);
+//            // Appliquer les modifications de style
+//            UIManager.put("ComboBox.background", colorBackground);
+//            UIManager.put("ComboBox.foreground", Color.WHITE);
+//            UIManager.put("ComboBox.border", new LineBorder(colorLineBorder, 1));
+//
+//            UIManager.put("Button.background", colorBackground);
+//            UIManager.put("Button.foreground", Color.WHITE);
+//            UIManager.put("Button.border", new LineBorder(colorLineBorder, 1));
+//
+//            UIManager.put("Spinner.background", colorBackground);
+//            UIManager.put("Spinner.foreground", Color.WHITE);
+//            UIManager.put("Spinner.border", new LineBorder(colorLineBorder, 1));
+
         } catch (UnsupportedLookAndFeelException ex) {
             ex.printStackTrace();
         }

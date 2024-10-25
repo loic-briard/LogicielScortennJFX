@@ -18,14 +18,19 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.ImageIcon;
+import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
@@ -44,7 +49,7 @@ public class AthleteSelection extends JFrame {
 
     private JButton addButton = new JButton("Add ->");
     private JButton removeButton = new JButton("<- Delete");
-    private JButton validateButton = new JButton("Validate");
+    private JButton validateButton = new JButton("<html><u>V</u>alidate</html>");
     private JTextField searchField = new JTextField();
     private DefaultTableModel modelRightTable;
     private String choosenBDD;
@@ -125,7 +130,7 @@ public class AthleteSelection extends JFrame {
 				}
 		    }
 		});
-		validateButton.addActionListener(new ActionListener() {
+		ActionListener actionValidate = new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		    	for (int row = 0; row < modelRightTable.getRowCount(); row++) {
@@ -160,7 +165,46 @@ public class AthleteSelection extends JFrame {
 		    	}
 		    	dispose();
 		    }
-		});
+		};
+		validateButton.addActionListener(actionValidate);
+		// Associer l'action à la touche "V" (en minuscule)
+		
+//		validateButton.addActionListener(new ActionListener() {
+//		    @Override
+//		    public void actionPerformed(ActionEvent e) {
+//		    	for (int row = 0; row < modelRightTable.getRowCount(); row++) {
+//		    	    String displayName = (String) modelRightTable.getValueAt(row, 0);
+//		    	    // Recherchez le joueur correspondant dans votre liste de joueurs compl�te
+//		    	    for (Joueur joueur : allJoueurs) {
+//		    	        if (joueur.getDisplay_name().equals(displayName)) {
+//		    	        	Joueur joueurAvecVerif=null;
+//		    	        	try {
+//								joueurAvecVerif = BDD_v2.getJoueurParID(joueur.getID(), choosenBDD);
+//								// R�cup�rer la date de naissance du joueur
+//							    String dobString = joueurAvecVerif.getBirthDate();
+//							    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+//							    Date dob = dateFormat.parse(dobString);
+//							    // Calculer l'�ge � partir de la date de naissance
+//							    int age = calculateAge(dob);
+//							    
+//							    // Comparer l'�ge actuel avec l'�ge enregistr� dans le joueur
+//							    boolean ageChanged = (age != joueurAvecVerif.getAge());
+//							    if (ageChanged) {
+//							        // Mettre � jour l'�ge du joueur
+//							        joueurAvecVerif.setAge(age);
+//							        BDD_v2.updateAgeJoueur(joueurAvecVerif.getID(), age, choosenBDD);
+//							    }
+//							} catch (ClassNotFoundException | SQLException | ParseException e1) {
+//								e1.printStackTrace();
+//							}
+//		    	            selectedPlayers.add(joueurAvecVerif);
+//		    	            //break; // Sortez de la boucle interne une fois que le joueur est trouv�
+//		    	        }
+//		    	    } 
+//		    	}
+//		    	dispose();
+//		    }
+//		});
         
 		// Cr�ez un conteneur pour les boutons
         JPanel buttonPanel = new JPanel();
@@ -168,6 +212,20 @@ public class AthleteSelection extends JFrame {
         buttonPanel.add(addButton);
         buttonPanel.add(removeButton);
         buttonPanel.add(validateButton);
+        
+        // Ajouter une KeyBinding pour la touche "v" seule
+        InputMap inputMap = validateButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = validateButton.getActionMap();
+
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, 0), "validateAction"); // 0 pour aucun modificateur
+        actionMap.put("validateAction", new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+            public void actionPerformed(ActionEvent e) {
+                actionValidate.actionPerformed(e);
+            }
+        });
 
         // Cr�ez un conteneur pour les listes et les boutons
         JPanel mainPanel = new JPanel();
