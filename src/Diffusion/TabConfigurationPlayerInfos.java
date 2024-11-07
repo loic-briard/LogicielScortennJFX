@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Diffusion;
 
 import java.awt.*;
@@ -11,16 +14,41 @@ import Main.ImageUtility;
 import Players.Joueur;
 import Police.TabPolice;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class TabConfigurationPlayerInfos.
+ */
 public class TabConfigurationPlayerInfos extends JPanel {
+    
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
 
+    /** The spinners. */
     private Map<String, JSpinner> spinners = new HashMap<>();
+    
+    /** The display frame. */
     private WindowBroadcastPublic displayFrame;
+    
+    /** The joueur. */
     private Joueur joueur;
+    
+    /** The infos player details. */
     private PlayerForDiffusion infosPlayerDetails;
+    
+    /** The placement frame. */
     private WindowConfigurationPlayerInfos placementFrame;
+    
+    /** The elements. */
     private String[] elements = {"name", "Surname", "Img", "Flag", "Acro", "Line", "Rank", "BirthDate", "BirthPlace", "Height", "Weight", "Hand", "Age", "Prizetotal", "Cityresidence"};
 
+    /**
+     * Instantiates a new tab configuration player infos.
+     *
+     * @param infosPlayerDetail the infos player detail
+     * @param joueur the joueur
+     * @param displayFrame the display frame
+     * @param placementFrame the placement frame
+     */
     public TabConfigurationPlayerInfos(PlayerForDiffusion infosPlayerDetail, Joueur joueur, WindowBroadcastPublic displayFrame, WindowConfigurationPlayerInfos placementFrame) {
         this.displayFrame = displayFrame;
         this.joueur = joueur;
@@ -32,6 +60,9 @@ public class TabConfigurationPlayerInfos extends JPanel {
         refreshSpinner(infosPlayerDetails);
     }
 
+    /**
+     * Initialize spinners.
+     */
     private void initializeSpinners() {
         for (String element : elements) {
             spinners.put(element + "X", createSpinner());
@@ -39,11 +70,19 @@ public class TabConfigurationPlayerInfos extends JPanel {
         }
     }
 
+    /**
+     * Creates the spinner.
+     *
+     * @return the j spinner
+     */
     private JSpinner createSpinner() {
         SpinnerNumberModel model = new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1);
         return new JSpinner(model);
     }
 
+    /**
+     * Creates the layout.
+     */
     private void createLayout() {
         setLayout(new BorderLayout());
         JPanel panelTab = new JPanel(new GridBagLayout());
@@ -65,12 +104,24 @@ public class TabConfigurationPlayerInfos extends JPanel {
         add(panelTab, BorderLayout.NORTH);
     }
 
+    /**
+     * Adds the component.
+     *
+     * @param container the container
+     * @param gbc the gbc
+     * @param component the component
+     * @param gridx the gridx
+     * @param gridy the gridy
+     */
     private void addComponent(Container container, GridBagConstraints gbc, Component component, int gridx, int gridy) {
         gbc.gridx = gridx;
         gbc.gridy = gridy;
         container.add(component, gbc);
     }
 
+    /**
+     * Confirm tab player.
+     */
     public void confirmTabPlayer() {
         System.out.println("Update position elements player from windowConfigurationPlayerInfos");
         for (Map.Entry<String, JSpinner> entry : spinners.entrySet()) {
@@ -84,6 +135,13 @@ public class TabConfigurationPlayerInfos extends JPanel {
         }
     }
 
+    /**
+     * Sets the position element.
+     *
+     * @param element the element
+     * @param x the x
+     * @param y the y
+     */
     private void setPositionElement(String element, int x, int y) {
         TabPolice tabPolice = placementFrame.getTabPolice();
         switch (element) {
@@ -135,6 +193,14 @@ public class TabConfigurationPlayerInfos extends JPanel {
         }
     }
 
+    /**
+     * Sets the position.
+     *
+     * @param component the component
+     * @param x the x
+     * @param y the y
+     * @param checkbox the checkbox
+     */
     private void setPosition(JComponent component, int x, int y, JCheckBox checkbox) {
         component.setVisible(checkbox.isSelected());
         component.setLocation(x, y);
@@ -142,6 +208,12 @@ public class TabConfigurationPlayerInfos extends JPanel {
         displayFrame.repaint();
     }
 
+    /**
+     * Sets the position img.
+     *
+     * @param x the x
+     * @param y the y
+     */
     private void setPositionImg(int x, int y) {
         TabPolice tabPolice = infosPlayerDetails.getPlacementFrameTwoPlayer().getTabPolice();
         int taille = (int) tabPolice.TailleImg.getValue();
@@ -158,6 +230,12 @@ public class TabConfigurationPlayerInfos extends JPanel {
         displayFrame.repaint();
     }
 
+    /**
+     * Sets the position flag.
+     *
+     * @param x the x
+     * @param y the y
+     */
     private void setPositionFlag(int x, int y) {
         TabPolice tabPolice = infosPlayerDetails.getPlacementFrameTwoPlayer().getTabPolice();
         int taille = (int) tabPolice.TailleFlag.getValue();
@@ -174,6 +252,11 @@ public class TabConfigurationPlayerInfos extends JPanel {
 		displayFrame.repaint();
     }
 
+    /**
+     * Refresh spinner.
+     *
+     * @param infosPlayerDetails the infos player details
+     */
     public void refreshSpinner(PlayerForDiffusion infosPlayerDetails) {
 //        System.out.println("Refresh player spinner : " + infosPlayerDetails.nameLabel.getText() + " current player : " + this.joueur.getDisplay_name());
         for (Map.Entry<String, JSpinner> entry : spinners.entrySet()) {
@@ -189,6 +272,13 @@ public class TabConfigurationPlayerInfos extends JPanel {
         }
     }
 
+    /**
+     * Gets the component by name.
+     *
+     * @param name the name
+     * @param infosPlayerDetails the infos player details
+     * @return the component by name
+     */
     private JComponent getComponentByName(String name, PlayerForDiffusion infosPlayerDetails) {
         switch (name) {
             case "name": return infosPlayerDetails.playerName;
@@ -209,9 +299,21 @@ public class TabConfigurationPlayerInfos extends JPanel {
             default: return null;
         }
     }
+    
+    /**
+     * Gets the entete tab.
+     *
+     * @return the entete tab
+     */
     public String getEnteteTab() {
     	return (infosPlayerDetails.getNumeroPlayer()+1)+", "+joueur.getDisplay_name();
     }
+    
+    /**
+     * Gets the infos player details.
+     *
+     * @return the infos player details
+     */
     public PlayerForDiffusion getInfosPlayerDetails() {
         return infosPlayerDetails;
     }

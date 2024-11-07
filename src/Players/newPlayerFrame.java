@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Players;
 
 import java.awt.Container;
@@ -30,39 +33,101 @@ import Main.BDD_v2;
 import Main.ImageUtility;
 import Main.MainJFX;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class newPlayerFrame.
+ */
 public class newPlayerFrame extends JFrame {
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The id label. */
 	// D�clarez les composants que vous avez d�crits
 	private JLabel idLabel;
+	
+	/** The sex combo box. */
 	private JComboBox<String> sexComboBox;
+	
+	/** The name field. */
 	private JTextField nameField;
+	
+	/** The surname field. */
 	private JTextField surnameField;
+	
+	/** The display name field. */
 	private JTextField displayNameField;
+	
+	/** The nationality combo box. */
 	private JComboBox<String> nationalityComboBox;
+	
+	/** The flag label. */
 	private JLabel flagLabel;
+	
+	/** The player image label. */
 	private JLabel playerImageLabel;
+	
+	/** The load image button. */
 	private JButton loadImageButton;
+	
+	/** The birthdate chooser. */
 	private JDateChooser birthdateChooser;
+	
+	/** The ranking field. */
 	private JTextField rankingField;
+	
+	/** The height field. */
 	private JTextField heightField;
+	
+	/** The hand combo box. */
 	private JComboBox<String> handComboBox;
+	
+	/** The age field. */
 	private JTextField ageField;
+	
+	/** The weight field. */
 	private JTextField weightField;
+	
+	/** The prize field. */
 	private JTextField prizeField;
+	
+	/** The birthplace field. */
 	private JTextField birthplaceField;
+	
+	/** The city residence field. */
 	private JTextField cityResidenceField;
 
+	/** The bdd P layers combo box. */
 	private JComboBox<String> bddPLayersComboBox;
+	
+	/** The selected joueurs. */
 	private ArrayList<Joueur> selectedJoueurs;
 
+	/** The content pane. */
 	private JPanel contentPane;
 
+	/** The current image. */
 	private String currentImage;
+	
+	/** The current flag. */
 	private String currentFlag;
+	
+	/** The bdd choosen. */
 	private String bddChoosen;
+	
+	/** The date format. */
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	
+	/** The i D. */
 	private int iD;
 
+	/**
+	 * Instantiates a new new player frame.
+	 *
+	 * @param parentFrame the parent frame
+	 * @param bddChoosen the bdd choosen
+	 * @throws SQLException the SQL exception
+	 */
 	public newPlayerFrame(ListOfPlayersFrame parentFrame, String bddChoosen) throws SQLException {
 		setTitle("New players ");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -291,6 +356,11 @@ public class newPlayerFrame extends JFrame {
 		});
 	}
 
+	/**
+	 * Update player image preview.
+	 *
+	 * @param imagePath the image path
+	 */
 	private void updatePlayerImagePreview(String imagePath) {
 		ImageUtility image = new ImageUtility(imagePath, 150);
 		playerImageLabel.setIcon(image.getIcon());
@@ -299,6 +369,11 @@ public class newPlayerFrame extends JFrame {
 		pack();
 	}
 
+	/**
+	 * Update player flag preview.
+	 *
+	 * @param imagePath the image path
+	 */
 	private void updatePlayerFlagPreview(String imagePath) {
 		ImageUtility image = new ImageUtility(imagePath, 75);
 		flagLabel.setIcon(image.getIcon());
@@ -306,6 +381,16 @@ public class newPlayerFrame extends JFrame {
 		flagLabel.repaint();
 	}
 
+	/**
+	 * Adds the component.
+	 *
+	 * @param container the container
+	 * @param label the label
+	 * @param component the component
+	 * @param gbc the gbc
+	 * @param x the x
+	 * @param y the y
+	 */
 	private void addComponent(Container container, String label, JComponent component, GridBagConstraints gbc, int x, int y) {
 		gbc.gridx = x;
 		gbc.gridy = y;
@@ -316,6 +401,12 @@ public class newPlayerFrame extends JFrame {
 		container.add(component, gbc);
 	}
 
+	/**
+	 * Gets the date.
+	 *
+	 * @param birthdateChooser the birthdate chooser
+	 * @return the date
+	 */
 	private String getDate(JDateChooser birthdateChooser) {
 		// Obtenez la date de naissance
 		Date birthdate = birthdateChooser.getDate();
@@ -325,6 +416,12 @@ public class newPlayerFrame extends JFrame {
 		return formattedDate;
 	}
 
+	/**
+	 * Calculate age.
+	 *
+	 * @param dob the dob
+	 * @return the int
+	 */
 	// M�thode pour calculer l'�ge � partir de la date de naissance
 	private int calculateAge(Date dob) {
 		Calendar today = Calendar.getInstance();
@@ -337,6 +434,11 @@ public class newPlayerFrame extends JFrame {
 		return age;
 	}
 	
+	/**
+	 * Auto complete infos joueur.
+	 *
+	 * @param selectedJoueur the selected joueur
+	 */
 	private void autoCompleteInfosJoueur(Joueur selectedJoueur) {
 		sexComboBox.setSelectedItem(selectedJoueur.getSexe());
 		nameField.setText(selectedJoueur.getNom());
@@ -378,6 +480,12 @@ public class newPlayerFrame extends JFrame {
 		this.pack();
 		setSize(600, this.getHeight());
 	}
+	
+	/**
+	 * Validate fields.
+	 *
+	 * @return true, if successful
+	 */
 	private boolean validateFields() {
 	    return !nameField.getText().isEmpty() &&
 	           !surnameField.getText().isEmpty() &&

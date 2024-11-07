@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Flags;
 
 import java.io.BufferedReader;
@@ -8,32 +11,69 @@ import java.io.InputStreamReader;
 import Main.BDD_v2;
 import Main.MainJFX;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Drapeau.
+ */
 public class Drapeau {
+	
+	/** The Nom. */
 	private String Nom;
+	
+	/** The Image drapeau. */
 	private String ImageDrapeau;
 	
+	/**
+	 * Instantiates a new drapeau.
+	 *
+	 * @param nom the nom
+	 * @param path the path
+	 */
 	public Drapeau(String nom, String path) {
 		super();
 		this.Nom = nom;
 		this.ImageDrapeau = path;
 	}
 
+	/**
+	 * Gets the image drapeau.
+	 *
+	 * @return the image drapeau
+	 */
 	public String getImageDrapeau() {
 		return ImageDrapeau;
 	}
 
+	/**
+	 * Sets the image drapeau.
+	 *
+	 * @param imageDrapeau the new image drapeau
+	 */
 	public void setImageDrapeau(String imageDrapeau) {
 		ImageDrapeau = imageDrapeau;
 	}
 
+	/**
+	 * Gets the nom.
+	 *
+	 * @return the nom
+	 */
 	public String getNom() {
 		return Nom;
 	}
 
+	/**
+	 * Sets the nom.
+	 *
+	 * @param nom the new nom
+	 */
 	public void setNom(String nom) {
 		Nom = nom;
 	}
 
+	/**
+	 * Charger drapeau.
+	 */
 	public static void chargerDrapeau() {
 		try {
 		    if (MainJFX.openOnEclipse) {

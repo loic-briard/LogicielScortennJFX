@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Police;
 
 import java.awt.BorderLayout;
@@ -19,34 +22,85 @@ import javax.swing.SpinnerNumberModel;
 import Diffusion.WindowConfigurationPlayerInfos;
 import DiffusionPlayers.PlayerForDiffusion;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class TabPolice.
+ */
 public class TabPolice extends JPanel {
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
+	/** The checkbox name. */
 	public JCheckBox checkboxName;
+	
+	/** The checkbox surname. */
 	public JCheckBox checkboxSurname;
+	
+	/** The checkbox acro. */
 	public JCheckBox checkboxAcro;
+	
+	/** The checkbox img. */
 	public JCheckBox checkboxImg;
+	
+	/** The checkbox flag. */
 	public JCheckBox checkboxFlag;
+	
+	/** The checkbox rank. */
 	public JCheckBox checkboxRank;
+	
+	/** The checkbox birth date. */
 	public JCheckBox checkboxBirthDate;
+	
+	/** The checkbox birth place. */
 	public JCheckBox checkboxBirthPlace;
+	
+	/** The checkbox height. */
 	public JCheckBox checkboxHeight;
+	
+	/** The checkbox weight. */
 	public JCheckBox checkboxWeight;
+	
+	/** The checkbox hand. */
 	public JCheckBox checkboxHand;
+	
+	/** The checkbox age. */
 	public JCheckBox checkboxAge;
+	
+	/** The checkbox prizetotal. */
 	public JCheckBox checkboxPrizetotal;
+	
+	/** The checkbox cityresidence. */
 	public JCheckBox checkboxCityresidence;
+	
+	/** The checkbox line. */
 	public JCheckBox checkboxLine;
+	
+	/** The Taille img. */
 	// ---------------------------------
 	public JSpinner TailleImg;
+	
+	/** The Taille flag. */
 	public JSpinner TailleFlag;	
 	
+	/** The list player. */
 	private ArrayList<PlayerForDiffusion> listPlayer;
 	
+	/**
+	 * Sets the list player.
+	 *
+	 * @param listPlayerUpdate the new list player
+	 */
 	public void setListPlayer(ArrayList<PlayerForDiffusion> listPlayerUpdate) {
 		this.listPlayer = listPlayerUpdate;
 	}
 
+	/**
+	 * Instantiates a new tab police.
+	 *
+	 * @param listPlayerDisplay the list player display
+	 * @param placemenFenetre the placemen fenetre
+	 */
 	public TabPolice(ArrayList<PlayerForDiffusion> listPlayerDisplay, WindowConfigurationPlayerInfos placemenFenetre) {
 		// Initialisation des JCheckBox pour chaque �l�ment
 		this.listPlayer = listPlayerDisplay;
@@ -316,6 +370,16 @@ public class TabPolice extends JPanel {
 //		this.add(validationButtonAll, BorderLayout.SOUTH);
 //		placemenFrame.refreshAllTab();
 	}
+	
+	/**
+	 * Adds the component.
+	 *
+	 * @param container the container
+	 * @param gbc the gbc
+	 * @param component the component
+	 * @param gridx the gridx
+	 * @param gridy the gridy
+	 */
 	private void addComponent(Container container, GridBagConstraints gbc, Component component, int gridx, int gridy) {
 		gbc.gridx = gridx;
 		gbc.gridy = gridy;

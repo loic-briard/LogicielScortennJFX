@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Event;
 
 import java.awt.BorderLayout;
@@ -14,15 +17,31 @@ import javax.swing.JTextField;
 
 import Main.BDD_v2;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class newEventFrame.
+ */
 public class newEventFrame extends JFrame{
+
+/** The Constant serialVersionUID. */
 private static final long serialVersionUID = 1L;
 
+	/** The name field. */
 	private JTextField nameField;
+
+/** The new name. */
 //	private String currentName;
 	private String newName;
 	
+	/** The background new name. */
 	private String backgroundNewName;
 	
+	/**
+	 * Instantiates a new new event frame.
+	 *
+	 * @param parentFrame the parent frame
+	 * @throws SQLException the SQL exception
+	 */
 	public newEventFrame(ListOfEventsFrame parentFrame) throws SQLException{
 		setTitle("New Event ");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -31,14 +50,14 @@ private static final long serialVersionUID = 1L;
         nameField = new JTextField("name");
         
         String[] backgroundNames = BDD_v2.getNamesFromDatabase("background");
-        // Créez un JComboBox pour le menu déroulant
+        // Crï¿½ez un JComboBox pour le menu dï¿½roulant
         JComboBox<String> backgroundComboBox = new JComboBox<>(backgroundNames);
-        // Ajoutez un écouteur d'événements au JComboBox pour gérer la sélection
+        // Ajoutez un ï¿½couteur d'ï¿½vï¿½nements au JComboBox pour gï¿½rer la sï¿½lection
         backgroundComboBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Récupérez l'élément sélectionné
+                // Rï¿½cupï¿½rez l'ï¿½lï¿½ment sï¿½lectionnï¿½
             	backgroundNewName = (String) backgroundComboBox.getSelectedItem();
-                // Faites ce que vous voulez avec l'événement sélectionné
+                // Faites ce que vous voulez avec l'ï¿½vï¿½nement sï¿½lectionnï¿½
                 System.out.println("Background selected: " + backgroundNewName);
             }
         });
@@ -50,7 +69,7 @@ private static final long serialVersionUID = 1L;
         panel.add(backgroundComboBox, BorderLayout.CENTER);
         add(panel);
         
-        // Créez un bouton "Valider"
+        // Crï¿½ez un bouton "Valider"
         JButton validateButton = new JButton("Validate");
         add(validateButton, BorderLayout.SOUTH);
         // Ajoutez un gestionnaire d'action au bouton "Valider"

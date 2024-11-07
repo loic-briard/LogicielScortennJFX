@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Players;
 
 import javax.swing.*;
@@ -5,13 +8,29 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import java.awt.*;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ImageRenderer.
+ */
 public class ImageRenderer extends DefaultTableCellRenderer {
-    /**
-	 * 
-	 */
+    
+    /** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The Constant IMAGE_HEIGHT. */
 	private static final int IMAGE_HEIGHT = 60;
 
+    /**
+     * Gets the table cell renderer component.
+     *
+     * @param table the table
+     * @param value the value
+     * @param isSelected the is selected
+     * @param hasFocus the has focus
+     * @param row the row
+     * @param column the column
+     * @return the table cell renderer component
+     */
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value,
                                                    boolean isSelected, boolean hasFocus, int row, int column) {

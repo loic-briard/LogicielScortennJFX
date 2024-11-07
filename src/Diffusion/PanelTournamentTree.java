@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Diffusion;
 import javax.swing.*;
 
@@ -7,6 +10,7 @@ import java.awt.*;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 
+// TODO: Auto-generated Javadoc
 class Player {
     String name;
     int x;
@@ -19,34 +23,88 @@ class Player {
     }
 }
 
+/**
+ * The Class PanelTournamentTree.
+ */
 public class PanelTournamentTree extends JPanel {
 	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The players. */
 	private ArrayList<PlayerForDiffusion> players;
+	
+	/** The selected player index. */
 	private int selectedPlayerIndex = -10;
+    
+    /** The horizontal spacing. */
     private int horizontalSpacing = 150;
+    
+    /** The line width. */
     private int lineWidth = 2;
+    
+    /** The tree color. */
     private Color treeColor = Color.BLACK; // Couleur par défaut
+    
+    /** The selected player path color. */
     private Color selectedPlayerPathColor = Color.RED;    
+    
+    /** The path color. */
     private Color pathColor = Color.RED;    
+    
+    /** The x left P layer. */
     private int xLeftPLayer = 10;
+    
+    /** The x right P layer. */
     private int xRightPLayer = 500;
+    
+    /** The nb joueur. */
     private int nbJoueur;
+    
+    /** The animation timer. */
     private Timer animationTimer;
+    
+    /** The animation duration. */
     private int animationDuration;
+    
+    /** The blink count. */
     private int blinkCount;
+    
+    /** The current blink count. */
     private int currentBlinkCount;
+    
+    /** The is blinking. */
     private boolean isBlinking = false;
     
+    /**
+     * Sets the x left tree.
+     *
+     * @param x the new x left tree
+     */
     public void setXLeftTree(int x) {
     	xLeftPLayer = x;
     	repaint();
     }
+    
+    /**
+     * Sets the x right tree.
+     *
+     * @param x the new x right tree
+     */
     public void setXRightTree(int x) {
     	xRightPLayer = x;
     	repaint();
     }
 
+    /**
+     * Instantiates a new panel tournament tree.
+     *
+     * @param nbJoueurs the nb joueurs
+     * @param windowAnimationConfiguration the window animation configuration
+     * @param players2 the players 2
+     * @param horizontalSpacing the horizontal spacing
+     * @param lineWidth the line width
+     */
     public PanelTournamentTree(int nbJoueurs, PanelAnimationConfiguration windowAnimationConfiguration, ArrayList<PlayerForDiffusion> players2, int horizontalSpacing, int lineWidth) {
         this.nbJoueur = nbJoueurs;
     	this.players = players2;
@@ -57,6 +115,11 @@ public class PanelTournamentTree extends JPanel {
         this.setOpaque(false);
     }
 
+    /**
+     * Paint component.
+     *
+     * @param g the g
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -104,10 +167,30 @@ public class PanelTournamentTree extends JPanel {
         }
         
     }
+    
+    /** The last X left. */
     private int lastXLeft;
+    
+    /** The last X right. */
     private int lastXRight;
+    
+    /** The last Y left. */
     private int lastYLeft;
+    
+    /** The last Y right. */
     private int lastYRight;
+    
+    /**
+     * Draw tournament tree.
+     *
+     * @param g2 the g 2
+     * @param xPositions the x positions
+     * @param yPositions the y positions
+     * @param numPlayers the num players
+     * @param spacing the spacing
+     * @param isLeft the is left
+     * @param playerIndex the player index
+     */
     private void drawTournamentTree(Graphics2D g2, int[] xPositions, int[] yPositions, int numPlayers, int spacing, boolean isLeft,int playerIndex) {
     	g2.setColor(treeColor); // Assurez-vous que la couleur est définie ici aussi
         if (numPlayers <= 1) return;
@@ -194,30 +277,76 @@ public class PanelTournamentTree extends JPanel {
         
         drawTournamentTree(g2, newXPositions, newYPositions, numPlayers / 2, spacing, isLeft,playerIndex/2);
     }
+    
+    /**
+     * Sets the tree color.
+     *
+     * @param color the new tree color
+     */
     public void setTreeColor(Color color) {
         this.treeColor = color;
         repaint(); // Redessine le panel avec la nouvelle couleur
     }
+    
+    /**
+     * Sets the line width.
+     *
+     * @param width the new line width
+     */
     public void setLineWidth(int width) {
         this.lineWidth = width;
         repaint(); // Redessine le panel avec la nouvelle épaisseur de ligne
     }
+    
+    /**
+     * Sets the horizontal spacing.
+     *
+     * @param spacing the new horizontal spacing
+     */
     public void setHorizontalSpacing(int spacing) {
         this.horizontalSpacing = spacing;
         repaint(); // Redessine le panel avec le nouveau espacement horizontal
     }
+    
+    /**
+     * Sets the selectedpath color.
+     *
+     * @param selectedColor the new selectedpath color
+     */
     public void setSelectedpathColor(Color selectedColor) {
     	selectedPlayerPathColor = selectedColor;
     }
+    
+    /**
+     * Highlight player path.
+     *
+     * @param player the player
+     * @param pathColor the path color
+     */
     public void highlightPlayerPath(int player, Color pathColor) {
         this.selectedPlayerIndex = player;
         this.pathColor = pathColor;
         repaint();
     }
+    
+    /**
+     * Sets the player.
+     *
+     * @param index the index
+     * @param playerFD the player FD
+     */
     public void setPlayer(int index,PlayerForDiffusion playerFD) {
     	this.players.set(index, playerFD);
     	repaint();
     }
+    
+    /**
+     * Animate player path.
+     *
+     * @param player the player
+     * @param durationAnimation the duration animation
+     * @param blinkCounts the blink counts
+     */
     public void animatePlayerPath(int player,int durationAnimation,int blinkCounts) {
     	this.selectedPlayerIndex = player;
     	

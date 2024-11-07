@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Flags;
 
 import java.awt.BorderLayout;
@@ -16,19 +19,45 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import Main.BDD_v2;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ListOfFlag.
+ */
 public class ListOfFlag extends JFrame {
+    
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
+    
+    /** The search field. */
     private JTextField searchField;
+    
+    /** The modify button. */
     private JButton modifyButton;
+	
+	/** The search button. */
 	private JButton searchButton;
 //	private SwingWorker<Void, Object[]> worker;
 	
-	public JTable flagTable;
+	/** The flag table. */
+public JTable flagTable;
+    
+    /** The table model flag. */
     public CustomTableModelFlag tableModelFlag;
+    
+    /** The scroll pane flag. */
     private JScrollPane scrollPaneFlag;
+    
+    /** The table data. */
     Object[][] tableData = null;
+	
+	/** The Constant IMAGE_HEIGHT. */
 	private static final int IMAGE_HEIGHT = 60;
 
+    /**
+     * Instantiates a new list of flag.
+     *
+     * @throws SQLException the SQL exception
+     */
     public ListOfFlag() throws SQLException {
         // Initialisation de la fen�tre
         setTitle("List of Flags");

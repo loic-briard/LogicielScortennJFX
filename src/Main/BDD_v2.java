@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Main;
 
 import java.io.BufferedReader;
@@ -31,17 +34,41 @@ import Flags.Drapeau;
 import Players.Joueur;
 import Sauvegarde.ConfigurationSaveLoad;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BDD_v2.
+ */
 public class BDD_v2 {
+	
+	/** The url. */
 	static String url = "jdbc:hsqldb:file:database" + File.separator + "Tennis_BDD_v2;shutdown=true";
+	
+	/** The login. */
 	static String login = "sa";
+	
+	/** The password. */
 	static String password = "";
+	
+	/** The atp. */
 	public static String ATP = "ATP";
+	
+	/** The wta. */
 	public static String WTA = "WTA";
+	
+	/** The tab bdd. */
 	public static ArrayList<String> tabBdd = new ArrayList<>();
+	
+	/** The connection. */
 	static Connection connection;
 
 	// --------------------------------------- INITIALISATION --------------------------------------------------------------------------------------------------------------
 
+	/**
+	 * Connexion BDD.
+	 *
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws SQLException the SQL exception
+	 */
 	public static void connexionBDD() throws ClassNotFoundException, SQLException {
 		System.out.println("Database connexion");
 		Class.forName("org.hsqldb.jdbcDriver");
@@ -53,6 +80,13 @@ public class BDD_v2 {
 		}
 	}
 
+	/**
+	 * Executer requete SQL.
+	 *
+	 * @param requete the requete
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws SQLException the SQL exception
+	 */
 	public static void executerRequeteSQL(String requete) throws ClassNotFoundException, SQLException {
 		Class.forName("org.hsqldb.jdbcDriver");
 		try (Statement statement = connection.createStatement()) {
@@ -63,6 +97,12 @@ public class BDD_v2 {
 	    }
 	}
 
+	/**
+	 * Deconnexion BDD.
+	 *
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws SQLException the SQL exception
+	 */
 	static void deconnexionBDD() throws ClassNotFoundException, SQLException {
 		try {
 			if (connection != null) {
@@ -74,6 +114,12 @@ public class BDD_v2 {
 		}
 	}
 
+	/**
+	 * Suppressions des tables.
+	 *
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws SQLException the SQL exception
+	 */
 	public static void suppressionsDesTables() throws ClassNotFoundException, SQLException {
 		// nom des tales � d�finir
 		String requete = "";
@@ -89,6 +135,12 @@ public class BDD_v2 {
 		System.out.println("  - Tables deleted");
 	}
 
+	/**
+	 * Creationdes tables.
+	 *
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws SQLException the SQL exception
+	 */
 	public static void creationdesTables() throws ClassNotFoundException, SQLException {
 		String requete = "";
 		requete += "CREATE TABLE Background (Nom VARCHAR(20) PRIMARY KEY, Img_1 varchar(255), Img_2 varchar(255), " + "Img_3 varchar(255), Img_4 varchar(255));";
@@ -110,6 +162,13 @@ public class BDD_v2 {
 		System.out.println("  + create tables finished");
 	}
 
+	/**
+	 * Creation new table.
+	 *
+	 * @param name the name
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws SQLException the SQL exception
+	 */
 	public static void creationNewTable(String name) throws ClassNotFoundException, SQLException {
 		String requete = "";
 		requete += "CREATE TABLE " + name + " (id int PRIMARY KEY, "
@@ -136,6 +195,13 @@ public class BDD_v2 {
 
 	// --------------------------------------- INSERTIONS--------------------------------------------------------------------------------------------------------------
 
+	/**
+	 * Insertion background dans BDD.
+	 *
+	 * @param background the background
+	 * @throws SQLException the SQL exception
+	 * @throws ClassNotFoundException the class not found exception
+	 */
 	public static void insertionBackgroundDansBDD(Background background) throws SQLException, ClassNotFoundException {
 		StringBuilder requete = new StringBuilder("");
 
@@ -146,6 +212,13 @@ public class BDD_v2 {
 		System.out.println("  + Background : " + background.getNom() + " added");
 	}
 
+	/**
+	 * Insertion event dans BDD.
+	 *
+	 * @param event the event
+	 * @throws SQLException the SQL exception
+	 * @throws ClassNotFoundException the class not found exception
+	 */
 	public static void insertionEventDansBDD(Evenement event) throws SQLException, ClassNotFoundException {
 		StringBuilder requete = new StringBuilder("");
 
@@ -155,6 +228,13 @@ public class BDD_v2 {
 		System.out.println("  + Evenement : " + event.getNom() + " added");
 	}
 
+	/**
+	 * Insertion drapeau dans BDD.
+	 *
+	 * @param drapeau the drapeau
+	 * @throws SQLException the SQL exception
+	 * @throws ClassNotFoundException the class not found exception
+	 */
 	public static void insertionDrapeauDansBDD(Drapeau drapeau) throws SQLException, ClassNotFoundException {
 		StringBuilder requete = new StringBuilder("");
 
@@ -164,6 +244,14 @@ public class BDD_v2 {
 		System.out.println("  + Drapeau de : " + drapeau.getNom() + " added");
 	}
 
+	/**
+	 * Insertion joueur dans BDD.
+	 *
+	 * @param joueur the joueur
+	 * @param bddName the bdd name
+	 * @throws SQLException the SQL exception
+	 * @throws ClassNotFoundException the class not found exception
+	 */
 	public static void insertionJoueurDansBDD(Joueur joueur, String bddName) throws SQLException, ClassNotFoundException {
 		try {
 			String requete = "INSERT INTO " + bddName + " (id, Sexe, Nom, Prenom, NomAfficher, Nat, Birthdate, ImgJoueur, Ranking, height, hand, age, weight, PRIZETOTAL, BIRTHPLACE, CityResidence)"
@@ -194,6 +282,13 @@ public class BDD_v2 {
 		}
 	}
 
+	/**
+	 * Compter nb elements BDD.
+	 *
+	 * @param NomBDD the nom BDD
+	 * @return the int
+	 * @throws SQLException the SQL exception
+	 */
 	// ---------------------------------------------------- RECUPERATION------------------------------------------------------------------------------
 	public static int compterNbElementsBDD(String NomBDD) throws SQLException {
 		int count = 0;
@@ -208,6 +303,15 @@ public class BDD_v2 {
 		return count;
 	}
 
+	/**
+	 * Gets the joueur par ID.
+	 *
+	 * @param joueurID the joueur ID
+	 * @param bddname the bddname
+	 * @return the joueur par ID
+	 * @throws SQLException the SQL exception
+	 * @throws ClassNotFoundException the class not found exception
+	 */
 	public static Joueur getJoueurParID(int joueurID, String bddname) throws SQLException, ClassNotFoundException {
 		Joueur joueur = null;
 		String requete = "SELECT * FROM " + bddname + " WHERE id = " + joueurID;// "CREATE INDEX nom_index ON Joueur (Nom);" +
@@ -240,6 +344,15 @@ public class BDD_v2 {
 		return joueur;
 	}
 
+	/**
+	 * Gets the joueur par nom.
+	 *
+	 * @param nomJoueur the nom joueur
+	 * @param bddName the bdd name
+	 * @return the joueur par nom
+	 * @throws SQLException the SQL exception
+	 * @throws ClassNotFoundException the class not found exception
+	 */
 	public static Joueur getJoueurParNom(String nomJoueur, String bddName) throws SQLException, ClassNotFoundException {
 		Joueur joueur = null;
 		String requete = "SELECT * FROM " + bddName + " WHERE Nom = '" + nomJoueur + "'";
@@ -272,6 +385,14 @@ public class BDD_v2 {
 		return joueur;
 	}
 
+	/**
+	 * Gets the all joueurs.
+	 *
+	 * @param bddName the bdd name
+	 * @return the all joueurs
+	 * @throws SQLException the SQL exception
+	 * @throws ClassNotFoundException the class not found exception
+	 */
 	public static ArrayList<Joueur> getAllJoueurs(String bddName) throws SQLException, ClassNotFoundException {
 		ArrayList<Joueur> joueurs = new ArrayList<>();
 		String requete = "SELECT * FROM " + bddName;
@@ -305,6 +426,12 @@ public class BDD_v2 {
 		return joueurs;
 	}
 
+	/**
+	 * Data event.
+	 *
+	 * @return the string[][]
+	 * @throws SQLException the SQL exception
+	 */
 	public static String[][] DataEvent() throws SQLException {
 		String requete = "SELECT Event.Nom AS EventName, Event.NomBG AS BackgroundName, Background.Img_1, Background.Img_2, Background.Img_3, Background.Img_4, Background.Img_5 " 
 	+ "FROM Event LEFT JOIN Background ON Event.NomBG = Background.Nom";
@@ -339,6 +466,13 @@ public class BDD_v2 {
 		return data;
 	}
 
+	/**
+	 * Gets the evenement by name.
+	 *
+	 * @param eventName the event name
+	 * @return the evenement by name
+	 * @throws SQLException the SQL exception
+	 */
 	public static Evenement getEvenementByName(String eventName) throws SQLException {
 		Evenement evenement = null;
 		String requete = "SELECT Event.*, Background.* FROM Event " + "INNER JOIN Background ON Event.NomBG = Background.Nom WHERE Event.Nom = ?";
@@ -375,6 +509,12 @@ public class BDD_v2 {
 		return evenement;
 	}
 
+	/**
+	 * Data background.
+	 *
+	 * @return the string[][]
+	 * @throws SQLException the SQL exception
+	 */
 	public static String[][] DataBackground() throws SQLException {
 		String requete = "SELECT Background.Nom AS BackgroundName, Background.Img_1, Background.Img_2, Background.Img_3, Background.Img_4, Background.Img_5 FROM Background";
 
@@ -409,6 +549,12 @@ public class BDD_v2 {
 		return data;
 	}
 
+	/**
+	 * Data background list.
+	 *
+	 * @return the array list
+	 * @throws SQLException the SQL exception
+	 */
 	public static ArrayList<Background> DataBackgroundList() throws SQLException {
 		String requete = "SELECT Background.Nom AS BackgroundName, Background.Img_1, Background.Img_2, Background.Img_3, Background.Img_4, Background.Img_5 FROM Background";
 
@@ -438,6 +584,13 @@ public class BDD_v2 {
 		return backgroundBDD;
 	}
 
+	/**
+	 * Gets the one background.
+	 *
+	 * @param nomBackground the nom background
+	 * @return the one background
+	 * @throws SQLException the SQL exception
+	 */
 	public static Background getOneBackground(String nomBackground) throws SQLException {
 		System.out.println("  get background named : " + nomBackground);
 		String requete = "SELECT Background.Nom AS BackgroundName, Background.Img_1, Background.Img_2, Background.Img_3, " + "Background.Img_4,Background.Img_5 FROM BACKGROUND WHERE Nom = '" + nomBackground + "'";
@@ -466,6 +619,12 @@ public class BDD_v2 {
 		return backgroundtemp;
 	}
 
+	/**
+	 * Data flag.
+	 *
+	 * @return the string[][]
+	 * @throws SQLException the SQL exception
+	 */
 	public static String[][] DataFlag() throws SQLException {
 		String requete = "SELECT Flag.NomAcro AS Acronyme, Flag.ImgFlag as Flag FROM Flag";
 
@@ -487,6 +646,14 @@ public class BDD_v2 {
 		return data;
 	}
 
+	/**
+	 * Data joueur.
+	 *
+	 * @param bddName the bdd name
+	 * @return the string[][]
+	 * @throws SQLException the SQL exception
+	 * @throws ClassNotFoundException the class not found exception
+	 */
 	public static String[][] DataJoueur(String bddName) throws SQLException, ClassNotFoundException {
 		String requete = "SELECT id, Sexe, Nom, Prenom, NomAfficher, Nat, Birthdate, ImgJoueur, Ranking, height, hand, age, " + "weight, PRIZETOTAL, BIRTHPLACE, CITYRESIDENCE FROM " + bddName;
 
@@ -525,6 +692,14 @@ public class BDD_v2 {
 		return data;
 	}
 
+	/**
+	 * Gets the flag image path by acronym.
+	 *
+	 * @param acroNat the acro nat
+	 * @return the flag image path by acronym
+	 * @throws SQLException the SQL exception
+	 * @throws ClassNotFoundException the class not found exception
+	 */
 	public static String getFlagImagePathByAcronym(String acroNat) throws SQLException, ClassNotFoundException {
 		String imagePath = null;
 		if(acroNat != " ") {
@@ -542,6 +717,13 @@ public class BDD_v2 {
 		return imagePath;
 	}
 
+	/**
+	 * Gets the last player ID.
+	 *
+	 * @param bddname the bddname
+	 * @return the last player ID
+	 * @throws SQLException the SQL exception
+	 */
 	public static int getLastPlayerID(String bddname) throws SQLException {
 		int lastPlayerID = -1;
 
@@ -557,6 +739,13 @@ public class BDD_v2 {
 		return lastPlayerID;
 	}
 
+	/**
+	 * Gets the all players info from database.
+	 *
+	 * @param bddName the bdd name
+	 * @return the all players info from database
+	 * @throws SQLException the SQL exception
+	 */
 	public static String[][] getAllPlayersInfoFromDatabase(String bddName) throws SQLException {
 		String[][] playersInfo = new String[compterNbElementsBDD(bddName)][];
 
@@ -579,6 +768,12 @@ public class BDD_v2 {
 		return playersInfo;
 	}
 
+	/**
+	 * Gets the names from database.
+	 *
+	 * @param nomBDD the nom BDD
+	 * @return the names from database
+	 */
 	public static String[] getNamesFromDatabase(String nomBDD) {
 		String requete = "SELECT Nom FROM " + nomBDD;// +" Event";
 		if (nomBDD == "flag") {
@@ -609,6 +804,14 @@ public class BDD_v2 {
 		return nameArray;
 	}
 
+	/**
+	 * Gets the data.
+	 *
+	 * @param selectedBDD the selected BDD
+	 * @param start the start
+	 * @param pageSize the page size
+	 * @return the data
+	 */
 	public static List<String[]> getData(String selectedBDD, int start, int pageSize) {
 		List<String[]> data = new ArrayList<>();
 
@@ -636,6 +839,14 @@ public class BDD_v2 {
 		return data;
 	}
 
+	/**
+	 * Gets the object joueur.
+	 *
+	 * @param selectedBDD the selected BDD
+	 * @param nomJoueur the nom joueur
+	 * @return the object joueur
+	 * @throws SQLException the SQL exception
+	 */
 	public static String[] getObjectJoueur(String selectedBDD, String nomJoueur) throws SQLException {
 		String[] playerData = null;
 
@@ -656,6 +867,12 @@ public class BDD_v2 {
 		return playerData;
 	}
 
+	/**
+	 * Gets the all list player table name.
+	 *
+	 * @return the all list player table name
+	 * @throws SQLException the SQL exception
+	 */
 	public static void getAllListPlayerTableName() throws SQLException {
 		String requete = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE TABLE_TYPE='TABLE'";
 		tabBdd.clear();
@@ -678,6 +895,12 @@ public class BDD_v2 {
 		}
 	}
 
+	/**
+	 * Update background in database.
+	 *
+	 * @param oldBackgroundName the old background name
+	 * @param newBackground the new background
+	 */
 	// ---------------------------------------------------- UPDATE------------------------------------------------------------------------------
 	public static void updateBackgroundInDatabase(String oldBackgroundName, String[] newBackground) {
 
@@ -709,6 +932,12 @@ public class BDD_v2 {
 		}
 	}
 
+	/**
+	 * Update background if needed.
+	 *
+	 * @param oldBackgroundName the old background name
+	 * @param newBackgroundName the new background name
+	 */
 	public static void updateBackgroundIfNeeded(String oldBackgroundName, String newBackgroundName) {
 		// V�rifie si l'ancien fond est utilis� dans la table "Event"
 		String checkQuery = "SELECT COUNT(*) FROM Event WHERE NomBG = ?";
@@ -740,6 +969,11 @@ public class BDD_v2 {
 		}
 	}
 
+	/**
+	 * Delete background.
+	 *
+	 * @param backgroundName the background name
+	 */
 	public static void deleteBackground(String backgroundName) {
 		// V�rifiez si le fond est utilis� dans la table "Event"
 		String checkQuery = "SELECT COUNT(*) FROM Event WHERE NomBG = ?";
@@ -787,6 +1021,13 @@ public class BDD_v2 {
 		}
 	}
 
+	/**
+	 * Update event in database.
+	 *
+	 * @param currentName the current name
+	 * @param newName the new name
+	 * @param backgroundNewName the background new name
+	 */
 	public static void updateEventInDatabase(String currentName, String newName, String backgroundNewName) {
 		String updateQuery = "UPDATE Event SET Nom = ?, NomBG = ? WHERE Nom = ?";
 		try (PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
@@ -801,6 +1042,13 @@ public class BDD_v2 {
 		}
 	}
 
+	/**
+	 * Delete event.
+	 *
+	 * @param eventName the event name
+	 * @throws SQLException the SQL exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static void deleteEvent(String eventName) throws SQLException, IOException {
 		int choice = JOptionPane.showConfirmDialog(null, "Do you really want to delete this event?", "Event delete", JOptionPane.YES_NO_OPTION);
 		if (choice == JOptionPane.YES_OPTION) {
@@ -817,6 +1065,13 @@ public class BDD_v2 {
 		}
 	}
 
+	/**
+	 * Delete joueur.
+	 *
+	 * @param playertName the playert name
+	 * @param bddname the bddname
+	 * @throws SQLException the SQL exception
+	 */
 	public static void deleteJoueur(String playertName, String bddname) throws SQLException {
 		int choice = JOptionPane.showConfirmDialog(null, "Do you really want to delete this player ?", "Player delete", JOptionPane.YES_NO_OPTION);
 		if (choice == JOptionPane.YES_OPTION) {
@@ -831,6 +1086,11 @@ public class BDD_v2 {
 		}
 	}
 
+	/**
+	 * Delete player table.
+	 *
+	 * @throws SQLException the SQL exception
+	 */
 	public static void deletePlayerTable() throws SQLException {
 		for (String tableName : tabBdd) {
 			if (!tableName.equals("ATP") && !tableName.equals("WTA")) {
@@ -842,6 +1102,13 @@ public class BDD_v2 {
 		}
 		System.out.println("  all player table have been deleted except ATP and WTA");
 	}
+	
+	/**
+	 * Delete one player table.
+	 *
+	 * @param s_tableNameToDelete the s table name to delete
+	 * @throws SQLException the SQL exception
+	 */
 	public static void deleteOnePlayerTable(String s_tableNameToDelete) throws SQLException {
 		String s_tableName = s_tableNameToDelete.toUpperCase();
 		if (!s_tableName.equals("ATP") && !s_tableName.equals("WTA") && !s_tableName.equals("EVENT") && !s_tableName.equals("BACKGROUND") && !s_tableName.equals("FLAG")) {
@@ -853,6 +1120,12 @@ public class BDD_v2 {
 		}
 	}
 
+	/**
+	 * Update flag in database.
+	 *
+	 * @param currentName the current name
+	 * @param newFlag the new flag
+	 */
 	public static void updateFlagInDatabase(String currentName, String[] newFlag) {
 		try {
 
@@ -869,6 +1142,28 @@ public class BDD_v2 {
 		}
 	}
 
+	/**
+	 * Update players in database.
+	 *
+	 * @param id the id
+	 * @param sexe the sexe
+	 * @param playerName the player name
+	 * @param playerSurname the player surname
+	 * @param displayName the display name
+	 * @param acroNat the acro nat
+	 * @param flag the flag
+	 * @param birthdate the birthdate
+	 * @param imgJoueur the img joueur
+	 * @param ranking the ranking
+	 * @param height the height
+	 * @param hand the hand
+	 * @param age the age
+	 * @param weight the weight
+	 * @param prize the prize
+	 * @param birthplace the birthplace
+	 * @param cityResidence the city residence
+	 * @param bddName the bdd name
+	 */
 	public static void updatePlayersInDatabase(int id, String sexe, String playerName, String playerSurname, String displayName, String acroNat, String flag, String birthdate, String imgJoueur,
 			int ranking, String height, String hand, String age, String weight, String prize, String birthplace, String cityResidence, String bddName) {
 
@@ -903,6 +1198,21 @@ public class BDD_v2 {
 		}
 	}
 
+	/**
+	 * Update infos sup joueur.
+	 *
+	 * @param id_recup the id recup
+	 * @param s_birthdate the s birthdate
+	 * @param i_ranking the i ranking
+	 * @param d_height the d height
+	 * @param s_plays the s plays
+	 * @param i_age the i age
+	 * @param i_weight the i weight
+	 * @param s_prizetotal the s prizetotal
+	 * @param s_birthplace the s birthplace
+	 * @param s_residence the s residence
+	 * @param bddName the bdd name
+	 */
 	public static void UpdateInfosSupJoueur(int id_recup, String s_birthdate, int i_ranking, String d_height, String s_plays, int i_age, String i_weight, String s_prizetotal, String s_birthplace,
 			String s_residence, String bddName) {
 		try {
@@ -932,6 +1242,13 @@ public class BDD_v2 {
 
 	}
 
+	/**
+	 * Update img joueur.
+	 *
+	 * @param id the id
+	 * @param path the path
+	 * @param bddName the bdd name
+	 */
 	// mise a jour du chemin vers l'image du joueur
 	public static void updateImgJoueur(int id, String path, String bddName) {
 		System.out.println("  image pathh from the player who is updated : " + path);
@@ -949,6 +1266,13 @@ public class BDD_v2 {
 		}
 	}
 
+	/**
+	 * Update age joueur.
+	 *
+	 * @param id the id
+	 * @param age the age
+	 * @param bddName the bdd name
+	 */
 	public static void updateAgeJoueur(int id, int age, String bddName) {
 		try {
 
@@ -965,6 +1289,16 @@ public class BDD_v2 {
 	}
 	// -------------------------------------------------------------------VERIFICATION-------------------------------------------------------------------------------------//
 
+	/**
+	 * Verif image.
+	 *
+	 * @param id the id
+	 * @param bddName the bdd name
+	 * @return true, if successful
+	 * @throws SQLException the SQL exception
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	// v�rifiquation si l'image du joueur existe
 	public static boolean verif_image(int id, String bddName) throws SQLException, ClassNotFoundException, IOException {
 		System.out.println("  checking if an image exist");
@@ -989,6 +1323,15 @@ public class BDD_v2 {
 		return b_image_existe;
 	}
 
+	/**
+	 * Verif infos manquante.
+	 *
+	 * @param id the id
+	 * @param bddName the bdd name
+	 * @return true, if successful
+	 * @throws SQLException the SQL exception
+	 * @throws ClassNotFoundException the class not found exception
+	 */
 	// renvoi true si des infos sont manquantes sinon renvoie false
 	public static boolean verifInfosManquante(int id, String bddName) throws SQLException, ClassNotFoundException {
 		System.out.println("  player informations checking in database : "+bddName);
@@ -1018,6 +1361,12 @@ public class BDD_v2 {
 		return b_infosManquante;
 	}
 	
+	/**
+	 * Verifier et creer tables.
+	 *
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws SQLException the SQL exception
+	 */
 	// verifications les tables existe =s (efectuer au demarage)
 	public static void verifierEtCreerTables() throws ClassNotFoundException, SQLException {
 		// Liste des noms de tables � v�rifier
@@ -1072,11 +1421,23 @@ public class BDD_v2 {
 		}
 	}
 
+	/**
+	 * Table existe.
+	 *
+	 * @param tableName the table name
+	 * @return true, if successful
+	 * @throws SQLException the SQL exception
+	 */
 	private static boolean tableExiste(String tableName) throws SQLException {
 		ResultSet tables = connection.getMetaData().getTables(null, null, tableName.toUpperCase(), null);
 		return tables.next();
 	}
 	
+	/**
+	 * Export table.
+	 *
+	 * @param tableName the table name
+	 */
 	//---------------------------------------------------------export / import------------------------------------------------------------------------------------
 	public static void exportTable(String tableName) {
 		// Requ�te SQL pour r�cup�rer toutes les donn�es de la table
@@ -1121,6 +1482,15 @@ public class BDD_v2 {
 		}
 	}
 	
+	/**
+	 * Import CSV.
+	 *
+	 * @param tableName the table name
+	 * @param filePath the file path
+	 * @throws SQLException the SQL exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ClassNotFoundException the class not found exception
+	 */
 	public static void importCSV(String tableName, String filePath) throws SQLException, IOException, ClassNotFoundException {
 	    creationNewTable(tableName);
 	    

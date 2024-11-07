@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Diffusion;
 
 /*
@@ -26,22 +29,67 @@ import Sauvegarde.ElementJoueur;
 import Sauvegarde.ElementJoueurFull;
 import Sauvegarde.ElementPoliceJoueur;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class WindowConfigurationPlayerInfos.
+ */
 public class WindowConfigurationPlayerInfos extends JFrame {
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-	public enum FrameType {player, game, tab, full,autre}
+	
+	/**
+	 * The Enum FrameType.
+	 */
+	public enum FrameType {
+/** The player. */
+player, 
+ /** The game. */
+ game, 
+ /** The tab. */
+ tab, 
+ /** The full. */
+ full,
+/** The autre. */
+autre}
+	
+	/** The frame type. */
 	private FrameType frameType;
 	
+	/** The display frame. */
 	public WindowBroadcastPublic displayFrame;
+
+/** The tabbed pane. */
 //	private String typeFenetre;
 	public JTabbedPane tabbedPane = new JTabbedPane();
+	
+	/** The button save config. */
 	private JButton buttonSaveConfig = new JButton("Save config");
+	
+	/** The tab infos J 1. */
 	public TabConfigurationPlayerInfos tabInfosJ1;
+	
+	/** The tab infos J 2. */
 	public TabConfigurationPlayerInfos tabInfosJ2;
+	
+	/** The tab police. */
 	public TabPolice tabPolice;
+	
+	/** The name event. */
 	private String nameEvent;
+	
+	/** The Constant CONFIG_DIR. */
 	private static final String CONFIG_DIR = "Config/";
+	
+	/** The Constant JSON_EXT. */
 	private static final String JSON_EXT = ".json";
 	
+	/**
+	 * Instantiates a new window configuration player infos.
+	 *
+	 * @param sonFrame the son frame
+	 * @param typeFrame the type frame
+	 */
 	public WindowConfigurationPlayerInfos(WindowBroadcastPublic sonFrame, String typeFrame) {
 		this.displayFrame = sonFrame;
 		this.frameType = FrameType.valueOf(typeFrame.toLowerCase());
@@ -52,14 +100,31 @@ public class WindowConfigurationPlayerInfos extends JFrame {
 		
 		this.nameEvent = this.displayFrame.getNameEvent();
 	}
+	
+	/**
+	 * Sets the type fenetre.
+	 *
+	 * @param typeFenetre the new type fenetre
+	 */
 	public void setTypeFenetre(String typeFenetre) {
 		this.frameType = FrameType.valueOf(typeFenetre.toLowerCase());
 		setTitle("Configuration Player Information : "+typeFenetre);
 	}
+	
+	/**
+	 * Gets the type fenetre.
+	 *
+	 * @return the type fenetre
+	 */
 	public String getTypeFenetre() {
 		return this.frameType.toString().toLowerCase();
 	}
 	
+	/**
+	 * Sets the tab police.
+	 *
+	 * @param tabPolice the new tab police
+	 */
 	public void setTabPolice(TabPolice tabPolice) {
 		this.tabPolice = tabPolice;
 		tabbedPane.addTab("Style", tabPolice);
@@ -69,25 +134,51 @@ public class WindowConfigurationPlayerInfos extends JFrame {
 		this.tabbedPane.revalidate();
 		this.tabbedPane.repaint();	
 	}
+	
+	/**
+	 * Gets the tab police.
+	 *
+	 * @return the tab police
+	 */
 	public TabPolice getTabPolice() {
 		return tabPolice;
 	}
 	
+	/**
+	 * Adds the tab joueur.
+	 *
+	 * @param tabInfos the tab infos
+	 */
 	public void addTabJoueur(TabConfigurationPlayerInfos tabInfos) {
 		this.tabbedPane.addTab(tabInfos.getEnteteTab(), tabInfos);
 		this.tabbedPane.revalidate();
 		this.tabbedPane.repaint();
 	}
+	
+	/**
+	 * Insert tab joueur.
+	 *
+	 * @param tabInfos the tab infos
+	 * @param indexTab the index tab
+	 */
 	public void insertTabJoueur(TabConfigurationPlayerInfos tabInfos, int indexTab) {
 		this.tabbedPane.insertTab(tabInfos.getEnteteTab(), null, tabInfos, null, indexTab);
 		this.tabbedPane.revalidate();
 		this.tabbedPane.repaint();
 	}
 	
+	/**
+	 * Gets the all tab.
+	 *
+	 * @return the all tab
+	 */
 	public JTabbedPane getAllTab() {
 		return tabbedPane;
 	}
 
+	/**
+	 * Initialize frame.
+	 */
 	private void initializeFrame() {
         setTitle("Configuration Player Information :  "+this.frameType.toString().toLowerCase());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -95,10 +186,16 @@ public class WindowConfigurationPlayerInfos extends JFrame {
         setIconImage(new ImageIcon("icon.png").getImage());
     }
     
+    /**
+     * Initialize save button.
+     */
     private void initializeSaveButton() {
         buttonSaveConfig.addActionListener(this::saveConfig);
     }
     
+    /**
+     * Initialize panel.
+     */
     private void initializePanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(tabbedPane, BorderLayout.NORTH);
@@ -106,6 +203,12 @@ public class WindowConfigurationPlayerInfos extends JFrame {
         add(panel);
         setVisible(true);
     }
+    
+    /**
+     * Save config.
+     *
+     * @param e the e
+     */
     private void saveConfig(ActionEvent e) {
         confirmAllTab();
 //        refreshAllTab();
@@ -127,6 +230,10 @@ public class WindowConfigurationPlayerInfos extends JFrame {
 			break;
         }
     }
+    
+    /**
+     * Save single player.
+     */
     private void saveSinglePlayer() {
         TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) tabbedPane.getComponentAt(0);
         PlayerForDiffusion infosPlayerDetails = currentTab.getInfosPlayerDetails();
@@ -135,14 +242,26 @@ public class WindowConfigurationPlayerInfos extends JFrame {
             ConfigurationSaveLoad.saveWindows(displayFrame.getNameEvent(), frameType.toString().toLowerCase(), infosPlayerDetails.mapJoueurDetails.getMapJoueurDetails(), null);
         }
     }
+    
+    /**
+     * Save game.
+     */
     private void saveGame() {
         ArrayList<Map<JPanel, JLabel>> joueurDetailsGame = getJoueurDetails();
         ConfigurationSaveLoad.saveWindowsMultiTab(displayFrame.getNameEvent(), frameType.toString().toLowerCase(), joueurDetailsGame);
     }
+    
+    /**
+     * Save tab.
+     */
     private void saveTab() {
     	ArrayList<Map<JPanel, JLabel>> joueurDetails = getJoueurDetails();
         ConfigurationSaveLoad.saveWindowsMultiTab(displayFrame.getNameEvent(), frameType.toString().toLowerCase(), joueurDetails);
     }
+    
+    /**
+     * Save full.
+     */
     private void saveFull() {
         ElementJoueurFull elementJoueurFull = new ElementJoueurFull();
         for (int i = 0; i < tabbedPane.getTabCount() - 1; i++) {
@@ -158,6 +277,11 @@ public class WindowConfigurationPlayerInfos extends JFrame {
         ConfigurationSaveLoad.updateElementJoueurFull(displayFrame.getNameEvent(), ReadJson, elementJoueurFull);
     }
     
+    /**
+     * Gets the joueur details.
+     *
+     * @return the joueur details
+     */
     private ArrayList<Map<JPanel, JLabel>> getJoueurDetails() {
     	ArrayList<Map<JPanel, JLabel>> joueurDetails = new ArrayList<>();
         for (int i = 0; i < tabbedPane.getTabCount() - 1; i++) {
@@ -170,6 +294,13 @@ public class WindowConfigurationPlayerInfos extends JFrame {
         }
         return joueurDetails;
     }
+    
+    /**
+     * Process player details.
+     *
+     * @param pfdFromTab the pfd from tab
+     * @param elementJoueurFull the element joueur full
+     */
     private void processPlayerDetails(PlayerForDiffusion pfdFromTab, ElementJoueurFull elementJoueurFull) {
         Map<String, Map<String, ElementJoueur>> playerList = new HashMap<>();
         Map<String, ElementJoueur> player = new HashMap<>();
@@ -208,6 +339,9 @@ public class WindowConfigurationPlayerInfos extends JFrame {
         elementJoueurFull.getPlayer().add(playerList);
     }
 
+	/**
+	 * Refresh all tab.
+	 */
 	public void refreshAllTab() {
 		for (int i = 0; i < tabbedPane.getTabCount(); i++) {
 			tabbedPane.setSelectedIndex(i);
@@ -220,6 +354,9 @@ public class WindowConfigurationPlayerInfos extends JFrame {
 		}
 	}
 
+	/**
+	 * Confirm all tab.
+	 */
 	public void confirmAllTab() {
 		for (int i = 0; i < tabbedPane.getTabCount(); i++) {
 			tabbedPane.setSelectedIndex(i);
@@ -232,17 +369,35 @@ public class WindowConfigurationPlayerInfos extends JFrame {
 		}
 	}
 
+	/**
+	 * Font serializer.
+	 *
+	 * @param fontToSerialize the font to serialize
+	 * @return the string
+	 */
 	public static String FontSerializer(Font fontToSerialize) {
 		String SerializeFont = fontToSerialize.getName() + "," + fontToSerialize.getStyle() + ","
 				+ fontToSerialize.getSize();
 		return SerializeFont;
 	}
 
+	/**
+	 * Color serializer.
+	 *
+	 * @param colorToSerialize the color to serialize
+	 * @return the string
+	 */
 	public static String ColorSerializer(Color colorToSerialize) {
 		String SerializeColor = colorToSerialize.getRed() + "," + colorToSerialize.getGreen() + ","
 				+ colorToSerialize.getBlue();
 		return SerializeColor;
 	}
+	
+	/**
+	 * Gets the emplacement player.
+	 *
+	 * @return the emplacement player
+	 */
 	private String getEmplacementPlayer() {
 	    return switch (frameType) {
 	        case player -> CONFIG_DIR + this.nameEvent + "/player" + JSON_EXT;

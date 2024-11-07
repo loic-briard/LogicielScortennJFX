@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Players;
 
 import java.awt.Image;
@@ -12,15 +15,38 @@ import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CustomTableModelJoueur.
+ */
 public class CustomTableModelJoueur extends AbstractTableModel {
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+    
+    /** The column names. */
     private String[] columnNames = { "ID", "Sex", "Name", "Surname", "Display name", "Nationality", "Flag", "Player image", "Ranking", "Prize Total", "Height", "Hand", "Age", "Weight", "Birthdate", "Birthplace", "City Residence"};
+    
+    /** The data. */
     private List<Object[]> data;
+    
+    /** The image loader. */
     private ExecutorService imageLoader = Executors.newFixedThreadPool(2);
+    
+    /** The loading icon. */
     private ImageIcon loadingIcon = new ImageIcon("loading.png");
+    
+    /** The image cache. */
     private ConcurrentHashMap<String, ImageIcon> imageCache = new ConcurrentHashMap<>();
+    
+    /** The Constant IMAGE_HEIGHT. */
     private static final int IMAGE_HEIGHT = 60;
 
+    /**
+     * Instantiates a new custom table model joueur.
+     *
+     * @param data the data
+     */
     public CustomTableModelJoueur(Object[][] data) {
         this.data = new ArrayList<>();
         for (Object[] row : data) {
@@ -30,16 +56,33 @@ public class CustomTableModelJoueur extends AbstractTableModel {
         this.loadingIcon = resizeIcon(new ImageIcon("loading.png"));
     }
 
+    /**
+     * Gets the row count.
+     *
+     * @return the row count
+     */
     @Override
     public int getRowCount() {
         return data.size();
     }
 
+    /**
+     * Gets the column count.
+     *
+     * @return the column count
+     */
     @Override
     public int getColumnCount() {
         return columnNames.length;
     }
 
+    /**
+     * Gets the value at.
+     *
+     * @param row the row
+     * @param col the col
+     * @return the value at
+     */
     @Override
     public Object getValueAt(int row, int col) {
         Object value = data.get(row)[col];
@@ -54,22 +97,48 @@ public class CustomTableModelJoueur extends AbstractTableModel {
         return value;
     }
 
+    /**
+     * Sets the value at.
+     *
+     * @param value the value
+     * @param row the row
+     * @param col the col
+     */
     @Override
     public void setValueAt(Object value, int row, int col) {
         data.get(row)[col] = value;
         fireTableCellUpdated(row, col);
     }
 
+    /**
+     * Gets the column name.
+     *
+     * @param col the col
+     * @return the column name
+     */
     @Override
     public String getColumnName(int col) {
         return columnNames[col];
     }
 
+    /**
+     * Checks if is cell editable.
+     *
+     * @param row the row
+     * @param col the col
+     * @return true, if is cell editable
+     */
     @Override
     public boolean isCellEditable(int row, int col) {
         return true;
     }
 
+    /**
+     * Gets the column class.
+     *
+     * @param columnIndex the column index
+     * @return the column class
+     */
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         if (columnIndex == 6 || columnIndex == 7) {
@@ -78,6 +147,9 @@ public class CustomTableModelJoueur extends AbstractTableModel {
         return super.getColumnClass(columnIndex);
     }
 
+    /**
+     * Load images.
+     */
     public void loadImages() {
         imageLoader.shutdownNow(); // Arrête les tâches de chargement précédentes
         imageLoader = Executors.newFixedThreadPool(2); // Crée un nouveau pool de threads
@@ -90,6 +162,12 @@ public class CustomTableModelJoueur extends AbstractTableModel {
         }
     }
 
+    /**
+     * Load image for cell.
+     *
+     * @param row the row
+     * @param col the col
+     */
     private void loadImageForCell(int row, int col) {
         Object value = data.get(row)[col];
         if (value instanceof String) {
@@ -112,6 +190,13 @@ public class CustomTableModelJoueur extends AbstractTableModel {
             }
         }
     }
+    
+    /**
+     * Resize icon.
+     *
+     * @param icon the icon
+     * @return the image icon
+     */
     private ImageIcon resizeIcon(ImageIcon icon) {
         Image img = icon.getImage();
         int originalWidth = icon.getIconWidth();
@@ -121,20 +206,40 @@ public class CustomTableModelJoueur extends AbstractTableModel {
         return new ImageIcon(resizedImage);
     }
 
+    /**
+     * Adds the row.
+     *
+     * @param rowData the row data
+     */
     public void addRow(Object[] rowData) {
         data.add(rowData);
         fireTableRowsInserted(data.size() - 1, data.size() - 1);
     }
 
+    /**
+     * Removes the row.
+     *
+     * @param row the row
+     */
     public void removeRow(int row) {
         data.remove(row);
         fireTableRowsDeleted(row, row);
     }
 
+    /**
+     * Update row.
+     *
+     * @param row the row
+     * @param rowData the row data
+     */
     public void updateRow(int row, Object[] rowData) {
         data.set(row, rowData);
         fireTableRowsUpdated(row, row);
     }
+    
+    /**
+     * Clear data.
+     */
     public void clearData() {
         int oldSize = data.size();
         data.clear();
@@ -143,6 +248,12 @@ public class CustomTableModelJoueur extends AbstractTableModel {
             fireTableRowsDeleted(0, oldSize - 1);
         }
     }
+    
+    /**
+     * Sets the new data.
+     *
+     * @param newData the new new data
+     */
     public void setNewData(Object[][] newData) {
         clearData();
         for (Object[] row : newData) {

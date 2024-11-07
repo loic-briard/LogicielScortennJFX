@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Main;
 
 import java.io.BufferedReader;
@@ -15,9 +18,24 @@ import com.formdev.flatlaf.FlatDarkLaf;
 
 import API.GestionAPI;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MainJFX.
+ */
 public class MainJFX {
+	
+	/** The open on eclipse. */
 	public static boolean openOnEclipse = false;
+	
+	/** The api. */
 	public static GestionAPI API = new GestionAPI();
+    
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     * @throws Exception the exception
+     */
     public static void main(String[] args) throws Exception {
     	// Obtient la classe actuelle
         Class<?> currentClass = MainJFX.class;
@@ -85,6 +103,13 @@ public class MainJFX {
         });
 		//BDD_v2.deconnexionBDD();
 	}
+ 
+ /**
+  * Test folder in jar.
+  *
+  * @param folderName the folder name
+  * @throws IOException Signals that an I/O exception has occurred.
+  */
  // M�thode pour tester si un dossier existe dans le JAR
     private static void testFolderInJar(String folderName) throws IOException {
         // Obtention du contenu du dossier depuis le JAR

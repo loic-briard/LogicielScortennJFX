@@ -31,13 +31,27 @@ import org.json.JSONObject;
 import Main.BDD_v2;
 import Players.Joueur;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GestionAPI.
+ */
 public class GestionAPI {
 
+	/** The s reponse. */
 	public static String s_reponse = "";
+	
+	/** The s cle API. */
 	public static String s_cleAPI = "7fb7968a03mshd012795cea9a38bp1a4c84jsn2816ff2c7b61";//c837b75253mshe24f11571463ee5p17f8b3jsn31aa86731177 | 7fb7968a03mshd012795cea9a38bp1a4c84jsn2816ff2c7b61
+	
+	/** The Constant httpClient. */
 	private static final HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1).connectTimeout(Duration.ofSeconds(10)).build();
+	
+	/** The correspondance drapeaux. */
 	Map<String, String> correspondanceDrapeaux = new HashMap<>();
     	
+	/**
+	 * Instantiates a new gestion API.
+	 */
 	public GestionAPI() {
 		correspondanceDrapeaux.put("ad", "AND");
 	    correspondanceDrapeaux.put("ae", "ARE");
@@ -292,6 +306,13 @@ public class GestionAPI {
 	    correspondanceDrapeaux.put("zw", "ZWE");		
 	}
 	
+	/**
+	 * Connexion ATP.
+	 *
+	 * @return the string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws InterruptedException the interrupted exception
+	 */
 	//permet de recuperer le classement des 500 premiers joueur de l'ATP
 	private String ConnexionATP() throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder().GET()
@@ -311,6 +332,14 @@ public class GestionAPI {
 		}
 		return null;
 	}
+	
+	/**
+	 * Connexion WTA.
+	 *
+	 * @return the string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws InterruptedException the interrupted exception
+	 */
 	//permet de recuperer le classement des 500 premiers joueur du WTA
 	 private static String ConnexionWTA() throws IOException, InterruptedException {
 	        HttpRequest request = HttpRequest.newBuilder()
@@ -370,7 +399,16 @@ public class GestionAPI {
 //		}
 //		return null;
 //	}
-	//mise en forme des donées recu du tableau de l'atp et insertion dans la bdd
+	/**
+ * Tab atp.
+ *
+ * @throws JSONException the JSON exception
+ * @throws IOException Signals that an I/O exception has occurred.
+ * @throws InterruptedException the interrupted exception
+ * @throws ClassNotFoundException the class not found exception
+ * @throws SQLException the SQL exception
+ */
+//mise en forme des donées recu du tableau de l'atp et insertion dans la bdd
 	public void TAB_ATP() throws JSONException, IOException, InterruptedException, ClassNotFoundException, SQLException {
 		String s_imgTemp = "clear.png";
 		// Convertir la chaîne en objet JSON
@@ -424,6 +462,16 @@ public class GestionAPI {
 			
 		}
 	}
+	
+	/**
+	 * Tab wta.
+	 *
+	 * @throws JSONException the JSON exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws InterruptedException the interrupted exception
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws SQLException the SQL exception
+	 */
 	//mise en forme des donées recu du tableau de l'atp et insertion dans la bdd
 		public void TAB_WTA() throws JSONException, IOException, InterruptedException, ClassNotFoundException, SQLException {
 			String s_imgTemp = "clear.png";
@@ -481,6 +529,17 @@ public class GestionAPI {
 			}
 		}
 	
+	/**
+	 * Insertions infos sup joueur.
+	 *
+	 * @param id the id
+	 * @param bddname the bddname
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws InterruptedException the interrupted exception
+	 * @throws JSONException the JSON exception
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws SQLException the SQL exception
+	 */
 	public void insertionsInfosSupJoueur(int id, String bddname) throws IOException, InterruptedException, JSONException, ClassNotFoundException, SQLException {
 //		Object o_infosJoueur[] = new Object[8]; 
 		// verification si il n'y a pas deja les infos
@@ -597,6 +656,16 @@ public class GestionAPI {
 		}else System.out.println("  infos complete !");
 	}
 	
+	/**
+	 * Recup IMGJ.
+	 *
+	 * @param id the id
+	 * @param bddname the bddname
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws InterruptedException the interrupted exception
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws SQLException the SQL exception
+	 */
 	//recupere l'image du joueur selectionne via son id et met le chemin vers l'image dans la bdd
 	private void recupIMGJ(int id, String bddname) throws IOException, InterruptedException, ClassNotFoundException, SQLException {
         BufferedImage image = null;
@@ -643,12 +712,26 @@ public class GestionAPI {
         }
     }
 	
+	/**
+	 * Enlever accents.
+	 *
+	 * @param texteAvecAccents the texte avec accents
+	 * @return the string
+	 */
 	public String enleverAccents(String texteAvecAccents) {
         String texteSansAccents = Normalizer.normalize(texteAvecAccents, Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
         return texteSansAccents;
     }
 	
+	/**
+	 * Verification element.
+	 *
+	 * @param objAverifier the obj averifier
+	 * @param element the element
+	 * @return the object
+	 * @throws JSONException the JSON exception
+	 */
 	public Object verificationElement(JSONObject objAverifier,String element) throws JSONException {
 		Object o_returnValeur=new Object();
 		if(objAverifier.has(element))

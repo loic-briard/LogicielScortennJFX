@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Main;
 
 /*
@@ -16,12 +19,30 @@ import java.nio.file.StandardCopyOption;
 
 import javax.imageio.ImageIO;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ImageUtility.
+ */
 public class ImageUtility extends JLabel {
+    
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
+    
+    /** The width. */
     private int width; // Largeur de l'image redimensionn�e
+    
+    /** The image path. */
     private String imagePath;
+    
+    /** The rezized image. */
     private BufferedImage rezizedImage;
 
+    /**
+     * Instantiates a new image utility.
+     *
+     * @param imagePath the image path
+     * @param height the height
+     */
     public ImageUtility(String imagePath, int height) {
         this.imagePath = imagePath;
         try {
@@ -61,17 +82,40 @@ public class ImageUtility extends JLabel {
         }
     }
 
+    /**
+     * Sets the image size.
+     *
+     * @param width the width
+     * @param height the height
+     */
     // M�thode pour d�finir la taille de l'image
     public void setImageSize(int width, int height) {
         this.width = width;
     }
+    
+    /**
+     * Gets the image path.
+     *
+     * @return the image path
+     */
     public String getImagePath() {
         return imagePath;
     }
+    
+    /**
+     * Gets the rezized image.
+     *
+     * @return the rezized image
+     */
     public BufferedImage getRezizedImage() {
     	return rezizedImage;
     }
     
+    /**
+     * Charger fichier.
+     *
+     * @return the string
+     */
     public static String chargerFichier() {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
@@ -88,6 +132,13 @@ public class ImageUtility extends JLabel {
 			System.out.println("-- probleme lors du chargemment de l'image");
 		return null;
 	}
+    
+    /**
+     * Enregistrer fichier.
+     *
+     * @param sourceFilePath the source file path
+     * @param destinationDirectoryPath the destination directory path
+     */
     public static void enregistrerFichier (String sourceFilePath, String destinationDirectoryPath) {
         File sourceFile = new File(sourceFilePath);
         File destinationDirectory = new File(destinationDirectoryPath);
@@ -117,6 +168,13 @@ public class ImageUtility extends JLabel {
             System.err.println("-- Erreur lors de la copie du fichier.");
         }
     }
+    
+    /**
+     * Gets the name file.
+     *
+     * @param sourceFilePath the source file path
+     * @return the name file
+     */
     public static String getNameFile (String sourceFilePath) {
     	File sourceFile = new File(sourceFilePath);
     	// V�rifier si le fichier source existe

@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Event;
 
 import java.awt.BorderLayout;
@@ -16,11 +19,27 @@ import Main.BDD_v2;
 import Main.ImageUtility;
 import Main.MenuPrincipal;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ListOfEventsFrame.
+ */
 public class ListOfEventsFrame extends JFrame {
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The event table. */
 	private JTable eventTable;
+	
+	/** The parent frame. */
 	private MenuPrincipal parentFrame; // R�f�rence � la fen�tre ListOfEventsFrame
 
+	/**
+	 * Instantiates a new list of events frame.
+	 *
+	 * @param menuPrincipal the menu principal
+	 * @throws SQLException the SQL exception
+	 */
 	public ListOfEventsFrame(MenuPrincipal menuPrincipal) throws SQLException {
 		this.parentFrame = menuPrincipal;
 		// Initialisation de la fen�tre
@@ -167,6 +186,12 @@ public class ListOfEventsFrame extends JFrame {
             }
         });
 	}
+	
+	/**
+	 * Refresh data.
+	 *
+	 * @throws SQLException the SQL exception
+	 */
 	public void refreshData() throws SQLException {
 		// Effacez les donn�es actuelles de la table
         DefaultTableModel model = (DefaultTableModel) eventTable.getModel();

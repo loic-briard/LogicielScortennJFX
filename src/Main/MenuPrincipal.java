@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Main;
 /*
  * fenetre d'accueil avec :
@@ -28,6 +31,7 @@ import Players.ListOfPlayersFrame;
 
 // TODO: Auto-generated Javadoc
 /**
+ * The Class MenuPrincipal.
  */
 public class MenuPrincipal extends JFrame {
     
@@ -566,6 +570,13 @@ public class MenuPrincipal extends JFrame {
         
         return button;
     }
+    
+    /**
+     * Creates the styled button start.
+     *
+     * @param text the text
+     * @return the j button
+     */
     private JButton createStyledButtonStart(String text) {
         JButton button = new JButton(text);
         button.setBackground(new Color(0, 101, 24));

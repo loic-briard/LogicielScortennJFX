@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Police;
 
 import javax.swing.*;
@@ -8,14 +11,34 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class FontAndColorSelectionDialog.
+ */
 public class FontAndColorSelectionDialog extends JDialog {
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
+	/** The text label. */
 	private JLabel textLabel;
+	
+	/** The panel modif. */
 	private JPanel panelModif;
+    
+    /** The selected color. */
     private Color selectedColor = null;
+    
+    /** The selected font. */
     private Font selectedFont = null;
 
+    /**
+     * Instantiates a new font and color selection dialog.
+     *
+     * @param labelToUpdate the label to update
+     * @param playerInfo the player info
+     * @param nouvellePolice the nouvelle police
+     */
     public FontAndColorSelectionDialog(JLabel labelToUpdate,JPanel playerInfo, chosenPolice nouvellePolice) {
         this.setModal(true);
         this.setLayout(new FlowLayout());

@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Players;
 
 import java.awt.Container;
@@ -19,37 +22,113 @@ import javax.swing.*;
 import Main.BDD_v2;
 import Main.ImageUtility;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ModifyPlayersFrame.
+ */
 public class ModifyPlayersFrame extends JFrame{
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The id label. */
 	// D�clarez les composants que vous avez d�crits
     private JLabel idLabel;
+    
+    /** The sex combo box. */
     private JComboBox<String> sexComboBox;
+    
+    /** The name field. */
     private JTextField nameField;
+    
+    /** The surname field. */
     private JTextField surnameField;
+    
+    /** The display name field. */
     private JTextField displayNameField;
+    
+    /** The nationality combo box. */
     private JComboBox<String> nationalityComboBox;
+    
+    /** The flag label. */
     private JLabel flagLabel;
+
+/** The player image label. */
 //    private JDateChooser  birthdatePicker;
     private JLabel playerImageLabel;
+    
+    /** The load image button. */
     private JButton loadImageButton;
+    
+    /** The ranking field. */
     private JTextField rankingField;
+    
+    /** The height field. */
     private JTextField heightField;
+    
+    /** The hand combo box. */
     private JComboBox<String> handComboBox;
+    
+    /** The age field. */
     private JTextField ageField;
+    
+    /** The weight field. */
     private JTextField weightField;
+    
+    /** The prize field. */
     private JTextField prizeField;
+    
+    /** The birthplace field. */
     private JTextField birthplaceField;
+    
+    /** The city residence field. */
     private JTextField cityResidenceField;
         
+    /** The content pane. */
     private JPanel contentPane;
     
+    /** The current image. */
     private String currentImage;
+    
+    /** The current flag. */
     private String currentFlag;
+    
+    /** The bddchoosen. */
     private String bddchoosen;
+    
+    /** The date format. */
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    
+    /** The joueur modifier. */
     private  Object[] joueurModifier;
+    
+    /** The birthdate chooser. */
     private JDateChooser birthdateChooser;
     
+	/**
+	 * Instantiates a new modify players frame.
+	 *
+	 * @param parentFrame the parent frame
+	 * @param iD the i D
+	 * @param sexe the sexe
+	 * @param playerName the player name
+	 * @param playerSurname the player surname
+	 * @param displayName the display name
+	 * @param acroNat the acro nat
+	 * @param flag the flag
+	 * @param bithdate the bithdate
+	 * @param imgJoueur the img joueur
+	 * @param ranking the ranking
+	 * @param height the height
+	 * @param hand the hand
+	 * @param age the age
+	 * @param weight the weight
+	 * @param prize the prize
+	 * @param birthplace the birthplace
+	 * @param cityResidence the city residence
+	 * @param bddChoosen the bdd choosen
+	 * @param selectedRow the selected row
+	 */
 	public ModifyPlayersFrame(ListOfPlayersFrame parentFrame, String iD, String sexe, String playerName, String playerSurname, String displayName, 
 			String acroNat, String flag, String bithdate, String imgJoueur, String ranking, String height, String hand, String age, 
 			String weight, String prize, String birthplace, String cityResidence, String bddChoosen, int selectedRow) {
@@ -216,18 +295,41 @@ public class ModifyPlayersFrame extends JFrame{
         
         setVisible(true); 
     }
+	
+	/**
+	 * Update player image preview.
+	 *
+	 * @param imagePath the image path
+	 */
 	private void updatePlayerImagePreview(String imagePath) {
 	    ImageUtility image = new ImageUtility(imagePath, 150);
 	    playerImageLabel.setIcon(image.getIcon());
 	    playerImageLabel.revalidate();
 	    playerImageLabel.repaint();
 	}
+	
+	/**
+	 * Update player flag preview.
+	 *
+	 * @param imagePath the image path
+	 */
 	private void updatePlayerFlagPreview(String imagePath) {
 	    ImageUtility image = new ImageUtility(imagePath, 75);
 	    flagLabel.setIcon(image.getIcon());
 	    flagLabel.revalidate();
 	    flagLabel.repaint();
 	}
+    
+    /**
+     * Adds the component.
+     *
+     * @param container the container
+     * @param label the label
+     * @param component the component
+     * @param gbc the gbc
+     * @param x the x
+     * @param y the y
+     */
     private void addComponent(Container container, String label, JComponent component, GridBagConstraints gbc, int x, int y) {
         gbc.gridx = x;
         gbc.gridy = y;
@@ -237,6 +339,13 @@ public class ModifyPlayersFrame extends JFrame{
         gbc.weightx = 1.0;
         container.add(component, gbc);
     }
+    
+    /**
+     * Gets the date.
+     *
+     * @param birthdateChooser the birthdate chooser
+     * @return the date
+     */
     private String getDate(JDateChooser birthdateChooser) {
     	// Obtenez la date de naissance
     	Date birthdate = birthdateChooser.getDate();
@@ -245,6 +354,12 @@ public class ModifyPlayersFrame extends JFrame{
     	System.out.println("++++ date de naissance formater : "+formattedDate);
 		return formattedDate;
     }
+    
+    /**
+     * Validate fields.
+     *
+     * @return true, if successful
+     */
     private boolean validateFields() {
         return !nameField.getText().isEmpty() &&
                !surnameField.getText().isEmpty() &&

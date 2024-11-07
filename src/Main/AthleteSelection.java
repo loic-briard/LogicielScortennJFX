@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Main;
 
 /*
@@ -39,21 +42,52 @@ import org.json.JSONException;
 
 import Players.Joueur;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AthleteSelection.
+ */
 public class AthleteSelection extends JFrame {  
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The all players table. */
 	private JTable allPlayersTable;
+    
+    /** The selected players table. */
     private JTable selectedPlayersTable;
     
+    /** The all joueurs. */
     private ArrayList<Joueur> allJoueurs = new ArrayList<>();
+    
+    /** The selected players. */
     private ArrayList<Joueur> selectedPlayers = new ArrayList<>();
 
+    /** The add button. */
     private JButton addButton = new JButton("Add ->");
+    
+    /** The remove button. */
     private JButton removeButton = new JButton("<- Delete");
+    
+    /** The validate button. */
     private JButton validateButton = new JButton("<html><u>V</u>alidate</html>");
+    
+    /** The search field. */
     private JTextField searchField = new JTextField();
+    
+    /** The model right table. */
     private DefaultTableModel modelRightTable;
+    
+    /** The choosen BDD. */
     private String choosenBDD;
 
+	/**
+	 * Instantiates a new athlete selection.
+	 *
+	 * @param choosenBDD the choosen BDD
+	 * @throws SQLException the SQL exception
+	 * @throws ClassNotFoundException the class not found exception
+	 */
 	public AthleteSelection(String choosenBDD) throws SQLException, ClassNotFoundException {
         setTitle("Selection of Players");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -286,10 +320,18 @@ public class AthleteSelection extends JFrame {
         setVisible(true);
     }
     
+    /**
+     * Gets the selected players.
+     *
+     * @return the selected players
+     */
     public ArrayList<Joueur> getSelectedPlayers(){
     	return this.selectedPlayers;
     }
     
+    /**
+     * Ajout plyare to selected list.
+     */
     public void ajoutPlyareToSelectedList() {
     	int selectedRow = allPlayersTable.getSelectedRow();
 		if (selectedRow >= 0) {
@@ -307,6 +349,13 @@ public class AthleteSelection extends JFrame {
 			
 		}
     }
+    
+    /**
+     * Calculate age.
+     *
+     * @param dob the dob
+     * @return the int
+     */
     private int calculateAge(Date dob) {
         Calendar today = Calendar.getInstance();
         Calendar birthDate = Calendar.getInstance();

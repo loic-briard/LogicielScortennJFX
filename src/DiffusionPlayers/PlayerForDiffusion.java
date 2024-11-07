@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package DiffusionPlayers;
 
 /*
@@ -30,103 +33,284 @@ import Sauvegarde.ConfigurationSaveLoad;
 import Sauvegarde.ElementJoueur;
 import Sauvegarde.ElementPoliceJoueur;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PlayerForDiffusion.
+ */
 public class PlayerForDiffusion extends JPanel{
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
+	/** The player name. */
 	public JPanel playerName;
+	
+	/** The player surname. */
 	public JPanel playerSurname;
+	
+	/** The player img. */
 	public JPanel playerImg;
+	
+	/** The player flag. */
 	public JPanel playerFlag;
+	
+	/** The player acro. */
 	public JPanel playerAcro;
+	
+	/** The player rank. */
 	public JPanel playerRank;
+	
+	/** The player birthdate. */
 	public JPanel playerBirthdate;
+	
+	/** The player birthplace. */
 	public JPanel playerBirthplace;
+	
+	/** The player height. */
 	public JPanel playerHeight;
+	
+	/** The player weight. */
 	public JPanel playerWeight;
+	
+	/** The player hand. */
 	public JPanel playerHand;
+	
+	/** The player age. */
 	public JPanel playerAge;
+	
+	/** The player prizetotal. */
 	public JPanel playerPrizetotal;
+	
+	/** The player cityresidence. */
 	public JPanel playerCityresidence;
+	
+	/** The player line. */
 	public JPanel playerLine;
+	
+	/** The name label. */
 	// -----------------------------------
 	public JLabel nameLabel;
+	
+	/** The Surname label. */
 	public JLabel SurnameLabel;
+	
+	/** The Img label. */
 	public ImageUtility ImgLabel;
+	
+	/** The Flag label. */
 	public ImageUtility FlagLabel;
+	
+	/** The Acro label. */
 	public JLabel AcroLabel;
+	
+	/** The Rank label. */
 	public JLabel RankLabel;
+	
+	/** The birthdate label. */
 	public JLabel birthdateLabel;
+	
+	/** The birth place label. */
 	public JLabel birthPlaceLabel;
+	
+	/** The height label. */
 	public JLabel heightLabel;
+	
+	/** The weight label. */
 	public JLabel weightLabel;
+	
+	/** The hand label. */
 	public JLabel handLabel;
+	
+	/** The age label. */
 	public JLabel ageLabel;
+	
+	/** The prizetotal label. */
 	public JLabel prizetotalLabel;
+	
+	/** The cityresidence label. */
 	public JLabel cityresidenceLabel;
+	
+	/** The line label. */
 	public JLabel lineLabel;
+	
+	/** The police name. */
 	// --------------------------------
 	public chosenPolice policeName;
+	
+	/** The police surname. */
 	public chosenPolice policeSurname;
+	
+	/** The police acro. */
 	public chosenPolice policeAcro;
+	
+	/** The police rank. */
 	public chosenPolice policeRank;
+	
+	/** The police birth date. */
 	public chosenPolice policeBirthDate;
+	
+	/** The police birth place. */
 	public chosenPolice policeBirthPlace;
+	
+	/** The police height. */
 	public chosenPolice policeHeight;
+	
+	/** The police weight. */
 	public chosenPolice policeWeight;
+	
+	/** The police hand. */
 	public chosenPolice policeHand;
+	
+	/** The police age. */
 	public chosenPolice policeAge;
+	
+	/** The police prizetotal. */
 	public chosenPolice policePrizetotal;
+	
+	/** The police cityresidence. */
 	public chosenPolice policeCityresidence;
+	
+	/** The police line. */
 	public chosenPolice policeLine;
+	
+	/** The taille img joueur. */
 	//-----------------------------------------
 	public int tailleImgJoueur;
+	
+	/** The taille img flag. */
 	public int tailleImgFlag;
 	
+	/** The joueur. */
 	private Joueur joueur;
+	
+	/** The frame for diffusion. */
 	private WindowBroadcastPublic frameForDiffusion;
+	
+	/** The window configuration player infos. */
 	private WindowConfigurationPlayerInfos windowConfigurationPlayerInfos;
+	
+	/** The map joueur details. */
 	public JoueurDetails mapJoueurDetails;
+	
+	/** The type fen. */
 	private String typeFen;
+	
+	/** The playerfordifusion 2. */
 	private PlayerForDiffusion playerfordifusion2;
+	
+	/** The nom event. */
 	private String nomEvent;
+	
+	/** The numero player. */
 	private int numeroPlayer;
+	
+	/** The animation panel. */
 	private PanelAnimationConfiguration animationPanel;
+	
+	/** The panel player global. */
 	private ZoomablePanel panelPlayerGlobal;
+	
+	/** The Constant CONFIG_DIR. */
 	private static final String CONFIG_DIR = "Config/";
+	
+	/** The Constant JSON_EXT. */
 	private static final String JSON_EXT = ".json";
+	
+	/** The mouse adapter panel. */
 	private MouseAdapterPanel mouseAdapterPanel;
 //	private Evenement event;
 //	private BackgroundPanel backgroundPanel;
 	
-	public MouseAdapterPanel getMouseAdapterPanel() {
+	/**
+ * Gets the mouse adapter panel.
+ *
+ * @return the mouse adapter panel
+ */
+public MouseAdapterPanel getMouseAdapterPanel() {
 		return mouseAdapterPanel;
 	}
+	
+	/**
+	 * Gets the numero player.
+	 *
+	 * @return the numero player
+	 */
 	public int getNumeroPlayer() {
 		return numeroPlayer;
 	}
+	
+	/**
+	 * Sets the numero player.
+	 *
+	 * @param numeroPlayerIndex the new numero player
+	 */
 	public void setNumeroPlayer(int numeroPlayerIndex) {
 		this.numeroPlayer = numeroPlayerIndex;
 	}
+	
+	/**
+	 * Sets the placement frame two player.
+	 *
+	 * @param placementFrameTwoPlayer the new placement frame two player
+	 */
 	public void setPlacementFrameTwoPlayer(WindowConfigurationPlayerInfos placementFrameTwoPlayer) {
 		this.windowConfigurationPlayerInfos = placementFrameTwoPlayer;
 	}
+	
+	/**
+	 * Gets the placement frame two player.
+	 *
+	 * @return the placement frame two player
+	 */
 	public WindowConfigurationPlayerInfos getPlacementFrameTwoPlayer() {
 		return windowConfigurationPlayerInfos;
 	}
+	
+	/**
+	 * Gets the type fen.
+	 *
+	 * @return the type fen
+	 */
 	public String getTypeFen() {
 		return typeFen;
 	}
 	
+	/**
+	 * Gets the joueur.
+	 *
+	 * @return the joueur
+	 */
 	public Joueur getJoueur() {
 		return joueur;
 	}
+	
+	/**
+	 * Gets the panel global.
+	 *
+	 * @return the panel global
+	 */
 	public JPanel getPanelGlobal() {
 		return this.panelPlayerGlobal;
 	}
+	
+	/**
+	 * Gets the window animation configuration.
+	 *
+	 * @return the window animation configuration
+	 */
 	public PanelAnimationConfiguration getWindowAnimationConfiguration(){
 		return animationPanel;
 	}
 	
+	/**
+	 * Instantiates a new player for diffusion.
+	 *
+	 * @param nomEvent the nom event
+	 * @param diffusionFrame the diffusion frame
+	 * @param panelAnimationConfig the panel animation config
+	 * @param typeFrame the type frame
+	 * @param numeroPlayer the numero player
+	 */
 	public PlayerForDiffusion(Evenement nomEvent, WindowBroadcastPublic diffusionFrame,PanelAnimationConfiguration panelAnimationConfig,String typeFrame, int numeroPlayer) {
 		this.frameForDiffusion = diffusionFrame;
 		this.typeFen = typeFrame;
@@ -151,6 +335,9 @@ public class PlayerForDiffusion extends JPanel{
 //		backgroundPanel.setVisible(false);		
 	}
 	
+	/**
+	 * Initialize police.
+	 */
 	private void initializePolice() {
 		policeName = createPolice() ;
 		policeSurname = createPolice() ;
@@ -166,12 +353,22 @@ public class PlayerForDiffusion extends JPanel{
 		policeCityresidence = createPolice() ;
 		policeLine = createPolice() ;
 	}
+	
+	/**
+	 * Creates the police.
+	 *
+	 * @return the chosen police
+	 */
 	private chosenPolice createPolice() {
 		chosenPolice policeInitial = new chosenPolice();
 		policeInitial.setNewfont(new Font("Arial", Font.BOLD, 25));
 		policeInitial.setNewColor(Color.BLACK);
 		return policeInitial;
 	}
+	
+	/**
+	 * Creates the player panels.
+	 */
 	private void createPlayerPanels() {
 	    String[] panelNames = {"Name", "Surname", "ImgJoueur", "ImgFlag", "Acronyme", "Rank", "Birthdate", "Birthplace", "Height", "Weight", "Hand", "Age", "Prizetotal", "CityResidence", "Line"};
 	    for (String name : panelNames) {
@@ -195,6 +392,13 @@ public class PlayerForDiffusion extends JPanel{
 	        }
 	    }
 	}
+	
+	/**
+	 * Creates the player panel.
+	 *
+	 * @param name the name
+	 * @return the j panel
+	 */
 	private JPanel createPlayerPanel(String name) {
 	    JPanel panel = new JPanel();
 	    panel.setOpaque(false);
@@ -206,6 +410,12 @@ public class PlayerForDiffusion extends JPanel{
 	    panel.addMouseMotionListener(mouseAdapter);
 	    return panel;
 	}
+	
+	/**
+	 * Gets the emplacement player.
+	 *
+	 * @return the emplacement player
+	 */
 	private String getEmplacementPlayer() {
 	    return switch (typeFen) {
 	        case "player" -> CONFIG_DIR + nomEvent + "/player" + JSON_EXT;
@@ -215,6 +425,15 @@ public class PlayerForDiffusion extends JPanel{
 	        default -> throw new IllegalArgumentException("Unexpected value: " + typeFen);
 	    };
 	}
+	
+	/**
+	 * Sets the player.
+	 *
+	 * @param joueur the joueur
+	 * @param ligne the ligne
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws SQLException the SQL exception
+	 */
 	public void setPlayer(Joueur joueur, int ligne) throws ClassNotFoundException, SQLException {
 	    this.joueur = joueur;
 	    
@@ -249,6 +468,12 @@ public class PlayerForDiffusion extends JPanel{
 	    updateDisplay(ligne);    
 	}
 
+	/**
+	 * Update text panel.
+	 *
+	 * @param panel the panel
+	 * @param info the info
+	 */
 	private void updateTextPanel(JPanel panel, LabelInfo info) {
 	    panel.removeAll();
 	    JLabel label = new JLabel(info.text);
@@ -258,12 +483,21 @@ public class PlayerForDiffusion extends JPanel{
 	    panel.setSize(label.getPreferredSize().width, label.getPreferredSize().height + 5);
 	}
 
+	/**
+	 * Update image panel.
+	 *
+	 * @param panel the panel
+	 * @param imageLabel the image label
+	 */
 	private void updateImagePanel(JPanel panel, ImageUtility imageLabel) {
 	    panel.removeAll();
 	    panel.add(imageLabel);
 	    panel.setSize(imageLabel.getPreferredSize().width, imageLabel.getPreferredSize().height + 5);
 	}
 
+	/**
+	 * Setup global panel.
+	 */
 	private void setupGlobalPanel() {
 	    panelPlayerGlobal = new ZoomablePanel();
 	    panelPlayerGlobal.setLocation(this.frameForDiffusion.getWidth()/2-panelPlayerGlobal.getWidth()/2,this.frameForDiffusion.getHeight()/2-panelPlayerGlobal.getHeight()/2);
@@ -276,6 +510,11 @@ public class PlayerForDiffusion extends JPanel{
 	                  playerLine, playerImg, playerFlag).forEach(panelPlayerGlobal::addComponent);
 	}
 
+	/**
+	 * Update display.
+	 *
+	 * @param ligne the ligne
+	 */
 	private void updateDisplay(int ligne) {
 	    this.setLayout(null);
 	    this.setOpaque(false);
@@ -290,6 +529,9 @@ public class PlayerForDiffusion extends JPanel{
 	    this.frameForDiffusion.repaint();
 	}
 
+	/**
+	 * Handle window type specific behavior.
+	 */
 	private void handleWindowTypeSpecificBehavior() {
 //    	panelAnimationConfiguration.zoomPanel(backgroundPanel, this.windowBroadcastPublic, null);
 	    switch (typeFen) {
@@ -323,6 +565,9 @@ public class PlayerForDiffusion extends JPanel{
 	    }
 	}
 
+	/**
+	 * Animate player elements.
+	 */
 	private void animatePlayerElements() {
 //		SwingUtilities.invokeLater(() -> {
 			PlayerForDiffusion endPlayer = this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer];
@@ -337,6 +582,12 @@ public class PlayerForDiffusion extends JPanel{
 //		});
 	}
 
+	/**
+	 * Animate text element.
+	 *
+	 * @param endComponent the end component
+	 * @param endPoint the end point
+	 */
 	private void animateTextElement(Component endComponent, Point endPoint) {
 	    for (Component startComponent : panelPlayerGlobal.getComponents()) {
 	        if (startComponent.getName().equals(endComponent.getName())) {
@@ -354,12 +605,20 @@ public class PlayerForDiffusion extends JPanel{
 	        }
 	    }
 	}
+	
+	/**
+	 * Display player full.
+	 */
 	private void displayPlayerFull() {
 		if(animationPanel.isPlayerFullEnabled())
 			this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer].setVisible(true);
 		else
 			this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer].setVisible(false);
 	}
+	
+	/**
+	 * Display player full and tournament tree animation.
+	 */
 	private void displayPlayerFullAndTournamentTreeAnimation() {
 		displayPlayerFull();
 		if(animationPanel.isPathTreeAnimationEnabled())// && animationFrame.isbeginingAnimationTreeCheckBoxEnabled()
@@ -368,15 +627,34 @@ public class PlayerForDiffusion extends JPanel{
 //			animationFrame.getPanelTournamentTree().animatePlayerPath(this.numeroPlayer, animationFrame.getAnimationPathTreeDuration(), animationFrame.getNbBlinkTreeDuration());
 	}
 
+	/**
+	 * The Class LabelInfo.
+	 */
 	private static class LabelInfo {
-	    String text;
-	    chosenPolice police;
+	    
+    	/** The text. */
+    	String text;
+	    
+    	/** The police. */
+    	chosenPolice police;
 
-	    LabelInfo(String text, chosenPolice police) {
+	    /**
+    	 * Instantiates a new label info.
+    	 *
+    	 * @param text the text
+    	 * @param police the police
+    	 */
+    	LabelInfo(String text, chosenPolice police) {
 	        this.text = text;
 	        this.police = police;
 	    }
 	}
+	
+	/**
+	 * Recup infos player.
+	 *
+	 * @param emplacementPlayer the emplacement player
+	 */
 	private void recupInfosPlayer(String emplacementPlayer) {
 	    int index = numeroPlayer;
 	    System.out.println("--- index du joueur a recup from " + typeFen + " : " + index + " | " + numeroPlayer + ", localisation : " + emplacementPlayer + " ---");
@@ -389,6 +667,9 @@ public class PlayerForDiffusion extends JPanel{
 	    updatePlayerElements(configData, emplacementPlayer, index);
 	}
 
+	/**
+	 * Sets the default positions.
+	 */
 	private void setDefaultPositions() {
 	    System.out.println("! Config in JSON null --> defaut config");
 	    int y = 0;
@@ -402,6 +683,13 @@ public class PlayerForDiffusion extends JPanel{
 	    playerFlag.setLocation(10, 260);
 	}
 
+	/**
+	 * Update player elements.
+	 *
+	 * @param configData the config data
+	 * @param emplacementPlayer the emplacement player
+	 * @param index the index
+	 */
 	private void updatePlayerElements(ConfigurationSaveLoad configData, String emplacementPlayer, int index) {
 	    Map<String, Object[]> elements = new HashMap<>();
 	    elements.put("Surname", new Object[]{playerSurname, policeSurname});
@@ -435,6 +723,17 @@ public class PlayerForDiffusion extends JPanel{
 	    updateImageElement(configData, emplacementPlayer, index, "ImgFlag", playerFlag);
 	}
 
+	/**
+	 * Update element.
+	 *
+	 * @param configData the config data
+	 * @param emplacementPlayer the emplacement player
+	 * @param index the index
+	 * @param elementName the element name
+	 * @param panel the panel
+	 * @param police the police
+	 * @param elementPolice the element police
+	 */
 	private void updateElement(ConfigurationSaveLoad configData, String emplacementPlayer, int index, String elementName, 
 	                           JPanel panel, chosenPolice police, ElementPoliceJoueur elementPolice) {
 		ElementJoueur element = configData.getElement(emplacementPlayer, nomEvent, typeFen, elementName, index);
@@ -447,6 +746,15 @@ public class PlayerForDiffusion extends JPanel{
 	    }
 	}
 
+	/**
+	 * Update image element.
+	 *
+	 * @param configData the config data
+	 * @param emplacementPlayer the emplacement player
+	 * @param index the index
+	 * @param elementName the element name
+	 * @param panel the panel
+	 */
 	private void updateImageElement(ConfigurationSaveLoad configData, String emplacementPlayer, int index, String elementName, JPanel panel) {
 	    ElementPoliceJoueur elementPolice = configData.getElementPolice(emplacementPlayer, nomEvent, typeFen, elementName, index);
 	    panel.setVisible(elementPolice.isVisible());
@@ -462,21 +770,45 @@ public class PlayerForDiffusion extends JPanel{
 	        }
 //	    }
 	}
+	
+	/**
+	 * The Class JoueurDetails.
+	 */
 	public class JoueurDetails {
+		
+		/** The joueur details map. */
 		public Map<JPanel, JLabel> joueurDetailsMap;
 
+		/**
+		 * Instantiates a new joueur details.
+		 */
 		public JoueurDetails() {
 			joueurDetailsMap = new LinkedHashMap<>();
 		}
 
+		/**
+		 * Adds the details.
+		 *
+		 * @param panel the panel
+		 * @param label the label
+		 */
 		public void addDetails(JPanel panel, JLabel label) {
 			joueurDetailsMap.put(panel, label);
 		}
 
+		/**
+		 * Gets the map joueur details.
+		 *
+		 * @return the map joueur details
+		 */
 		public Map<JPanel, JLabel> getMapJoueurDetails() {
 			return joueurDetailsMap;
 		}
 	}
+	
+	/**
+	 * Enegistrer details joueurs.
+	 */
 	public void enegistrerDetailsJoueurs() {
 		mapJoueurDetails = new JoueurDetails();
 		mapJoueurDetails.addDetails(this.playerName, this.nameLabel);
@@ -495,6 +827,10 @@ public class PlayerForDiffusion extends JPanel{
 		mapJoueurDetails.addDetails(this.playerCityresidence, this.cityresidenceLabel);
 		mapJoueurDetails.addDetails(this.playerLine, this.lineLabel);
 	}
+	
+	/**
+	 * Close.
+	 */
 	public void close() {
 		//this.placementFrame.dispose();
 		this.windowConfigurationPlayerInfos.dispose();

@@ -11,26 +11,68 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.sql.SQLException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ModifyBackgroundFrame.
+ */
 public class ModifyBackgroundFrame extends JFrame {
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
+	/** The name field. */
 	private JTextField nameField;
+	
+	/** The current name. */
 	private String currentName;
+	
+	/** The new name. */
 	private String newName;
 	
+    /** The image preview panel. */
     private JPanel imagePreviewPanel;   
+    
+    /** The current image 1. */
     private String currentImage1;
+    
+    /** The current image 2. */
     private String currentImage2;
+    
+    /** The current image 3. */
     private String currentImage3;
+    
+    /** The current image 4. */
     private String currentImage4;
+    
+    /** The current image 5. */
     private String currentImage5;
     
+    /** The load button 1. */
     private JButton loadButton1;
+    
+    /** The load button 2. */
     private JButton loadButton2;
+    
+    /** The load button 3. */
     private JButton loadButton3;
+    
+    /** The load button 4. */
     private JButton loadButton4;
+    
+    /** The load button 5. */
     private JButton loadButton5;
 
+    /**
+     * Instantiates a new modify background frame.
+     *
+     * @param parentFrame the parent frame
+     * @param currentName the current name
+     * @param currentImageA the current image A
+     * @param currentImageB the current image B
+     * @param currentImageC the current image C
+     * @param currentImageD the current image D
+     * @param currentImageE the current image E
+     */
     public ModifyBackgroundFrame(ListOfBackgroundFrame parentFrame, String currentName, String currentImageA, String currentImageB, String currentImageC, String currentImageD,String currentImageE) {
     	this.currentName = currentName;
         this.currentImage1 = currentImageA;
@@ -136,6 +178,9 @@ public class ModifyBackgroundFrame extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Update image previews.
+     */
     // Mettez � jour les aper�us des images
     private void updateImagePreviews() {
     	// Chargez les images actuelles et affichez-les dans les JLabels

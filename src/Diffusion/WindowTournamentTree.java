@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 
 package Diffusion;
 
@@ -25,28 +28,73 @@ import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class WindowTournamentTree.
+ */
 public class WindowTournamentTree extends JFrame {
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/** The selected joueurs. */
 	private final ArrayList<Joueur> selectedJoueurs;
+	
+	/** The window broadcast public. */
 	private WindowBroadcastPublic windowBroadcastPublic;
+	
+	/** The event. */
 	private final Evenement event;
+	
+	/** The window config player. */
 	public WindowConfigurationPlayerInfos windowConfigPlayer;
+	
+	/** The window config player full. */
 	public WindowConfigurationPlayerInfos windowConfigPlayerFull;
+	
+	/** The panel animation configuration. */
 	private PanelAnimationConfiguration panelAnimationConfiguration;
+	
+	/** The tab player for tree. */
 	private final PlayerForDiffusion[] tabPlayerForTree;
+	
+	/** The player panel. */
 	private final JPanel[] playerPanel;
+	
+	/** The black button appuyer. */
 	private boolean blackButtonAppuyer = false;
+	
+	/** The fond button appuyer. */
 	private boolean fondButtonAppuyer = false;
+	
+	/** The nb joueur. */
 	private final int nbJoueur;
 
+	/** The player for difusion list init. */
 	private ArrayList<PlayerForDiffusion> playerForDifusionListInit;
+	
+	/** The player for difusion solo. */
 	private PlayerForDiffusion playerForDifusionSolo;
+	
+	/** The player for difusion game 1. */
 	private PlayerForDiffusion playerForDifusionGame1;
+	
+	/** The player for difusion game 2. */
 	private PlayerForDiffusion playerForDifusionGame2;
 	
+	/** The zoom background. */
 	private ZoomablePanel zoomBackground;
 
+	/**
+	 * Instantiates a new window tournament tree.
+	 *
+	 * @param selectedJoueurs the selected joueurs
+	 * @param event the event
+	 * @param diffusionFrame the diffusion frame
+	 * @param nbJoueur the nb joueur
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws SQLException the SQL exception
+	 */
 	public WindowTournamentTree(ArrayList<Joueur> selectedJoueurs, Evenement event,
 			WindowBroadcastPublic diffusionFrame, int nbJoueur) throws ClassNotFoundException, SQLException {
 		this.selectedJoueurs = selectedJoueurs;
@@ -77,6 +125,9 @@ public class WindowTournamentTree extends JFrame {
 		zoomBackground.setOpaque(false);
 	}
 
+	/**
+	 * Setup frame.
+	 */
 	private void setupFrame() {
 		setTitle("Broadcast configuration");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -99,6 +150,9 @@ public class WindowTournamentTree extends JFrame {
 		ConfigurationSaveLoad.initJson(nbJoueur, this.eventName());
 	}
 
+	/**
+	 * Setup panels.
+	 */
 	private void setupPanels() {
 		Border contour = BorderFactory.createLineBorder(Color.black);
 		// Créez un conteneur pour les sections supérieures
@@ -133,6 +187,13 @@ public class WindowTournamentTree extends JFrame {
 		add(bottomSectionsPanel, BorderLayout.CENTER);
 	}
 
+	/**
+	 * Creates the section panel.
+	 *
+	 * @param sectionName the section name
+	 * @param indexPanel the index panel
+	 * @return the j panel
+	 */
 	private JPanel createSectionPanel(String sectionName, int indexPanel) {
 		JPanel panel = new JPanel(new GridBagLayout());
 		playerPanel[indexPanel] = new JPanel();
@@ -152,6 +213,13 @@ public class WindowTournamentTree extends JFrame {
 		return panel;
 	}
 
+	/**
+	 * Adds the player selection.
+	 *
+	 * @param panel the panel
+	 * @param playerIndex the player index
+	 * @param panelIndex the panel index
+	 */
 	private void addPlayerSelection(JPanel panel, int playerIndex, int panelIndex) {
 		JComboBox<String> comboBox = new JComboBox<>(
 				selectedJoueurs.stream().map(Joueur::getDisplay_name).toArray(String[]::new));
@@ -168,6 +236,12 @@ public class WindowTournamentTree extends JFrame {
 		panel.add(comboButtonPanel);
 	}
 
+	/**
+	 * Creates the game panel.
+	 *
+	 * @param indexPanel the index panel
+	 * @return the j panel
+	 */
 	private JPanel createGamePanel(int indexPanel) {
 		JPanel gamePanel = new JPanel();
 		gamePanel.setLayout(new BoxLayout(gamePanel, BoxLayout.Y_AXIS));
@@ -182,12 +256,21 @@ public class WindowTournamentTree extends JFrame {
 		return gamePanel;
 	}
 
+	/**
+	 * Creates the tab button.
+	 *
+	 * @param indexPanel the index panel
+	 * @return the j button
+	 */
 	private JButton createTabButton(int indexPanel) {
 		JButton tabButton = new JButton("Tab");
 		tabButton.addActionListener(e -> handleTabSelection(indexPanel));
 		return tabButton;
 	}
 
+	/**
+	 * Setup bottom panel.
+	 */
 	private void setupBottomPanel() {
 		Border contour = BorderFactory.createLineBorder(Color.black);
 		JPanel bottomPanel = new JPanel(new BorderLayout());
@@ -221,11 +304,21 @@ public class WindowTournamentTree extends JFrame {
 		add(bottomPanel, BorderLayout.SOUTH);
 	}
 
+	/**
+	 * Finalize setup.
+	 */
 	private void finalizeSetup() {
 		pack();
 		setVisible(true);
 	}
 
+	/**
+	 * Handle player selection.
+	 *
+	 * @param comboBox the combo box
+	 * @param playerIndex the player index
+	 * @param panelIndex the panel index
+	 */
 	private void handlePlayerSelection(JComboBox<String> comboBox, int playerIndex, int panelIndex) {
 		String selectedItem = (String) comboBox.getSelectedItem();
 		if (selectedItem != null) {
@@ -309,6 +402,12 @@ public class WindowTournamentTree extends JFrame {
 		}
 	}
 
+	/**
+	 * Handle game selection.
+	 *
+	 * @param buttonIndex the button index
+	 * @param indexPanel the index panel
+	 */
 	private void handleGameSelection(int buttonIndex, int indexPanel) {
 		// Retrieve the selected players from the corresponding section
 		int playerIndex1 = buttonIndex * 2; // Calculate the index of the first player
@@ -367,6 +466,11 @@ public class WindowTournamentTree extends JFrame {
 //		});
 	}
 
+	/**
+	 * Handle tab selection.
+	 *
+	 * @param indexPanel the index panel
+	 */
 	private void handleTabSelection(int indexPanel) {
 		windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_1());
 		// cr�ation d'une liste de PlayerForDiffusion pour aficher les pool
@@ -415,8 +519,12 @@ public class WindowTournamentTree extends JFrame {
 //		});
 	}
 
+	/** The index player. */
 	private int indexPlayer = -1;
 
+	/**
+	 * Handle full competition.
+	 */
 	private void handleFullCompetition() {
 		windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_4());
 		windowBroadcastPublic.removeLayerContent(JLayeredPane.MODAL_LAYER);// nettoyage du layer
@@ -459,6 +567,9 @@ public class WindowTournamentTree extends JFrame {
 		});
 	}
 
+	/**
+	 * Toggle background.
+	 */
 	private void toggleBackground() {
 		windowBroadcastPublic.removeLayerContent(55);
 		ZoomablePanel testBackground = new ZoomablePanel();
@@ -480,6 +591,12 @@ public class WindowTournamentTree extends JFrame {
 		fondButtonAppuyer = !fondButtonAppuyer;
 	}
 
+	/**
+	 * Toggle black background.
+	 *
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws SQLException the SQL exception
+	 */
 	private void toggleBlackBackground() throws ClassNotFoundException, SQLException {
 		if (blackButtonAppuyer == false)
 			windowBroadcastPublic.setBackgroundImageLayered("black.jpg", JLayeredPane.POPUP_LAYER);
@@ -490,6 +607,12 @@ public class WindowTournamentTree extends JFrame {
 //		initListPlayerForDiffusion(selectedJoueurs);
 	}
 
+	/**
+	 * Found player.
+	 *
+	 * @param nomJoueur the nom joueur
+	 * @return the joueur
+	 */
 	private Joueur foundPlayer(String nomJoueur) {
 		for (Joueur joueur : selectedJoueurs) {
 			if (joueur.getDisplay_name().equals(nomJoueur)) {
@@ -499,6 +622,13 @@ public class WindowTournamentTree extends JFrame {
 		return null;
 	}
 
+	/**
+	 * Inits the list player for diffusion.
+	 *
+	 * @return the array list
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws SQLException the SQL exception
+	 */
 	public ArrayList<PlayerForDiffusion> initListPlayerForDiffusion() throws ClassNotFoundException, SQLException {
 		playerForDifusionListInit = new ArrayList<PlayerForDiffusion>();
 		for (int i = 0; i < this.nbJoueur; i++) {
@@ -510,6 +640,13 @@ public class WindowTournamentTree extends JFrame {
 		return playerForDifusionListInit;
 	}
 
+	/**
+	 * Gets the selected player name.
+	 *
+	 * @param panel the panel
+	 * @param playerIndex the player index
+	 * @return the selected player name
+	 */
 	private String getSelectedPlayerName(JPanel panel, int playerIndex) {
 		Component[] components = panel.getComponents();
 		if (playerIndex < components.length && components[playerIndex] instanceof JPanel) {
@@ -523,6 +660,12 @@ public class WindowTournamentTree extends JFrame {
 		}
 		return null;
 	}
+	
+	/**
+	 * Display fond joueur.
+	 *
+	 * @param typeJoueur the type joueur
+	 */
 	private void displayFondJoueur(String typeJoueur) {
 		// nettoyage du layer du fond du joueur
 		windowBroadcastPublic.removeLayerContent(55);
@@ -565,26 +708,56 @@ public class WindowTournamentTree extends JFrame {
 		
 	}
 
+	/**
+	 * Event name.
+	 *
+	 * @return the string
+	 */
 	public String eventName() {
 		return this.event.getNom();
 	}
 
+	/**
+	 * Gets the tab player for tree.
+	 *
+	 * @return the tab player for tree
+	 */
 	public PlayerForDiffusion[] getTabPlayerForTree() {
 		return tabPlayerForTree;
 	}
 
+	/**
+	 * Gets the nb joueur.
+	 *
+	 * @return the nb joueur
+	 */
 	public int getNbJoueur() {
 		return nbJoueur;
 	}
 
+	/**
+	 * Gets the window broadcast public.
+	 *
+	 * @return the window broadcast public
+	 */
 	public WindowBroadcastPublic getWindowBroadcastPublic() {
 		return windowBroadcastPublic;
 	}
 
+	/**
+	 * Gets the panel animation configuration.
+	 *
+	 * @return the panel animation configuration
+	 */
 	public PanelAnimationConfiguration getPanelAnimationConfiguration() {
 		return panelAnimationConfiguration;
 	}
 
+	/**
+	 * Sets the window config player full.
+	 *
+	 * @param windowConfigPlayerFull the new window config player full
+	 */
 	public void setWindowConfigPlayerFull(WindowConfigurationPlayerInfos windowConfigPlayerFull) {
 		this.windowConfigPlayerFull = windowConfigPlayerFull;
 	}

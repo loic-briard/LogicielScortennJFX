@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Police;
 
 import java.awt.Color;
@@ -15,14 +18,33 @@ import javax.swing.JDialog;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class FontSelector.
+ */
 public class FontSelector extends JDialog{
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
+	/** The choosen font. */
 	private Font choosenFont;
+	
+	/** The choosen color. */
 	private Color choosenColor;
+	
+	/** The choosen size. */
 	private int choosenSize;
+	
+	/** The choosen style. */
 	private int choosenStyle;
 
+	/**
+	 * Instantiates a new font selector.
+	 *
+	 * @param _actualFont the actual font
+	 * @param _actualColor the actual color
+	 */
 	public FontSelector(Font _actualFont, Color _actualColor) {
 		this.setModal(true);
         this.setLayout(new FlowLayout());
@@ -100,29 +122,54 @@ public class FontSelector extends JDialog{
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                // Mettez à jour la police avec les nouvelles valeurs
+                // Mettez ï¿½ jour la police avec les nouvelles valeurs
                 choosenFont = choosenFont.deriveFont((float) choosenSize).deriveFont(choosenStyle);
             }
         });
         this.setVisible(true);
 	}
 
+	/**
+	 * Gets the choosen font.
+	 *
+	 * @return the choosen font
+	 */
 	public Font getChoosenFont() {
 		return choosenFont;
 	}
 
+	/**
+	 * Gets the choosen color.
+	 *
+	 * @return the choosen color
+	 */
 	public Color getChoosenColor() {
 		return choosenColor;
 	}
 
+	/**
+	 * Gets the choosen size.
+	 *
+	 * @return the choosen size
+	 */
 	public int getChoosenSize() {
 		return choosenSize;
 	}
 
+	/**
+	 * Gets the choosen bound.
+	 *
+	 * @return the choosen bound
+	 */
 	public int getChoosenBound() {
 		return choosenStyle;
 	}
 	
+	/**
+	 * Gets the police comlet.
+	 *
+	 * @return the police comlet
+	 */
 	public Font getPoliceComlet() {
 		Font policeComplete = new Font(getChoosenFont().getName(), choosenStyle, choosenSize);
 		return policeComplete;

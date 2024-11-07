@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Flags;
 
 import javax.swing.*;
@@ -10,20 +13,43 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ModifyFlagFrame.
+ */
 public class ModifyFlagFrame extends JFrame {
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
 	//private ListOfFlag parentFrame; // R�f�rence � la fen�tre ListOfEventsFrame
 	
+	/** The name field. */
 	private JTextField nameField;
+	
+	/** The current name. */
 	private String currentName;
+	
+	/** The new name. */
 	private String newName;
 	
+    /** The image preview panel. */
     private JPanel imagePreviewPanel;   
+    
+    /** The current image. */
     private String currentImage;
     
+    /** The load button. */
     private JButton loadButton;
 
+    /**
+     * Instantiates a new modify flag frame.
+     *
+     * @param parentFrame the parent frame
+     * @param currentName the current name
+     * @param imgPath the img path
+     * @param selectedRow the selected row
+     */
     public ModifyFlagFrame(ListOfFlag parentFrame, String currentName, String imgPath, int selectedRow) {
 		//this.parentFrame = parentFrame;
     	this.currentName = currentName;
@@ -89,6 +115,9 @@ public class ModifyFlagFrame extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Update image previews.
+     */
     // Mettez � jour les aper�us des images
     private void updateImagePreviews() {
     	// Chargez les images actuelles et affichez-les dans les JLabels

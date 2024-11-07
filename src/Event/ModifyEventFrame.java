@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Event;
 
 import java.awt.BorderLayout;
@@ -15,16 +18,38 @@ import javax.swing.JTextField;
 
 import Main.BDD_v2;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ModifyEventFrame.
+ */
 public class ModifyEventFrame extends JFrame {
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
+	/** The name field. */
 	private JTextField nameField;
+	
+	/** The current name. */
 	private String currentName;
+	
+	/** The new name. */
 	private String newName;
 	
+	/** The background current name. */
 	private String backgroundCurrentName;
+	
+	/** The background new name. */
 	private String backgroundNewName;
 	
+	/**
+	 * Instantiates a new modify event frame.
+	 *
+	 * @param parentFrame the parent frame
+	 * @param currentName the current name
+	 * @param backgroundCurrentName the background current name
+	 * @throws SQLException the SQL exception
+	 */
 	public ModifyEventFrame(ListOfEventsFrame parentFrame, String currentName, String backgroundCurrentName) throws SQLException{
 		this.currentName = currentName;
 		this.backgroundCurrentName = backgroundCurrentName;
@@ -37,20 +62,20 @@ public class ModifyEventFrame extends JFrame {
         nameField.setPreferredSize(new Dimension(200, 30));
         
         String[] backgroundNames = BDD_v2.getNamesFromDatabase("background");
-        // Créez un JComboBox pour le menu déroulant
+        // Crï¿½ez un JComboBox pour le menu dï¿½roulant
         JComboBox<String> backgroundComboBox = new JComboBox<>(backgroundNames);
-        // Ajoutez un écouteur d'événements au JComboBox pour gérer la sélection
+        // Ajoutez un ï¿½couteur d'ï¿½vï¿½nements au JComboBox pour gï¿½rer la sï¿½lection
         backgroundComboBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Récupérez l'élément sélectionné
+                // Rï¿½cupï¿½rez l'ï¿½lï¿½ment sï¿½lectionnï¿½
             	backgroundNewName = (String) backgroundComboBox.getSelectedItem();
-                // Faites ce que vous voulez avec l'événement sélectionné
+                // Faites ce que vous voulez avec l'ï¿½vï¿½nement sï¿½lectionnï¿½
                 System.out.println("Background selected: " + backgroundNewName);
             }
         });
         backgroundComboBox.setSelectedItem(this.backgroundCurrentName);//.setSelectedIndex(-1);
         
-        // Créez un bouton "Valider"
+        // Crï¿½ez un bouton "Valider"
         JButton validateButton = new JButton("Validate");
         //add(validateButton, BorderLayout.SOUTH);
         

@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Diffusion;
 
 /*
@@ -8,14 +11,37 @@ import javax.swing.*;
 import Event.Evenement;
 import java.awt.*;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class WindowBroadcastPublic.
+ */
 public class WindowBroadcastPublic extends JFrame {
+    
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
+    
+    /** The actual event. */
     private final Evenement actualEvent;
+    
+    /** The layered pane. */
     private final JLayeredPane layeredPane;
+    
+    /** The background label. */
     private final JLabel backgroundLabel;
+    
+    /** The window tournament tree. */
     private WindowTournamentTree windowTournamentTree;
+    
+    /** The animation frame. */
     private PanelAnimationConfiguration animationFrame;
 
+    /**
+     * Instantiates a new window broadcast public.
+     *
+     * @param eventChoosen the event choosen
+     * @param screen the screen
+     * @param windowDimension the window dimension
+     */
     public WindowBroadcastPublic(Evenement eventChoosen, GraphicsDevice screen, Dimension windowDimension) {
     	this.actualEvent = eventChoosen;        
     	setupFrame(screen, windowDimension);
@@ -32,6 +58,12 @@ public class WindowBroadcastPublic extends JFrame {
         this.setVisible(true);
     }
 
+    /**
+     * Setup frame.
+     *
+     * @param screen the screen
+     * @param windowDimension the window dimension
+     */
     private void setupFrame(GraphicsDevice screen, Dimension windowDimension) {
     	if(windowDimension.getHeight() == 0.0 || windowDimension.getWidth() == 0.0)
 			this.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -55,11 +87,19 @@ public class WindowBroadcastPublic extends JFrame {
 		this.setVisible(true);
     }
 
+    /**
+     * Setup layered pane.
+     */
     private void setupLayeredPane() {
         layeredPane.setLayout(null);
         layeredPane.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
     }
 
+    /**
+     * Sets the background image.
+     *
+     * @param imagePath the new background image
+     */
     public void setBackgroundImage(String imagePath) {
         ImageIcon imageBackground = new ImageIcon(imagePath);
 		Image scaledImageBackground = imageBackground.getImage().getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_SMOOTH);
@@ -69,6 +109,12 @@ public class WindowBroadcastPublic extends JFrame {
         layeredPane.repaint();		
     }
 
+    /**
+     * Sets the background image layered.
+     *
+     * @param imagePath the image path
+     * @param layer the layer
+     */
     public void setBackgroundImageLayered(String imagePath, Integer layer) {
         removeLayerContent(layer);
 		ImageIcon imageBackground = new ImageIcon(imagePath);
@@ -80,13 +126,31 @@ public class WindowBroadcastPublic extends JFrame {
 		layeredPane.add(imageLabel, layer);
     }
 
+    /**
+     * Adds the content.
+     *
+     * @param layer the layer
+     * @param panelContent the panel content
+     */
     public void addContent(Integer layer, JPanel panelContent) {
         layeredPane.add(panelContent, layer);
     }
+    
+    /**
+     * Adds the content label.
+     *
+     * @param layer the layer
+     * @param Content the content
+     */
     public void addContentLabel(Integer layer, JLabel Content) {
     	layeredPane.add(Content, layer);
     }
 
+    /**
+     * Removes the layer content.
+     *
+     * @param layer the layer
+     */
     public void removeLayerContent(int layer) {
         for (Component component : layeredPane.getComponentsInLayer(layer)) {
             layeredPane.remove(component);
@@ -95,16 +159,48 @@ public class WindowBroadcastPublic extends JFrame {
         layeredPane.repaint();
     }
 
+    /**
+     * Close.
+     */
     public void close() {
         this.dispose();
     }
 
+    /**
+     * Gets the layered pane window broadcast public.
+     *
+     * @return the layered pane window broadcast public
+     */
     // Getters
     public JLayeredPane getLayeredPaneWindowBroadcastPublic() { return layeredPane; }
+    
+    /**
+     * Gets the animation frame.
+     *
+     * @return the animation frame
+     */
     public PanelAnimationConfiguration getAnimationFrame() { return animationFrame; }
+    
+    /**
+     * Gets the window tournament tree from broadcast.
+     *
+     * @return the window tournament tree from broadcast
+     */
     public WindowTournamentTree getWindowTournamentTreeFromBroadcast() { return windowTournamentTree; }
+    
+    /**
+     * Gets the name event.
+     *
+     * @return the name event
+     */
     public String getNameEvent() { return this.actualEvent.getNom(); }
 
+    /**
+     * Sets the window tournament tree from broadcast.
+     *
+     * @param windowTournamentTree the new window tournament tree from broadcast
+     * @throws ClassNotFoundException the class not found exception
+     */
     // Setter
 	public void setWindowTournamentTreeFromBroadcast(WindowTournamentTree windowTournamentTree) throws ClassNotFoundException {
 		this.windowTournamentTree = windowTournamentTree;

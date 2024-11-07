@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Players;
 
 import java.awt.BorderLayout;
@@ -17,25 +20,51 @@ import javax.swing.event.*;
 import Main.BDD_v2;
 import Main.ImageUtility;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ListOfPlayersFrame.
+ */
 public class ListOfPlayersFrame extends JFrame {
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 //	private static final int PAGE_SIZE = 5;  // Ajustez selon vos besoins
 //	private static final int MAX_PLAYERS = 100; // Limite de joueurs � charger
 //    private int currentPage = 0;
 //    private boolean loadingData = false;  // Indique si les donn�es sont actuellement en cours de chargement
 
-    public JTable playersTable;
+    /** The players table. */
+public JTable playersTable;
+    
+    /** The table model. */
     private CustomTableModelJoueur tableModel;
+    
+    /** The scroll pane. */
     private JScrollPane scrollPane;
+    
+    /** The table data. */
     Object[][] tableData = null;
+	
+	/** The search field. */
 	private JTextField searchField = new JTextField();
+	
+	/** The bdd P layers combo box. */
 	private JComboBox<String> bddPLayersComboBox;
+	
+	/** The clignotement actif. */
 	private static boolean clignotementActif = false;
 //	private final Object workerLock = new Object();
+/** The Constant IMAGE_HEIGHT. */
 //	SwingWorker<Void, Void> currentWorker;
 	private static final int IMAGE_HEIGHT = 60;
 	
 
+	/**
+	 * Instantiates a new list of players frame.
+	 *
+	 * @throws SQLException the SQL exception
+	 * @throws ClassNotFoundException the class not found exception
+	 */
 	public ListOfPlayersFrame() throws SQLException, ClassNotFoundException {
 		setTitle("List of Players");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -519,6 +548,11 @@ public class ListOfPlayersFrame extends JFrame {
 	    return future;
 	}*/
 	
+	/**
+	 * Changer contour temporaire.
+	 *
+	 * @param comboBox the combo box
+	 */
 	private static void changerContourTemporaire(JComboBox<?> comboBox) {
 	    // Sauvegarde de la bordure d'origine
 	    Border bordureOriginale = comboBox.getBorder();
@@ -554,6 +588,11 @@ public class ListOfPlayersFrame extends JFrame {
 	    timer.start();
 	}
 	
+	/**
+	 * Update combobox table.
+	 *
+	 * @throws SQLException the SQL exception
+	 */
 	private void updateComboboxTable() throws SQLException {
 		BDD_v2.getAllListPlayerTableName();
 		bddPLayersComboBox.setModel(new DefaultComboBoxModel<>(BDD_v2.tabBdd.toArray(new String[0])));

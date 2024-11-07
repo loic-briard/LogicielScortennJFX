@@ -19,10 +19,23 @@ import javax.swing.table.DefaultTableModel;
 import Main.BDD_v2;
 import Main.ImageUtility;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ListOfBackgroundFrame.
+ */
 public class ListOfBackgroundFrame extends JFrame {
+	
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The background table. */
 	private JTable backgroundTable;
 
+	/**
+	 * Instantiates a new list of background frame.
+	 *
+	 * @throws SQLException the SQL exception
+	 */
 	public ListOfBackgroundFrame() throws SQLException {
 		// Initialisation de la fen�tre
 		setTitle("List of Background");
@@ -151,6 +164,12 @@ public class ListOfBackgroundFrame extends JFrame {
 			}
 		});
 	}
+	
+	/**
+	 * Refresh data.
+	 *
+	 * @throws SQLException the SQL exception
+	 */
 	public void refreshData() throws SQLException {
 	    // Effacez les donn�es actuelles de la table
 	    DefaultTableModel model = (DefaultTableModel) backgroundTable.getModel();

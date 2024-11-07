@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package Sauvegarde;
 
 import java.awt.Color;
@@ -27,6 +30,7 @@ import com.google.gson.JsonSyntaxException;
 
 import Diffusion.PanelAnimationConfiguration;
 
+// TODO: Auto-generated Javadoc
 class ElementOneJoueur {
 	private Map<String, ElementJoueur> player = new HashMap<>();
 	private Map<String, ElementPoliceJoueur> playerPolice = new HashMap<>();
@@ -82,17 +86,39 @@ class ElementJoueurTab {
 	}
 }
 
+/**
+ * The Class ConfigurationSaveLoad.
+ */
 public class ConfigurationSaveLoad {
+	
+	/** The locations. */
 	private Map<String, Object> locations = new HashMap<>();
 
+	/**
+	 * Gets the locations.
+	 *
+	 * @return the locations
+	 */
 	public Map<String, Object> getLocations() {
 		return locations;
 	}
 
+	/**
+	 * Sets the locations.
+	 *
+	 * @param map the map
+	 */
 	public void setLocations(Map<String, Object> map) {
 		this.locations = map;
 	}
 
+	/**
+	 * Save config to file.
+	 *
+	 * @param data the data
+	 * @param filePath the file path
+	 * @param fileName the file name
+	 */
 	// Méthode pour sauvegarder les données de configuration au format JSON
 	public static void saveConfigToFile(ElementOneJoueur data, String filePath, String fileName) {
 		Gson gson = new Gson();
@@ -116,6 +142,13 @@ public class ConfigurationSaveLoad {
 		}
 	}
 
+	/**
+	 * Save config to file game.
+	 *
+	 * @param elementsTwoPlayer the elements two player
+	 * @param filePath the file path
+	 * @param fileName the file name
+	 */
 	// Méthode pour sauvegarder les données de configuration au format JSON
 	public static void saveConfigToFileGame(ElementJoueurGame elementsTwoPlayer, String filePath, String fileName) {
 		Gson gson = new Gson();
@@ -139,6 +172,13 @@ public class ConfigurationSaveLoad {
 		}
 	}
 
+	/**
+	 * Save config to file tab.
+	 *
+	 * @param data the data
+	 * @param filePath the file path
+	 * @param fileName the file name
+	 */
 	// Méthode pour sauvegarder les données de configuration au format JSON
 	public static void saveConfigToFileTab(ElementJoueurTab data, String filePath, String fileName) {
 		Gson gson = new Gson();
@@ -162,6 +202,13 @@ public class ConfigurationSaveLoad {
 		}
 	}
 
+	/**
+	 * Save config to file full.
+	 *
+	 * @param data the data
+	 * @param filePath the file path
+	 * @param fileName the file name
+	 */
 	// Méthode pour sauvegarder les données de configuration au format JSON
 	public static void saveConfigToFileFull(ElementJoueurFull data, String filePath, String fileName) {
 		Gson gson = new Gson();
@@ -186,6 +233,12 @@ public class ConfigurationSaveLoad {
 		}
 	}
 
+	/**
+	 * Load config from file.
+	 *
+	 * @param filePath the file path
+	 * @return the configuration save load
+	 */
 	public static ConfigurationSaveLoad loadConfigFromFile(String filePath) {
 		Gson gson = new Gson();
 		ConfigurationSaveLoad data = null;
@@ -213,6 +266,14 @@ public class ConfigurationSaveLoad {
 		return data;
 	}
 
+	/**
+	 * Save windows.
+	 *
+	 * @param nomEvent the nom event
+	 * @param typeWindows the type windows
+	 * @param JoueurDetailsP1 the joueur details P 1
+	 * @param JoueurDetailsP2 the joueur details P 2
+	 */
 	public static void saveWindows(String nomEvent, String typeWindows, Map<JPanel, JLabel> JoueurDetailsP1,
 			Map<JPanel, JLabel> JoueurDetailsP2) {
 		ConfigurationSaveLoad eventData = loadConfigFromFile("Config/" + nomEvent + "/player.json");
@@ -255,6 +316,13 @@ public class ConfigurationSaveLoad {
 		}
 	}
 
+	/**
+	 * Save windows multi tab.
+	 *
+	 * @param nomEvent the nom event
+	 * @param typeWindows the type windows
+	 * @param JoueurDetails the joueur details
+	 */
 	public static void saveWindowsMultiTab(String nomEvent, String typeWindows,
 			ArrayList<Map<JPanel, JLabel>> JoueurDetails) {
 		ConfigurationSaveLoad eventData = loadConfigFromFile("Config/" + nomEvent + "/" + typeWindows + ".json");
@@ -390,6 +458,12 @@ public class ConfigurationSaveLoad {
 		}
 	}
 
+	/**
+	 * Read json file full.
+	 *
+	 * @param filePath the file path
+	 * @return the element joueur full
+	 */
 	public static ElementJoueurFull readJsonFileFull(String filePath) {
 		ElementJoueurFull elementJoueurFull = new ElementJoueurFull();
 		Gson gson = new Gson();
@@ -444,6 +518,13 @@ public class ConfigurationSaveLoad {
 		return elementJoueurFull;
 	}
 
+	/**
+	 * Update element joueur full.
+	 *
+	 * @param nomEvent the nom event
+	 * @param original the original
+	 * @param partial the partial
+	 */
 	public static void updateElementJoueurFull(String nomEvent, ElementJoueurFull original, ElementJoueurFull partial) {
 		// Update players
 		for (Map<String, Map<String, ElementJoueur>> partialPlayerMap : partial.getPlayer()) {
@@ -493,6 +574,12 @@ public class ConfigurationSaveLoad {
 
 	}
 
+	/**
+	 * Replace player data full.
+	 *
+	 * @param nomEvent the nom event
+	 * @param source the source
+	 */
 	public static void replacePlayerDataFull(String nomEvent, ElementJoueurFull source) {
 		ElementJoueurFull target = readJsonFileFull("Config/" + nomEvent + "/" + "full.json");
 //
@@ -564,8 +651,9 @@ public class ConfigurationSaveLoad {
 	/**
 	 * retourne la position d'un element d'un joueur (ex: position du label name) en
 	 * fonction du type d'evenement, de fenetre, le NOM DE L'ELEMENT, et l'INDEX du
-	 * joueur
-	 * 
+	 * joueur.
+	 *
+	 * @param emplacement the emplacement
 	 * @param eventName   Le nom de l'événement.
 	 * @param typeFenetre Le type de fenêtre (par exemple, "full").
 	 * @param nomElement  l'element a recuperer (ex: name)
@@ -686,6 +774,16 @@ public class ConfigurationSaveLoad {
 		return null;
 	}
 
+	/**
+	 * Gets the element police.
+	 *
+	 * @param emplacement the emplacement
+	 * @param eventName the event name
+	 * @param typeFenetre the type fenetre
+	 * @param nomElement the nom element
+	 * @param index the index
+	 * @return the element police
+	 */
 	public ElementPoliceJoueur getElementPolice(String emplacement, String eventName, String typeFenetre,
 			String nomElement, int index) {
 
@@ -738,6 +836,16 @@ public class ConfigurationSaveLoad {
 		return null;
 	}
 
+	/**
+	 * Gets the all element visible.
+	 *
+	 * @param nbPlayer the nb player
+	 * @param filePath the file path
+	 * @return the all element visible
+	 * @throws JsonIOException the json IO exception
+	 * @throws JsonSyntaxException the json syntax exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public Map<String, Map<String, Object>> getAllElementVisible(int nbPlayer, String filePath)
 			throws JsonIOException, JsonSyntaxException, IOException {
 		Map<String, Map<String, Object>> playerData = new HashMap<>();
@@ -782,6 +890,12 @@ public class ConfigurationSaveLoad {
 		return playerData;
 	}
 
+	/**
+	 * Inits the json.
+	 *
+	 * @param nbJoueur the nb joueur
+	 * @param nomEvent the nom event
+	 */
 	public static void initJson(int nbJoueur, String nomEvent) {
 		try {
 			ArrayList<String> listFileName = new ArrayList<String>();
@@ -813,6 +927,12 @@ public class ConfigurationSaveLoad {
 		}
 	}
 
+	/**
+	 * Creates the default element joueur full.
+	 *
+	 * @param nbJoueur the nb joueur
+	 * @return the element joueur full
+	 */
 	private static ElementJoueurFull createDefaultElementJoueurFull(int nbJoueur) {
 		ElementJoueurFull defaultData = new ElementJoueurFull();
 		// Initialiser les joueurs (par exemple, 2 joueurs)
@@ -864,24 +984,48 @@ public class ConfigurationSaveLoad {
 		return defaultData;
 	}
 
+	/**
+	 * Font serializer.
+	 *
+	 * @param fontToSerialize the font to serialize
+	 * @return the string
+	 */
 	public static String FontSerializer(Font fontToSerialize) {
 		String SerializeFont = fontToSerialize.getName() + "," + fontToSerialize.getStyle() + ","
 				+ fontToSerialize.getSize();
 		return SerializeFont;
 	}
 
+	/**
+	 * Color serializer.
+	 *
+	 * @param colorToSerialize the color to serialize
+	 * @return the string
+	 */
 	public static String ColorSerializer(Color colorToSerialize) {
 		String SerializeColor = colorToSerialize.getRed() + "," + colorToSerialize.getGreen() + ","
 				+ colorToSerialize.getBlue();
 		return SerializeColor;
 	}
 
+	/**
+	 * Parses the color.
+	 *
+	 * @param color the color
+	 * @return the color
+	 */
 	private static Color parseColor(String color) {
 		String[] rgb = color.split(",");
 		return new Color(Integer.parseInt(rgb[0].trim()), Integer.parseInt(rgb[1].trim()),
 				Integer.parseInt(rgb[2].trim()));
 	}
 
+	/**
+	 * Save config animation.
+	 *
+	 * @param panelAnimation the panel animation
+	 * @param nomEvent the nom event
+	 */
 	public static void saveConfigAnimation(PanelAnimationConfiguration panelAnimation, String nomEvent) {
 		AnimationSave animationSave = new AnimationSave();
 
@@ -916,6 +1060,13 @@ public class ConfigurationSaveLoad {
 		saveConfigAnimationToJson(animationSave, "Config/" + nomEvent, "animation.json");
 	}
 
+	/**
+	 * Save config animation to json.
+	 *
+	 * @param data the data
+	 * @param filePath the file path
+	 * @param fileName the file name
+	 */
 	// Méthode pour sauvegarder les données de configuration au format JSON
 	public static void saveConfigAnimationToJson(AnimationSave data, String filePath, String fileName) {
 		Gson gson = new Gson();
@@ -939,6 +1090,12 @@ public class ConfigurationSaveLoad {
 		}
 	}
 
+	/**
+	 * Sets the config animation.
+	 *
+	 * @param nomEvent the nom event
+	 * @param panelanimation the panelanimation
+	 */
 	public static void setConfigAnimation(String nomEvent, PanelAnimationConfiguration panelanimation) {
 		try (Reader reader = new FileReader("Config/" + nomEvent+ File.separator + "animation.json")) {
 			JsonElement jsonElement = JsonParser.parseReader(reader);
@@ -968,6 +1125,13 @@ public class ConfigurationSaveLoad {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Delete folder.
+	 *
+	 * @param path the path
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static void deleteFolder(Path path) throws IOException {
         Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
             @Override
