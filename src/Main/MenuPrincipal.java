@@ -10,8 +10,6 @@ package Main;
  */
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import java.awt.*;
@@ -28,26 +26,62 @@ import Flags.ListOfFlag;
 import Players.Joueur;
 import Players.ListOfPlayersFrame;
 
+// TODO: Auto-generated Javadoc
+/**
+ */
 public class MenuPrincipal extends JFrame {
+    
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
+    
+    /** The Constant TITLE. */
     private static final String TITLE = "Main Menu";
+    
+    /** The Constant ICON_PATH. */
     private static final String ICON_PATH = "icon.png";
     
+    /** The athlete selection. */
     private AthleteSelection athleteSelection;
+    
+    /** The list events window. */
     private JFrame listEventsWindow;
+    
+    /** The list BG window. */
     private JFrame listBGWindow;
+    
+    /** The list players window. */
     private JFrame listPlayersWindow;
+    
+    /** The flags window. */
     private JFrame flagsWindow;
+    
+    /** The actual screen. */
     private String actualScreen = "";
 
+    /** The event combo box. */
     private JComboBox<String> eventComboBox;
+    
+    /** The bdd P layers combo box. */
     private static JComboBox<String> bddPLayersComboBox;
+    
+    /** The spinner nb joueur. */
     private JSpinner spinnerNbJoueur;
+    
+    /** The spinner screen. */
     private JSpinner spinnerScreen;
+    
+    /** The size fenetre X. */
     private JSpinner sizeFenetreX;
+    
+    /** The size fenetre Y. */
     private JSpinner sizeFenetreY;
+    
+    /** The select athlete button. */
     private JButton selectAthleteButton;
 
+    /**
+     * Instantiates a new menu principal.
+     */
     public MenuPrincipal() {
         initializeFrame();
         createMenuBar();
@@ -56,6 +90,9 @@ public class MenuPrincipal extends JFrame {
 //        this.pack();
     }
 
+    /**
+     * Initialize frame.
+     */
     private void initializeFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -73,9 +110,11 @@ public class MenuPrincipal extends JFrame {
         });
     }
 
+    /**
+     * Creates the menu bar.
+     */
     private void createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
-        menuBar.add(createFileMenu());
         menuBar.add(createMenuItem("Events", e -> openListEventsWindow()));
         menuBar.add(createMenuItem("Background", e -> openListBGWindow()));
         menuBar.add(createMenuItem("Players", e -> openListPlayersWindow()));
@@ -83,20 +122,22 @@ public class MenuPrincipal extends JFrame {
         setJMenuBar(menuBar);
     }
 
-    private JMenu createFileMenu() {
-        JMenu fileMenu = new JMenu("File");
-        JMenuItem exitMenuItem = new JMenuItem("Exit");
-        exitMenuItem.addActionListener(e -> System.exit(0));
-        fileMenu.add(exitMenuItem);
-        return fileMenu;
-    }
-
+    /**
+     * Creates the menu item.
+     *
+     * @param name the name
+     * @param listener the listener
+     * @return the j menu item
+     */
     private JMenuItem createMenuItem(String name, ActionListener listener) {
         JMenuItem menuItem = new JMenuItem(name);
         menuItem.addActionListener(listener);
         return menuItem;
     }
 
+    /**
+     * Open list events window.
+     */
     private void openListEventsWindow() {
         if (listEventsWindow == null || !listEventsWindow.isVisible()) {
             try {
@@ -110,6 +151,9 @@ public class MenuPrincipal extends JFrame {
         }
     }
 
+    /**
+     * Open list BG window.
+     */
     private void openListBGWindow() {
         if (listBGWindow == null || !listBGWindow.isVisible()) {
             try {
@@ -123,6 +167,9 @@ public class MenuPrincipal extends JFrame {
         }
     }
 
+    /**
+     * Open list players window.
+     */
     private void openListPlayersWindow() {
         if (listPlayersWindow == null || !listPlayersWindow.isVisible()) {
             try {
@@ -136,6 +183,9 @@ public class MenuPrincipal extends JFrame {
         }
     }
 
+    /**
+     * Open list flags window.
+     */
     private void openListFlagsWindow() {
         if (flagsWindow == null || !flagsWindow.isVisible()) {
             try {
@@ -148,6 +198,10 @@ public class MenuPrincipal extends JFrame {
             flagsWindow.setState(JFrame.NORMAL);
         }
     }
+    
+    /**
+     * Creates the main panel.
+     */
     private void createMainPanel() {
         // Create a main panel with a gradient background
         JPanel mainPanel = new JPanel() {
@@ -193,6 +247,11 @@ public class MenuPrincipal extends JFrame {
         add(mainPanel);
     }
 
+    /**
+     * Creates the title panel.
+     *
+     * @return the j panel
+     */
     private JPanel createTitlePanel() {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
@@ -205,6 +264,11 @@ public class MenuPrincipal extends JFrame {
         return panel;
     }
 
+    /**
+     * Creates the styled dimension panel.
+     *
+     * @return the j panel
+     */
     private JPanel createStyledDimensionPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10));
@@ -225,6 +289,11 @@ public class MenuPrincipal extends JFrame {
         return panel;
     }
 
+    /**
+     * Creates the styled selection panel.
+     *
+     * @return the j panel
+     */
     private JPanel createStyledSelectionPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
@@ -266,10 +335,10 @@ public class MenuPrincipal extends JFrame {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         buttonPanel.setOpaque(false);
         
-        selectAthleteButton = createStyledButton("Select Athletes");
+        selectAthleteButton = createStyledButton("Select Players");
         selectAthleteButton.addActionListener(e -> openAthleteSelection());
         
-        JButton diffusionButton = createStyledButton("Start Tournament");
+        JButton diffusionButton = createStyledButtonStart("Start Tournament");
         diffusionButton.addActionListener(e -> {
             try {
                 handleDiffusionButton();
@@ -289,6 +358,11 @@ public class MenuPrincipal extends JFrame {
         return panel;
     }
 
+    /**
+     * Creates the styled screen selection panel.
+     *
+     * @return the j panel
+     */
     private JPanel createStyledScreenSelectionPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         panel.setOpaque(false);
@@ -324,6 +398,12 @@ public class MenuPrincipal extends JFrame {
         return panel;
     }
 
+    /**
+     * Handle diffusion button.
+     *
+     * @throws ClassNotFoundException the class not found exception
+     * @throws SQLException the SQL exception
+     */
     // Keeping original functionality for athlete selection and diffusion
     private void handleDiffusionButton() throws ClassNotFoundException, SQLException {
         if (eventComboBox.getSelectedItem() == null) {
@@ -341,6 +421,12 @@ public class MenuPrincipal extends JFrame {
         }
     }
 
+    /**
+     * Blink component border.
+     *
+     * @param component the component
+     * @param blinkCount the blink count
+     */
     // Original blink methods with adapted styling
     public static void blinkComponentBorder(JComponent component, int blinkCount) {
         final int[] count = {0};
@@ -372,6 +458,12 @@ public class MenuPrincipal extends JFrame {
         timer.start();
     }
 
+	/**
+	 * Make button blink.
+	 *
+	 * @param button the button
+	 * @param times the times
+	 */
 	public void makeButtonBlink(JButton button, int times) {
         final int[] count = {0};
         final Border originalBorder = button.getBorder();
@@ -400,6 +492,12 @@ public class MenuPrincipal extends JFrame {
         timer.start();
     }
 
+    /**
+     * Creates the styled label.
+     *
+     * @param text the text
+     * @return the j label
+     */
     // Helper methods for styling components
     private JLabel createStyledLabel(String text) {
         JLabel label = new JLabel(text);
@@ -408,6 +506,12 @@ public class MenuPrincipal extends JFrame {
         return label;
     }
 
+    /**
+     * Creates the styled spinner.
+     *
+     * @param model the model
+     * @return the j spinner
+     */
     private JSpinner createStyledSpinner(SpinnerModel model) {
         JSpinner spinner = new JSpinner(model);
         spinner.setPreferredSize(new Dimension(100, 30));
@@ -417,6 +521,12 @@ public class MenuPrincipal extends JFrame {
         return spinner;
     }
 
+    /**
+     * Creates the styled combo box.
+     *
+     * @param strings the strings
+     * @return the j combo box
+     */
     private JComboBox<String> createStyledComboBox(String[] strings) {
         JComboBox<String> comboBox = new JComboBox<String>(strings);
         comboBox.setBackground(new Color(40, 43, 43));
@@ -426,6 +536,12 @@ public class MenuPrincipal extends JFrame {
         return comboBox;
     }
 
+    /**
+     * Creates the styled button.
+     *
+     * @param text the text
+     * @return the j button
+     */
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
         button.setBackground(new Color(40, 43, 43));
@@ -450,7 +566,37 @@ public class MenuPrincipal extends JFrame {
         
         return button;
     }
+    private JButton createStyledButtonStart(String text) {
+        JButton button = new JButton(text);
+        button.setBackground(new Color(0, 101, 24));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.setBorder(BorderFactory.createLineBorder(new Color(150, 150, 150), 1));
+        button.setPreferredSize(new Dimension(150, 35));
+        
+        button.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                if (button.isEnabled()) {
+                    button.setBackground(new Color(0,209,49));
+                }
+            }
+            public void mouseExited(MouseEvent e) {
+                if (button.isEnabled()) {
+                    button.setBackground(new Color(0, 101, 24));
+                }
+            }
+        });
+        
+        return button;
+    }
 
+    /**
+     * Creates the styled border.
+     *
+     * @param title the title
+     * @return the border
+     */
     private Border createStyledBorder(String title) {
         TitledBorder titledBorder = BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(new Color(150, 150, 150), 1),
@@ -463,6 +609,11 @@ public class MenuPrincipal extends JFrame {
         return BorderFactory.createCompoundBorder(titledBorder, margin);
     }
 
+    /**
+     * Update actual screen.
+     *
+     * @param actualDisplayLabel the actual display label
+     */
     private void updateActualScreen(JLabel actualDisplayLabel) {
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -484,6 +635,9 @@ public class MenuPrincipal extends JFrame {
         });
     }
 
+    /**
+     * Open athlete selection.
+     */
     private void openAthleteSelection() {
         try {
         	if(bddPLayersComboBox.getSelectedItem() == null) {
@@ -495,6 +649,11 @@ public class MenuPrincipal extends JFrame {
         }
     }
 
+    /**
+     * Display selected players.
+     *
+     * @param selectedPlayers the selected players
+     */
     private void displaySelectedPlayers(ArrayList<Joueur> selectedPlayers) {
         StringBuilder playersInfo = new StringBuilder("Selected players :\n");
         for (Joueur joueur : selectedPlayers) {
@@ -503,6 +662,13 @@ public class MenuPrincipal extends JFrame {
         JOptionPane.showMessageDialog(null, playersInfo.toString(), "Selected players", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     * Creates the diffusion window.
+     *
+     * @param selectedPlayers the selected players
+     * @throws ClassNotFoundException the class not found exception
+     * @throws SQLException the SQL exception
+     */
     private void createDiffusionWindow(ArrayList<Joueur> selectedPlayers) throws ClassNotFoundException, SQLException {
         String selectedEvent = (String) eventComboBox.getSelectedItem();
         Evenement eventChoosen = new Evenement(selectedEvent);
@@ -519,12 +685,20 @@ public class MenuPrincipal extends JFrame {
         System.out.println("-> Selected event : " + eventChoosen.getNom() + ", player list : " + bddPLayersComboBox.getSelectedItem() + ", number of players : " + (int) spinnerNbJoueur.getValue()+" ,taille fenetre "+diffusionFrame.getSize().getWidth()+"x"+diffusionFrame.getSize().getHeight()+"<-");
     }
 
+    /**
+     * Refresh event combo box.
+     */
     public void refreshEventComboBox() {
         String[] eventNames = BDD_v2.getNamesFromDatabase("event");
         eventComboBox.setModel(new DefaultComboBoxModel<>(eventNames));
         eventComboBox.setSelectedIndex(-1);
     }
 
+    /**
+     * Refresh player table combobox.
+     *
+     * @throws SQLException the SQL exception
+     */
     public static void refreshPlayerTableCombobox() throws SQLException {
         BDD_v2.getAllListPlayerTableName();
         bddPLayersComboBox.setModel(new DefaultComboBoxModel<>(BDD_v2.tabBdd.toArray(new String[0])));

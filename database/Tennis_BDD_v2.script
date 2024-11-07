@@ -28,7 +28,7 @@ SET FILES NIO TRUE
 SET FILES NIO SIZE 256
 SET FILES LOG TRUE
 SET FILES LOG SIZE 50
-SET FILES CHECK 199262
+SET FILES CHECK 199864
 SET DATABASE COLLATION "SQL_TEXT" PAD SPACE
 CREATE USER SA PASSWORD DIGEST 'd41d8cd98f00b204e9800998ecf8427e'
 ALTER USER SA SET LOCAL TRUE
@@ -325,7 +325,7 @@ INSERT INTO LIST_16_JOUEUR VALUES(16,'Men','Musetti','Lorenzo','Musetti L.','ITA
 INSERT INTO LIST_16_JOUEUR VALUES(17,'Men','Celikbilek','Altu\u011f','Celikbilek A.','TUR','01/01/2000','PlayersImages\Gasquet_R.png',386,'1555','right-handed','24','66','8523698','Lodz','Tunis')
 INSERT INTO LIST_8_JOUEUR VALUES(1,'Men','Alcaraz','Carlos','Alcaraz C.','ESP','05/05/2003','PlayersImages\Alcaraz_C.png',3,'183','right-handed','21','68','26286108\u20ac','El Palmar, Murcia, Spain','El Palmar, Murcia, Spain')
 INSERT INTO LIST_8_JOUEUR VALUES(2,'Men','Djokovic','Novak','Djokovic N.','SRB','22/05/1987','PlayersImages\Djokovic_N.png',2,'188','right-handed','37','77','152079141\u20ac','Belgrade, Serbia','Monte Carlo, Monaco')
-INSERT INTO LIST_8_JOUEUR VALUES(3,'Men','Fritz','Taylor','Fritz T.','USA','28/10/1997','PlayersImages\Fritz_T.png',11,'196','right-handed','26','86','13413677\u20ac','Rancho Santa Fe, CA, USA','Rancho Palos Verdes, CA, USA')
+INSERT INTO LIST_8_JOUEUR VALUES(3,'Men','Fritz','Taylor','Fritz T.','USA','28/10/1997','27',11,'196','right-handed','26','86','13413677\u20ac','Rancho Santa Fe, CA, USA','Rancho Palos Verdes, CA, USA')
 INSERT INTO LIST_8_JOUEUR VALUES(6,'Men','Ruud','Casper','Ruud C.','NOR','22/12/1998','PlayersImages\Ruud_C.png',9,'183','right-handed','25','77','16409417\u20ac','Oslo, Norway','Oslo, Norway')
 INSERT INTO LIST_8_JOUEUR VALUES(7,'Men','Medvedev','Daniil','Medvedev D.','RUS','11/02/1996','PlayersImages\Medvedev_D.png',5,'198','right-handed','28','83','34176534\u20ac','Moscow, Russia','Monte Carlo, Monaco')
 INSERT INTO LIST_8_JOUEUR VALUES(8,'Men','Celikbilek','Altu\u011f','Celikbilek A.','TUR','01/01/2000','PlayersImages\Gasquet_R.png',386,'1555','right-handed','24','66','8523698','Lodz','Tunis')

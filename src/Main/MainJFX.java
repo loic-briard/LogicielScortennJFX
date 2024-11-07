@@ -1,6 +1,5 @@
 package Main;
 
-import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,8 +11,6 @@ import java.security.ProtectionDomain;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.border.LineBorder;
-
 import com.formdev.flatlaf.FlatDarkLaf;
 
 import API.GestionAPI;
