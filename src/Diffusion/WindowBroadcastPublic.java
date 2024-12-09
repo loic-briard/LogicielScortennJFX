@@ -51,7 +51,8 @@ public class WindowBroadcastPublic extends JFrame {
         
         backgroundLabel = new JLabel();
         backgroundLabel.setBounds(0, 0, this.getWidth(), this.getHeight());
-        setBackgroundImage("black.jpg"); // Mettre le chemin de l'image initiale
+        setBackgroundImage(eventChoosen.getBackground().getImage_1()); // Mettre le chemin de l'image initiale
+//        setBackgroundImage("black.jpg"); // Mettre le chemin de l'image initiale
         layeredPane.add(backgroundLabel, JLayeredPane.DEFAULT_LAYER);
         
         this.add(layeredPane);

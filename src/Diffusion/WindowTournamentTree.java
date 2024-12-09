@@ -123,6 +123,9 @@ public class WindowTournamentTree extends JFrame {
 		zoomBackground= new ZoomablePanel();
 		zoomBackground.setLayout(null);
 		zoomBackground.setOpaque(false);
+		
+		blackButtonAppuyer = false;
+		toggleBlackBackground();
 	}
 
 	/**
@@ -571,18 +574,18 @@ public class WindowTournamentTree extends JFrame {
 	 * Toggle background.
 	 */
 	private void toggleBackground() {
-		windowBroadcastPublic.removeLayerContent(55);
-		ZoomablePanel testBackground = new ZoomablePanel();
-		testBackground.setLayout(null);
-		testBackground.setOpaque(false);
-		ImageUtility imageFond = new ImageUtility("Background/fondPourSolo.png", 0);
-		imageFond.setLocation(0, 0);
-		imageFond.setSize(imageFond.getPreferredSize());
-		testBackground.add(imageFond);
-		testBackground.setLocation(this.windowBroadcastPublic.getWidth() / 2,this.windowBroadcastPublic.getHeight() / 2 );
-		testBackground.setSize(10,10);
-		windowBroadcastPublic.addContent(55, testBackground);
-		panelAnimationConfiguration.zoomPanel(testBackground, this.windowBroadcastPublic, null);
+//		windowBroadcastPublic.removeLayerContent(55);
+//		ZoomablePanel testBackground = new ZoomablePanel();
+//		testBackground.setLayout(null);
+//		testBackground.setOpaque(false);
+//		ImageUtility imageFond = new ImageUtility("Background/fondPourSolo.png", 0);
+//		imageFond.setLocation(0, 0);
+//		imageFond.setSize(imageFond.getPreferredSize());
+//		testBackground.add(imageFond);
+//		testBackground.setLocation(this.windowBroadcastPublic.getWidth() / 2,this.windowBroadcastPublic.getHeight() / 2 );
+//		testBackground.setSize(10,10);
+//		windowBroadcastPublic.addContent(55, testBackground);
+//		panelAnimationConfiguration.zoomPanel(testBackground, this.windowBroadcastPublic, null);
 		
     	if(fondButtonAppuyer == false)
 			windowBroadcastPublic.setBackgroundImageLayered(event.getBackground().getImage_5(), JLayeredPane.POPUP_LAYER);

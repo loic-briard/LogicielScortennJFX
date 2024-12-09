@@ -28,7 +28,7 @@ SET FILES NIO TRUE
 SET FILES NIO SIZE 256
 SET FILES LOG TRUE
 SET FILES LOG SIZE 50
-SET FILES CHECK 199864
+SET FILES CHECK 203159
 SET DATABASE COLLATION "SQL_TEXT" PAD SPACE
 CREATE USER SA PASSWORD DIGEST 'd41d8cd98f00b204e9800998ecf8427e'
 ALTER USER SA SET LOCAL TRUE
@@ -831,7 +831,7 @@ INSERT INTO ATP VALUES(417196,'men','Landaluce','Martin','Landaluce M.','ESP',''
 INSERT INTO ATP VALUES(420876,'men','Dodig','Matej','Dodig M.','HRV','','clear.png',295,'0','','0','0','','','')
 INSERT INTO ATP VALUES(451920,'men','Sanchez Quilez','Alejo','Sanchez Quilez A.','ESP','','clear.png',500,'0','','0','0','','','')
 INSERT INTO ATP VALUES(462052,'men','Schwaerzler','Joel','Schwaerzler J.','AUT','','clear.png',370,'0','','0','0','','','')
-INSERT INTO WTA VALUES(18298,'women','Zvonareva','Vera','Zvonareva V.','RUS','','clear.png',321,'0','','0','0','','','')
+INSERT INTO WTA VALUES(18298,'women','Zvonareva','Vera','Zvonareva V.','RUS','07/09/1984','PlayersImages\Zvonareva_V.png',1165,'172','right-handed','40','0','13791333\u20ac','Moscow, Russia','Moscow, Russia')
 INSERT INTO WTA VALUES(18731,'women','Paszek','Tamira','Paszek T.','AUT','','clear.png',374,'0','','0','0','','','')
 INSERT INTO WTA VALUES(18742,'women','Volodko','Kateryna','Volodko K.','UKR','','clear.png',354,'0','','0','0','','','')
 INSERT INTO WTA VALUES(18808,'women','Cornet','Aliz\u00e9','Cornet A.','FRA','','clear.png',233,'0','','0','0','','','')
