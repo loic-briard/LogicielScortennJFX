@@ -326,9 +326,10 @@ public JTable playersTable;
 					String bithdate = (String) playersTable.getValueAt(selectedRow, 14);
 					String birthplace = (String) playersTable.getValueAt(selectedRow, 15);
 					String cityResidence = (String) playersTable.getValueAt(selectedRow, 16);
+					String teteDeSerie = (String) playersTable.getValueAt(selectedRow, 17);
 
 					new ModifyPlayersFrame(ListOfPlayersFrame.this, ID, sexe, playerName, playerSurname, DisplayName, acroNat, string_flag, bithdate, string_joueur, ranking, height, hand, age, weight, prize,
-							birthplace, cityResidence, (String) bddPLayersComboBox.getSelectedItem(),selectedRow);
+							birthplace, cityResidence,teteDeSerie, (String) bddPLayersComboBox.getSelectedItem(),selectedRow);
 				}
 			}
 		});
@@ -423,131 +424,7 @@ public JTable playersTable;
                 }
 			}
 		});
-		// Appel de l'annulation lorsque la fen�tre est ferm�e
-//		addWindowListener(new WindowAdapter() {
-//		    @Override
-//		    public void windowClosing(WindowEvent e) {
-//		        if (currentWorker != null && !currentWorker.isDone()) {
-//		            currentWorker.cancel(true);
-//		        }
-//		        try {
-//					Main.MenuPrincipal.refreshPlayerTableCombobox();
-//				} catch (SQLException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//		    }
-//		});
 	}
-
-	/*private void loadMorePlayersData() {
-	    if (loadingData) {
-	        System.out.println("Les donnees chargent...");
-	        return;
-	    }
-	    if (currentWorker != null && !currentWorker.isDone()) {
-	        System.out.println("Une tâche de chargement est déjà en cours.");
-	        return;
-	    }
-
-	    String selectedBDD = (String) bddPLayersComboBox.getSelectedItem();
-	    if (selectedBDD == null) {
-	        clignotementActif = true;
-	        changerContourTemporaire(bddPLayersComboBox);
-	        JOptionPane.showMessageDialog(null, "no database selected", "Error", JOptionPane.ERROR_MESSAGE);
-	        return;
-	    }
-
-	    loadingData = true;
-	    
-	    // Attendre que le worker précédent soit terminé
-	    if (currentWorker != null && !currentWorker.isDone()) {
-	        try {
-	            currentWorker.get(); // Attendre que le worker précédent se termine
-	        } catch (InterruptedException | ExecutionException e) {
-	            e.printStackTrace();
-	        }
-	    }
-
-	    currentWorker = new SwingWorker<Void, Void>() {
-	        @Override
-	        protected Void doInBackground() throws Exception {
-	            try {
-	                int loadNbjoueur = PAGE_SIZE;
-	                if (currentPage == 0) {
-	                    loadNbjoueur += 500;
-	                }
-
-	                int nbelemntBdd = BDD_v2.compterNbElementsBDD(selectedBDD);
-	                System.out.println("Nombre d'elements dans la base de donnees "+selectedBDD+" : " + nbelemntBdd);
-	                if (nbelemntBdd < loadNbjoueur) {
-	                    loadNbjoueur = nbelemntBdd;
-	                }
-	                
-	                if(playersTable.getModel().getRowCount() == nbelemntBdd)      {
-	                	return null;
-	                }
-
-	                int startIndex = currentPage * PAGE_SIZE;
-	                System.out.println("Chargement des joueurs de " + startIndex + " a " + loadNbjoueur);
-	                CustomTableModel model = (CustomTableModel) playersTable.getModel();
-	                List<String[]> playersData = BDD_v2.getData(selectedBDD, startIndex, loadNbjoueur);
-	                int i = 0;
-	                for (String[] data : playersData) {
-	                    if (isCancelled()) {
-	                        // Si l'annulation est demand�e, sortez de la boucle
-	                        System.out.println("! Chargement annule.");
-	                        return null;
-	                    }
-
-	                    System.out.println("Traitement des donn�es : " + Arrays.toString(data));
-	                    String flagImagePath = BDD_v2.getFlagImagePathByAcronym(data[5]);
-	                    String playerImagePath = data[6];
-	                    if (playerImagePath == null)
-	                        playerImagePath = "clear.png";
-	                    model.addRow(new Object[] { data[0], data[1], data[2], data[3], data[4], data[5],
-	                            new ImageUtility(flagImagePath, 55), new ImageUtility(playerImagePath, 55), data[7],
-	                            data[8], data[9], data[10], data[11], data[12], data[13], data[14], data[15] });
-	                    System.out.println(""+i+" Donnees traitees : " + Arrays.toString(data));
-	                    i++;
-	                }
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-
-	            return null;
-	        }
-
-	        @Override
-	        protected void done() {
-	            loadingData = false;
-	        }
-	    };
-	    
-	    currentWorker.execute();
-	}*/
-	
-	/*private CompletableFuture<Void> stopCurrentWorker() {
-	    CompletableFuture<Void> future = new CompletableFuture<>();
-	    
-	    synchronized (workerLock) {
-	        if (currentWorker != null && !currentWorker.isDone()) {
-	            currentWorker.cancel(true);
-	            currentWorker.addPropertyChangeListener(evt -> {
-	                if ("state".equals(evt.getPropertyName()) && 
-	                    SwingWorker.StateValue.DONE == evt.getNewValue()) {
-	                    future.complete(null);
-	                }
-	            });
-	        } else {
-	            future.complete(null);
-	        }
-	        currentWorker = null;
-	    }
-	    
-	    return future;
-	}*/
-	
 	/**
 	 * Changer contour temporaire.
 	 *

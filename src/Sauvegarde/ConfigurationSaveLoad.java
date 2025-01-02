@@ -941,7 +941,7 @@ public class ConfigurationSaveLoad {
 			Map<String, ElementJoueur> elements = new HashMap<>();
 
 			String[] elementNames = { "Prizetotal", "Birthplace", "ImgJoueur", "Rank", "Birthdate", "Hand", "Weight",
-					"Name", "Acronyme", "CityResidence", "Line", "Height", "ImgFlag", "Surname", "Age" };
+					"Name", "Acronyme", "CityResidence", "Line", "Height", "ImgFlag", "Surname", "Age","Seeding" };
 			int j = 0;
 			for (String elementName : elementNames) {
 				int posY = 100+i*100;
@@ -965,7 +965,7 @@ public class ConfigurationSaveLoad {
 		// Initialiser playerPolice
 		Map<String, ElementPoliceJoueur> playerPolice = new HashMap<>();
 		String[] elementNames = { "Prizetotal", "Birthplace", "ImgJoueur", "Rank", "Birthdate", "Hand", "Weight",
-				"Name", "Acronyme", "CityResidence", "Line", "Height", "ImgFlag", "Surname", "Age" };
+				"Name", "Acronyme", "CityResidence", "Line", "Height", "ImgFlag", "Surname", "Age","Seeding" };
 
 		for (String elementName : elementNames) {
 			ElementPoliceJoueur policeElement = new ElementPoliceJoueur();

@@ -83,6 +83,9 @@ public class ModifyPlayersFrame extends JFrame{
     
     /** The city residence field. */
     private JTextField cityResidenceField;
+    
+    /** The tete de serie field. */
+	private JTextField teteDeSerieField;
         
     /** The content pane. */
     private JPanel contentPane;
@@ -131,7 +134,7 @@ public class ModifyPlayersFrame extends JFrame{
 	 */
 	public ModifyPlayersFrame(ListOfPlayersFrame parentFrame, String iD, String sexe, String playerName, String playerSurname, String displayName, 
 			String acroNat, String flag, String bithdate, String imgJoueur, String ranking, String height, String hand, String age, 
-			String weight, String prize, String birthplace, String cityResidence, String bddChoosen, int selectedRow) {
+			String weight, String prize, String birthplace, String cityResidence,String teteDeSerie, String bddChoosen, int selectedRow) {
 		this.currentImage = imgJoueur;
 		this.currentFlag = flag;
 		this.bddchoosen = bddChoosen;
@@ -186,7 +189,8 @@ public class ModifyPlayersFrame extends JFrame{
         weightField = new JTextField(weight);
         prizeField = new JTextField(prize);
         birthplaceField = new JTextField(birthplace);
-        cityResidenceField = new JTextField(cityResidence);        
+        cityResidenceField = new JTextField(cityResidence);    
+        teteDeSerieField = new JTextField(teteDeSerie);
         
      // Ajoutez un �couteur d'�v�nements au JComboBox pour g�rer la s�lection
         nationalityComboBox.addActionListener(new ActionListener() {
@@ -224,6 +228,7 @@ public class ModifyPlayersFrame extends JFrame{
        addComponent(contentPane, "Prize total:", prizeField, gbc, 0, ++row);
        addComponent(contentPane, "Birth place:", birthplaceField, gbc, 0, ++row);
        addComponent(contentPane, "Residence city:", cityResidenceField, gbc, 0, ++row);
+       addComponent(contentPane, "Seeding:", teteDeSerieField, gbc, 0, ++row);
               
      // Ajoutez un gestionnaire d'action au bouton "Load" pour charger une nouvelle image
         loadImageButton.addActionListener(new ActionListener() {
@@ -257,13 +262,14 @@ public class ModifyPlayersFrame extends JFrame{
                     String prize = prizeField.getText();
                     String birthplace = birthplaceField.getText();
                     String cityResidence = cityResidenceField.getText();
+                    String teteDeSerie = teteDeSerieField.getText();
                     
                     BDD_v2.updatePlayersInDatabase(Integer.parseUnsignedInt(iD), sexe, playerName, playerSurname, displayName, acroNat, flag, getDate(birthdateChooser), imgJoueur,
-                            Integer.parseUnsignedInt(ranking), height,hand,age, weight,prize,birthplace,cityResidence, bddchoosen);
+                            Integer.parseUnsignedInt(ranking), height,hand,age, weight,prize,birthplace,cityResidence,teteDeSerie, bddchoosen);
                     dispose();
                     
                     joueurModifier = new Object[] {iD, sexe, playerName, playerSurname, displayName, acroNat, flag, imgJoueur,
-                            ranking,prize,height,hand,age, weight, getDate(birthdateChooser),birthplace,cityResidence};
+                            ranking,prize,height,hand,age, weight, getDate(birthdateChooser),birthplace,cityResidence,teteDeSerie};
                     CustomTableModelJoueur model = (CustomTableModelJoueur) parentFrame.playersTable.getModel();
                     model.updateRow(selectedRow, joueurModifier);
                     model.loadImages();
@@ -372,6 +378,7 @@ public class ModifyPlayersFrame extends JFrame{
                !weightField.getText().isEmpty() &&
                !prizeField.getText().isEmpty() &&
                !birthplaceField.getText().isEmpty() &&
-               !cityResidenceField.getText().isEmpty();
+               !cityResidenceField.getText().isEmpty()&&
+	           !teteDeSerieField.getText().isEmpty();
     }
 }

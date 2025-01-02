@@ -25,7 +25,7 @@ public class CustomTableModelJoueur extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
     
     /** The column names. */
-    private String[] columnNames = { "ID", "Sex", "Name", "Surname", "Display name", "Nationality", "Flag", "Player image", "Ranking", "Prize Total", "Height", "Hand", "Age", "Weight", "Birthdate", "Birthplace", "City Residence"};
+    private String[] columnNames = { "ID", "Sex", "Name", "Surname", "Display name", "Nationality", "Flag", "Player image", "Ranking", "Prize Total", "Height", "Hand", "Age", "Weight", "Birthdate", "Birthplace", "City Residence", "Seeding"};
     
     /** The data. */
     private List<Object[]> data;

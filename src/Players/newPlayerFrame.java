@@ -31,6 +31,7 @@ import org.json.JSONException;
 
 import Main.BDD_v2;
 import Main.ImageUtility;
+import Main.InternetChecker;
 import Main.MainJFX;
 
 // TODO: Auto-generated Javadoc
@@ -96,6 +97,9 @@ public class newPlayerFrame extends JFrame {
 	
 	/** The city residence field. */
 	private JTextField cityResidenceField;
+	
+	/** The tete de serie field. */
+	private JTextField teteDeSerieField;
 
 	/** The bdd P layers combo box. */
 	private JComboBox<String> bddPLayersComboBox;
@@ -205,6 +209,7 @@ public class newPlayerFrame extends JFrame {
 		prizeField = new JTextField();
 		birthplaceField = new JTextField();
 		cityResidenceField = new JTextField();
+		teteDeSerieField = new JTextField();
 
 		// Ajoutez un �couteur d'�v�nements au JComboBox pour g�rer la s�lection
 		nationalityComboBox.addActionListener(new ActionListener() {
@@ -242,6 +247,7 @@ public class newPlayerFrame extends JFrame {
 		addComponent(contentPane, "Prize total:", prizeField, gbc, 0, ++row);
 		addComponent(contentPane, "Birth place:", birthplaceField, gbc, 0, ++row);
 		addComponent(contentPane, "Residence city:", cityResidenceField, gbc, 0, ++row);
+		addComponent(contentPane, "Seeding", teteDeSerieField, gbc, 0, ++row);
 		int row2 = 0;
 		addComponent(contentPane, " ", new JLabel("Choose a list of players"), gbc, 2, row2);
 		addComponent(contentPane, " ", bddPLayersComboBox, gbc, 2, ++row2);
@@ -302,9 +308,10 @@ public class newPlayerFrame extends JFrame {
 		            String prize = prizeField.getText();
 		            String birthplace = birthplaceField.getText();
 		            String cityResidence = cityResidenceField.getText();
+		            String teteDeSerie = teteDeSerieField.getText();
 
 		            Joueur player = new Joueur(iD, sexe, playerName, playerSurname, displayName, acroNat, getDate(birthdateChooser), imgJoueur, Integer.parseUnsignedInt(ranking),
-		                    Integer.parseUnsignedInt(height), hand, Integer.parseUnsignedInt(age), Integer.parseUnsignedInt(weight), prize, birthplace, cityResidence);
+		                    Integer.parseUnsignedInt(height), hand, Integer.parseUnsignedInt(age), Integer.parseUnsignedInt(weight), prize, birthplace, cityResidence, teteDeSerie);
 		            try {
 		                BDD_v2.insertionJoueurDansBDD(player, bddChoosen);
 
@@ -315,7 +322,7 @@ public class newPlayerFrame extends JFrame {
 		                    playerImagePath = "clear.png";
 		                CustomTableModelJoueur model = (CustomTableModelJoueur) parentFrame.playersTable.getModel();
 		                model.addRow(new Object[] { data[0], data[1], data[2], data[3], data[4], data[5], flagImagePath, playerImagePath, data[7], data[8],
-		                        data[9], data[10], data[11], data[12], data[13], data[14], data[15] });
+		                        data[9], data[10], data[11], data[12], data[13], data[14], data[15], data[16] });
 		                System.out.println("++++ Données traitées : " + Arrays.toString(data));
 		                model.loadImages();
 		            } catch (ClassNotFoundException | SQLException e2) {
@@ -340,17 +347,19 @@ public class newPlayerFrame extends JFrame {
 		
 		b_recupInfoPlayer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				for (Joueur joueur : selectedJoueurs) {
-		            if (joueur.getDisplay_name().equals((String) selectedPLayerComboBox.getSelectedItem())) {
-		            	try {
-							MainJFX.API.insertionsInfosSupJoueur(joueur.getID(), (String)bddPLayersComboBox.getSelectedItem());
-							autoCompleteInfosJoueur(BDD_v2.getJoueurParID(joueur.getID(), (String)bddPLayersComboBox.getSelectedItem())); // Retourne le joueur si son nom correspond
-						} catch (ClassNotFoundException | IOException | InterruptedException | JSONException
-								| SQLException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-		            }
+				if(InternetChecker.isInternetAvailable()) {
+					for (Joueur joueur : selectedJoueurs) {
+			            if (joueur.getDisplay_name().equals((String) selectedPLayerComboBox.getSelectedItem())) {
+			            	try {
+								MainJFX.API.insertionsInfosSupJoueur(joueur.getID(), (String)bddPLayersComboBox.getSelectedItem());
+								autoCompleteInfosJoueur(BDD_v2.getJoueurParID(joueur.getID(), (String)bddPLayersComboBox.getSelectedItem())); // Retourne le joueur si son nom correspond
+							} catch (ClassNotFoundException | IOException | InterruptedException | JSONException
+									| SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+			            }
+					}
 		        }
 			}
 		});
@@ -475,7 +484,7 @@ public class newPlayerFrame extends JFrame {
 		prizeField.setText(selectedJoueur.getPrizetotal());
 		birthplaceField.setText(selectedJoueur.getBirthPlace());
 		cityResidenceField.setText(selectedJoueur.getCityResidence());
-		
+		teteDeSerieField.setText(selectedJoueur.getTeteDeSerie());
 
 		this.pack();
 		setSize(600, this.getHeight());

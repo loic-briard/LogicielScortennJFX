@@ -43,6 +43,7 @@ public class MenuPrincipal extends JFrame {
     
     /** The Constant ICON_PATH. */
     private static final String ICON_PATH = "icon.png";
+    private static final String ERREUR_CONNEXION_PATH = "erreur_connexion.png";
     
     /** The athlete selection. */
     private AthleteSelection athleteSelection;
@@ -124,7 +125,7 @@ public class MenuPrincipal extends JFrame {
         menuBar.add(createMenuItem("Players", e -> openListPlayersWindow()));
         menuBar.add(createMenuItem("Flags", e -> openListFlagsWindow()));
         setJMenuBar(menuBar);
-    }
+    }	
 
     /**
      * Creates the menu item.
@@ -259,6 +260,11 @@ public class MenuPrincipal extends JFrame {
     private JPanel createTitlePanel() {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
+        
+        if(!InternetChecker.isInternetAvailable()) {
+        	ImageUtility connexionImage = new ImageUtility(ERREUR_CONNEXION_PATH, 50);
+        	panel.add(connexionImage);
+        }
         
         JLabel titleLabel = new JLabel("Tournament Management System");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
@@ -702,7 +708,7 @@ public class MenuPrincipal extends JFrame {
     public void refreshEventComboBox() {
         String[] eventNames = BDD_v2.getNamesFromDatabase("event");
         eventComboBox.setModel(new DefaultComboBoxModel<>(eventNames));
-        eventComboBox.setSelectedIndex(-1);
+        //eventComboBox.setSelectedIndex(-1);
     }
 
     /**

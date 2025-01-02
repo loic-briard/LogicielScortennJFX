@@ -89,7 +89,7 @@ public class MainJFX {
 		
 		
 //		BDD_v2.suppressionsDesTables();
-		//BDD_v2.creationdesTables();
+//		BDD_v2.creationdesTables();
 		BDD_v2.verifierEtCreerTables();
 		BDD_v2.getAllListPlayerTableName();
 //		API.TAB_WTA();

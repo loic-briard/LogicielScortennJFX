@@ -84,6 +84,9 @@ public class PlayerForDiffusion extends JPanel{
 	/** The player cityresidence. */
 	public JPanel playerCityresidence;
 	
+	/** The player tete de serie. */
+	public JPanel playerTeteDeSerie;
+	
 	/** The player line. */
 	public JPanel playerLine;
 	
@@ -130,6 +133,9 @@ public class PlayerForDiffusion extends JPanel{
 	/** The cityresidence label. */
 	public JLabel cityresidenceLabel;
 	
+	/** The cityresidence label. */
+	public JLabel teteDeSerieLabel;
+	
 	/** The line label. */
 	public JLabel lineLabel;
 	
@@ -169,6 +175,9 @@ public class PlayerForDiffusion extends JPanel{
 	
 	/** The police cityresidence. */
 	public chosenPolice policeCityresidence;
+	
+	/** The police cityresidence. */
+	public chosenPolice policeTeteDeSerie;
 	
 	/** The police line. */
 	public chosenPolice policeLine;
@@ -350,7 +359,8 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 		policeHand = createPolice() ;
 		policeAge = createPolice() ;
 		policePrizetotal = createPolice() ;
-		policeCityresidence = createPolice() ;
+		policeCityresidence = createPolice();
+		policeTeteDeSerie = createPolice();
 		policeLine = createPolice() ;
 	}
 	
@@ -370,7 +380,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	 * Creates the player panels.
 	 */
 	private void createPlayerPanels() {
-	    String[] panelNames = {"Name", "Surname", "ImgJoueur", "ImgFlag", "Acronyme", "Rank", "Birthdate", "Birthplace", "Height", "Weight", "Hand", "Age", "Prizetotal", "CityResidence", "Line"};
+	    String[] panelNames = {"Name", "Surname", "ImgJoueur", "ImgFlag", "Acronyme", "Rank", "Birthdate", "Birthplace", "Height", "Weight", "Hand", "Age", "Prizetotal", "CityResidence","Seeding", "Line"};
 	    for (String name : panelNames) {
 	        JPanel panel = createPlayerPanel(name);
 	        switch (name) {
@@ -388,6 +398,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	            case "Age": playerAge = panel; break;
 	            case "Prizetotal": playerPrizetotal = panel; break;
 	            case "CityResidence": playerCityresidence = panel; break;
+	            case "Seeding": playerTeteDeSerie = panel; break;
 	            case "Line": playerLine = panel; break;
 	        }
 	    }
@@ -451,6 +462,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	    playerInfo.put(playerAge, new LabelInfo(String.valueOf(joueur.getAge()), policeAge));
 	    playerInfo.put(playerPrizetotal, new LabelInfo(joueur.getPrizetotal(), policePrizetotal));
 	    playerInfo.put(playerCityresidence, new LabelInfo(joueur.getCityResidence(), policeCityresidence));
+	    playerInfo.put(playerTeteDeSerie, new LabelInfo(joueur.getTeteDeSerie(), policeTeteDeSerie));
 	    playerInfo.put(playerLine, new LabelInfo(String.valueOf(ligne), policeLine));
 	    // Mettre à jour tous les panneaux de texte
 	    playerInfo.forEach((panel, info) -> updateTextPanel(panel, info));
@@ -506,7 +518,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	    panelPlayerGlobal.setName(this.joueur.getNom());
 	    // Ajouter tous les panneaux au panneau global
 	    Arrays.asList(playerName, playerSurname, playerAcro, playerRank, playerBirthdate, playerBirthplace,
-	                  playerHeight, playerWeight, playerHand, playerAge, playerPrizetotal, playerCityresidence,
+	                  playerHeight, playerWeight, playerHand, playerAge, playerPrizetotal, playerCityresidence,playerTeteDeSerie,
 	                  playerLine, playerImg, playerFlag).forEach(panelPlayerGlobal::addComponent);
 	}
 
@@ -675,7 +687,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	    int y = 0;
 	    for (JPanel panel : Arrays.asList(playerName, playerSurname, playerAcro, playerRank, playerBirthdate, 
 	                                      playerBirthplace, playerHeight, playerWeight, playerHand, playerAge, 
-	                                      playerPrizetotal, playerCityresidence, playerLine)) {
+	                                      playerPrizetotal, playerCityresidence, playerTeteDeSerie, playerLine)) {
 	        panel.setLocation(10, y);
 	        y += 20;
 	    }
@@ -704,6 +716,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	    elements.put("Age", new Object[]{playerAge, policeAge});
 	    elements.put("Prizetotal", new Object[]{playerPrizetotal, policePrizetotal});
 	    elements.put("CityResidence", new Object[]{playerCityresidence, policeCityresidence});
+	    elements.put("Seeding", new Object[]{playerTeteDeSerie, policeTeteDeSerie});
 	    elements.put("Line", new Object[]{playerLine, policeLine});
 
 	    for (Map.Entry<String, Object[]> entry : elements.entrySet()) {
@@ -712,7 +725,10 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	        chosenPolice police = (chosenPolice) entry.getValue()[1];
 
 	        ElementPoliceJoueur elementPolice = configData.getElementPolice(emplacementPlayer, nomEvent, typeFen, elementName, index);
-	        panel.setVisible(elementPolice.isVisible());
+	        if(elementPolice != null)
+	        	panel.setVisible(elementPolice.isVisible());
+	        else
+	        	System.out.println("! "+elementName+" = null");
 //	        if (elementPolice.isVisible()) {
 //	            updateElement(configData, emplacementPlayer, index, elementName, panel, police, elementPolice);
 //	        }
@@ -825,6 +841,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 		mapJoueurDetails.addDetails(this.playerAge, this.ageLabel);
 		mapJoueurDetails.addDetails(this.playerPrizetotal, this.prizetotalLabel);
 		mapJoueurDetails.addDetails(this.playerCityresidence, this.cityresidenceLabel);
+		mapJoueurDetails.addDetails(this.playerTeteDeSerie, this.teteDeSerieLabel);
 		mapJoueurDetails.addDetails(this.playerLine, this.lineLabel);
 	}
 	

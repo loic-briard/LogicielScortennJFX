@@ -314,24 +314,61 @@ public class GestionAPI {
 	 * @throws InterruptedException the interrupted exception
 	 */
 	//permet de recuperer le classement des 500 premiers joueur de l'ATP
-	private String ConnexionATP() throws IOException, InterruptedException {
-		HttpRequest request = HttpRequest.newBuilder().GET()
-				.uri(URI.create("https://allsportsapi2.p.rapidapi.com/api/tennis/rankings/atp/live")) 
-				.setHeader("X-RapidAPI-Key", s_cleAPI)
-				.setHeader("X-RapidAPI-Host", "allsportsapi2.p.rapidapi.com")
-				.build();
-
-		HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-		System.out.println("> Conexion API ATP "+response.statusCode());
-		if(!(response.statusCode() == 401)) {
-//			s_reponse = response.body();
-			return (response.body());
-		}else {
-			JOptionPane.showMessageDialog(null, "erreur cle api : "+response.statusCode(), "Erreur", JOptionPane.ERROR_MESSAGE);
-		}
-		return null;
-	}
+	private static String ConnexionATP() throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create("https://allsportsapi2.p.rapidapi.com/api/tennis/rankings/atp/live"))
+                .setHeader("X-RapidAPI-Key", s_cleAPI)
+                .setHeader("X-RapidAPI-Host", "allsportsapi2.p.rapidapi.com")
+                .build();
+        
+        HttpResponse<InputStream> response = httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream());
+        
+        System.out.println("> Conexion API ATP " + response.statusCode());
+        System.out.println("Headers: " + response.headers());
+        
+        // Vérifier si la réponse est compressée
+        if ("gzip".equals(response.headers().firstValue("content-encoding").orElse(""))) {
+            try (GZIPInputStream gzipInputStream = new GZIPInputStream(response.body());
+                 BufferedReader reader = new BufferedReader(new InputStreamReader(gzipInputStream))) {
+                StringBuilder responseBody = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    responseBody.append(line);
+                }
+                System.out.println(responseBody.toString());
+                return responseBody.toString();
+            }
+        } else {
+            // Si la réponse n'est pas compressée
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(response.body()))) {
+                StringBuilder responseBody = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    responseBody.append(line);
+                }
+                return responseBody.toString();
+            }
+        }
+    }
+//	private String ConnexionATP() throws IOException, InterruptedException {
+//		HttpRequest request = HttpRequest.newBuilder().GET()
+//				.uri(URI.create("https://allsportsapi2.p.rapidapi.com/api/tennis/rankings/atp/live")) 
+//				.setHeader("X-RapidAPI-Key", s_cleAPI)
+//				.setHeader("X-RapidAPI-Host", "allsportsapi2.p.rapidapi.com")
+//				.build();
+//
+//		HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+//
+//		System.out.println("> Conexion API ATP "+response.statusCode());
+//		if(!(response.statusCode() == 401)) {
+////			s_reponse = response.body();
+//			return (response.body());
+//		}else {
+//			JOptionPane.showMessageDialog(null, "erreur cle api : "+response.statusCode(), "Erreur", JOptionPane.ERROR_MESSAGE);
+//		}
+//		return null;
+//	}
 	
 	/**
 	 * Connexion WTA.
@@ -454,7 +491,7 @@ public class GestionAPI {
 		    }
 			int i_ID = teamID.getInt("id");
 			//les valeurs "" et 0 seront ajouter une fois le joueur choisit sinon on atteint la limite de requete de l'api
-			Joueur joueur = new Joueur(i_ID, "homme",s_name, s_surname, s_displayName, s_alpha3, "", s_imgTemp, i_rankingValue, 0, "", 0, 0, "", "", "");
+			Joueur joueur = new Joueur(i_ID, "homme",s_name, s_surname, s_displayName, s_alpha3, "", s_imgTemp, i_rankingValue, 0, "", 0, 0, "", "", "","");
 
 			System.out.println("  + Player added in ATP, name : "+s_name+", surname : "+s_surname);
 			//insertion dans la base de données
@@ -520,9 +557,9 @@ public class GestionAPI {
 			    }
 				int i_ID = teamID.getInt("id");
 				//les valeurs "" et 0 seront ajouter une fois le joueur choisit sinon on atteint la limite de requete de l'api
-				Joueur joueur = new Joueur(i_ID, "women",s_name, s_surname, s_displayName, s_alpha3, "", s_imgTemp, i_rankingValue, 0, "", 0, 0, "", "", "");
+				Joueur joueur = new Joueur(i_ID, "women",s_name, s_surname, s_displayName, s_alpha3, "", s_imgTemp, i_rankingValue, 0, "", 0, 0, "", "", "","");
 				
-				System.out.println("  + player added in WTA, name : "+s_name+", surname : "+s_surname);
+				//System.out.println("  + player added in WTA, name : "+s_name+", surname : "+s_surname);
 				//insertion dans la base de données
 				BDD_v2.insertionJoueurDansBDD(joueur, BDD_v2.WTA);
 				

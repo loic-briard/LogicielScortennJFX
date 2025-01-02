@@ -105,7 +105,7 @@ public class WindowTournamentTree extends JFrame {
 		this.playerPanel = new JPanel[4];
 		if(this.selectedJoueurs.get(this.selectedJoueurs.size()-1).getNom() != "QUALIFIER")
 			this.selectedJoueurs.add(this.selectedJoueurs.size(), new Joueur(0, "men", "QUALIFIER", " ", "QUALIFIER", " ",
-				" ", "clear.png", 0, 0, " ", 0, 0, " ", " ", " "));
+				" ", "clear.png", 0, 0, " ", 0, 0, " ", " ", " "," "));
 		
 		setupFrame();
 		this.panelAnimationConfiguration = new PanelAnimationConfiguration(this);
@@ -232,8 +232,9 @@ public class WindowTournamentTree extends JFrame {
 
 		JButton playerButton = new JButton("Player");
 		playerButton.addActionListener(e -> handlePlayerSelection(comboBox, playerIndex, panelIndex));
-
+		int ligne = playerIndex + (nbJoueur / 4) * panelIndex+1;
 		JPanel comboButtonPanel = new JPanel();
+		comboButtonPanel.add(new JLabel(ligne+""));
 		comboButtonPanel.add(comboBox);
 		comboButtonPanel.add(playerButton);
 		panel.add(comboButtonPanel);
@@ -338,9 +339,10 @@ public class WindowTournamentTree extends JFrame {
 //			zoomBackground.setSize(10,10);
 //			windowBroadcastPublic.addContent(55, zoomBackground);
 			
-			displayFondJoueur("player");
 			System.gc();
 			Joueur soloPlayer = foundPlayer(selectedItem);
+			if(soloPlayer.getNom() != "QUALIFIER")
+				displayFondJoueur("player");
 			ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
 			int ligne = playerIndex + (nbJoueur / 4) * panelIndex;
 //			SwingUtilities.invokeLater(() -> {

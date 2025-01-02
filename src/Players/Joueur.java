@@ -45,6 +45,8 @@ public class Joueur {
 	/** The prizetotal. */
 	String prizetotal;
 	
+	String teteDeSerie;
+	
 	/** The rank. */
 	int rank;
     
@@ -76,9 +78,10 @@ public class Joueur {
 	 * @param prizetotal the prizetotal
 	 * @param BirthPlace the birth place
 	 * @param CityResidence the city residence
+	 * @param teteDeSerie [Q,WC,ALT]
 	 */
 	public Joueur(int ID, String sexe, String nom, String prenom, String display_name, String nation_acronyme, 
-			String birthDate, String ImgJoueur, int rank, int taille, String main, int age, int weight, String prizetotal, String BirthPlace, String CityResidence){
+			String birthDate, String ImgJoueur, int rank, int taille, String main, int age, int weight, String prizetotal, String BirthPlace, String CityResidence, String teteDeSerie){
 		
 		super();
 		this.ID = ID;
@@ -98,6 +101,7 @@ public class Joueur {
 		this.birthDate = birthDate;
 		this.CityResidence = CityResidence;
 		this.BirthPlace = BirthPlace;
+		this.teteDeSerie = teteDeSerie;
 	}
 
 
@@ -421,6 +425,16 @@ public class Joueur {
 	}
 
 
+	public String getTeteDeSerie() {
+		return teteDeSerie;
+	}
+
+
+	public void setTeteDeSerie(String teteDeSerie) {
+		this.teteDeSerie = teteDeSerie;
+	}
+
+
 	/**
 	 * To string.
 	 *
@@ -430,7 +444,7 @@ public class Joueur {
 	public String toString() {
 		return "Joueur [ID=" + ID + ", " + sexe + ", " + nom + ", " + prenom + ", display name=" + display_name + ", nationalit�=" + natio_acronyme + ", main=" + main
 				+ ", birthDate=" + birthDate + ", BirthPlace=" + BirthPlace + ", CityResidence=" + CityResidence + ", imgJoueur=" + imgJoueur + ", prizetotal=" + prizetotal + ", rank=" + rank
-				+ ", taille=" + taille + "cm, age=" + age + ", weight=" + weight + "kg]";
+				+ ", taille=" + taille + "cm, age=" + age + ", weight=" + weight + "kg, tete de serie = "+teteDeSerie+"]";
 	}
 
 }

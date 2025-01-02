@@ -73,6 +73,9 @@ public class TabPolice extends JPanel {
 	/** The checkbox cityresidence. */
 	public JCheckBox checkboxCityresidence;
 	
+	/** The checkbox cityresidence. */
+	public JCheckBox checkboxTeteDeSerie;
+	
 	/** The checkbox line. */
 	public JCheckBox checkboxLine;
 	
@@ -119,6 +122,7 @@ public class TabPolice extends JPanel {
 		checkboxAge = new JCheckBox("Display age",listPlayer.get(0).playerAge.isVisible());
 		checkboxPrizetotal = new JCheckBox("Display prize total",listPlayer.get(0).playerPrizetotal.isVisible());
 		checkboxCityresidence = new JCheckBox("Display city residence",listPlayer.get(0).playerCityresidence.isVisible());
+		checkboxTeteDeSerie = new JCheckBox("Display Seeding",listPlayer.get(0).playerTeteDeSerie.isVisible());
 		checkboxLine = new JCheckBox("Display line",listPlayer.get(0).playerLine.isVisible());
 		
 		TailleImg = new JSpinner(new SpinnerNumberModel(listPlayer.get(0).tailleImgJoueur, 0, 10000, 1));
@@ -136,6 +140,7 @@ public class TabPolice extends JPanel {
 		JButton buttonFontAge = new JButton("Choose Font");
 		JButton buttonFontPrizetotal = new JButton("Choose Font");
 		JButton buttonFontCityresidence = new JButton("Choose Font");
+		JButton buttonFontSeeding= new JButton("Choose Font");
 		JButton buttonFontLine = new JButton("Choose Font");
 		// --------------------------------------action des boutons--------------------------------------
 		buttonFontName.addActionListener(new ActionListener() {
@@ -282,6 +287,18 @@ public class TabPolice extends JPanel {
 				}
 			}
 		});
+		buttonFontSeeding.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FontSelector fontSelector = new FontSelector(listPlayer.get(0).playerTeteDeSerie.getComponents()[0].getFont(), listPlayer.get(0).playerTeteDeSerie.getComponents()[0].getForeground());
+				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
+					playerForDiffusion.playerTeteDeSerie.getComponents()[0].setFont(fontSelector.getPoliceComlet());
+					playerForDiffusion.playerTeteDeSerie.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.policeTeteDeSerie.setNewfont(fontSelector.getPoliceComlet());
+					playerForDiffusion.policeTeteDeSerie.setNewColor(fontSelector.getChoosenColor());
+					playerForDiffusion.playerTeteDeSerie.setSize(playerForDiffusion.playerTeteDeSerie.getComponents()[0].getPreferredSize());
+				}
+			}
+		});
 		buttonFontLine.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FontSelector fontSelector = new FontSelector(listPlayer.get(0).playerLine.getComponents()[0].getFont(), listPlayer.get(0).playerLine.getComponents()[0].getForeground());
@@ -363,6 +380,10 @@ public class TabPolice extends JPanel {
 		addComponent(panelTab, gbc, new JLabel("City residence :"), 0, choixColonne);
 		addComponent(panelTab, gbc, checkboxCityresidence, 1, choixColonne);
 		addComponent(panelTab, gbc, buttonFontCityresidence, 2, choixColonne);
+		choixColonne++;
+		addComponent(panelTab, gbc, new JLabel("Seeding :"), 0, choixColonne);
+		addComponent(panelTab, gbc, checkboxTeteDeSerie, 1, choixColonne);
+		addComponent(panelTab, gbc, buttonFontSeeding, 2, choixColonne);
 		choixColonne++;
 		
 		this.setLayout(new BorderLayout());
