@@ -302,8 +302,17 @@ public class WindowTournamentTree extends JFrame {
 		bottomPanel.add(bottomPanelButton, BorderLayout.NORTH);
 		bottomPanel.add(this.panelAnimationConfiguration, BorderLayout.CENTER);
 		JButton btnSaveConfigAnimation = new JButton("Save config animation");
+		
 		btnSaveConfigAnimation.addActionListener(
-				e -> ConfigurationSaveLoad.saveConfigAnimation(panelAnimationConfiguration, this.eventName()));
+				e -> {
+					int choice = JOptionPane.showConfirmDialog(null, "Do you want to update animation?",
+							"Animation update", JOptionPane.YES_NO_OPTION);
+					if(choice == JOptionPane.YES_OPTION) {
+						System.out.println("update animationselected");
+						ConfigurationSaveLoad.saveConfigAnimation(panelAnimationConfiguration, this.eventName());
+					}else
+						System.out.println("don't update animation selected");
+				});
 		bottomPanel.add(btnSaveConfigAnimation, BorderLayout.SOUTH);
 		add(bottomPanel, BorderLayout.SOUTH);
 	}

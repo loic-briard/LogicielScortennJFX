@@ -28,7 +28,7 @@ SET FILES NIO TRUE
 SET FILES NIO SIZE 256
 SET FILES LOG TRUE
 SET FILES LOG SIZE 50
-SET FILES CHECK 265730
+SET FILES CHECK 266446
 SET DATABASE COLLATION "SQL_TEXT" PAD SPACE
 CREATE USER SA PASSWORD DIGEST 'd41d8cd98f00b204e9800998ecf8427e'
 ALTER USER SA SET LOCAL TRUE
@@ -1311,7 +1311,7 @@ INSERT INTO LIST_8_JOUEUR VALUES(1,'Men','Gasquet','Richard','Gasquet R.','FRA',
 INSERT INTO LIST_8_JOUEUR VALUES(2,'Men','Nadal','Rafael','Nadal R.','ESP','03/06/1986','PlayersImages\Nadal_R.png',153,'185','left-handed','38','85','112455083\u20ac','Manacor, Mallorca, Spain','Manacor, Mallorca, Spain','[ALT]')
 INSERT INTO LIST_8_JOUEUR VALUES(3,'Men','Monfils','Ga\u00ebl','Monfils G.','FRA','01/09/1986','PlayersImages\Monfils_G.png',55,'193','right-handed','38','85','19192298\u20ac','Paris, France','Switzerland','[WC]')
 INSERT INTO LIST_8_JOUEUR VALUES(4,'Men','Paire','Beno\u00eet','Paire B.','FRA','08/05/1989','PlayersImages\Paire_B.png',414,'196','right-handed','35','80','8712076\u20ac','Avignon, France','Geneva, Switzerland',' ')
-INSERT INTO LIST_8_JOUEUR VALUES(5,'Men','Raonic','Milos','Raonic M.','CAN','27/12/1990','PlayersImages\Raonic_M.png',238,'196','right-handed','33','98','17294187\u20ac','Podgorica, Montenegro','Monte Carlo, Monaco',' ')
+INSERT INTO LIST_8_JOUEUR VALUES(5,'Men','Raonic','Milos','Raonic M.','CAN','27/12/1990','34',238,'196','right-handed','33','98','17294187\u20ac','Podgorica, Montenegro','Monte Carlo, Monaco',' ')
 INSERT INTO LIST_8_JOUEUR VALUES(6,'Men','Vesel\u00fd','Ji\u0159\u00ed','Vesel\u00fd J.','CZE','10/07/1993','PlayersImages\Vesel\u00fd_J.png',342,'198','left-handed','31','94','5088068\u20ac','Pribram, Czechia','Ras Al Khaimah, UAE',' ')
 INSERT INTO LIST_8_JOUEUR VALUES(7,'Men','de Loore','Joris','de Loore J.','BEL','21/04/1993','PlayersImages\de_Loore_J.png',327,'191','right-handed','31','86','465616\u20ac','Bruges, Belgium',' Paris',' ')
 INSERT INTO LIST_8_JOUEUR VALUES(8,'Men','Basilashvili','Nikoloz','Basilashvili N.','GEO','23/02/1992','PlayersImages\Basilashvili_N.png',208,'185','right-handed','32','79','7340522\u20ac','Tbilisi, Georgia','Tbilisi, Georgia',' ')

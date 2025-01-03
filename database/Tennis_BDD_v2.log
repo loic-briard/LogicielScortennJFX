@@ -1,0 +1,4 @@
+/*C2*/SET SCHEMA PUBLIC
+DELETE FROM LIST_8_JOUEUR WHERE ID=5
+INSERT INTO LIST_8_JOUEUR VALUES(5,'Men','Raonic','Milos','Raonic M.','CAN','27/12/1990','34',238,'196','right-handed','33','98','17294187\u20ac','Podgorica, Montenegro','Monte Carlo, Monaco',' ')
+COMMIT

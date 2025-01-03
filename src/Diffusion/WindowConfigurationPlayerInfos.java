@@ -19,6 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
@@ -210,25 +211,34 @@ autre}
      * @param e the e
      */
     private void saveConfig(ActionEvent e) {
-        confirmAllTab();
+    	int choice = JOptionPane.showConfirmDialog(null, "Do you want to update position and font of players?",
+				"Players position, font update", JOptionPane.YES_NO_OPTION);
+		if(choice == JOptionPane.YES_OPTION)
+			System.out.println("update position, font players selected");
+		else
+			System.out.println("don't update position, font players selected");
+		
+		if (choice == JOptionPane.YES_OPTION) {
+			confirmAllTab();
 //        refreshAllTab();
-        
-        switch (frameType) {
-            case player:
-                saveSinglePlayer();
-                break;
-            case game:
-                saveGame();
-                break;
-            case tab:
-                saveTab();
-                break;
-            case full:
-                saveFull();
-                break;
-		default:
-			break;
-        }
+
+			switch (frameType) {
+			case player:
+				saveSinglePlayer();
+				break;
+			case game:
+				saveGame();
+				break;
+			case tab:
+				saveTab();
+				break;
+			case full:
+				saveFull();
+				break;
+			default:
+				break;
+			}
+		}
     }
     
     /**

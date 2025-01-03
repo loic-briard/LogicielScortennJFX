@@ -60,6 +60,9 @@ public class MenuPrincipal extends JFrame {
     /** The flags window. */
     private JFrame flagsWindow;
     
+    /** The parameters window. */
+    private JFrame parametersWindow;
+    
     /** The actual screen. */
     private String actualScreen = "";
 
@@ -124,6 +127,7 @@ public class MenuPrincipal extends JFrame {
         menuBar.add(createMenuItem("Background", e -> openListBGWindow()));
         menuBar.add(createMenuItem("Players", e -> openListPlayersWindow()));
         menuBar.add(createMenuItem("Flags", e -> openListFlagsWindow()));
+        menuBar.add(createMenuItem("Parameters", e -> openListParametersWindow()));
         setJMenuBar(menuBar);
     }	
 
@@ -192,6 +196,19 @@ public class MenuPrincipal extends JFrame {
      * Open list flags window.
      */
     private void openListFlagsWindow() {
+        if (flagsWindow == null || !flagsWindow.isVisible()) {
+            try {
+                flagsWindow = new ListOfFlag();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            flagsWindow.toFront();
+            flagsWindow.setState(JFrame.NORMAL);
+        }
+    }
+    
+    private void openListParametersWindow() {
         if (flagsWindow == null || !flagsWindow.isVisible()) {
             try {
                 flagsWindow = new ListOfFlag();
