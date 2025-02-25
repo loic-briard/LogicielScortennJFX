@@ -14,6 +14,10 @@
                     "positionX": 738,
                     "positionY": 403
                 },
+                "Country": {
+                    "positionX": 1060,
+                    "positionY": 215
+                },
                 "Rank": {
                     "positionX": 869,
                     "positionY": 358
@@ -81,6 +85,10 @@
                 "ImgJoueur": {
                     "positionX": 1253,
                     "positionY": 403
+                },
+                "Country": {
+                    "positionX": 1060,
+                    "positionY": 215
                 },
                 "Rank": {
                     "positionX": 1351,
@@ -190,6 +198,12 @@
             "visible": true,
             "font": "Arial,1,25",
             "color": "0,0,0",
+            "taille": 0
+        },
+        "Country": {
+            "visible": true,
+            "font": "Arial,1,25",
+            "color": "255,255,255",
             "taille": 0
         },
         "CityResidence": {

@@ -26,6 +26,7 @@ import Diffusion.WindowBroadcastPublic;
 import Event.Evenement;
 import Event.ListOfEventsFrame;
 import Flags.ListOfFlag;
+import GlobalSettings.GlobalSettingsUI;
 import Players.Joueur;
 import Players.ListOfPlayersFrame;
 
@@ -59,9 +60,6 @@ public class MenuPrincipal extends JFrame {
     
     /** The flags window. */
     private JFrame flagsWindow;
-    
-    /** The parameters window. */
-    private JFrame parametersWindow;
     
     /** The actual screen. */
     private String actualScreen = "";
@@ -182,7 +180,7 @@ public class MenuPrincipal extends JFrame {
     private void openListPlayersWindow() {
         if (listPlayersWindow == null || !listPlayersWindow.isVisible()) {
             try {
-                listPlayersWindow = new ListOfPlayersFrame();
+                listPlayersWindow = new ListOfPlayersFrame(this);
             } catch (SQLException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
@@ -209,16 +207,17 @@ public class MenuPrincipal extends JFrame {
     }
     
     private void openListParametersWindow() {
-        if (flagsWindow == null || !flagsWindow.isVisible()) {
-            try {
-                flagsWindow = new ListOfFlag();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        } else {
-            flagsWindow.toFront();
-            flagsWindow.setState(JFrame.NORMAL);
-        }
+    	GlobalSettingsUI.openListParametersWindow();
+//        if (flagsWindow == null || !flagsWindow.isVisible()) {
+//            try {
+//                flagsWindow = new ListOfFlag();
+//            } catch (SQLException ex) {
+//                ex.printStackTrace();
+//            }
+//        } else {
+//            flagsWindow.toFront();
+//            flagsWindow.setState(JFrame.NORMAL);
+//        }
     }
     
     /**
@@ -442,6 +441,7 @@ public class MenuPrincipal extends JFrame {
         } else if((int) spinnerNbJoueur.getValue() == 0) {
             blinkComponentBorder(spinnerNbJoueur, 3);
         } else {
+//        	System.out.println(GlobalSettings.getInstance().getNameMaxLength());
             ArrayList<Joueur> selectedPlayers = athleteSelection.getSelectedPlayers();
             displaySelectedPlayers(selectedPlayers);
             createDiffusionWindow(selectedPlayers);
@@ -733,7 +733,7 @@ public class MenuPrincipal extends JFrame {
      *
      * @throws SQLException the SQL exception
      */
-    public static void refreshPlayerTableCombobox() throws SQLException {
+    public void refreshPlayerTableCombobox() throws SQLException {
         BDD_v2.getAllListPlayerTableName();
         bddPLayersComboBox.setModel(new DefaultComboBoxModel<>(BDD_v2.tabBdd.toArray(new String[0])));
     }

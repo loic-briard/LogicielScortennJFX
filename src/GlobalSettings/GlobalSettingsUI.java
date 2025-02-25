@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 
 public class GlobalSettingsUI {
 
+    private static JFrame parametersWindow = null;
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(GlobalSettingsUI::createAndShowGUI);
     }
@@ -17,9 +19,10 @@ public class GlobalSettingsUI {
 
         // Création de la JFrame
         JFrame frame = new JFrame("Global Settings");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(400, 300);
         frame.setLayout(new GridBagLayout());
+        frame.setIconImage(new ImageIcon("icon.png").getImage());
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -27,20 +30,24 @@ public class GlobalSettingsUI {
 
         // Création des JLabels et JComboBoxes
         JLabel nameLabel = new JLabel("Name Max Length:");
-        JComboBox<Integer> nameComboBox = new JComboBox<>(generateOptions(settings.getNameMaxLength()));
-        nameComboBox.setSelectedItem(settings.getNameMaxLength());
+        JSpinner nameSpinner = new JSpinner();
+        nameSpinner.setValue(settings.getNameMaxLength());
 
         JLabel surnameLabel = new JLabel("Surname Max Length:");
-        JComboBox<Integer> surnameComboBox = new JComboBox<>(generateOptions(settings.getSurnameMaxLength()));
-        surnameComboBox.setSelectedItem(settings.getSurnameMaxLength());
+        JSpinner surnameSpinner = new JSpinner();
+        surnameSpinner.setValue(settings.getSurnameMaxLength());
 
         JLabel cityResidenceLabel = new JLabel("City Residence Max Length:");
-        JComboBox<Integer> cityResidenceComboBox = new JComboBox<>(generateOptions(settings.getCityResidenceMaxLength()));
-        cityResidenceComboBox.setSelectedItem(settings.getCityResidenceMaxLength());
+        JSpinner cityResidenceSpinner = new JSpinner();
+        cityResidenceSpinner.setValue(settings.getCityResidenceMaxLength());
 
         JLabel birthPlaceLabel = new JLabel("Birth Place Max Length:");
-        JComboBox<Integer> birthPlaceComboBox = new JComboBox<>(generateOptions(settings.getBirthPlaceMaxLength()));
-        birthPlaceComboBox.setSelectedItem(settings.getBirthPlaceMaxLength());
+        JSpinner birthPlaceSpinner = new JSpinner();
+        birthPlaceSpinner.setValue(settings.getBirthPlaceMaxLength());
+        
+        JLabel spaceLabel = new JLabel("Space Length:");
+        JSpinner spaceSpinner = new JSpinner();
+        spaceSpinner.setValue(settings.getSpaceLength());
 
         // Ajout des composants à la JFrame
         gbc.gridx = 0;
@@ -48,28 +55,35 @@ public class GlobalSettingsUI {
         frame.add(nameLabel, gbc);
 
         gbc.gridx = 1;
-        frame.add(nameComboBox, gbc);
+        frame.add(nameSpinner, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
         frame.add(surnameLabel, gbc);
 
         gbc.gridx = 1;
-        frame.add(surnameComboBox, gbc);
+        frame.add(surnameSpinner, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 2;
         frame.add(cityResidenceLabel, gbc);
 
         gbc.gridx = 1;
-        frame.add(cityResidenceComboBox, gbc);
+        frame.add(cityResidenceSpinner, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
         frame.add(birthPlaceLabel, gbc);
 
         gbc.gridx = 1;
-        frame.add(birthPlaceComboBox, gbc);
+        frame.add(birthPlaceSpinner, gbc);
+        
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        frame.add(spaceLabel, gbc);
+        
+        gbc.gridx = 1;
+        frame.add(spaceSpinner, gbc);
 
         // Bouton pour enregistrer les valeurs
         JButton saveButton = new JButton("Save");
@@ -77,17 +91,21 @@ public class GlobalSettingsUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Mise à jour des valeurs dans GlobalSettings
-                settings.setNameMaxLength((Integer) nameComboBox.getSelectedItem());
-                settings.setSurnameMaxLength((Integer) surnameComboBox.getSelectedItem());
-                settings.setCityResidenceMaxLength((Integer) cityResidenceComboBox.getSelectedItem());
-                settings.setBirthPlaceMaxLength((Integer) birthPlaceComboBox.getSelectedItem());
+                settings.setNameMaxLength((Integer) nameSpinner.getValue());
+                settings.setSurnameMaxLength((Integer) surnameSpinner.getValue());
+                settings.setCityResidenceMaxLength((Integer) cityResidenceSpinner.getValue());
+                settings.setBirthPlaceMaxLength((Integer) birthPlaceSpinner.getValue());
+                settings.setSpaceLength((Integer) spaceSpinner.getValue());
+                
+                settings.saveSettingsToJson();
 
                 JOptionPane.showMessageDialog(frame, "Settings updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                frame.dispose();
             }
         });
 
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         frame.add(saveButton, gbc);
@@ -97,11 +115,15 @@ public class GlobalSettingsUI {
         frame.setVisible(true);
     }
 
-    private static Integer[] generateOptions(int maxLength) {
-        Integer[] options = new Integer[maxLength + 1];
-        for (int i = 1; i <= maxLength; i++) {
-            options[i] = i;
+    public static void openListParametersWindow() {
+        if (parametersWindow == null || !parametersWindow.isVisible()) {
+            parametersWindow = new JFrame("Global Settings");
+            parametersWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            createAndShowGUI();
+        } else {
+            parametersWindow.toFront();
+            parametersWindow.setState(JFrame.NORMAL);
         }
-        return options;
     }
 }
+

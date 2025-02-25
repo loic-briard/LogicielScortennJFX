@@ -84,6 +84,8 @@ public class WindowTournamentTree extends JFrame {
 	
 	/** The zoom background. */
 	private ZoomablePanel zoomBackground;
+	
+	private JComboBox<String>[] tabComboBox;
 
 	/**
 	 * Instantiates a new window tournament tree.
@@ -95,6 +97,7 @@ public class WindowTournamentTree extends JFrame {
 	 * @throws ClassNotFoundException the class not found exception
 	 * @throws SQLException the SQL exception
 	 */
+	@SuppressWarnings("unchecked")
 	public WindowTournamentTree(ArrayList<Joueur> selectedJoueurs, Evenement event,
 			WindowBroadcastPublic diffusionFrame, int nbJoueur) throws ClassNotFoundException, SQLException {
 		this.selectedJoueurs = selectedJoueurs;
@@ -104,14 +107,16 @@ public class WindowTournamentTree extends JFrame {
 		this.tabPlayerForTree = new PlayerForDiffusion[nbJoueur];
 		this.playerPanel = new JPanel[4];
 		if(this.selectedJoueurs.get(this.selectedJoueurs.size()-1).getNom() != "QUALIFIER")
-			this.selectedJoueurs.add(this.selectedJoueurs.size(), new Joueur(0, "men", "QUALIFIER", " ", "QUALIFIER", " ",
+			this.selectedJoueurs.add(this.selectedJoueurs.size(), new Joueur(0, "men", "QUALIFIER", " ", "QUALIFIER", " "," ",
 				" ", "clear.png", 0, 0, " ", 0, 0, " ", " ", " "," "));
+		tabComboBox = new JComboBox[this.nbJoueur];
 		
 		setupFrame();
 		this.panelAnimationConfiguration = new PanelAnimationConfiguration(this);
 		setupPanels();
 		setupBottomPanel();
 		finalizeSetup();
+		
 
 		playerForDifusionSolo = new PlayerForDiffusion(this.event, windowBroadcastPublic, panelAnimationConfiguration,"player", 0);
 		playerForDifusionGame1 = new PlayerForDiffusion(this.event, windowBroadcastPublic, panelAnimationConfiguration,"game", 0);
@@ -226,6 +231,7 @@ public class WindowTournamentTree extends JFrame {
 	private void addPlayerSelection(JPanel panel, int playerIndex, int panelIndex) {
 		JComboBox<String> comboBox = new JComboBox<>(
 				selectedJoueurs.stream().map(Joueur::getDisplay_name).toArray(String[]::new));
+		
 		comboBox.setEditable(true);
 		AutoCompleteDecorator.decorate(comboBox);
 		comboBox.setSelectedIndex(-1);
@@ -233,6 +239,8 @@ public class WindowTournamentTree extends JFrame {
 		JButton playerButton = new JButton("Player");
 		playerButton.addActionListener(e -> handlePlayerSelection(comboBox, playerIndex, panelIndex));
 		int ligne = playerIndex + (nbJoueur / 4) * panelIndex+1;
+		
+		tabComboBox[ligne-1] = comboBox;
 		JPanel comboButtonPanel = new JPanel();
 		comboButtonPanel.add(new JLabel(ligne+""));
 		comboButtonPanel.add(comboBox);
@@ -424,18 +432,18 @@ public class WindowTournamentTree extends JFrame {
 	 */
 	private void handleGameSelection(int buttonIndex, int indexPanel) {
 		// Retrieve the selected players from the corresponding section
-		int playerIndex1 = buttonIndex * 2; // Calculate the index of the first player
-		int playerIndex2 = playerIndex1 + 1; // Calculate the index of the second player
+		int playerIndex1 =  (2 * buttonIndex + 1) + ((nbJoueur / 4) * indexPanel)-1; // Calculate the index of the first player
+		int playerIndex2 =  (2 * buttonIndex + 1) + ((nbJoueur / 4) * indexPanel); // Calculate the index of the second player
 		windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_1());
 		windowBroadcastPublic.removeLayerContent(JLayeredPane.MODAL_LAYER);// nettoyage du layer
 		// Check if the indices are within bounds before accessing the list
 //		System.out.println(" index Button: " + buttonIndex + ", index P1: " + playerIndex1 + ", index P2: " + playerIndex2);
 		displayFondJoueur("game");
-
+		System.out.println("P1 : "+playerIndex1+", P2 : "+playerIndex2);
 //		SwingUtilities.invokeLater(() -> {
 			if (playerIndex1 < selectedJoueurs.size() && playerIndex2 < selectedJoueurs.size()) {
-				Joueur Player1 = foundPlayer(getSelectedPlayerName(playerPanel[indexPanel], playerIndex1));
-				Joueur Player2 = foundPlayer(getSelectedPlayerName(playerPanel[indexPanel], playerIndex2));
+				Joueur Player1 = foundPlayer((String) tabComboBox[playerIndex1].getSelectedItem());
+				Joueur Player2 = foundPlayer((String) tabComboBox[playerIndex2].getSelectedItem());
 //			PlayerForDiffusion PlayerDetails1 = new PlayerForDiffusion(this.eventName(), windowBroadcastPublic, "game",0);
 //			PlayerForDiffusion PlayerDetails2 = new PlayerForDiffusion(this.eventName(), windowBroadcastPublic, "game",1);
 				int ligne1 = (2 * buttonIndex + 1) + ((nbJoueur / 4) * indexPanel);
@@ -492,12 +500,13 @@ public class WindowTournamentTree extends JFrame {
 		windowBroadcastPublic.removeLayerContent(JLayeredPane.MODAL_LAYER);// nettoyage du layer
 		
 		displayFondJoueur("tab");
-
+		
+		System.out.println("indexpanel : "+indexPanel+", nbjoueur : "+nbJoueur);
 		
 //		SwingUtilities.invokeLater(() -> {
 			for (int i = 0; i < (nbJoueur / 4); i++) {
 				// System.out.println((nbJoueur / 4) * indexPanel + i);
-				Joueur Player = foundPlayer(getSelectedPlayerName(playerPanel[indexPanel], i));
+				Joueur Player = foundPlayer((String) tabComboBox[(nbJoueur / 4) * indexPanel + i].getSelectedItem());
 				PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.event, windowBroadcastPublic,
 						panelAnimationConfiguration, "tab", i);
 				int ligne = (nbJoueur / 4) * indexPanel + i + 1;
@@ -528,6 +537,11 @@ public class WindowTournamentTree extends JFrame {
 				windowConfigPlayer.addTabJoueur(tabPool);
 				System.out.println("    TAB player to display  : " + playerForDiffusion.getJoueur().getNom());
 			}
+			System.out.println(ListSelectedJoueur.size());
+			for (PlayerForDiffusion playerForDiffusion : ListSelectedJoueur) {
+				
+				System.out.println(playerForDiffusion.getName());
+			}
 			windowConfigPlayer.setTabPolice(new TabPolice(ListSelectedJoueur, windowConfigPlayer));
 			windowConfigPlayer.pack();
 //		});
@@ -554,7 +568,7 @@ public class WindowTournamentTree extends JFrame {
 			int playersInThisRow = totalPlayers / 4;
 			// iteration sur le nombre de joueur dans la partie de l'arbre du tournoi
 			for (int i = 0; i < playersInThisRow; i++) {
-				Joueur Player = foundPlayer(getSelectedPlayerName(playerPanel[y], i));
+				Joueur Player = foundPlayer((String) tabComboBox[y * (totalPlayers / 4) + i].getSelectedItem());
 				if (Player != null) {
 					int ligne = y * (totalPlayers / 4) + i + 1;
 					if (tabPlayerForTree[ligne - 1] == null) {
@@ -654,27 +668,6 @@ public class WindowTournamentTree extends JFrame {
 		return playerForDifusionListInit;
 	}
 
-	/**
-	 * Gets the selected player name.
-	 *
-	 * @param panel the panel
-	 * @param playerIndex the player index
-	 * @return the selected player name
-	 */
-	private String getSelectedPlayerName(JPanel panel, int playerIndex) {
-		Component[] components = panel.getComponents();
-		if (playerIndex < components.length && components[playerIndex] instanceof JPanel) {
-			JPanel comboButtonPanel = (JPanel) components[playerIndex];
-			Component[] subComponents = comboButtonPanel.getComponents();
-			if (subComponents.length == 2 && subComponents[0] instanceof JComboBox) {
-				@SuppressWarnings("unchecked")
-				JComboBox<String> comboBox = (JComboBox<String>) subComponents[0];
-				return (String) comboBox.getSelectedItem();
-			}
-		}
-		return null;
-	}
-	
 	/**
 	 * Display fond joueur.
 	 *

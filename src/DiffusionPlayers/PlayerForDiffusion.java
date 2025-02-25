@@ -25,6 +25,7 @@ import Diffusion.PanelAnimationConfiguration;
 import Diffusion.WindowBroadcastPublic;
 import Diffusion.WindowConfigurationPlayerInfos;
 import Event.Evenement;
+import GlobalSettings.GlobalSettings;
 import Main.BDD_v2;
 import Main.ImageUtility;
 import Players.Joueur;
@@ -56,6 +57,9 @@ public class PlayerForDiffusion extends JPanel{
 	
 	/** The player acro. */
 	public JPanel playerAcro;
+	
+	/** The player acro. */
+	public JPanel playerCountry;
 	
 	/** The player rank. */
 	public JPanel playerRank;
@@ -106,6 +110,9 @@ public class PlayerForDiffusion extends JPanel{
 	/** The Acro label. */
 	public JLabel AcroLabel;
 	
+	/** The Acro label. */
+	public JLabel CountryLabel;
+	
 	/** The Rank label. */
 	public JLabel RankLabel;
 	
@@ -148,6 +155,9 @@ public class PlayerForDiffusion extends JPanel{
 	
 	/** The police acro. */
 	public chosenPolice policeAcro;
+	
+	/** The police acro. */
+	public chosenPolice policeCountry;
 	
 	/** The police rank. */
 	public chosenPolice policeRank;
@@ -227,8 +237,8 @@ public class PlayerForDiffusion extends JPanel{
 	
 	/** The mouse adapter panel. */
 	private MouseAdapterPanel mouseAdapterPanel;
-//	private Evenement event;
-//	private BackgroundPanel backgroundPanel;
+
+	private GlobalSettings globalsettings;
 	
 	/**
  * Gets the mouse adapter panel.
@@ -335,6 +345,8 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 		recupInfosPlayer(getEmplacementPlayer());
 		mouseAdapterPanel = new MouseAdapterPanel(playerfordifusion2, playerfordifusion2, this.frameForDiffusion);
 		
+		globalsettings = GlobalSettings.getInstance();
+		
 //		this.frameForDiffusion.removeLayerContent(55);
 //		backgroundPanel = new BackgroundPanel(event.getBackground().getImage_2());
 //		backgroundPanel.setOpaque(false);
@@ -351,6 +363,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 		policeName = createPolice() ;
 		policeSurname = createPolice() ;
 		policeAcro = createPolice() ;
+		policeCountry = createPolice() ;
 		policeRank = createPolice() ;
 		policeBirthDate = createPolice() ;
 		policeBirthPlace = createPolice() ;
@@ -380,7 +393,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	 * Creates the player panels.
 	 */
 	private void createPlayerPanels() {
-	    String[] panelNames = {"Name", "Surname", "ImgJoueur", "ImgFlag", "Acronyme", "Rank", "Birthdate", "Birthplace", "Height", "Weight", "Hand", "Age", "Prizetotal", "CityResidence","Seeding", "Line"};
+	    String[] panelNames = {"Name", "Surname", "ImgJoueur", "ImgFlag", "Acronyme", "Country", "Rank", "Birthdate", "Birthplace", "Height", "Weight", "Hand", "Age", "Prizetotal", "CityResidence","Seeding", "Line"};
 	    for (String name : panelNames) {
 	        JPanel panel = createPlayerPanel(name);
 	        switch (name) {
@@ -389,6 +402,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	            case "ImgJoueur": playerImg = panel; break;
 	            case "ImgFlag": playerFlag = panel; break;
 	            case "Acronyme": playerAcro = panel; break;
+	            case "Country": playerCountry = panel; break;
 	            case "Rank": playerRank = panel; break;
 	            case "Birthdate": playerBirthdate = panel; break;
 	            case "Birthplace": playerBirthplace = panel; break;
@@ -437,6 +451,14 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	    };
 	}
 	
+	private String substringMethod(String value, int length) {
+		if (value.length() <= length) {
+	        return value;
+	    } else {
+	        return value.substring(0, length);
+	    }
+	}
+	
 	/**
 	 * Sets the player.
 	 *
@@ -447,21 +469,22 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	 */
 	public void setPlayer(Joueur joueur, int ligne) throws ClassNotFoundException, SQLException {
 	    this.joueur = joueur;
-	    
-	    // Créer une map pour stocker les informations du joueur
+	    System.out.println("taille infos : "+"name : "+globalsettings.getNameMaxLength()+", Surname : "+globalsettings.getSurnameMaxLength());
+	    // Créer une map pour stocker les informations du joueurS
 	    Map<JPanel, LabelInfo> playerInfo = new LinkedHashMap<>();
-	    playerInfo.put(playerName, new LabelInfo(joueur.getNom(), policeName));
-	    playerInfo.put(playerSurname, new LabelInfo(joueur.getPrenom(), policeSurname));
+	    playerInfo.put(playerName, new LabelInfo(substringMethod(joueur.getNom(), globalsettings.getNameMaxLength()) , policeName));
+	    playerInfo.put(playerSurname, new LabelInfo(substringMethod(joueur.getPrenom(), globalsettings.getSurnameMaxLength()), policeSurname));
 	    playerInfo.put(playerAcro, new LabelInfo(joueur.getNatio_acronyme(), policeAcro));
+	    playerInfo.put(playerCountry, new LabelInfo(joueur.getCountry(), policeCountry));
 	    playerInfo.put(playerRank, new LabelInfo(String.valueOf(joueur.getRank()), policeRank));
 	    playerInfo.put(playerBirthdate, new LabelInfo(joueur.getBirthDate(), policeBirthDate));
-	    playerInfo.put(playerBirthplace, new LabelInfo(joueur.getBirthPlace(), policeBirthPlace));
+	    playerInfo.put(playerBirthplace, new LabelInfo(substringMethod(joueur.getBirthPlace(), globalsettings.getBirthPlaceMaxLength()), policeBirthPlace));
 	    playerInfo.put(playerHeight, new LabelInfo(String.valueOf(joueur.getTaille()), policeHeight));
 	    playerInfo.put(playerWeight, new LabelInfo(String.valueOf(joueur.getWeight()), policeWeight));
 	    playerInfo.put(playerHand, new LabelInfo(joueur.getMain(), policeHand));
 	    playerInfo.put(playerAge, new LabelInfo(String.valueOf(joueur.getAge()), policeAge));
 	    playerInfo.put(playerPrizetotal, new LabelInfo(joueur.getPrizetotal(), policePrizetotal));
-	    playerInfo.put(playerCityresidence, new LabelInfo(joueur.getCityResidence(), policeCityresidence));
+	    playerInfo.put(playerCityresidence, new LabelInfo(substringMethod(joueur.getCityResidence(), globalsettings.getCityResidenceMaxLength()), policeCityresidence));
 	    playerInfo.put(playerTeteDeSerie, new LabelInfo(joueur.getTeteDeSerie(), policeTeteDeSerie));
 	    playerInfo.put(playerLine, new LabelInfo(String.valueOf(ligne), policeLine));
 	    // Mettre à jour tous les panneaux de texte
@@ -517,7 +540,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	    panelPlayerGlobal.setOpaque(false);
 	    panelPlayerGlobal.setName(this.joueur.getNom());
 	    // Ajouter tous les panneaux au panneau global
-	    Arrays.asList(playerName, playerSurname, playerAcro, playerRank, playerBirthdate, playerBirthplace,
+	    Arrays.asList(playerName, playerSurname, playerAcro,playerCountry, playerRank, playerBirthdate, playerBirthplace,
 	                  playerHeight, playerWeight, playerHand, playerAge, playerPrizetotal, playerCityresidence,playerTeteDeSerie,
 	                  playerLine, playerImg, playerFlag).forEach(panelPlayerGlobal::addComponent);
 	}
@@ -685,7 +708,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	private void setDefaultPositions() {
 	    System.out.println("! Config in JSON null --> defaut config");
 	    int y = 0;
-	    for (JPanel panel : Arrays.asList(playerName, playerSurname, playerAcro, playerRank, playerBirthdate, 
+	    for (JPanel panel : Arrays.asList(playerName, playerSurname, playerAcro, playerCountry, playerRank, playerBirthdate, 
 	                                      playerBirthplace, playerHeight, playerWeight, playerHand, playerAge, 
 	                                      playerPrizetotal, playerCityresidence, playerTeteDeSerie, playerLine)) {
 	        panel.setLocation(10, y);
@@ -707,6 +730,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	    elements.put("Surname", new Object[]{playerSurname, policeSurname});
 	    elements.put("Name", new Object[]{playerName, policeName});
 	    elements.put("Acronyme", new Object[]{playerAcro, policeAcro});
+	    elements.put("Country", new Object[]{playerCountry, policeCountry});
 	    elements.put("Rank", new Object[]{playerRank, policeRank});
 	    elements.put("Birthdate", new Object[]{playerBirthdate, policeBirthDate});
 	    elements.put("Birthplace", new Object[]{playerBirthplace, policeBirthPlace});
@@ -832,6 +856,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 		mapJoueurDetails.addDetails(this.playerImg, this.ImgLabel);
 		mapJoueurDetails.addDetails(this.playerFlag, this.FlagLabel);
 		mapJoueurDetails.addDetails(this.playerAcro, this.AcroLabel);
+		mapJoueurDetails.addDetails(this.playerCountry, this.CountryLabel);
 		mapJoueurDetails.addDetails(this.playerRank,this.RankLabel);
 		mapJoueurDetails.addDetails(this.playerBirthdate, this.birthdateLabel);
 		mapJoueurDetails.addDetails(this.playerBirthplace, this.birthPlaceLabel);

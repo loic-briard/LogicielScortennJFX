@@ -19,6 +19,7 @@ import javax.swing.border.*;
 import javax.swing.event.*;
 import Main.BDD_v2;
 import Main.ImageUtility;
+import Main.MenuPrincipal;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -58,6 +59,7 @@ public JTable playersTable;
 //	SwingWorker<Void, Void> currentWorker;
 	private static final int IMAGE_HEIGHT = 60;
 	
+	private MenuPrincipal parentFrame;
 
 	/**
 	 * Instantiates a new list of players frame.
@@ -65,7 +67,8 @@ public JTable playersTable;
 	 * @throws SQLException the SQL exception
 	 * @throws ClassNotFoundException the class not found exception
 	 */
-	public ListOfPlayersFrame() throws SQLException, ClassNotFoundException {
+	public ListOfPlayersFrame(MenuPrincipal menuPrincipal) throws SQLException, ClassNotFoundException {
+		this.parentFrame = menuPrincipal;
 		setTitle("List of Players");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(1400, 600); // Augmentez la largeur de la fen�tre pour mieux afficher les donn�es
@@ -267,6 +270,7 @@ public JTable playersTable;
 							scrollPane.setVisible(true);
 							deleteTableButton.setVisible(true);
 							exportButton.setVisible(true);
+							parentFrame.refreshPlayerTableCombobox();
 		                }
 						
 //						bddPLayersComboBox = new JComboBox<>(new DefaultComboBoxModel<>(BDD_v2.tabBdd.toArray(new String[0])));
@@ -291,6 +295,7 @@ public JTable playersTable;
 						updateComboboxTable();
 						bddPLayersComboBox.setSelectedIndex(-1);
 						scrollPane.setVisible(false);
+						parentFrame.refreshPlayerTableCombobox();
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}
@@ -311,24 +316,25 @@ public JTable playersTable;
 					String playerSurname = (String) playersTable.getValueAt(selectedRow, 3);
 					String DisplayName = (String) playersTable.getValueAt(selectedRow, 4);
 					String acroNat = (String) playersTable.getValueAt(selectedRow, 5);
-					ImageIcon img_flag = (ImageIcon) playersTable.getValueAt(selectedRow, 6);
+					String country = (String) playersTable.getValueAt(selectedRow, 6);
+					ImageIcon img_flag = (ImageIcon) playersTable.getValueAt(selectedRow, 7);
 					String string_flag = img_flag.getDescription();
 //					ImageUtility flag = (ImageUtility) playersTable.getValueAt(selectedRow, 6);
-					ImageIcon img_Joueur = (ImageIcon) playersTable.getValueAt(selectedRow, 7);
+					ImageIcon img_Joueur = (ImageIcon) playersTable.getValueAt(selectedRow, 8);
 					String string_joueur = img_Joueur.getDescription();
 //					ImageUtility imgJoueur = (ImageUtility) playersTable.getValueAt(selectedRow, 7);
-					String ranking = (String) playersTable.getValueAt(selectedRow, 8);
-					String prize = (String) playersTable.getValueAt(selectedRow, 9);
-					String height = (String) playersTable.getValueAt(selectedRow, 10);
-					String hand = (String) playersTable.getValueAt(selectedRow, 11);
-					String age = (String) playersTable.getValueAt(selectedRow, 12);
-					String weight = (String) playersTable.getValueAt(selectedRow, 13);
-					String bithdate = (String) playersTable.getValueAt(selectedRow, 14);
-					String birthplace = (String) playersTable.getValueAt(selectedRow, 15);
-					String cityResidence = (String) playersTable.getValueAt(selectedRow, 16);
-					String teteDeSerie = (String) playersTable.getValueAt(selectedRow, 17);
+					String ranking = (String) playersTable.getValueAt(selectedRow, 9);
+					String prize = (String) playersTable.getValueAt(selectedRow, 10);
+					String height = (String) playersTable.getValueAt(selectedRow, 11);
+					String hand = (String) playersTable.getValueAt(selectedRow, 12);
+					String age = (String) playersTable.getValueAt(selectedRow, 13);
+					String weight = (String) playersTable.getValueAt(selectedRow, 14);
+					String bithdate = (String) playersTable.getValueAt(selectedRow, 15);
+					String birthplace = (String) playersTable.getValueAt(selectedRow, 16);
+					String cityResidence = (String) playersTable.getValueAt(selectedRow, 17);
+					String teteDeSerie = (String) playersTable.getValueAt(selectedRow, 18);
 
-					new ModifyPlayersFrame(ListOfPlayersFrame.this, ID, sexe, playerName, playerSurname, DisplayName, acroNat, string_flag, bithdate, string_joueur, ranking, height, hand, age, weight, prize,
+					new ModifyPlayersFrame(ListOfPlayersFrame.this, ID, sexe, playerName, playerSurname, DisplayName, acroNat,country, string_flag, bithdate, string_joueur, ranking, height, hand, age, weight, prize,
 							birthplace, cityResidence,teteDeSerie, (String) bddPLayersComboBox.getSelectedItem(),selectedRow);
 				}
 			}
@@ -421,6 +427,12 @@ public JTable playersTable;
 					scrollPane.setVisible(true);
 					deleteTableButton.setVisible(true);
 					exportButton.setVisible(true);
+					try {
+						parentFrame.refreshPlayerTableCombobox();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
                 }
 			}
 		});

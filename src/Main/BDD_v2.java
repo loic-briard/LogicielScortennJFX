@@ -128,9 +128,9 @@ public class BDD_v2 {
 //		requete += "DROP TABLE WTA IF EXISTS;";
 //		requete += "DROP TABLE ATP IF EXISTS;";
 //		requete += "DROP TABLE LIST_8_JOUEUR IF EXISTS;";
-//		requete += "DROP TABLE Background IF EXISTS;";
-//		requete += "DROP TABLE Event IF EXISTS;";
-//		requete += "DROP TABLE Flag IF EXISTS;";
+		requete += "DROP TABLE Background IF EXISTS;";
+		requete += "DROP TABLE Event IF EXISTS;";
+//		requete += "DROP TABLE FLAG IF EXISTS;";
 
 		executerRequeteSQL(requete);
 
@@ -145,13 +145,13 @@ public class BDD_v2 {
 	 */
 	public static void creationdesTables() throws ClassNotFoundException, SQLException {
 		String requete = "";
-		requete += "CREATE TABLE Background (Nom VARCHAR(20) PRIMARY KEY, Img_1 varchar(255), Img_2 varchar(255), "
+		requete += "CREATE TABLE Background (Nom VARCHAR(120) PRIMARY KEY, Img_1 varchar(255), Img_2 varchar(255), "
 				+ "Img_3 varchar(255), Img_4 varchar(255));";
 		requete += "CREATE TABLE Event (Nom VARCHAR(20) PRIMARY KEY, NomBG VARCHAR(20));";// , FOREIGN KEY (NomBG)
 																							// REFERENCES Background
 																							// (Nom)
 
-		requete += "CREATE TABLE Flag (NomAcro VARCHAR(10) PRIMARY KEY, ImgFlag varchar(255));";
+		requete += "CREATE TABLE Flag (NomAcro VARCHAR(10) PRIMARY KEY,NomPays VARCHAR(125), ImgFlag varchar(255));";
 //		requete += "CREATE TABLE CUSTOM (id int PRIMARY KEY, Sexe varchar(15), Nom varchar(100), Prenom varchar(100)," + "NomAfficher varchar(100), Nat varchar(10), Birthdate varchar(50),"
 //				+ "ImgJoueur varchar(255), Ranking int, height varchar(10), hand varchar(25), age varchar(10),"
 //				+ "weight varchar(20), PRIZETOTAL varchar(60),BIRTHPLACE varchar(200),CITYRESIDENCE varchar(200),TETEDESERIE varchar(20)," + "FOREIGN KEY (Nat) REFERENCES Flag(NomAcro))";
@@ -181,7 +181,7 @@ public class BDD_v2 {
 	public static void creationNewTable(String name) throws ClassNotFoundException, SQLException {
 		String requete = "";
 		requete += "CREATE TABLE " + name + " (id int PRIMARY KEY, " + "Sexe varchar(15), " + "Nom varchar(100), "
-				+ "Prenom varchar(100)," + "NomAfficher varchar(100), " + "Nat varchar(10), " + "Birthdate varchar(50),"
+				+ "Prenom varchar(100)," + "NomAfficher varchar(100), " + "Nat varchar(10), " + "Country varchar(100), " + "Birthdate varchar(50),"
 				+ "ImgJoueur varchar(255), " + "Ranking int, " + "height varchar(10), " + "hand varchar(25), "
 				+ "age varchar(10)," + "weight varchar(20), " + "PRIZETOTAL varchar(60)," + "BIRTHPLACE varchar(200),"
 				+ "CITYRESIDENCE varchar(200)," + "TETEDESERIE varchar(20),"
@@ -208,7 +208,6 @@ public class BDD_v2 {
 				+ background.getNom() + "', '" + background.getImage_1() + "', '" + background.getImage_2() + "', '"
 				+ background.getImage_3() + "', '" + background.getImage_4() + "', '" + background.getImage_5()
 				+ "');");
-
 		executerRequeteSQL(requete.toString());
 		System.out.println("  + Background : " + background.getNom() + " added");
 	}
@@ -240,11 +239,13 @@ public class BDD_v2 {
 	public static void insertionDrapeauDansBDD(Drapeau drapeau) throws SQLException, ClassNotFoundException {
 		StringBuilder requete = new StringBuilder("");
 
-		requete.append("INSERT INTO Flag (NomAcro, ImgFlag) VALUES" + "('" + drapeau.getNom() + "', '"
-				+ drapeau.getImageDrapeau() + "');");
+		requete.append("INSERT INTO Flag (NomAcro, NomPays, ImgFlag) VALUES" 
+		+ "('" + drapeau.getNom() + "', '"
+			   + drapeau.getPays() + "', '"
+			   + drapeau.getImageDrapeau() + "');");
 
 		executerRequeteSQL(requete.toString());
-		System.out.println("  + Drapeau de : " + drapeau.getNom() + " added");
+		System.out.println("  + Drapeau de : " + drapeau.getNom()+", "+ drapeau.getPays() + " added");
 	}
 
 	/**
@@ -259,8 +260,8 @@ public class BDD_v2 {
 			throws SQLException, ClassNotFoundException {
 		try {
 			String requete = "INSERT INTO " + bddName
-					+ " (id, Sexe, Nom, Prenom, NomAfficher, Nat, Birthdate, ImgJoueur, Ranking, height, hand, age, weight, PRIZETOTAL, BIRTHPLACE, CityResidence,TETEDESERIE)"
-					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
+					+ " (id, Sexe, Nom, Prenom, NomAfficher, Nat, Country, Birthdate, ImgJoueur, Ranking, height, hand, age, weight, PRIZETOTAL, BIRTHPLACE, CityResidence,TETEDESERIE)"
+					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
 
 			try (PreparedStatement preparedStatement = connection.prepareStatement(requete)) {
 				preparedStatement.setInt(1, joueur.getID());
@@ -269,17 +270,18 @@ public class BDD_v2 {
 				preparedStatement.setString(4, joueur.getPrenom());
 				preparedStatement.setString(5, joueur.getDisplay_name());
 				preparedStatement.setString(6, joueur.getNatio_acronyme());
-				preparedStatement.setString(7, joueur.getBirthDate());
-				preparedStatement.setString(8, joueur.getImgJoueur());
-				preparedStatement.setInt(9, joueur.getRank());
-				preparedStatement.setString(10, joueur.getTaille() + "");
-				preparedStatement.setString(11, joueur.getMain());
-				preparedStatement.setInt(12, joueur.getAge());
-				preparedStatement.setString(13, joueur.getWeight() + "");
-				preparedStatement.setString(14, joueur.getPrizetotal());
-				preparedStatement.setString(15, joueur.getBirthPlace());
-				preparedStatement.setString(16, joueur.getCityResidence());
-				preparedStatement.setString(17, joueur.getTeteDeSerie());
+				preparedStatement.setString(7, joueur.getCountry());
+				preparedStatement.setString(8, joueur.getBirthDate());
+				preparedStatement.setString(9, joueur.getImgJoueur());
+				preparedStatement.setInt(10, joueur.getRank());
+				preparedStatement.setString(11, joueur.getTaille() + "");
+				preparedStatement.setString(12, joueur.getMain());
+				preparedStatement.setInt(13, joueur.getAge());
+				preparedStatement.setString(14, joueur.getWeight() + "");
+				preparedStatement.setString(15, joueur.getPrizetotal());
+				preparedStatement.setString(16, joueur.getBirthPlace());
+				preparedStatement.setString(17, joueur.getCityResidence());
+				preparedStatement.setString(18, joueur.getTeteDeSerie());
 
 				preparedStatement.executeUpdate();
 			}
@@ -335,6 +337,7 @@ public class BDD_v2 {
 				String prenom = resultSet.getString("Prenom");
 				String display_name = resultSet.getString("NomAfficher");
 				String natio_acronyme = resultSet.getString("Nat");
+				String country = resultSet.getString("Country");
 				String birthDate = resultSet.getString("Birthdate");
 				String imgJoueur = resultSet.getString("ImgJoueur");
 				int rank = resultSet.getInt("Ranking");
@@ -347,7 +350,7 @@ public class BDD_v2 {
 				String cityResidence = resultSet.getString("CityResidence");
 				String teteDeSerie = resultSet.getString("TETEDESERIE");
 
-				joueur = new Joueur(id, sexe, nom, prenom, display_name, natio_acronyme, birthDate, imgJoueur, rank,
+				joueur = new Joueur(id, sexe, nom, prenom, display_name, natio_acronyme, country, birthDate, imgJoueur, rank,
 						Integer.parseInt(taille), main, Integer.parseInt(age), Integer.parseInt(weight), prizetotal,
 						birthPlace, cityResidence, teteDeSerie);
 			}
@@ -378,6 +381,7 @@ public class BDD_v2 {
 				String prenom = resultSet.getString("Prenom");
 				String display_name = resultSet.getString("NomAfficher");
 				String natio_acronyme = resultSet.getString("Nat");
+				String country = resultSet.getString("Country");
 				String birthDate = resultSet.getString("Birthdate");
 				String imgJoueur = resultSet.getString("ImgJoueur");
 				int rank = resultSet.getInt("Ranking");
@@ -390,7 +394,7 @@ public class BDD_v2 {
 				String cityResidence = resultSet.getString("CityResidence");
 				String teteDeSerie = resultSet.getString("TETEDESERIE");
 
-				joueur = new Joueur(id, sexe, nom, prenom, display_name, natio_acronyme, birthDate, imgJoueur, rank,
+				joueur = new Joueur(id, sexe, nom, prenom, display_name, natio_acronyme, country, birthDate, imgJoueur, rank,
 						Integer.parseInt(taille), main, Integer.parseInt(age), Integer.parseInt(weight), prizetotal,
 						birthPlace, cityResidence, teteDeSerie);
 			}
@@ -420,6 +424,7 @@ public class BDD_v2 {
 				String prenom = resultSet.getString("Prenom");
 				String display_name = resultSet.getString("NomAfficher");
 				String natio_acronyme = resultSet.getString("Nat");
+				String country = resultSet.getString("Country");
 				String birthDate = resultSet.getString("Birthdate");
 				String imgJoueur = resultSet.getString("ImgJoueur");
 				int rank = resultSet.getInt("Ranking");
@@ -432,7 +437,7 @@ public class BDD_v2 {
 				String cityResidence = resultSet.getString("CityResidence");
 				String teteDeSerie = resultSet.getString("TETEDESERIE");
 
-				Joueur joueur = new Joueur(id, sexe, nom, prenom, display_name, natio_acronyme, birthDate, imgJoueur,
+				Joueur joueur = new Joueur(id, sexe, nom, prenom, display_name, natio_acronyme, country,birthDate, imgJoueur,
 						rank, Integer.parseInt(taille), main, Integer.parseInt(age), Integer.parseInt(weight),
 						prizetotal, birthPlace, cityResidence, teteDeSerie);
 				joueurs.add(joueur);
@@ -643,22 +648,21 @@ public class BDD_v2 {
 	 * @throws SQLException the SQL exception
 	 */
 	public static String[][] DataFlag() throws SQLException {
-		String requete = "SELECT Flag.NomAcro AS Acronyme, Flag.ImgFlag as Flag FROM Flag";
+		String requete = "SELECT NomAcro, NomPays, ImgFlag FROM Flag";
 
-		int rowCount = 0;
-		String[][] data = new String[compterNbElementsBDD("Flag")][2];
+		int rowCount = compterNbElementsBDD("Flag");
+		String[][] data = new String[rowCount][3];
 
 		try (Statement statement = connection.createStatement()) {
 			ResultSet resultSet = statement.executeQuery(requete);
-
-			while (resultSet.next()) {
-				rowCount++;
-				String acronyme = resultSet.getString("Acronyme");
-				String imagePath = resultSet.getString("Flag");
-
-				data[rowCount - 1][0] = acronyme;
-				data[rowCount - 1][1] = imagePath;
-			}
+			
+			int i = 0;
+	        while (resultSet.next()) {
+	            data[i][0] = resultSet.getString("NomAcro");
+	            data[i][1] = resultSet.getString("NomPays");
+	            data[i][2] = resultSet.getString("ImgFlag");
+	            i++;
+	        }
 		}
 		return data;
 	}
@@ -672,7 +676,7 @@ public class BDD_v2 {
 	 * @throws ClassNotFoundException the class not found exception
 	 */
 	public static String[][] DataJoueur(String bddName) throws SQLException, ClassNotFoundException {
-		String requete = "SELECT id, Sexe, Nom, Prenom, NomAfficher, Nat, Birthdate, ImgJoueur, Ranking, height, hand, age, "
+		String requete = "SELECT id, Sexe, Nom, Prenom, NomAfficher, Nat, Country, Birthdate, ImgJoueur, Ranking, height, hand, age, "
 				+ "weight, PRIZETOTAL, BIRTHPLACE, CITYRESIDENCE,TETEDESERIE FROM " + bddName;
 
 		// D�terminer la taille de la matrice
@@ -689,6 +693,7 @@ public class BDD_v2 {
 				String prenom = resultSet.getString("Prenom");
 				String nomAfficher = resultSet.getString("NomAfficher");
 				String nat = resultSet.getString("Nat");
+				String country = resultSet.getString("Country");
 				String flagImagePath = getFlagImagePathByAcronym(nat);
 				String birthdate = resultSet.getString("Birthdate");
 				String imgJoueur = resultSet.getString("ImgJoueur");
@@ -702,7 +707,7 @@ public class BDD_v2 {
 				String cityresidence = resultSet.getString("CITYRESIDENCE");
 				String teteDeSerie = resultSet.getString("TETEDESERIE");
 				// Stocker les donn�es dans la matrice
-				data[rowCount - 1] = new String[] { String.valueOf(id), sexe, nom, prenom, nomAfficher, nat,
+				data[rowCount - 1] = new String[] { String.valueOf(id), sexe, nom, prenom, nomAfficher, nat, country,
 						flagImagePath, imgJoueur, String.valueOf(ranking), prizetotal, height, hand, age, weight,
 						birthdate, birthplace, cityresidence, teteDeSerie };
 			}
@@ -834,7 +839,7 @@ public class BDD_v2 {
 	public static List<String[]> getData(String selectedBDD, int start, int pageSize) {
 		List<String[]> data = new ArrayList<>();
 
-		String requete = "SELECT id, Sexe, Nom, Prenom, NomAfficher, Nat, Birthdate, ImgJoueur, Ranking, height, hand, age, "
+		String requete = "SELECT id, Sexe, Nom, Prenom, NomAfficher, Nat, Country, Birthdate, ImgJoueur, Ranking, height, hand, age, "
 				+ "weight, PRIZETOTAL, BIRTHPLACE, CITYRESIDENCE,TETEDESERIE FROM " + selectedBDD + " LIMIT ?, ?";
 		System.out.println("  get all data PLayer from database : " + selectedBDD);
 
@@ -846,7 +851,7 @@ public class BDD_v2 {
 				while (resultSet.next()) {
 					String[] playerData = new String[] { resultSet.getString("id"), resultSet.getString("Sexe"),
 							resultSet.getString("Nom"), resultSet.getString("Prenom"),
-							resultSet.getString("NomAfficher"), resultSet.getString("Nat"),
+							resultSet.getString("NomAfficher"), resultSet.getString("Nat"),resultSet.getString("Country"),
 							resultSet.getString("ImgJoueur"), resultSet.getString("Ranking"),
 							resultSet.getString("PRIZETOTAL"), resultSet.getString("height"),
 							resultSet.getString("hand"), resultSet.getString("age"), resultSet.getString("weight"),
@@ -873,7 +878,7 @@ public class BDD_v2 {
 	public static String[] getObjectJoueur(String selectedBDD, String nomJoueur) throws SQLException {
 		String[] playerData = null;
 
-		String requete = "SELECT id, Sexe, Nom, Prenom, NomAfficher, Nat, Birthdate, ImgJoueur, Ranking, height, hand, age, "
+		String requete = "SELECT id, Sexe, Nom, Prenom, NomAfficher, Nat, Country, Birthdate, ImgJoueur, Ranking, height, hand, age, "
 				+ "weight, PRIZETOTAL, BIRTHPLACE, CITYRESIDENCE,TETEDESERIE FROM " + selectedBDD + " WHERE Nom = '"
 				+ nomJoueur + "'";
 
@@ -884,11 +889,11 @@ public class BDD_v2 {
 			if (resultSet.next()) {
 				playerData = new String[] { resultSet.getString("id"), resultSet.getString("Sexe"),
 						resultSet.getString("Nom"), resultSet.getString("Prenom"), resultSet.getString("NomAfficher"),
-						resultSet.getString("Nat"), resultSet.getString("ImgJoueur"), resultSet.getString("Ranking"),
+						resultSet.getString("Nat"), resultSet.getString("Country"), resultSet.getString("ImgJoueur"), resultSet.getString("Ranking"),
 						resultSet.getString("PRIZETOTAL"), resultSet.getString("height"), resultSet.getString("hand"),
 						resultSet.getString("age"), resultSet.getString("weight"), resultSet.getString("Birthdate"),
 						resultSet.getString("BIRTHPLACE"), resultSet.getString("CITYRESIDENCE"),
-						resultSet.getString("CITYRESIDENCE") };
+						resultSet.getString("TETEDESERIE") };
 			}
 		}
 		return playerData;
@@ -1098,6 +1103,24 @@ public class BDD_v2 {
 			System.out.println("  ! event hasn't been deleted");
 		}
 	}
+	public static void deleteFlag(String acroFlag) throws SQLException, IOException {
+		int choice = JOptionPane.showConfirmDialog(null, "Do you really want to delete this flag?", "flag delete",
+				JOptionPane.YES_NO_OPTION);
+		if (choice == JOptionPane.YES_OPTION) {
+			String deleteQuery = "DELETE FROM flag WHERE NomAcro = ?";
+			try (PreparedStatement updateStatement = connection.prepareStatement(deleteQuery)) {
+				updateStatement.setString(1, acroFlag);
+				updateStatement.executeUpdate();
+			}
+			System.out.println("  - flag " + acroFlag + " has been deleted");
+			File fileFlag = new File("flag" + File.separator + acroFlag+".png");
+			if(fileFlag.exists()) {
+				fileFlag.delete();
+			}
+		} else {
+			System.out.println("  ! event hasn't been deleted");
+		}
+	}
 
 	/**
 	 * Delete joueur.
@@ -1160,16 +1183,17 @@ public class BDD_v2 {
 	 * Update flag in database.
 	 *
 	 * @param currentName the current name
-	 * @param newFlag     the new flag
+	 * @param newDrapeau     the new flag
 	 */
-	public static void updateFlagInDatabase(String currentName, String[] newFlag) {
+	public static void updateFlagInDatabase(String currentName, Drapeau newDrapeau) {
 		try {
-
-			String updateQuery = "UPDATE Flag SET nomacro = ?, imgflag = ? WHERE nomacro = ?";
+			System.out.println(currentName+", drapeau : "+newDrapeau.getNom()+" | "+newDrapeau.getPays()+" | "+newDrapeau.getImageDrapeau());
+			String updateQuery = "UPDATE Flag SET nomacro = ?, nompays = ?, imgflag = ? WHERE nomacro = ?";
 			try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
-				preparedStatement.setString(1, newFlag[0]);
-				preparedStatement.setString(2, newFlag[1]);
-				preparedStatement.setString(3, currentName);
+				preparedStatement.setString(1, newDrapeau.getNom());
+				preparedStatement.setString(2, newDrapeau.getPays());
+				preparedStatement.setString(3, newDrapeau.getImageDrapeau());
+				preparedStatement.setString(4, currentName);
 				preparedStatement.executeUpdate();
 			}
 		} catch (SQLException e) {
@@ -1177,6 +1201,7 @@ public class BDD_v2 {
 			System.err.println("Erreur lors de la mise � jour du drapeau dans la base de donn�es.");
 		}
 	}
+
 
 	/**
 	 * Update players in database.
@@ -1202,14 +1227,14 @@ public class BDD_v2 {
 	 * @param bddchoosen
 	 */
 	public static void updatePlayersInDatabase(int id, String sexe, String playerName, String playerSurname,
-			String displayName, String acroNat, String flag, String birthdate, String imgJoueur, int ranking,
+			String displayName, String acroNat, String country, String flag, String birthdate, String imgJoueur, int ranking,
 			String height, String hand, String age, String weight, String prize, String birthplace,
 			String cityResidence, String teteDeSerie, String bddchoosen) {
 
 		try {
 			// Cr�ez une requ�te SQL pour mettre � jour les donn�es du joueur
 			String updateQuery = "UPDATE " + bddchoosen
-					+ " SET Sexe = ?, Nom = ?, Prenom = ?, NomAfficher = ?, Nat = ?, Birthdate = ?, "
+					+ " SET Sexe = ?, Nom = ?, Prenom = ?, NomAfficher = ?, Nat = ?,Country = ?, Birthdate = ?, "
 					+ "ImgJoueur = ?, Ranking = ?, height = ?, hand = ?, age = ?, weight = ?, PRIZETOTAL = ?, "
 					+ "BIRTHPLACE = ?, CITYRESIDENCE = ?,TETEDESERIE = ? WHERE id = ?";
 			System.out.println(updateQuery);
@@ -1219,18 +1244,19 @@ public class BDD_v2 {
 				preparedStatement.setString(3, playerSurname);
 				preparedStatement.setString(4, displayName);
 				preparedStatement.setString(5, acroNat);
-				preparedStatement.setString(6, birthdate);
-				preparedStatement.setString(7, imgJoueur);
-				preparedStatement.setInt(8, ranking);
-				preparedStatement.setString(9, height);
-				preparedStatement.setString(10, hand);
-				preparedStatement.setString(11, age);
-				preparedStatement.setString(12, weight);
-				preparedStatement.setString(13, prize);
-				preparedStatement.setString(14, birthplace);
-				preparedStatement.setString(15, cityResidence);
-				preparedStatement.setString(16, teteDeSerie);
-				preparedStatement.setInt(17, id);
+				preparedStatement.setString(6, country);
+				preparedStatement.setString(7, birthdate);
+				preparedStatement.setString(8, imgJoueur);
+				preparedStatement.setInt(9, ranking);
+				preparedStatement.setString(10, height);
+				preparedStatement.setString(11, hand);
+				preparedStatement.setString(12, age);
+				preparedStatement.setString(13, weight);
+				preparedStatement.setString(14, prize);
+				preparedStatement.setString(15, birthplace);
+				preparedStatement.setString(16, cityResidence);
+				preparedStatement.setString(17, teteDeSerie);
+				preparedStatement.setInt(18, id);
 				System.out.println(preparedStatement);
 				preparedStatement.executeUpdate(); // Ex�cutez la requ�te de mise � jour
 			}
@@ -1420,7 +1446,7 @@ public class BDD_v2 {
 				System.out.println("  table : " + table + " doesn't exists. Creation in progress ... ");
 				if (table.equals("Background")) {
 					executerRequeteSQL("CREATE TABLE " + table
-							+ " (Nom VARCHAR(20) PRIMARY KEY, Img_1 varchar(255), Img_2 varchar(255), Img_3 varchar(255), Img_4 varchar(255), Img_5 varchar(255));");
+							+ " (Nom VARCHAR(120) PRIMARY KEY, Img_1 varchar(255), Img_2 varchar(255), Img_3 varchar(255), Img_4 varchar(255), Img_5 varchar(255));");
 
 					backgroundExample.setImage_1("Background" + File.separator + "backgroundexample1.png");
 					backgroundExample.setImage_2("Background" + File.separator + "backgroundexample2.png");
@@ -1429,13 +1455,13 @@ public class BDD_v2 {
 					backgroundExample.setImage_5("Background" + File.separator + "backgroundexample5.png");
 					BDD_v2.insertionBackgroundDansBDD(backgroundExample);
 				} else if (table.equals("Event")) {
-					executerRequeteSQL("CREATE TABLE " + table + " (Nom VARCHAR(20) PRIMARY KEY, NomBG VARCHAR(20));");
+					executerRequeteSQL("CREATE TABLE " + table + " (Nom VARCHAR(120) PRIMARY KEY, NomBG VARCHAR(120));");
 					Evenement eventExample = new Evenement("eventExample");
 					eventExample.setBackground(backgroundExample);// BDD_v2.getOneBackground("backgroundExample"));
 					insertionEventDansBDD(eventExample);
 				} else if (table.equals("Flag")) {
 					executerRequeteSQL(
-							"CREATE TABLE " + table + " (NomAcro VARCHAR(10) PRIMARY KEY, ImgFlag varchar(255));");
+							"CREATE TABLE " + table + " (NomAcro VARCHAR(10) PRIMARY KEY, NomPays VARCHAR(125), ImgFlag varchar(255));");
 					Drapeau.chargerDrapeau();
 				} else {
 					creationNewTable(table);
@@ -1542,7 +1568,7 @@ public class BDD_v2 {
 		creationNewTable(tableName);
 
 		// Lecture du fichier CSV et insertion des donn�es dans la table
-		String insertQuery = "INSERT INTO " + tableName + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String insertQuery = "INSERT INTO " + tableName + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
 			// Sp�cifier l'encodage UTF-8 lors de la lecture du fichier
 			@SuppressWarnings("resource")
@@ -1564,17 +1590,18 @@ public class BDD_v2 {
 				preparedStatement.setString(4, values[3]); // Pr�nom
 				preparedStatement.setString(5, values[4]); // Display name
 				preparedStatement.setString(6, values[5]); // Acronyme de nationalit�
-				preparedStatement.setString(7, values[6]); // Date de naissance
-				preparedStatement.setString(8, values[7]); // Image joueur
-				preparedStatement.setInt(9, Integer.parseInt(values[8])); // Classement
-				preparedStatement.setInt(10, Integer.parseInt(values[9])); // Taille
-				preparedStatement.setString(11, values[10]); // Main
-				preparedStatement.setInt(12, Integer.parseInt(values[11])); // �ge
-				preparedStatement.setInt(13, Integer.parseInt(values[12])); // Poids
-				preparedStatement.setString(14, values[13]); // Gain total
-				preparedStatement.setString(15, values[14]); // Lieu de naissance
-				preparedStatement.setString(16, values[15]); // Lieu de r�sidence
-				preparedStatement.setString(17, values[16]); // tete de serie
+				preparedStatement.setString(7, values[6]); // Country
+				preparedStatement.setString(8, values[7]); // Date de naissance
+				preparedStatement.setString(9, values[8]); // Image joueur
+				preparedStatement.setInt(10, Integer.parseInt(values[9])); // Classement
+				preparedStatement.setInt(11, Integer.parseInt(values[10])); // Taille
+				preparedStatement.setString(12, values[11]); // Main
+				preparedStatement.setInt(13, Integer.parseInt(values[12])); // �ge
+				preparedStatement.setInt(14, Integer.parseInt(values[13])); // Poids
+				preparedStatement.setString(15, values[14]); // Gain total
+				preparedStatement.setString(16, values[15]); // Lieu de naissance
+				preparedStatement.setString(17, values[16]); // Lieu de r�sidence
+				preparedStatement.setString(18, values[17]); // tete de serie
 				// Ex�cuter la requ�te d'insertion
 				preparedStatement.executeUpdate();
 			}

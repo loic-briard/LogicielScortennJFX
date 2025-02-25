@@ -24,6 +24,8 @@ import java.util.Date;
 
 import com.toedter.calendar.JDateChooser;
 
+import Flags.Drapeau;
+
 import javax.swing.*;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
@@ -61,6 +63,8 @@ public class newPlayerFrame extends JFrame {
 	
 	/** The nationality combo box. */
 	private JComboBox<String> nationalityComboBox;
+	
+	private JLabel countryLabel;
 	
 	/** The flag label. */
 	private JLabel flagLabel;
@@ -194,6 +198,7 @@ public class newPlayerFrame extends JFrame {
 		displayNameField = new JTextField();
 		nationalityComboBox = new JComboBox<>(BDD_v2.getNamesFromDatabase("flag")); // Remplacez par les acronymes de la nationalit�
 		nationalityComboBox.setSelectedItem(-1);
+		countryLabel = new JLabel();
 		flagLabel = new JLabel();// new ImageUtility(currentFlag,75).getIcon()
 		// Utilisez JDateChooser pour choisir la date de naissance
 		birthdateChooser = new JDateChooser();
@@ -218,6 +223,7 @@ public class newPlayerFrame extends JFrame {
 				String selectedFlag = (String) nationalityComboBox.getSelectedItem();
 				try {
 					currentFlag = BDD_v2.getFlagImagePathByAcronym(selectedFlag);
+					countryLabel.setText(Drapeau.getFullName(selectedFlag));
 				} catch (ClassNotFoundException | SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -235,6 +241,7 @@ public class newPlayerFrame extends JFrame {
 		addComponent(contentPane, "Surname:", surnameField, gbc, 0, ++row);
 		addComponent(contentPane, "Display Name:", displayNameField, gbc, 0, ++row);
 		addComponent(contentPane, "Nationality:", nationalityComboBox, gbc, 0, ++row);
+		addComponent(contentPane, "Country:", countryLabel, gbc, 0, ++row);
 		addComponent(contentPane, "Flag:", flagLabel, gbc, 0, ++row);
 		addComponent(contentPane, "Birthdate:", birthdateChooser, gbc, 0, ++row);
 		addComponent(contentPane, "Player image:", playerImageLabel, gbc, 0, ++row);
@@ -299,6 +306,7 @@ public class newPlayerFrame extends JFrame {
 		            String playerSurname = surnameField.getText();
 		            String displayName = displayNameField.getText();
 		            String acroNat = nationalityComboBox.getSelectedItem().toString();
+		            String country = countryLabel.getText();
 		            String imgJoueur = currentImage;
 		            String ranking = rankingField.getText();
 		            String height = heightField.getText();
@@ -310,7 +318,7 @@ public class newPlayerFrame extends JFrame {
 		            String cityResidence = cityResidenceField.getText();
 		            String teteDeSerie = teteDeSerieField.getText();
 
-		            Joueur player = new Joueur(iD, sexe, playerName, playerSurname, displayName, acroNat, getDate(birthdateChooser), imgJoueur, Integer.parseUnsignedInt(ranking),
+		            Joueur player = new Joueur(iD, sexe, playerName, playerSurname, displayName, acroNat,country, getDate(birthdateChooser), imgJoueur, Integer.parseUnsignedInt(ranking),
 		                    Integer.parseUnsignedInt(height), hand, Integer.parseUnsignedInt(age), Integer.parseUnsignedInt(weight), prize, birthplace, cityResidence, teteDeSerie);
 		            try {
 		                BDD_v2.insertionJoueurDansBDD(player, bddChoosen);
@@ -321,8 +329,8 @@ public class newPlayerFrame extends JFrame {
 		                if (playerImagePath == null)
 		                    playerImagePath = "clear.png";
 		                CustomTableModelJoueur model = (CustomTableModelJoueur) parentFrame.playersTable.getModel();
-		                model.addRow(new Object[] { data[0], data[1], data[2], data[3], data[4], data[5], flagImagePath, playerImagePath, data[7], data[8],
-		                        data[9], data[10], data[11], data[12], data[13], data[14], data[15], data[16] });
+		                model.addRow(new Object[] { data[0], data[1], data[2], data[3], data[4], data[5], data[6],flagImagePath, playerImagePath, data[8], data[9],
+		                        data[10], data[11], data[12], data[13], data[14], data[15], data[16], data[17] });
 		                System.out.println("++++ Données traitées : " + Arrays.toString(data));
 		                model.loadImages();
 		            } catch (ClassNotFoundException | SQLException e2) {
@@ -454,6 +462,7 @@ public class newPlayerFrame extends JFrame {
 		surnameField.setText(selectedJoueur.getPrenom());
 		displayNameField.setText(selectedJoueur.getDisplay_name());
 		nationalityComboBox.setSelectedItem(selectedJoueur.getNatio_acronyme());
+		countryLabel.setText(selectedJoueur.getCountry());
 		rankingField.setText(selectedJoueur.getRank()+"");
 		heightField.setText(selectedJoueur.getTaille()+"");
 		handComboBox.setSelectedItem(selectedJoueur.getMain());

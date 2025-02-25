@@ -39,7 +39,7 @@ public class TabConfigurationPlayerInfos extends JPanel {
     private WindowConfigurationPlayerInfos placementFrame;
     
     /** The elements. */
-    private String[] elements = {"name", "Surname", "Img", "Flag", "Acro", "Line", "Rank", "BirthDate", "BirthPlace", "Height", "Weight", "Hand", "Age", "Prizetotal", "Cityresidence","Seeding"};
+    private String[] elements = {"name", "Surname", "Img", "Flag", "Acro", "Country", "Line", "Rank", "BirthDate", "BirthPlace", "Height", "Weight", "Hand", "Age", "Prizetotal", "Cityresidence","Seeding"};
 
     /**
      * Instantiates a new tab configuration player infos.
@@ -160,6 +160,9 @@ public class TabConfigurationPlayerInfos extends JPanel {
             case "Acro":
                 setPosition(infosPlayerDetails.playerAcro, x, y, tabPolice.checkboxAcro);
                 break;
+            case "Country":
+            	setPosition(infosPlayerDetails.playerCountry, x, y, tabPolice.checkboxCountry);
+            	break;
             case "Rank":
                 setPosition(infosPlayerDetails.playerRank, x, y, tabPolice.checkboxRank);
                 break;
@@ -289,6 +292,7 @@ public class TabConfigurationPlayerInfos extends JPanel {
             case "Img": return infosPlayerDetails.playerImg;
             case "Flag": return infosPlayerDetails.playerFlag;
             case "Acro": return infosPlayerDetails.playerAcro;
+            case "Country": return infosPlayerDetails.playerCountry;
             case "Line": return infosPlayerDetails.playerLine;
             case "Rank": return infosPlayerDetails.playerRank;
             case "BirthDate": return infosPlayerDetails.playerBirthdate;

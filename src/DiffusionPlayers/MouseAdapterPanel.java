@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import Diffusion.TabConfigurationPlayerInfos;
 import Diffusion.WindowBroadcastPublic;
 import Diffusion.WindowConfigurationPlayerInfos;
+import GlobalSettings.GlobalSettings;
 import Police.TabPolice;
 
 // TODO: Auto-generated Javadoc
@@ -77,6 +78,27 @@ public class MouseAdapterPanel extends MouseAdapter {
 		int yMoved = thisY + (e.getY() - prevPos.y);
 //		System.out.println("composant : "+panel.getName()+"|"+xMoved+"|"+yMoved);
 		panel.setLocation(xMoved, yMoved);
+		
+		if (this.playerfordifusion2.getTypeFen() == "full") {
+			int space = GlobalSettings.getInstance().getSpaceLength();
+			switch (panel.getName()) {
+			case "Name":
+				this.playerfordifusion2.playerSurname.setLocation(xMoved + panel.getWidth() + space, yMoved);
+				this.playerfordifusion2.playerTeteDeSerie.setLocation(xMoved + this.playerfordifusion2.playerSurname.getWidth()+ panel.getWidth() + space*2, yMoved);
+				break;
+			case "Surname":
+				this.playerfordifusion2.playerName.setLocation(xMoved - (this.playerfordifusion2.playerName.getWidth() + space), yMoved);
+				this.playerfordifusion2.playerTeteDeSerie.setLocation(xMoved + panel.getWidth() + space, yMoved);
+				break;
+			case "Seeding":
+				this.playerfordifusion2.playerSurname.setLocation(xMoved - (this.playerfordifusion2.playerSurname.getWidth() + space), yMoved);
+				this.playerfordifusion2.playerName.setLocation(xMoved - (this.playerfordifusion2.playerSurname.getWidth() + this.playerfordifusion2.playerName.getWidth() + space*2), yMoved);
+				break;
+
+			default:
+				break;
+			}
+		}
 	}
 
 	/**

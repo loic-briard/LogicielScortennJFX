@@ -901,6 +901,7 @@ public class ConfigurationSaveLoad {
 			ArrayList<String> listFileName = new ArrayList<String>();
 			listFileName.add("player.json");
 			listFileName.add("game.json");
+			listFileName.add("tab.json");
 			listFileName.add("animation.json");
 			Path targetPath = Paths.get("config" + File.separator + nomEvent);
 			// Créer le dossier destination s'il n'existe pas
@@ -941,7 +942,7 @@ public class ConfigurationSaveLoad {
 			Map<String, ElementJoueur> elements = new HashMap<>();
 
 			String[] elementNames = { "Prizetotal", "Birthplace", "ImgJoueur", "Rank", "Birthdate", "Hand", "Weight",
-					"Name", "Acronyme", "CityResidence", "Line", "Height", "ImgFlag", "Surname", "Age","Seeding" };
+					"Name", "Acronyme", "Country",  "CityResidence", "Line", "Height", "ImgFlag", "Surname", "Age","Seeding" };
 			int j = 0;
 			for (String elementName : elementNames) {
 				int posY = 100+i*100;
@@ -965,7 +966,7 @@ public class ConfigurationSaveLoad {
 		// Initialiser playerPolice
 		Map<String, ElementPoliceJoueur> playerPolice = new HashMap<>();
 		String[] elementNames = { "Prizetotal", "Birthplace", "ImgJoueur", "Rank", "Birthdate", "Hand", "Weight",
-				"Name", "Acronyme", "CityResidence", "Line", "Height", "ImgFlag", "Surname", "Age","Seeding" };
+				"Name", "Acronyme", "Country",  "CityResidence", "Line", "Height", "ImgFlag", "Surname", "Age","Seeding" };
 
 		for (String elementName : elementNames) {
 			ElementPoliceJoueur policeElement = new ElementPoliceJoueur();
@@ -1132,20 +1133,49 @@ public class ConfigurationSaveLoad {
 	 * @param path the path
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public static void deleteFolder(Path path) throws IOException {
-        Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+//	public static void deleteFolder(Path path) throws IOException {
+//		System.out.println("folder to delete : "+path);
+//        Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+//            @Override
+//            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+//                Files.delete(file);
+//                return FileVisitResult.CONTINUE;
+//            }
+//
+//            @Override
+//            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+//                Files.delete(dir);
+//                return FileVisitResult.CONTINUE;
+//            }
+//        });
+//    }
+	
+	public static void deleteFolder(Path dir) throws IOException {
+        if (!Files.exists(dir)) {
+            System.out.println("❌ Le dossier n'existe pas : " + dir);
+            return; // Évite de tenter une suppression inutile
+        }
+
+        Files.walkFileTree(dir, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                Files.delete(file);
+                if (Files.exists(file)) {
+                    Files.delete(file); // Supprime chaque fichier
+                    System.out.println("✔ Fichier supprimé : " + file);
+                }
                 return FileVisitResult.CONTINUE;
             }
 
             @Override
             public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                Files.delete(dir);
+                if (Files.exists(dir)) {
+                    Files.delete(dir); // Supprime le dossier après avoir supprimé son contenu
+                    System.out.println("✔ Dossier supprimé : " + dir);
+                }
                 return FileVisitResult.CONTINUE;
             }
         });
     }
+
 
 }

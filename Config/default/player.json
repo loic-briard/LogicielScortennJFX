@@ -16,6 +16,10 @@
             "positionX": 1060,
             "positionY": 215
         },
+        "Country": {
+            "positionX": 1060,
+            "positionY": 215
+        },
         "Birthdate": {
             "positionX": 830,
             "positionY": 560
@@ -23,6 +27,10 @@
         "Hand": {
             "positionX": 960,
             "positionY": 630
+        },
+        "Seeding": {
+            "positionX": 888,
+            "positionY": 747
         },
         "Weight": {
             "positionX": 830,
@@ -53,12 +61,8 @@
             "positionY": 340
         },
         "Surname": {
-            "positionX": 685,
-            "positionY": 250
-        },
-        "Seeding": {
-            "positionX": 685,
-            "positionY": 250
+            "positionX": 701,
+            "positionY": 270
         },
         "Age": {
             "positionX": 1090,
@@ -99,6 +103,18 @@
         "Hand": {
             "visible": true,
             "font": "Arial,1,25",
+            "color": "255,255,255",
+            "taille": 0
+        },
+        "Country": {
+            "visible": true,
+            "font": "Arial,1,25",
+            "color": "255,255,255",
+            "taille": 0
+        },
+        "Seeding": {
+            "visible": true,
+            "font": "Arial,1,30",
             "color": "255,255,255",
             "taille": 0
         },
@@ -145,12 +161,6 @@
             "taille": 100
         },
         "Surname": {
-            "visible": true,
-            "font": "Arial,1,30",
-            "color": "255,255,255",
-            "taille": 0
-        },
-        "Seeding": {
             "visible": true,
             "font": "Arial,1,30",
             "color": "255,255,255",

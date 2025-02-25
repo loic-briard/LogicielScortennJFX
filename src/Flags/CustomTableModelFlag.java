@@ -25,7 +25,7 @@ public class CustomTableModelFlag extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
     
     /** The column names. */
-    private String[] columnNames = { "Acronym", "Flag" };
+    private String[] columnNames = { "Acronym","Countries", "Flag" };
     
     /** The data. */
     private List<Object[]> data;
@@ -83,19 +83,17 @@ public class CustomTableModelFlag extends AbstractTableModel {
      * @param col the col
      * @return the value at
      */
+    
     @Override
     public Object getValueAt(int row, int col) {
         Object value = data.get(row)[col];
-        if (col == 1 && value instanceof String) {
+        if (col == 2 && value instanceof String) { // Colonne de l'image
             String imagePath = (String) value;
-            if (imageCache.containsKey(imagePath)) {
-                return imageCache.get(imagePath);
-            } else if (new File(imagePath).exists()) {
-                return loadingIcon;
-            }
+            return imageCache.getOrDefault(imagePath, loadingIcon);
         }
         return value;
     }
+
 
     /**
      * Sets the value at.
@@ -141,7 +139,7 @@ public class CustomTableModelFlag extends AbstractTableModel {
      */
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        if (columnIndex == 1 ) {
+        if (columnIndex == 2 ) {
             return ImageIcon.class;
         }
         return super.getColumnClass(columnIndex);
@@ -156,7 +154,7 @@ public class CustomTableModelFlag extends AbstractTableModel {
         for (int row = 0; row < getRowCount(); row++) {
             final int finalRow = row;
             imageLoader.submit(() -> {
-                loadImageForCell(finalRow, 1); // Flag
+                loadImageForCell(finalRow, 2); // Flag
             });
         }
     }

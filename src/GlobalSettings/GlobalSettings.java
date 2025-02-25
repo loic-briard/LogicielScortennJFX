@@ -1,5 +1,18 @@
 package GlobalSettings;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import Sauvegarde.GlobalSettingSave;
+
 public class GlobalSettings {
 
     // Instance unique de la classe GlobalSettings
@@ -10,6 +23,7 @@ public class GlobalSettings {
     private int surnameMaxLength;
     private int cityResidenceMaxLength;
     private int birthPlaceMaxLength;
+    private int space;
 
     // Constructeur privé pour empêcher l'instanciation directe
     private GlobalSettings() {
@@ -18,7 +32,12 @@ public class GlobalSettings {
         this.surnameMaxLength = 12;
         this.cityResidenceMaxLength = 12;
         this.birthPlaceMaxLength = 12;
+        this.space = 20;
+        
+        getGlobalSettingsFromJson();
     }
+
+    GlobalSettingSave saveSettings = new GlobalSettingSave();
 
     // Méthode pour obtenir l'instance unique
     public static GlobalSettings getInstance() {
@@ -64,4 +83,46 @@ public class GlobalSettings {
     public void setBirthPlaceMaxLength(int birthPlaceMaxLength) {
         this.birthPlaceMaxLength = birthPlaceMaxLength;
     }
+    
+    public int getSpaceLength() {
+        return space;
+    }
+    
+    public void setSpaceLength(int space) {
+    	this.space = space;
+    }
+    
+    public Map<String, Object> createMapSetting() {
+    	Map<String, Object> mapSetting = new HashMap<String, Object>();
+    	
+    	mapSetting.put("name", getNameMaxLength());
+    	mapSetting.put("surname", getSurnameMaxLength());
+    	mapSetting.put("residence", getCityResidenceMaxLength());
+    	mapSetting.put("birthplace", getBirthPlaceMaxLength());
+    	mapSetting.put("space", getSpaceLength());
+    	
+		return mapSetting;    	
+    }
+    
+    public void saveSettingsToJson() {
+    	saveSettings.setMapSetting(createMapSetting());
+    	saveSettings.saveSettingToJson("Config", "globalSettings.json");
+    }
+    
+    public void getGlobalSettingsFromJson() {
+		try (Reader reader = new FileReader("Config" + File.separator + "globalSettings.json")) {
+			JsonElement jsonElement = JsonParser.parseReader(reader);
+			if (jsonElement.isJsonObject()) {
+				JsonObject configObject = jsonElement.getAsJsonObject();
+				setNameMaxLength(configObject.getAsJsonPrimitive("name").getAsInt());	
+				setSurnameMaxLength(configObject.getAsJsonPrimitive("surname").getAsInt());	
+				setCityResidenceMaxLength(configObject.getAsJsonPrimitive("residence").getAsInt());	
+				setBirthPlaceMaxLength(configObject.getAsJsonPrimitive("birthplace").getAsInt());	
+				setSpaceLength(configObject.getAsJsonPrimitive("space").getAsInt());	
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+    
 }

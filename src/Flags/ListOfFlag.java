@@ -8,7 +8,11 @@ import java.awt.FlowLayout;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Comparator;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -31,8 +35,11 @@ public class ListOfFlag extends JFrame {
     /** The search field. */
     private JTextField searchField;
     
+    /** The new button. */
+    private JButton newButton;
     /** The modify button. */
     private JButton modifyButton;
+    private JButton deleteButton;
 	
 	/** The search button. */
 	private JButton searchButton;
@@ -73,6 +80,8 @@ public JTable flagTable;
         }
 
         // Cr�ez un mod�le de table -------------------------------------------------------------------------------------------------------------------------
+//        tableModelFlag = new CustomTableModelFlag(BDD_v2.DataFlag());
+//        flagTable.setModel(tableModelFlag);
         tableModelFlag = new CustomTableModelFlag(new Object[][]{});
         flagTable = new JTable(tableModelFlag){
 			private static final long serialVersionUID = 1L;
@@ -86,6 +95,7 @@ public JTable flagTable;
         flagTable.setDefaultRenderer(ImageIcon.class, new ImageRendererFlags());
         scrollPaneFlag = new JScrollPane(flagTable);
         tableData = BDD_v2.DataFlag();
+        Arrays.sort(tableData, Comparator.comparing(o -> o[0].toString()));
         SwingUtilities.invokeLater(() -> {
             tableModelFlag.setNewData(tableData);
             tableModelFlag.loadImages();
@@ -93,15 +103,19 @@ public JTable flagTable;
         //------------------------------------------------------------------------------------------------------------------------------------------------
         // Champ de recherche
         searchField = new JTextField(20);
+        newButton = new JButton("New");
         // Bouton "Modifier"
-        modifyButton = new JButton("Modifier");
+        modifyButton = new JButton("Modify");
+        deleteButton = new JButton("Delete");
      // Bouton "Search"
         searchButton = new JButton("Search");
         
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panel.add(searchField);
         panel.add(searchButton);
+        panel.add(newButton);
         panel.add(modifyButton);
+        panel.add(deleteButton);
         add(panel,BorderLayout.NORTH);
 
         // Ajout du gestionnaire d'�v�nements pour le bouton "Search"
@@ -109,15 +123,21 @@ public JTable flagTable;
             String searchText = searchField.getText().trim().toUpperCase();
             if (!searchText.isEmpty()) {
                 for (int row = 0; row < flagTable.getRowCount(); row++) {
-                    String cellValue = flagTable.getValueAt(row, 0).toString(); // Assurez-vous d'adapter le num�ro de colonne
+                    String cellValue = flagTable.getValueAt(row, 1).toString(); // Assurez-vous d'adapter le num�ro de colonne
                     if (cellValue.equals(searchText)) {
-                        flagTable.scrollRectToVisible(flagTable.getCellRect(row, 0, true));
+                        flagTable.scrollRectToVisible(flagTable.getCellRect(row, 1, true));
                         break; // Arr�tez la recherche apr�s avoir trouv� la premi�re correspondance
                     }
                 }
             }
         });
         
+        newButton.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        			new NewFlagFrame(ListOfFlag.this);
+        	}
+        });
         modifyButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -125,15 +145,34 @@ public JTable flagTable;
 				if (selectedRow >= 0) {
 					// Obtenez les donn�es de la ligne s�lectionn�e
 					String flagName = (String) flagTable.getValueAt(selectedRow, 0);
+					String flagNameCountry = (String) flagTable.getValueAt(selectedRow, 1);
 //					ImageUtility imageUtility = (ImageUtility) flagTable.getValueAt(selectedRow, 1);
-					ImageIcon img_flag = (ImageIcon) flagTable.getValueAt(selectedRow, 1);
+					ImageIcon img_flag = (ImageIcon) flagTable.getValueAt(selectedRow, 2);
 					String string_flag = img_flag.getDescription();
 //					String imgPath = imageUtility.getImagePath();
 					// Ouvrir une fen�tre de modification avec ces donn�es
-					new ModifyFlagFrame(ListOfFlag.this, flagName, string_flag,selectedRow);
+					new ModifyFlagFrame(ListOfFlag.this, flagName, flagNameCountry, string_flag,selectedRow);
 				}
 			}
 		});
+        deleteButton.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		int selectedRow = flagTable.getSelectedRow();
+        		if (selectedRow >= 0) {
+        			// Obtenez les donn�es de la ligne s�lectionn�e
+        			String flagName = (String) flagTable.getValueAt(selectedRow, 0);
+        			// Ouvrir une fen�tre de modification avec ces donn�es
+        			try {
+						BDD_v2.deleteFlag(flagName);
+					} catch (SQLException | IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+        			tableModelFlag.removeRow(selectedRow);
+        		}
+        	}
+        });
 
         // Ajout du JTable � la fen�tre
         add(scrollPaneFlag);

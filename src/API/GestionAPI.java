@@ -13,11 +13,13 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.SQLException;
 import java.text.Normalizer;
+import java.text.NumberFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
@@ -28,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import Flags.Drapeau;
 import Main.BDD_v2;
 import Players.Joueur;
 
@@ -468,20 +471,16 @@ public class GestionAPI {
 			JSONObject teamID = ranking.getJSONObject("team");
 			
 			String s_fullName = ranking.getString("rowName");
-			String s_name = teamID.getString("name").substring(0, teamID.getString("name").length() - 3).replace("-", " ");
-			String s_surname ;
-			int i_diffTaille = s_fullName.split(" ").length - s_name.split(" ").length;
 			
-			if (i_diffTaille >= 2) {
-				s_surname = s_fullName.substring(0, (s_fullName.split("").length - s_name.split("").length));
-			} else if (i_diffTaille == 1) {
-			    // Si la chaîne ne contient qu'un seul mot, garder ce mot
-				s_surname = s_fullName.split(" ")[0];
-			} else {
-			    // Si la chaîne est vide, rien à garder
-				s_surname = "";
+			String s_name = teamID.getString("name").split("\\.")[teamID.getString("name").split("\\.").length-1].trim().replace("-", " ");
+			
+			int i_size_surname = s_fullName.split(" ").length - s_name.split(" ").length;
+			String s_surname = "";
+			
+			for (int j = 0; j < i_size_surname; j++) {
+				s_surname += s_fullName.split(" ")[j]+" ";
 			}
-			
+
 			String s_displayName = teamID.getString("shortName");
 		    String s_alpha3 = "";
 			if (teamID.has("country")) {
@@ -491,9 +490,8 @@ public class GestionAPI {
 		    }
 			int i_ID = teamID.getInt("id");
 			//les valeurs "" et 0 seront ajouter une fois le joueur choisit sinon on atteint la limite de requete de l'api
-			Joueur joueur = new Joueur(i_ID, "homme",s_name, s_surname, s_displayName, s_alpha3, "", s_imgTemp, i_rankingValue, 0, "", 0, 0, "", "", "","");
+			Joueur joueur = new Joueur(i_ID, "homme",s_name, s_surname.trim(), s_displayName, s_alpha3, Drapeau.getFullName(s_alpha3), "", s_imgTemp, i_rankingValue, 0, "", 0, 0, "", "", "","");
 
-			System.out.println("  + Player added in ATP, name : "+s_name+", surname : "+s_surname);
 			//insertion dans la base de données
 			BDD_v2.insertionJoueurDansBDD(joueur, BDD_v2.ATP);
 			
@@ -533,18 +531,14 @@ public class GestionAPI {
 				JSONObject teamID = ranking.getJSONObject("team");
 				
 				String s_fullName = ranking.getString("rowName");
-				String s_name = teamID.getString("name").substring(0, teamID.getString("name").length() - 3).replace("-", " ");
-				String s_surname ;
-				int i_diffTaille = s_fullName.split(" ").length - s_name.split(" ").length;
 				
-				if (i_diffTaille >= 2) {
-					s_surname = s_fullName.substring(0, (s_fullName.split("").length - s_name.split("").length));
-				} else if (i_diffTaille == 1) {
-				    // Si la chaîne ne contient qu'un seul mot, garder ce mot
-					s_surname = s_fullName.split(" ")[0];
-				} else {
-				    // Si la chaîne est vide, rien à garder
-					s_surname = "";
+				String s_name = teamID.getString("name").split("\\.")[teamID.getString("name").split("\\.").length-1].trim().replace("-", " ");
+				
+				int i_size_surname = s_fullName.split(" ").length - s_name.split(" ").length;
+				String s_surname = "";
+				
+				for (int j = 0; j < i_size_surname; j++) {
+					s_surname += s_fullName.split(" ")[j]+" ";
 				}
 				
 				String s_displayName = teamID.getString("shortName");
@@ -557,7 +551,7 @@ public class GestionAPI {
 			    }
 				int i_ID = teamID.getInt("id");
 				//les valeurs "" et 0 seront ajouter une fois le joueur choisit sinon on atteint la limite de requete de l'api
-				Joueur joueur = new Joueur(i_ID, "women",s_name, s_surname, s_displayName, s_alpha3, "", s_imgTemp, i_rankingValue, 0, "", 0, 0, "", "", "","");
+				Joueur joueur = new Joueur(i_ID, "women",s_name, s_surname, s_displayName, s_alpha3, Drapeau.getFullName(s_alpha3), "", s_imgTemp, i_rankingValue, 0, "", 0, 0, "", "", "","");
 				
 				//System.out.println("  + player added in WTA, name : "+s_name+", surname : "+s_surname);
 				//insertion dans la base de données
@@ -660,7 +654,25 @@ public class GestionAPI {
 				} else if ("GBP".equals(s_valeur)) {
 					s_valeur = "£";
 				}
-				String s_prizetotal = s_prizeTotal+s_valeur;
+				//String s_prizetotal = s_prizeTotal+s_valeur;
+				if (s_prizeTotal.length() > 1) {
+					String currency = s_valeur;
+
+					// Convertir en long
+//					numericPart.replace(" ", "");
+//					numericPart.replace("?", "");
+					s_prizeTotal.replaceAll("[^0-9]", "");
+					long number = Long.parseLong(s_prizeTotal);
+
+					// Formater avec des espaces comme séparateurs de milliers
+					NumberFormat formatterP = NumberFormat.getInstance(Locale.FRANCE);
+					String formattedNumber = formatterP.format(number);
+
+					// Retourner la chaîne formatée avec le symbole '€'
+					s_prizeTotal = formattedNumber + currency;
+				}else
+					s_prizeTotal = "0";
+				
 				//lieu de residence
 				String s_residence = playerTeamInfo.has("residence") ? playerTeamInfo.getString("residence") +"" : " ";
 //				String s_residence = playerTeamInfo.getString("residence");
@@ -675,7 +687,7 @@ public class GestionAPI {
 						s_plays+", "+
 						i_age+", "+
 						s_weight+", "+
-						s_prizetotal+", "+
+						s_prizeTotal+", "+
 						s_birthplace+", "+
 						s_residence);
 				BDD_v2.UpdateInfosSupJoueur(id_recup, 
@@ -685,7 +697,7 @@ public class GestionAPI {
 						s_plays,
 						i_age,
 						s_weight,
-						s_prizetotal,
+						s_prizeTotal,
 						s_birthplace,
 						s_residence, 
 						bddname);

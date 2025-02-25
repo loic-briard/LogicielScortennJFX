@@ -1,141 +1,109 @@
-/*
- * 
- */
 package Flags;
 
 import javax.swing.*;
-
 import Main.BDD_v2;
 import Main.ImageUtility;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ModifyFlagFrame.
  */
 public class ModifyFlagFrame extends JFrame {
-	
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 1L;
-
-	//private ListOfFlag parentFrame; // R�f�rence � la fen�tre ListOfEventsFrame
-	
-	/** The name field. */
-	private JTextField nameField;
-	
-	/** The current name. */
-	private String currentName;
-	
-	/** The new name. */
-	private String newName;
-	
-    /** The image preview panel. */
-    private JPanel imagePreviewPanel;   
-    
-    /** The current image. */
+    private static final long serialVersionUID = 1L;
+    private JTextField nameField;
+    private JTextField countryField;
+    private String currentName;
+    private String currentNameCountry;
+    private String newName;
+    private String newCountry;
+    private JPanel imagePreviewPanel;
     private String currentImage;
-    
-    /** The load button. */
     private JButton loadButton;
 
     /**
      * Instantiates a new modify flag frame.
      *
-     * @param parentFrame the parent frame
-     * @param currentName the current name
-     * @param imgPath the img path
-     * @param selectedRow the selected row
+     * @param parentFrame       the parent frame
+     * @param currentName       the current name
+     * @param currentNameCountry the current country name
+     * @param imgPath           the image path
+     * @param selectedRow       the selected row
      */
-    public ModifyFlagFrame(ListOfFlag parentFrame, String currentName, String imgPath, int selectedRow) {
-		//this.parentFrame = parentFrame;
-    	this.currentName = currentName;
+    public ModifyFlagFrame(ListOfFlag parentFrame, String currentName, String currentNameCountry, String imgPath, int selectedRow) {
+        this.currentName = currentName;
+        this.currentNameCountry = currentNameCountry;
         this.currentImage = imgPath;
         loadButton = new JButton("Load");
 
-        setTitle("Modify Flag : "+currentName);
+        setTitle("Modify Flag : " + currentName);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(500, 800);
+        setSize(500, 550);
+        
         ImageIcon logoIcon = new ImageIcon("icon.png");
-        // V�rifiez si l'ic�ne a �t� charg�e avec succ�s
         if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
             setIconImage(logoIcon.getImage());
         } else {
-            // Si l'ic�ne n'a pas pu �tre charg�e, affichez un message d'erreur
-            System.err.println("Impossible de charger l'ic�ne.");
+            System.err.println("Impossible de charger l'icône.");
         }
-        
-        // Ajoutez le champ de texte pour le nom
+
+        JPanel inputPanel = new JPanel(new GridLayout(2, 1, 5, 5));
         nameField = new JTextField(this.currentName);
-        add(nameField, BorderLayout.NORTH);
-        // Cr�ez un bouton "Valider"
+        countryField = new JTextField(this.currentNameCountry);
+        inputPanel.add(new JLabel("Acronym:"));
+        inputPanel.add(nameField);
+        inputPanel.add(new JLabel("Country Name:"));
+        inputPanel.add(countryField);
+        add(inputPanel, BorderLayout.NORTH);
+
         JButton validateButton = new JButton("Validate");
         add(validateButton, BorderLayout.SOUTH);
-        // Cr�ez un JPanel pour afficher les aper�us d'images
+
         imagePreviewPanel = new JPanel();
         imagePreviewPanel.setLayout(new BoxLayout(imagePreviewPanel, BoxLayout.Y_AXIS));
-        // Chargez les images actuelles et affichez-les dans les JLabels
         updateImagePreviews();
-        // Ajoutez le JPanel des aper�us d'images � la fen�tre
-        add(imagePreviewPanel, BorderLayout.CENTER);    
+        add(imagePreviewPanel, BorderLayout.CENTER);
 
-        // Ajoutez un gestionnaire d'action au bouton "Valider"
         validateButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 newName = nameField.getText();
-                String newFlag[] = {newName, currentImage};
-                Object newFlagObj[] = {newName, currentImage};
-                BDD_v2.updateFlagInDatabase(currentName, newFlag);
-                // Fermez la fen�tre de modification
+                newCountry = countryField.getText();
+                Object newFlagObj[] = {newName, newCountry, currentImage};
+                Drapeau newDrapeau = new Drapeau(newName, newCountry, currentImage);
+                BDD_v2.updateFlagInDatabase(currentName, newDrapeau);
                 dispose();
                 CustomTableModelFlag model = (CustomTableModelFlag) parentFrame.flagTable.getModel();
-				model.updateRow(selectedRow, newFlagObj);
-				model.loadImages();
-//                    parentFrame.refreshModifiedRow(currentName, newName, currentImage);
+                model.updateRow(selectedRow, newFlagObj);
+                model.loadImages();
             }
         });
-        
-        // Ajoutez un gestionnaire d'action au bouton "load 1"
+
         loadButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String newImgPath = ImageUtility.chargerFichier();
                 ImageUtility.enregistrerFichier(newImgPath, "flag");
-                currentImage = "flag"+File.separator+ImageUtility.getNameFile(newImgPath);
-                System.out.println("++++ chemin vers le drapeau : "+imgPath);
-                // Chargez les images actuelles et affichez-les dans les JLabels
+                currentImage = "flag" + File.separator + ImageUtility.getNameFile(newImgPath);
+                System.out.println("++++ chemin vers le drapeau : " + imgPath);
                 updateImagePreviews();
             }
         });
-     
-        
-
         setVisible(true);
     }
 
     /**
      * Update image previews.
      */
-    // Mettez � jour les aper�us des images
     private void updateImagePreviews() {
-    	// Chargez les images actuelles et affichez-les dans les JLabels
-    	System.out.println("+++ image actuel : "+currentImage);
-    	ImageUtility image = new ImageUtility(currentImage, 150);
-
-    	// Cr�ez des JLabels pour afficher les images actuelles
-    	JLabel labelImage1 = new JLabel(image.getIcon());
-    	
-    	// image 1 -----------------------------------------------------------------------------
-    	JPanel boxImage1 = new JPanel();
-    	boxImage1.setLayout(new BoxLayout(boxImage1, BoxLayout.X_AXIS));
-    	boxImage1.add(labelImage1);
-    	boxImage1.add(loadButton);
-
-        imagePreviewPanel.removeAll();  // Effacez les aper�us pr�c�dents
+        ImageUtility image = new ImageUtility(currentImage, 150);
+        JLabel labelImage1 = new JLabel(image.getIcon());
+        JPanel boxImage1 = new JPanel();
+        boxImage1.setLayout(new BoxLayout(boxImage1, BoxLayout.X_AXIS));
+        boxImage1.add(labelImage1);
+        boxImage1.add(loadButton);
+        imagePreviewPanel.removeAll();
         imagePreviewPanel.add(boxImage1);
-
-        revalidate();  // Rafra�chissez l'affichage
+        revalidate();
     }
 }

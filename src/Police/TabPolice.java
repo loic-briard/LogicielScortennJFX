@@ -39,6 +39,8 @@ public class TabPolice extends JPanel {
 	
 	/** The checkbox acro. */
 	public JCheckBox checkboxAcro;
+	/** The checkbox acro. */
+	public JCheckBox checkboxCountry;
 	
 	/** The checkbox img. */
 	public JCheckBox checkboxImg;
@@ -111,6 +113,7 @@ public class TabPolice extends JPanel {
 		checkboxName = new JCheckBox("Display name",listPlayer.get(0).playerName.isVisible());
 		checkboxSurname = new JCheckBox("Display surname",listPlayer.get(0).playerSurname.isVisible());
 		checkboxAcro = new JCheckBox("Display acronym",listPlayer.get(0).playerAcro.isVisible());
+		checkboxCountry = new JCheckBox("Display country",listPlayer.get(0).playerCountry.isVisible());
 		checkboxImg = new JCheckBox("Display image",listPlayer.get(0).playerImg.isVisible());
 		checkboxFlag = new JCheckBox("Display flag",listPlayer.get(0).playerFlag.isVisible());
 		checkboxRank = new JCheckBox("Display rank",listPlayer.get(0).playerRank.isVisible());
@@ -131,6 +134,7 @@ public class TabPolice extends JPanel {
 		JButton buttonFontName = new JButton("Choose Font");
 		JButton buttonFontSurname = new JButton("Choose Font");
 		JButton buttonFontAcro = new JButton("Choose Font");
+		JButton buttonFontCountry = new JButton("Choose Font");
 		JButton buttonFontRank = new JButton("Choose Font");
 		JButton buttonFontBirthDate = new JButton("Choose Font");
 		JButton buttonFontBirthPlace = new JButton("Choose Font");
@@ -176,6 +180,18 @@ public class TabPolice extends JPanel {
 					playerForDiffusion.policeAcro.setNewfont(fontSelector.getPoliceComlet());
 					playerForDiffusion.policeAcro.setNewColor(fontSelector.getChoosenColor());
 					playerForDiffusion.playerAcro.setSize(playerForDiffusion.playerAcro.getComponents()[0].getPreferredSize());
+				}
+			}
+		});
+		buttonFontCountry.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FontSelector fontSelector = new FontSelector(listPlayer.get(0).playerCountry.getComponents()[0].getFont(), listPlayer.get(0).playerCountry.getComponents()[0].getForeground());
+				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
+					playerForDiffusion.playerCountry.getComponents()[0].setFont(fontSelector.getPoliceComlet());
+					playerForDiffusion.playerCountry.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.policeCountry.setNewfont(fontSelector.getPoliceComlet());
+					playerForDiffusion.policeCountry.setNewColor(fontSelector.getChoosenColor());
+					playerForDiffusion.playerCountry.setSize(playerForDiffusion.playerCountry.getComponents()[0].getPreferredSize());
 				}
 			}
 		});
@@ -337,9 +353,13 @@ public class TabPolice extends JPanel {
 		addComponent(panelTab, gbc, checkboxFlag, 1, choixColonne);
 		addComponent(panelTab, gbc, TailleFlag, 2, choixColonne);
 		choixColonne++;
-		addComponent(panelTab, gbc, new JLabel("Country :"), 0, choixColonne);
+		addComponent(panelTab, gbc, new JLabel("Country Acronyme:"), 0, choixColonne);
 		addComponent(panelTab, gbc, checkboxAcro, 1, choixColonne);
 		addComponent(panelTab, gbc, buttonFontAcro, 2, choixColonne);
+		choixColonne++;
+		addComponent(panelTab, gbc, new JLabel("Country :"), 0, choixColonne);
+		addComponent(panelTab, gbc, checkboxCountry, 1, choixColonne);
+		addComponent(panelTab, gbc, buttonFontCountry, 2, choixColonne);
 		choixColonne++;
 		addComponent(panelTab, gbc, new JLabel("Line :"), 0, choixColonne);
 		addComponent(panelTab, gbc, checkboxLine, 1, choixColonne);

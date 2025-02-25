@@ -18,6 +18,8 @@ import java.util.Date;
 
 import com.toedter.calendar.JDateChooser;
 
+import Flags.Drapeau;
+
 import javax.swing.*;
 import Main.BDD_v2;
 import Main.ImageUtility;
@@ -50,6 +52,8 @@ public class ModifyPlayersFrame extends JFrame{
     /** The nationality combo box. */
     private JComboBox<String> nationalityComboBox;
     
+    /** The flag label. */
+    private JLabel countryLabel;
     /** The flag label. */
     private JLabel flagLabel;
 
@@ -133,7 +137,7 @@ public class ModifyPlayersFrame extends JFrame{
 	 * @param selectedRow the selected row
 	 */
 	public ModifyPlayersFrame(ListOfPlayersFrame parentFrame, String iD, String sexe, String playerName, String playerSurname, String displayName, 
-			String acroNat, String flag, String bithdate, String imgJoueur, String ranking, String height, String hand, String age, 
+			String acroNat,String country, String flag, String bithdate, String imgJoueur, String ranking, String height, String hand, String age, 
 			String weight, String prize, String birthplace, String cityResidence,String teteDeSerie, String bddChoosen, int selectedRow) {
 		this.currentImage = imgJoueur;
 		this.currentFlag = flag;
@@ -167,6 +171,7 @@ public class ModifyPlayersFrame extends JFrame{
         displayNameField = new JTextField(displayName);
         nationalityComboBox = new JComboBox<>(BDD_v2.getNamesFromDatabase("flag")); // Remplacez par les acronymes de la nationalit�
         nationalityComboBox.setSelectedItem(acroNat);
+        countryLabel = new JLabel(country);
         flagLabel = new JLabel(new ImageUtility(currentFlag,75).getIcon());
      // Utilisez JDateChooser pour choisir la date de naissance
         birthdateChooser = new JDateChooser(); // Assurez-vous que la date est correctement format�e
@@ -199,6 +204,7 @@ public class ModifyPlayersFrame extends JFrame{
                 String selectedFlag = (String) nationalityComboBox.getSelectedItem();
                 try {
 					currentFlag = BDD_v2.getFlagImagePathByAcronym(selectedFlag);
+					countryLabel.setText(Drapeau.getFullName(selectedFlag));
 				} catch (ClassNotFoundException | SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -206,6 +212,7 @@ public class ModifyPlayersFrame extends JFrame{
                 updatePlayerFlagPreview(currentFlag);
                 // Faites ce que vous voulez avec l'�v�nement s�lectionn�
                 System.out.println("++++ flag selected: " + selectedFlag+"|"+currentFlag);
+                
             }
         });
         // Ajoutez les composants � la fen�tre en utilisant GridBagLayout
@@ -216,6 +223,7 @@ public class ModifyPlayersFrame extends JFrame{
        addComponent(contentPane, "Surname:", surnameField, gbc, 0, ++row);
        addComponent(contentPane, "Display Name:", displayNameField, gbc, 0, ++row);
        addComponent(contentPane, "Nationality:", nationalityComboBox, gbc, 0, ++row);
+       addComponent(contentPane, "Country:", countryLabel, gbc, 0, ++row);
        addComponent(contentPane, "Flag:", flagLabel, gbc, 0, ++row);
        addComponent(contentPane, "BirthDate:", birthdateChooser, gbc, 0, ++row);
        addComponent(contentPane, "Playe image:", playerImageLabel, gbc, 0, ++row);
@@ -252,6 +260,7 @@ public class ModifyPlayersFrame extends JFrame{
                     String playerSurname = surnameField.getText();
                     String displayName = displayNameField.getText();
                     String acroNat = nationalityComboBox.getSelectedItem().toString();
+                    String country = countryLabel.getText();
                     String flag = currentFlag;
                     String imgJoueur = currentImage;
                     String ranking = rankingField.getText();
@@ -264,11 +273,11 @@ public class ModifyPlayersFrame extends JFrame{
                     String cityResidence = cityResidenceField.getText();
                     String teteDeSerie = teteDeSerieField.getText();
                     
-                    BDD_v2.updatePlayersInDatabase(Integer.parseUnsignedInt(iD), sexe, playerName, playerSurname, displayName, acroNat, flag, getDate(birthdateChooser), imgJoueur,
+                    BDD_v2.updatePlayersInDatabase(Integer.parseUnsignedInt(iD), sexe, playerName, playerSurname, displayName, acroNat,country, flag, getDate(birthdateChooser), imgJoueur,
                             Integer.parseUnsignedInt(ranking), height,hand,age, weight,prize,birthplace,cityResidence,teteDeSerie, bddchoosen);
                     dispose();
                     
-                    joueurModifier = new Object[] {iD, sexe, playerName, playerSurname, displayName, acroNat, flag, imgJoueur,
+                    joueurModifier = new Object[] {iD, sexe, playerName, playerSurname, displayName, acroNat,country, flag, imgJoueur,
                             ranking,prize,height,hand,age, weight, getDate(birthdateChooser),birthplace,cityResidence,teteDeSerie};
                     CustomTableModelJoueur model = (CustomTableModelJoueur) parentFrame.playersTable.getModel();
                     model.updateRow(selectedRow, joueurModifier);
@@ -378,7 +387,6 @@ public class ModifyPlayersFrame extends JFrame{
                !weightField.getText().isEmpty() &&
                !prizeField.getText().isEmpty() &&
                !birthplaceField.getText().isEmpty() &&
-               !cityResidenceField.getText().isEmpty()&&
-	           !teteDeSerieField.getText().isEmpty();
+               !cityResidenceField.getText().isEmpty();
     }
 }

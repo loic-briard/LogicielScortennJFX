@@ -25,7 +25,7 @@ public class CustomTableModelJoueur extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
     
     /** The column names. */
-    private String[] columnNames = { "ID", "Sex", "Name", "Surname", "Display name", "Nationality", "Flag", "Player image", "Ranking", "Prize Total", "Height", "Hand", "Age", "Weight", "Birthdate", "Birthplace", "City Residence", "Seeding"};
+    private String[] columnNames = { "ID", "Sex", "Name", "Surname", "Display name", "Nationality","Country", "Flag", "Player image", "Ranking", "Prize Total", "Height", "Hand", "Age", "Weight", "Birthdate", "Birthplace", "City Residence", "Seeding"};
     
     /** The data. */
     private List<Object[]> data;
@@ -86,7 +86,7 @@ public class CustomTableModelJoueur extends AbstractTableModel {
     @Override
     public Object getValueAt(int row, int col) {
         Object value = data.get(row)[col];
-        if ((col == 6 || col == 7) && value instanceof String) {
+        if ((col == 7 || col == 8) && value instanceof String) {
             String imagePath = (String) value;
             if (imageCache.containsKey(imagePath)) {
                 return imageCache.get(imagePath);
@@ -141,7 +141,7 @@ public class CustomTableModelJoueur extends AbstractTableModel {
      */
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        if (columnIndex == 6 || columnIndex == 7) {
+        if (columnIndex == 7 || columnIndex == 8) {
             return ImageIcon.class;
         }
         return super.getColumnClass(columnIndex);
@@ -156,8 +156,8 @@ public class CustomTableModelJoueur extends AbstractTableModel {
         for (int row = 0; row < getRowCount(); row++) {
             final int finalRow = row;
             imageLoader.submit(() -> {
-                loadImageForCell(finalRow, 6); // Flag
-                loadImageForCell(finalRow, 7); // Player image
+                loadImageForCell(finalRow, 7); // Flag
+                loadImageForCell(finalRow, 8); // Player image
             });
         }
     }
