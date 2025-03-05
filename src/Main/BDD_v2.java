@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
@@ -22,14 +23,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipOutputStream;
 
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.json.JSONException;
 
 import Background.Background;
 import Event.Evenement;
+import Event.ListOfEventsFrame;
 import Flags.Drapeau;
 import Players.Joueur;
 import Sauvegarde.ConfigurationSaveLoad;
@@ -124,12 +128,12 @@ public class BDD_v2 {
 	public static void suppressionsDesTables() throws ClassNotFoundException, SQLException {
 		// nom des tales � d�finir
 		String requete = "";
-//		requete += "DROP TABLE CUSTOM IF EXISTS;";
-//		requete += "DROP TABLE WTA IF EXISTS;";
-//		requete += "DROP TABLE ATP IF EXISTS;";
+		requete += "DROP TABLE CUSTOM IF EXISTS;";
+		requete += "DROP TABLE WTA IF EXISTS;";
+		requete += "DROP TABLE ATP IF EXISTS;";
 //		requete += "DROP TABLE LIST_8_JOUEUR IF EXISTS;";
-		requete += "DROP TABLE Background IF EXISTS;";
-		requete += "DROP TABLE Event IF EXISTS;";
+//		requete += "DROP TABLE Background IF EXISTS;";
+//		requete += "DROP TABLE Event IF EXISTS;";
 //		requete += "DROP TABLE FLAG IF EXISTS;";
 
 		executerRequeteSQL(requete);
@@ -403,7 +407,7 @@ public class BDD_v2 {
 	}
 
 	/**
-	 * Gets the all joueurs.
+	 * Gets the list of all joueurs from bdd name.
 	 *
 	 * @param bddName the bdd name
 	 * @return the all joueurs
@@ -597,7 +601,7 @@ public class BDD_v2 {
 				backgroundtemp.setImage_2(img2);
 				backgroundtemp.setImage_3(img3);
 				backgroundtemp.setImage_4(img4);
-				backgroundtemp.setImage_4(img5);
+				backgroundtemp.setImage_5(img5);
 
 				backgroundBDD.add(backgroundtemp);
 			}
@@ -945,6 +949,32 @@ public class BDD_v2 {
 		String insertQuery = "INSERT INTO Background (Nom, Img_1, Img_2, Img_3, Img_4, Img_5) VALUES (?, ?, ?, ?, ?, ?)";
 		try {
 			// Supprimer l'ancien background
+			if (oldBackgroundName != "empty") {
+				String[] allImgOld = getOneBackground(oldBackgroundName).getAllImage();
+				ArrayList<String> imgToNotDelete = new ArrayList<String>();
+				ArrayList<Background> listBackground = DataBackgroundList();
+				for (Background background : listBackground) {
+					if (!background.getNom().equals(oldBackgroundName)) {
+						String[] allImg = background.getAllImage();
+						for (int i = 0; i < allImg.length; i++) {
+							if (allImg[i].equals(allImgOld[i]) || background.getNom().equals("backgroundExample32")) {
+								System.out.println("image already used : "+allImg[i]);
+								imgToNotDelete.add(allImgOld[i]);
+							}
+						}
+					}
+				}
+//					String[] allImgOld = getOneBackground(oldBackgroundName).getAllImage();
+				for (int i = 0; i < allImgOld.length; i++) {
+					System.out.println("old bg img : " + allImgOld[i] + " | new img : " + newBackground[i + 1]);
+					if (!imgToNotDelete.contains(allImgOld[i])) {
+						if (!allImgOld[i].equals(newBackground[i + 1])) {
+							deleteFile(allImgOld[i]);
+						}
+					}
+				}		
+			}			
+			
 			PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
 			deleteStatement.setString(1, oldBackgroundName);
 			deleteStatement.executeUpdate();
@@ -1031,6 +1061,31 @@ public class BDD_v2 {
 						updateStatement.executeUpdate();
 						System.out.println("  update evenet with defaut background");
 					}
+					
+					String[] allImgOld = getOneBackground(backgroundName).getAllImage();
+					ArrayList<String> imgToNotDelete = new ArrayList<String>();
+					ArrayList<Background> listBackground = DataBackgroundList();
+					for (Background background : listBackground) {
+						if (!background.getNom().equals(backgroundName)) {
+							String[] allImg = background.getAllImage();
+							for (int i = 0; i < allImg.length; i++) {
+								System.out.println("background : "+background.getNom()+", img : "+allImg[i]);
+								if (allImg[i].equals(allImgOld[i]) || background.getNom().equals("backgroundExample32")) {
+									imgToNotDelete.add(allImgOld[i]);
+								}
+							}
+						}
+					}
+					for (int i = 0; i < allImgOld.length; i++) {
+						if (!imgToNotDelete.contains(allImgOld[i])) {
+							deleteFile(allImgOld[i]);
+						}
+					}		
+							
+//					String[] allImg = getOneBackground(backgroundName).getAllImage();
+//					for (String pathImg : allImg) {
+//						deleteFile(pathImg);
+//					}
 					String deleteQuery = "DELETE FROM Background WHERE Nom = ?";
 					try (PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery)) {
 						deleteStatement.setString(1, backgroundName);
@@ -1045,6 +1100,25 @@ public class BDD_v2 {
 			} else {
 				// Le fond n'est pas utilis� par un �v�nement, vous pouvez le supprimer en toute
 				// s�curit�
+				String[] allImgOld = getOneBackground(backgroundName).getAllImage();
+				ArrayList<String> imgToNotDelete = new ArrayList<String>();
+				ArrayList<Background> listBackground = DataBackgroundList();
+				for (Background background : listBackground) {
+					if (!background.getNom().equals(backgroundName)) {
+						String[] allImg = background.getAllImage();
+						for (int i = 0; i < allImg.length; i++) {
+							System.out.println("background : "+background.getNom()+", img : "+allImg[i]);
+							if (allImg[i].equals(allImgOld[i]) || background.getNom().equals("backgroundExample32")) {
+								imgToNotDelete.add(allImgOld[i]);
+							}
+						}
+					}
+				}
+				for (int i = 0; i < allImgOld.length; i++) {
+					if (!imgToNotDelete.contains(allImgOld[i])) {
+						deleteFile(allImgOld[i]);
+					}
+				}
 				String deleteQuery = "DELETE FROM Background WHERE Nom = ?";
 				try (PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery)) {
 					deleteStatement.setString(1, backgroundName);
@@ -1103,11 +1177,12 @@ public class BDD_v2 {
 			System.out.println("  ! event hasn't been deleted");
 		}
 	}
-	public static void deleteFlag(String acroFlag) throws SQLException, IOException {
+	public static void deleteFlag(String acroFlag) throws SQLException, IOException, ClassNotFoundException {
 		int choice = JOptionPane.showConfirmDialog(null, "Do you really want to delete this flag?", "flag delete",
 				JOptionPane.YES_NO_OPTION);
 		if (choice == JOptionPane.YES_OPTION) {
 			String deleteQuery = "DELETE FROM flag WHERE NomAcro = ?";
+			deleteFile(getFlagImagePathByAcronym(acroFlag));
 			try (PreparedStatement updateStatement = connection.prepareStatement(deleteQuery)) {
 				updateStatement.setString(1, acroFlag);
 				updateStatement.executeUpdate();
@@ -1128,11 +1203,13 @@ public class BDD_v2 {
 	 * @param playertName the playert name
 	 * @param bddname     the bddname
 	 * @throws SQLException the SQL exception
+	 * @throws ClassNotFoundException 
 	 */
-	public static void deleteJoueur(String playertName, String bddname) throws SQLException {
+	public static void deleteJoueur(String playertName, String bddname) throws SQLException, ClassNotFoundException {
 		int choice = JOptionPane.showConfirmDialog(null, "Do you really want to delete this player ?", "Player delete",
 				JOptionPane.YES_NO_OPTION);
 		if (choice == JOptionPane.YES_OPTION) {
+			deleteFile(getJoueurParNom(playertName, bddname).getImgJoueur());
 			String deleteQuery = "DELETE FROM " + bddname + " WHERE Nom = ?";
 			try (PreparedStatement updateStatement = connection.prepareStatement(deleteQuery)) {
 				updateStatement.setString(1, playertName);
@@ -1148,10 +1225,15 @@ public class BDD_v2 {
 	 * Delete player table.
 	 *
 	 * @throws SQLException the SQL exception
+	 * @throws ClassNotFoundException 
 	 */
-	public static void deletePlayerTable() throws SQLException {
+	public static void deletePlayerTable() throws SQLException, ClassNotFoundException {
 		for (String tableName : tabBdd) {
 			if (!tableName.equals("ATP") && !tableName.equals("WTA")) {
+				for (Joueur joueur : getAllJoueurs(tableName)) {
+					System.out.println("path to img joueur : "+joueur.getImgJoueur());
+					deleteFile(joueur.getImgJoueur());
+				}
 				String deleteQuery = "DROP TABLE IF EXISTS " + tableName;
 				try (PreparedStatement updateStatement = connection.prepareStatement(deleteQuery)) {
 					updateStatement.executeUpdate();
@@ -1166,11 +1248,17 @@ public class BDD_v2 {
 	 *
 	 * @param s_tableNameToDelete the s table name to delete
 	 * @throws SQLException the SQL exception
+	 * @throws ClassNotFoundException 
 	 */
-	public static void deleteOnePlayerTable(String s_tableNameToDelete) throws SQLException {
+	public static void deleteOnePlayerTable(String s_tableNameToDelete) throws SQLException, ClassNotFoundException {
 		String s_tableName = s_tableNameToDelete.toUpperCase();
 		if (!s_tableName.equals("ATP") && !s_tableName.equals("WTA") && !s_tableName.equals("EVENT")
 				&& !s_tableName.equals("BACKGROUND") && !s_tableName.equals("FLAG")) {
+			
+			for (Joueur joueur : getAllJoueurs(s_tableNameToDelete)) {
+				System.out.println("path to img joueur : "+joueur.getImgJoueur());
+				deleteFile(joueur.getImgJoueur());
+			}
 			String deleteQuery = "DROP TABLE IF EXISTS " + s_tableName;
 			try (PreparedStatement updateStatement = connection.prepareStatement(deleteQuery)) {
 				updateStatement.executeUpdate();
@@ -1187,6 +1275,7 @@ public class BDD_v2 {
 	 */
 	public static void updateFlagInDatabase(String currentName, Drapeau newDrapeau) {
 		try {
+			
 			System.out.println(currentName+", drapeau : "+newDrapeau.getNom()+" | "+newDrapeau.getPays()+" | "+newDrapeau.getImageDrapeau());
 			String updateQuery = "UPDATE Flag SET nomacro = ?, nompays = ?, imgflag = ? WHERE nomacro = ?";
 			try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
@@ -1323,7 +1412,7 @@ public class BDD_v2 {
 	public static void updateImgJoueur(int id, String path, String bddName) {
 		System.out.println("  image pathh from the player who is updated : " + path);
 		try {
-
+			
 			String updateQuery = "UPDATE " + bddName + " SET ImgJoueur = ? WHERE id = ?";
 			try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
 				preparedStatement.setString(1, path);
@@ -1439,7 +1528,7 @@ public class BDD_v2 {
 	public static void verifierEtCreerTables() throws ClassNotFoundException, SQLException {
 		// Liste des noms de tables � v�rifier
 		String[] tables = { "Background", "Event", "Flag", "ATP", "WTA" };
-		Background backgroundExample = new Background("backgroundExample");
+		Background backgroundExample = new Background("backgroundExample32");
 		for (String table : tables) {
 			if (!tableExiste(table)) {
 				// Si la table n'existe pas, la creer
@@ -1448,15 +1537,15 @@ public class BDD_v2 {
 					executerRequeteSQL("CREATE TABLE " + table
 							+ " (Nom VARCHAR(120) PRIMARY KEY, Img_1 varchar(255), Img_2 varchar(255), Img_3 varchar(255), Img_4 varchar(255), Img_5 varchar(255));");
 
-					backgroundExample.setImage_1("Background" + File.separator + "backgroundexample1.png");
-					backgroundExample.setImage_2("Background" + File.separator + "backgroundexample2.png");
-					backgroundExample.setImage_3("Background" + File.separator + "backgroundexample3.png");
-					backgroundExample.setImage_4("Background" + File.separator + "backgroundexample4.png");
-					backgroundExample.setImage_5("Background" + File.separator + "backgroundexample5.png");
+					backgroundExample.setImage_1("Background" + File.separator + "1bgFull32.png");
+					backgroundExample.setImage_2("Background" + File.separator + "2bgPlayer.png");
+					backgroundExample.setImage_3("Background" + File.separator + "3bgGame.png");
+					backgroundExample.setImage_4("Background" + File.separator + "4bgTab32.png");
+					backgroundExample.setImage_5("Background" + File.separator + "5bgWaitin.png");
 					BDD_v2.insertionBackgroundDansBDD(backgroundExample);
 				} else if (table.equals("Event")) {
 					executerRequeteSQL("CREATE TABLE " + table + " (Nom VARCHAR(120) PRIMARY KEY, NomBG VARCHAR(120));");
-					Evenement eventExample = new Evenement("eventExample");
+					Evenement eventExample = new Evenement("eventExample32");
 					eventExample.setBackground(backgroundExample);// BDD_v2.getOneBackground("backgroundExample"));
 					insertionEventDansBDD(eventExample);
 				} else if (table.equals("Flag")) {
@@ -1510,7 +1599,7 @@ public class BDD_v2 {
 	 */
 	// ---------------------------------------------------------export /
 	// import------------------------------------------------------------------------------------
-	public static void exportTable(String tableName) {
+	public static void exportTable(JFrame frameParent, String tableName) {
 		// Requ�te SQL pour r�cup�rer toutes les donn�es de la table
 		String query = "SELECT * FROM " + tableName;
 
@@ -1524,8 +1613,7 @@ public class BDD_v2 {
 		if (userSelection == JFileChooser.APPROVE_OPTION) {
 			try (Statement statement = connection.createStatement();
 					ResultSet resultSet = statement.executeQuery(query);
-					BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-							new FileOutputStream(fileChooser.getSelectedFile()), StandardCharsets.UTF_8))) {
+					BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileChooser.getSelectedFile()), StandardCharsets.UTF_8))) {
 
 				// �crire l'en-t�te CSV
 				StringBuilder header = new StringBuilder();
@@ -1545,14 +1633,99 @@ public class BDD_v2 {
 					writer.write(row.toString() + "\n");
 				}
 
-				JOptionPane.showMessageDialog(null, "Export CSV complete.");
+				JOptionPane.showMessageDialog(frameParent, "Export CSV complete.");
 
 			} catch (SQLException | IOException e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(null, "Error during CSV export : " + e.getMessage());
+				JOptionPane.showMessageDialog(frameParent, "Error during CSV export : " + e.getMessage());
 			}
 		}
 	}
+
+	public static void exportTableToZip(JFrame frameParent, String tableName) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Export to ZIP file");
+        fileChooser.setSelectedFile(new File(tableName + ".zip"));
+
+        int userSelection = fileChooser.showSaveDialog(null);
+        if (userSelection != JFileChooser.APPROVE_OPTION) {
+            System.out.println("Export annulé.");
+            return;
+        }
+
+        File zipFile = fileChooser.getSelectedFile();
+        if (!zipFile.getName().toLowerCase().endsWith(".zip")) {
+            zipFile = new File(zipFile.getAbsolutePath() + ".zip");
+        }
+
+        // Créer un fichier CSV temporaire
+        File csvFile = new File(System.getProperty("java.io.tmpdir"), tableName + ".csv");
+
+        try {
+            exportTableToCSV(tableName, csvFile); //  Générer le fichier CSV
+
+            try (ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zipFile))) {
+                //  Ajouter le fichier CSV au ZIP
+                ListOfEventsFrame.addFileToZip(zipOut, csvFile, tableName + ".csv");
+
+                // Ajouter les images référencées
+                try (Statement statement = connection.createStatement();
+                     ResultSet resultSet = statement.executeQuery("SELECT ImgJoueur FROM " + tableName)) {
+                    
+                    while (resultSet.next()) {
+                        String imagePath = resultSet.getString("ImgJoueur");
+                        if (imagePath != null && !imagePath.isEmpty()) {
+                            File imageFile = new File(imagePath);
+                            if (imageFile.exists()) {
+                                ListOfEventsFrame.addFileToZip(zipOut, imageFile, "player_image/" + imageFile.getName());
+                            } else {
+                                System.err.println("Image introuvable : " + imagePath);
+                            }
+                        }
+                    }
+                }
+
+                JOptionPane.showMessageDialog(frameParent, "Export ZIP terminé : " + zipFile.getAbsolutePath());
+            }
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(frameParent, "Erreur lors de l'export ZIP : " + e.getMessage());
+        } finally {
+            // 📌 Supprimer le fichier CSV temporaire après exportation
+            if (csvFile.exists()) {
+                csvFile.delete();
+            }
+        }
+    }
+	
+	/**
+     * Génère un fichier CSV à partir de la table SQL et l'enregistre en local.
+     */
+    private static void exportTableToCSV(String tableName, File csvFile) throws SQLException, IOException {
+        String query = "SELECT * FROM " + tableName;
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query);
+             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFile), StandardCharsets.UTF_8))) {
+
+            // Écrire l'en-tête CSV
+            StringBuilder header = new StringBuilder();
+            for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
+                header.append(resultSet.getMetaData().getColumnName(i)).append(";");
+            }
+            header.deleteCharAt(header.length() - 1);
+            writer.write(header.toString() + "\n");
+
+            // Écrire les données CSV
+            while (resultSet.next()) {
+                StringBuilder row = new StringBuilder();
+                for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
+                    row.append(resultSet.getString(i)).append(";");
+                }
+                row.deleteCharAt(row.length() - 1);
+                writer.write(row.toString() + "\n");
+            }
+        }
+    }
 
 	/**
 	 * Import CSV.
@@ -1563,12 +1736,11 @@ public class BDD_v2 {
 	 * @throws IOException            Signals that an I/O exception has occurred.
 	 * @throws ClassNotFoundException the class not found exception
 	 */
-	public static void importCSV(String tableName, String filePath)
-			throws SQLException, IOException, ClassNotFoundException {
+	public static void importCSV(String tableName, String filePath) throws SQLException, IOException, ClassNotFoundException {
 		creationNewTable(tableName);
 
 		// Lecture du fichier CSV et insertion des donn�es dans la table
-		String insertQuery = "INSERT INTO " + tableName + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String insertQuery = "INSERT INTO " + tableName + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?)";
 		try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
 			// Sp�cifier l'encodage UTF-8 lors de la lecture du fichier
 			@SuppressWarnings("resource")
@@ -1581,6 +1753,7 @@ public class BDD_v2 {
 					isFirstLine = false;
 					continue;
 				}
+				System.out.println(line);
 				// Diviser la ligne en valeurs s�par�es par des points-virgules
 				String[] values = line.split(";");
 				// Assigner les valeurs aux param�tres de la requ�te pr�par�e
@@ -1601,7 +1774,12 @@ public class BDD_v2 {
 				preparedStatement.setString(15, values[14]); // Gain total
 				preparedStatement.setString(16, values[15]); // Lieu de naissance
 				preparedStatement.setString(17, values[16]); // Lieu de r�sidence
-				preparedStatement.setString(18, values[17]); // tete de serie
+				String seeding = " ";
+				System.out.println(values.length);
+				if (values.length > 17) {
+					seeding = values[17];
+				}
+				preparedStatement.setString(18, seeding); // tete de serie
 				// Ex�cuter la requ�te d'insertion
 				preparedStatement.executeUpdate();
 			}
@@ -1610,4 +1788,17 @@ public class BDD_v2 {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void deleteFile(String filePath) {
+        try {
+            boolean deleted = Files.deleteIfExists(Paths.get(filePath));
+            if (deleted) {
+                System.out.println("Fichier supprimé : " + filePath);
+            } else {
+                System.out.println("Le fichier n'existe pas : " + filePath);
+            }
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la suppression : " + e.getMessage());
+        }
+    }
 }

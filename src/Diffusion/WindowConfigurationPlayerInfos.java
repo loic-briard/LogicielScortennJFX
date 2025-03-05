@@ -10,7 +10,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.GraphicsDevice;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -91,11 +94,11 @@ autre}
 	 * @param sonFrame the son frame
 	 * @param typeFrame the type frame
 	 */
-	public WindowConfigurationPlayerInfos(WindowBroadcastPublic sonFrame, String typeFrame) {
+	public WindowConfigurationPlayerInfos(GraphicsDevice configScreen,WindowBroadcastPublic sonFrame, String typeFrame) {
 		this.displayFrame = sonFrame;
 		this.frameType = FrameType.valueOf(typeFrame.toLowerCase());
 		
-		initializeFrame();
+		initializeFrame(configScreen);
 		initializeSaveButton();
 		initializePanel();
 		
@@ -180,18 +183,28 @@ autre}
 	/**
 	 * Initialize frame.
 	 */
-	private void initializeFrame() {
+	private void initializeFrame(GraphicsDevice configScreen) {
         setTitle("Configuration Player Information :  "+this.frameType.toString().toLowerCase());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(500, 700);
         setIconImage(new ImageIcon("icon.png").getImage());
+        Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
+        setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
+        
     }
     
     /**
      * Initialize save button.
      */
     private void initializeSaveButton() {
-        buttonSaveConfig.addActionListener(this::saveConfig);
+        buttonSaveConfig.addActionListener(e -> {
+			try {
+				saveConfig(e);
+			} catch (ClassNotFoundException | SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		});
     }
     
     /**
@@ -209,18 +222,20 @@ autre}
      * Save config.
      *
      * @param e the e
+     * @throws SQLException 
+     * @throws ClassNotFoundException 
      */
-    private void saveConfig(ActionEvent e) {
-    	int choice = JOptionPane.showConfirmDialog(null, "Do you want to update position and font of players?",
+    private void saveConfig(ActionEvent e) throws ClassNotFoundException, SQLException {
+    	int choice = JOptionPane.showConfirmDialog(this, "Do you want to update position and font of players?",
 				"Players position, font update", JOptionPane.YES_NO_OPTION);
 		if(choice == JOptionPane.YES_OPTION)
-			System.out.println("update position, font players selected");
+			System.out.println("saveConfig => update position, font players selected");
 		else
-			System.out.println("don't update position, font players selected");
+			System.out.println("saveConfig => don't update position, font players selected");
 		
 		if (choice == JOptionPane.YES_OPTION) {
 			confirmAllTab();
-//        refreshAllTab();
+//			refreshAllTab();
 
 			switch (frameType) {
 			case player:
@@ -234,6 +249,37 @@ autre}
 				break;
 			case full:
 				saveFull();
+				break;
+			default:
+				break;
+			}
+		}else {
+			switch (frameType) {
+			case player:
+				TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) tabbedPane.getComponentAt(0);
+		        PlayerForDiffusion infosPlayerDetails = currentTab.getInfosPlayerDetails();
+		        infosPlayerDetails.recupInfosPlayer(infosPlayerDetails.getEmplacementPlayer());
+				break;
+			case game:
+				for (int i = 0; i < tabbedPane.getTabCount() - 1; i++) {
+		            TabConfigurationPlayerInfos currentTab1 = (TabConfigurationPlayerInfos) tabbedPane.getComponentAt(i);
+		            PlayerForDiffusion infosDetails = currentTab1.getInfosPlayerDetails();
+		            infosDetails.recupInfosPlayer(infosDetails.getEmplacementPlayer());
+				}
+				break;
+			case tab:
+				for (int i = 0; i < tabbedPane.getTabCount() - 1; i++) {
+		            TabConfigurationPlayerInfos currentTab1 = (TabConfigurationPlayerInfos) tabbedPane.getComponentAt(i);
+		            PlayerForDiffusion infosDetails = currentTab1.getInfosPlayerDetails();
+		            infosDetails.recupInfosPlayer(infosDetails.getEmplacementPlayer());
+				}
+				break;
+			case full:
+				for (int i = 0; i < tabbedPane.getTabCount() - 1; i++) {
+		            TabConfigurationPlayerInfos currentTab1 = (TabConfigurationPlayerInfos) tabbedPane.getComponentAt(i);
+		            PlayerForDiffusion infosDetails = currentTab1.getInfosPlayerDetails();
+		            infosDetails.recupInfosPlayer(infosDetails.getEmplacementPlayer());
+				}
 				break;
 			default:
 				break;
@@ -332,6 +378,7 @@ autre}
 				playerElement.setPositionY(element.getPositionY());
 			}
             
+            System.out.println("taille de " + panel.getName() + ", panel : "+panel.getHeight()+", label : "+panel.getComponents()[0].getHeight());
             playerPoliceFull.setVisible(panel.isVisible());
             if ("ImgJoueur".equals(panel.getName()) || "ImgFlag".equals(panel.getName())) {
                 playerPoliceFull.setTaille(panel.getHeight());

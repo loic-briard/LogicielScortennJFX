@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.Point;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -338,6 +339,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 		this.numeroPlayer = numeroPlayer;
 //		this.animationFrame = frameForDiffusion.getAnimationFrame();
 		this.animationPanel = panelAnimationConfig;
+		globalsettings = GlobalSettings.getInstance();
 		playerfordifusion2 = this;
 
 		initializePolice();
@@ -345,7 +347,6 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 		recupInfosPlayer(getEmplacementPlayer());
 		mouseAdapterPanel = new MouseAdapterPanel(playerfordifusion2, playerfordifusion2, this.frameForDiffusion);
 		
-		globalsettings = GlobalSettings.getInstance();
 		
 //		this.frameForDiffusion.removeLayerContent(55);
 //		backgroundPanel = new BackgroundPanel(event.getBackground().getImage_2());
@@ -425,11 +426,13 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	 * @return the j panel
 	 */
 	private JPanel createPlayerPanel(String name) {
-	    JPanel panel = new JPanel();
+		GridBagLayout layoutImg = new GridBagLayout();
+		JPanel panel = new JPanel();
+		panel.setLayout(layoutImg);
+//		if(name =="ImgJoueur" || name == "ImgFlag") {
+//		}
 	    panel.setOpaque(false);
 	    panel.setName(name);
-//	    panel.setDoubleBuffered(true);
-//	    MouseAdapterPanel mouseAdapter = new MouseAdapterPanel(panel);
 	    MouseAdapterPanel mouseAdapter = new MouseAdapterPanel(panel, this.playerfordifusion2, this.frameForDiffusion);
 	    panel.addMouseListener(mouseAdapter);
 	    panel.addMouseMotionListener(mouseAdapter);
@@ -441,7 +444,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	 *
 	 * @return the emplacement player
 	 */
-	private String getEmplacementPlayer() {
+	public String getEmplacementPlayer() {
 	    return switch (typeFen) {
 	        case "player" -> CONFIG_DIR + nomEvent + "/player" + JSON_EXT;
 	        case "game" -> CONFIG_DIR + nomEvent + "/game" + JSON_EXT;
@@ -469,9 +472,30 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	 */
 	public void setPlayer(Joueur joueur, int ligne) throws ClassNotFoundException, SQLException {
 	    this.joueur = joueur;
-	    System.out.println("taille infos : "+"name : "+globalsettings.getNameMaxLength()+", Surname : "+globalsettings.getSurnameMaxLength());
+//	    System.out.println("---> set player, taille infos : "+"name : "+globalsettings.getNameMaxLength()+", Surname : "+globalsettings.getSurnameMaxLength());
 	    // Créer une map pour stocker les informations du joueurS
-	    Map<JPanel, LabelInfo> playerInfo = new LinkedHashMap<>();
+	    
+	    Map<JPanel, LabelInfo> playerInfo = getPlayerInfo(joueur, ligne);
+		// Mettre à jour tous les panneaux de texte
+	    playerInfo.forEach((panel, info) -> updateTextPanel(panel, info));
+
+	    recupInfosPlayer(getEmplacementPlayer());
+	    // Mettre à jour les panneaux d'image
+	    ImgLabel = new ImageUtility(joueur.getImgJoueur(), tailleImgJoueur);
+	    FlagLabel = new ImageUtility(BDD_v2.getFlagImagePathByAcronym(joueur.getNatio_acronyme()),tailleImgFlag);
+	    updateImagePanel(playerImg, ImgLabel);
+	    updateImagePanel(playerFlag, FlagLabel);
+	    //modif
+//	    updateImagePanel(playerImg, ImgLabel);
+//	    updateImagePanel(playerFlag, FlagLabel);
+	    // Créer et configurer le panneau global
+	    setupGlobalPanel();
+
+	    // Mettre à jour l'affichage
+	    updateDisplay(ligne);    
+	}
+	public Map<JPanel, LabelInfo> getPlayerInfo ( Joueur joueur, int ligne) {
+		Map<JPanel, LabelInfo> playerInfo = new LinkedHashMap<>();
 	    playerInfo.put(playerName, new LabelInfo(substringMethod(joueur.getNom(), globalsettings.getNameMaxLength()) , policeName));
 	    playerInfo.put(playerSurname, new LabelInfo(substringMethod(joueur.getPrenom(), globalsettings.getSurnameMaxLength()), policeSurname));
 	    playerInfo.put(playerAcro, new LabelInfo(joueur.getNatio_acronyme(), policeAcro));
@@ -487,20 +511,9 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	    playerInfo.put(playerCityresidence, new LabelInfo(substringMethod(joueur.getCityResidence(), globalsettings.getCityResidenceMaxLength()), policeCityresidence));
 	    playerInfo.put(playerTeteDeSerie, new LabelInfo(joueur.getTeteDeSerie(), policeTeteDeSerie));
 	    playerInfo.put(playerLine, new LabelInfo(String.valueOf(ligne), policeLine));
-	    // Mettre à jour tous les panneaux de texte
-	    playerInfo.forEach((panel, info) -> updateTextPanel(panel, info));
-
-	    // Mettre à jour les panneaux d'image
-	    ImgLabel = new ImageUtility(joueur.getImgJoueur(), tailleImgJoueur);
-	    FlagLabel = new ImageUtility(BDD_v2.getFlagImagePathByAcronym(joueur.getNatio_acronyme()),tailleImgFlag);
-	    updateImagePanel(playerImg, ImgLabel);
-	    updateImagePanel(playerFlag, FlagLabel);
-
-	    // Créer et configurer le panneau global
-	    setupGlobalPanel();
-
-	    // Mettre à jour l'affichage
-	    updateDisplay(ligne);    
+	    
+	    return playerInfo;
+		
 	}
 
 	/**
@@ -509,7 +522,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	 * @param panel the panel
 	 * @param info the info
 	 */
-	private void updateTextPanel(JPanel panel, LabelInfo info) {
+	public void updateTextPanel(JPanel panel, LabelInfo info) {
 	    panel.removeAll();
 	    JLabel label = new JLabel(info.text);
 	    label.setForeground(info.police.getNewColor());
@@ -527,7 +540,8 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	private void updateImagePanel(JPanel panel, ImageUtility imageLabel) {
 	    panel.removeAll();
 	    panel.add(imageLabel);
-	    panel.setSize(imageLabel.getPreferredSize().width, imageLabel.getPreferredSize().height + 5);
+	    panel.revalidate();
+	    panel.setSize(imageLabel.getPreferredSize().width, imageLabel.getPreferredSize().height);
 	}
 
 	/**
@@ -587,7 +601,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	        		panelPlayerGlobal.revalidate();
 	        		panelPlayerGlobal.repaint();
 
-	        		System.out.println("Player taille panel depart zoom : " + panelPlayerGlobal.getWidth() + "x" + panelPlayerGlobal.getHeight() + ", position : " + panelPlayerGlobal.getLocation().x + "x" + panelPlayerGlobal.getLocation().y);
+//	        		System.out.println("Player taille panel depart zoom : " + panelPlayerGlobal.getWidth() + "x" + panelPlayerGlobal.getHeight() + ", position : " + panelPlayerGlobal.getLocation().x + "x" + panelPlayerGlobal.getLocation().y);
 
 	        		this.animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, this::animatePlayerElements);
 	        	}else
@@ -665,7 +679,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	/**
 	 * The Class LabelInfo.
 	 */
-	private static class LabelInfo {
+	public static class LabelInfo {
 	    
     	/** The text. */
     	String text;
@@ -690,9 +704,9 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	 *
 	 * @param emplacementPlayer the emplacement player
 	 */
-	private void recupInfosPlayer(String emplacementPlayer) {
+	public void recupInfosPlayer(String emplacementPlayer) {
 	    int index = numeroPlayer;
-	    System.out.println("--- index du joueur a recup from " + typeFen + " : " + index + " | " + numeroPlayer + ", localisation : " + emplacementPlayer + " ---");
+	    System.out.println("recupInfosPlayer => --- index du joueur a recup from " + typeFen + " : " + index + " | " + numeroPlayer + ", localisation : " + emplacementPlayer + " ---");
 	    ConfigurationSaveLoad configData = ConfigurationSaveLoad.loadConfigFromFile(emplacementPlayer);
 	    if (configData == null) {
 	        setDefaultPositions();
@@ -776,13 +790,36 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	 */
 	private void updateElement(ConfigurationSaveLoad configData, String emplacementPlayer, int index, String elementName, 
 	                           JPanel panel, chosenPolice police, ElementPoliceJoueur elementPolice) {
+		
 		ElementJoueur element = configData.getElement(emplacementPlayer, nomEvent, typeFen, elementName, index);
 	    if (element != null) {
-	        panel.setLocation(element.getPositionX(), element.getPositionY());
-	        String[] fontParts = elementPolice.getFont().split(",");
+	    	String[] fontParts = elementPolice.getFont().split(",");
 	        police.setNewfont(new Font(fontParts[0], Integer.parseInt(fontParts[1]), Integer.parseInt(fontParts[2])));
+	        if(panel.getComponents().length > 0)
+	        	panel.getComponents()[0].setFont(police.getNewfont());
+	        
 	        String[] colorParts = elementPolice.getColor().split(",");
 	        police.setNewColor(new Color(Integer.parseInt(colorParts[0]), Integer.parseInt(colorParts[1]), Integer.parseInt(colorParts[2])));
+	        
+	        if(panel.getComponents().length > 0)
+	        	panel.getComponents()[0].setForeground(police.getNewColor());
+	        
+	    	if ((this.getTypeFen() == "full" || this.getTypeFen() == "tab") && (panel.getName() == "Name" || panel.getName() == "Surname" || panel.getName() == "Seeding")) {
+				int space = globalsettings.getSpaceLength();
+				switch (panel.getName()) {
+				case "Name":
+					panel.setLocation(element.getPositionX(), element.getPositionY());
+					this.playerSurname.setLocation(element.getPositionX() + panel.getWidth() + space, element.getPositionY());
+					this.playerTeteDeSerie.setLocation(element.getPositionX() + this.playerSurname.getWidth()+ panel.getWidth() + space*2, element.getPositionY());
+					break;
+
+				default:
+					break;
+				}				
+			}else {	    	
+				panel.setLocation(element.getPositionX(), element.getPositionY());
+			}
+	        
 	    }
 	}
 
@@ -803,8 +840,10 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	        if (element != null) {
 	            panel.setLocation(element.getPositionX(), element.getPositionY());
 	            if (elementName.equals("ImgJoueur")) {
+	            	System.out.println("updateImageElement => --->taille img joueur recup : "+ elementPolice.getTaille());
 	                tailleImgJoueur = elementPolice.getTaille();
 	            } else if (elementName.equals("ImgFlag")) {
+	            	System.out.println("updateImageElement => --->taille flag joueur recup : "+ elementPolice.getTaille());
 	                tailleImgFlag = elementPolice.getTaille();
 	            }
 	        }

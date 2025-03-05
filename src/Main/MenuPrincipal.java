@@ -17,6 +17,7 @@ import javax.swing.border.TitledBorder;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -29,6 +30,8 @@ import Flags.ListOfFlag;
 import GlobalSettings.GlobalSettingsUI;
 import Players.Joueur;
 import Players.ListOfPlayersFrame;
+import Sauvegarde.ConfigurationSaveLoad;
+import Sauvegarde.ElementJoueurFull;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -145,34 +148,91 @@ public class MenuPrincipal extends JFrame {
     /**
      * Open list events window.
      */
-    private void openListEventsWindow() {
-        if (listEventsWindow == null || !listEventsWindow.isVisible()) {
-            try {
-                listEventsWindow = new ListOfEventsFrame(this);
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        } else {
-            listEventsWindow.toFront();
-            listEventsWindow.setState(JFrame.NORMAL);
-        }
-    }
+	private void openListEventsWindow() {
+		if (listEventsWindow == null || !listEventsWindow.isVisible()) {
+			// Afficher l'écran de chargement
+			LoadingDialog loadingDialog = new LoadingDialog(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))]);
+			loadingDialog.showLoading();
+
+	        // Charger la fenêtre dans un thread séparé
+	        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+	            @Override
+	            protected Void doInBackground() throws Exception {
+	                try {
+	                    listEventsWindow = new ListOfEventsFrame(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))], MenuPrincipal.this);
+	                } catch (SQLException e) {
+	                    e.printStackTrace();
+	                }
+	                return null;
+	            }
+
+	            @Override
+	            protected void done() {
+	                // Fermer l'écran de chargement une fois le chargement terminé
+	                loadingDialog.hideLoading();
+	                SwingUtilities.invokeLater(() -> {
+	                    listEventsWindow.setVisible(true);
+//	                    listEventsWindow.setAlwaysOnTop(true); // Force au premier plan temporairement
+	                    listEventsWindow.toFront();
+	                    listEventsWindow.requestFocus();
+	                    
+	                    // Désactive `AlwaysOnTop` après 500ms pour éviter qu'elle reste bloquée au-dessus
+//	                    new javax.swing.Timer(500, evt -> listEventsWindow.setAlwaysOnTop(false)).setRepeats(false);
+	                });
+	                
+	            }
+	        };
+	        worker.execute();
+	        
+		} else {
+			listEventsWindow.toFront();
+			listEventsWindow.setState(JFrame.NORMAL);
+		}
+	}
 
     /**
      * Open list BG window.
      */
-    private void openListBGWindow() {
-        if (listBGWindow == null || !listBGWindow.isVisible()) {
-            try {
-                listBGWindow = new ListOfBackgroundFrame();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        } else {
-            listBGWindow.toFront();
-            listBGWindow.setState(JFrame.NORMAL);
-        }
-    }
+	private void openListBGWindow() {
+		if (listBGWindow == null || !listBGWindow.isVisible()) {
+			// Afficher l'écran de chargement
+			LoadingDialog loadingDialog = new LoadingDialog(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))]);
+			loadingDialog.showLoading();
+
+			// Charger la fenêtre dans un thread séparé
+			SwingWorker<Void, Void> worker = new SwingWorker<>() {
+				@Override
+				protected Void doInBackground() throws Exception {
+					try {
+						listBGWindow = new ListOfBackgroundFrame(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))]);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+					return null;
+				}
+
+				@Override
+				protected void done() {
+					// Fermer l'écran de chargement une fois le chargement terminé
+					loadingDialog.hideLoading();
+					SwingUtilities.invokeLater(() -> {
+						listBGWindow.setVisible(true);
+						listBGWindow.toFront();
+						listBGWindow.requestFocus();
+
+						// Désactive `AlwaysOnTop` après 500ms pour éviter qu'elle reste bloquée
+						// au-dessus
+//						new javax.swing.Timer(500, evt -> listBGWindow.setAlwaysOnTop(false)).setRepeats(false);
+					});
+
+				}
+			};
+			worker.execute();
+		} else {
+			listBGWindow.toFront();
+			listBGWindow.setState(JFrame.NORMAL);
+		}
+	}
 
     /**
      * Open list players window.
@@ -180,7 +240,7 @@ public class MenuPrincipal extends JFrame {
     private void openListPlayersWindow() {
         if (listPlayersWindow == null || !listPlayersWindow.isVisible()) {
             try {
-                listPlayersWindow = new ListOfPlayersFrame(this);
+                listPlayersWindow = new ListOfPlayersFrame(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))], this);
             } catch (SQLException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
@@ -196,7 +256,7 @@ public class MenuPrincipal extends JFrame {
     private void openListFlagsWindow() {
         if (flagsWindow == null || !flagsWindow.isVisible()) {
             try {
-                flagsWindow = new ListOfFlag();
+                flagsWindow = new ListOfFlag(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))]);
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -207,17 +267,7 @@ public class MenuPrincipal extends JFrame {
     }
     
     private void openListParametersWindow() {
-    	GlobalSettingsUI.openListParametersWindow();
-//        if (flagsWindow == null || !flagsWindow.isVisible()) {
-//            try {
-//                flagsWindow = new ListOfFlag();
-//            } catch (SQLException ex) {
-//                ex.printStackTrace();
-//            }
-//        } else {
-//            flagsWindow.toFront();
-//            flagsWindow.setState(JFrame.NORMAL);
-//        }
+    	GlobalSettingsUI.openListParametersWindow(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))]);
     }
     
     /**
@@ -338,6 +388,8 @@ public class MenuPrincipal extends JFrame {
         eventComboBox = createStyledComboBox(BDD_v2.getNamesFromDatabase("event"));
         eventComboBox.setSelectedIndex(-1);
         panel.add(eventComboBox, gbc);
+        
+        
 
         // Player List Selection
         gbc.gridx = 0; gbc.gridy = 1;
@@ -363,6 +415,23 @@ public class MenuPrincipal extends JFrame {
         
         selectAthleteButton = createStyledButton("Select Players");
         selectAthleteButton.addActionListener(e -> openAthleteSelection());
+        
+        eventComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	String path = "Config"+File.separator+eventComboBox.getSelectedItem()+File.separator+"full.json";
+            	File nbjoueur = new File(path);
+            	if(nbjoueur.exists()) {
+            		ElementJoueurFull elementJoueurFull = ConfigurationSaveLoad.readJsonFileFull(path);
+            		System.out.println(elementJoueurFull.getPlayer().size());
+            		for (Integer integer : allowedValues) {
+						if(elementJoueurFull.getPlayer().size() == integer)
+							spinnerNbJoueur.setValue(integer);           		
+					}
+            	}else
+            		System.out.println(" ! pas de dossier config pour cet event ! ");
+            }
+        });
         
         JButton diffusionButton = createStyledButtonStart("Start Tournament");
         diffusionButton.addActionListener(e -> {
@@ -436,11 +505,11 @@ public class MenuPrincipal extends JFrame {
             blinkComponentBorder(eventComboBox, 3);
         } else if(bddPLayersComboBox.getSelectedItem() == null) {
             blinkComponentBorder(bddPLayersComboBox, 3);
-        } else if(athleteSelection == null) {
+        } else if(athleteSelection == null || athleteSelection.getSelectedPlayers().size() < 1) {
             makeButtonBlink(selectAthleteButton, 3);
         } else if((int) spinnerNbJoueur.getValue() == 0) {
             blinkComponentBorder(spinnerNbJoueur, 3);
-        } else {
+        }else {
 //        	System.out.println(GlobalSettings.getInstance().getNameMaxLength());
             ArrayList<Joueur> selectedPlayers = athleteSelection.getSelectedPlayers();
             displaySelectedPlayers(selectedPlayers);
@@ -677,7 +746,7 @@ public class MenuPrincipal extends JFrame {
         	if(bddPLayersComboBox.getSelectedItem() == null) {
                 blinkComponentBorder(bddPLayersComboBox, 3);
             } else
-            	athleteSelection = new AthleteSelection((String) bddPLayersComboBox.getSelectedItem());
+            	athleteSelection = new AthleteSelection(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))], (String) bddPLayersComboBox.getSelectedItem());
         } catch (SQLException | ClassNotFoundException e1) {
             e1.printStackTrace();
         }
@@ -693,7 +762,7 @@ public class MenuPrincipal extends JFrame {
         for (Joueur joueur : selectedPlayers) {
             playersInfo.append(joueur.getNom()).append(" ").append(joueur.getPrenom()).append("\n");
         }
-        JOptionPane.showMessageDialog(null, playersInfo.toString(), "Selected players", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, playersInfo.toString(), "Selected players", JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -707,16 +776,22 @@ public class MenuPrincipal extends JFrame {
         String selectedEvent = (String) eventComboBox.getSelectedItem();
         Evenement eventChoosen = new Evenement(selectedEvent);
         try {
-            eventChoosen = BDD_v2.getEvenementByName(selectedEvent);
+        	eventChoosen = BDD_v2.getEvenementByName(selectedEvent);
         } catch (SQLException e1) {
-            e1.printStackTrace();
+        	e1.printStackTrace();
         }
-        GraphicsDevice[] screens = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-        GraphicsDevice selectedScreen = screens[Integer.parseInt((String)spinnerScreen.getValue())];
-        WindowBroadcastPublic diffusionFrame = new WindowBroadcastPublic(eventChoosen, selectedScreen, new Dimension((int)sizeFenetreX.getValue(), (int)sizeFenetreY.getValue()));
-        WindowTournamentTree windowTournamentTree = new WindowTournamentTree(selectedPlayers, eventChoosen, diffusionFrame, (int) spinnerNbJoueur.getValue());
-        diffusionFrame.setWindowTournamentTreeFromBroadcast(windowTournamentTree);
-        System.out.println("-> Selected event : " + eventChoosen.getNom() + ", player list : " + bddPLayersComboBox.getSelectedItem() + ", number of players : " + (int) spinnerNbJoueur.getValue()+" ,taille fenetre "+diffusionFrame.getSize().getWidth()+"x"+diffusionFrame.getSize().getHeight()+"<-");
+        if (eventChoosen.getBackground() != null) {
+	        GraphicsDevice[] screens = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+	        GraphicsDevice selectedScreen = screens[Integer.parseInt((String)spinnerScreen.getValue())];
+	        GraphicsDevice configScreen = screens[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))];
+	        WindowBroadcastPublic diffusionFrame = new WindowBroadcastPublic(eventChoosen, selectedScreen, new Dimension((int)sizeFenetreX.getValue(), (int)sizeFenetreY.getValue()));
+	        System.out.println("--> ecran actuel : "+actualScreen);
+	        WindowTournamentTree windowTournamentTree = new WindowTournamentTree(configScreen, selectedPlayers, eventChoosen, diffusionFrame, (int) spinnerNbJoueur.getValue());
+	        diffusionFrame.setWindowTournamentTreeFromBroadcast(windowTournamentTree);
+	        System.out.println("-> Selected event : " + eventChoosen.getNom() + ", player list : " + bddPLayersComboBox.getSelectedItem() + ", number of players : " + (int) spinnerNbJoueur.getValue()+" ,taille fenetre "+diffusionFrame.getSize().getWidth()+"x"+diffusionFrame.getSize().getHeight()+"<-");
+        }else {
+        	JOptionPane.showMessageDialog(this, "The event have no background", "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**

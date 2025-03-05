@@ -22,6 +22,7 @@ public class ModifyFlagFrame extends JFrame {
     private JPanel imagePreviewPanel;
     private String currentImage;
     private JButton loadButton;
+    private String lastFolder = null;
 
     /**
      * Instantiates a new modify flag frame.
@@ -32,7 +33,7 @@ public class ModifyFlagFrame extends JFrame {
      * @param imgPath           the image path
      * @param selectedRow       the selected row
      */
-    public ModifyFlagFrame(ListOfFlag parentFrame, String currentName, String currentNameCountry, String imgPath, int selectedRow) {
+    public ModifyFlagFrame(GraphicsDevice configScreen, ListOfFlag parentFrame, String currentName, String currentNameCountry, String imgPath, int selectedRow) {
         this.currentName = currentName;
         this.currentNameCountry = currentNameCountry;
         this.currentImage = imgPath;
@@ -41,6 +42,8 @@ public class ModifyFlagFrame extends JFrame {
         setTitle("Modify Flag : " + currentName);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(500, 550);
+        Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
+        setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
         
         ImageIcon logoIcon = new ImageIcon("icon.png");
         if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
@@ -82,7 +85,8 @@ public class ModifyFlagFrame extends JFrame {
 
         loadButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String newImgPath = ImageUtility.chargerFichier();
+                String newImgPath = ImageUtility.chargerFichier(lastFolder);
+                lastFolder = newImgPath;
                 ImageUtility.enregistrerFichier(newImgPath, "flag");
                 currentImage = "flag" + File.separator + ImageUtility.getNameFile(newImgPath);
                 System.out.println("++++ chemin vers le drapeau : " + imgPath);

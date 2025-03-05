@@ -550,11 +550,11 @@ public class PanelAnimationConfiguration extends JPanel {
 	        if(onComplete != null)
 	            onComplete.run();
 	    } else {
-	        System.out.println("Animation LABEL");
+//	        System.out.println("Animation LABEL");
 	        JLabel startLabel = (JLabel) panel.getComponents()[0];
 	        JLabel animatedLabel = new JLabel();
 			if (panel.getName().equals("ImgFlag") || panel.getName().equals("ImgJoueur")) {
-				System.out.println("Animation IMAGE");
+//				System.out.println("Animation IMAGE");
 				ImageUtility imageLabel = (ImageUtility) panel.getComponents()[0];
 				animatedLabel = new ImageUtility(imageLabel.getImagePath(),(int) targetSize.getHeight());
 				targetFont = new Font("Arial", 1, 25);
@@ -666,13 +666,13 @@ public class PanelAnimationConfiguration extends JPanel {
 	 * @param onComplete the on complete
 	 */
 	public void zoomPanel(JPanel panel, WindowBroadcastPublic frame, Runnable onComplete) {
-		System.out.println("Animation ZOOM "+panel.getName());
+//		System.out.println("Animation ZOOM "+panel.getName());
         int initialWidth = panel.getWidth();
         int initialHeight = panel.getHeight();
         int targetWidth = frame.getWidth();
         int targetHeight = frame.getHeight();
         Point initialLocation = panel.getLocation();
-        System.out.println("intial location "+initialLocation.toString()+", taille intial "+initialWidth+"x"+initialHeight);
+        System.out.println("Animation ZOOM "+panel.getName()+"intial location "+initialLocation.toString()+", taille intial "+initialWidth+"x"+initialHeight);
         int duration = getZoomAnimationDuration();
         if (!isZoomAnimationEnabled()) {
             panel.setBounds(0, 0, targetWidth, targetHeight);

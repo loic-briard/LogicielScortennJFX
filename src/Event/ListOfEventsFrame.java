@@ -5,9 +5,11 @@ package Event;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.GraphicsDevice;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.MediaTracker;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -21,7 +23,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -59,12 +60,15 @@ public class ListOfEventsFrame extends JFrame {
 	 * @param menuPrincipal the menu principal
 	 * @throws SQLException the SQL exception
 	 */
-	public ListOfEventsFrame(MenuPrincipal menuPrincipal) throws SQLException {
+	public ListOfEventsFrame(GraphicsDevice configScreen, MenuPrincipal menuPrincipal) throws SQLException {
 		this.parentFrame = menuPrincipal;
 		// Initialisation de la fen�tre
         setTitle("List of Events");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1000, 600);  
+        Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
+        setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
+        
         ImageIcon logoIcon = new ImageIcon("icon.png");
         // V�rifiez si l'ic�ne a �t� charg�e avec succ�s
         if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
@@ -184,7 +188,7 @@ public class ListOfEventsFrame extends JFrame {
 					String backgroundName = (String) eventTable.getValueAt(selectedRow, 1);
 					// Ouvrir une fen�tre de modification avec ces donn�es
 					try {
-						new ModifyEventFrame(ListOfEventsFrame.this, eventName, backgroundName);
+						new ModifyEventFrame(configScreen, ListOfEventsFrame.this, eventName, backgroundName);
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -212,7 +216,7 @@ public class ListOfEventsFrame extends JFrame {
 		newButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					new newEventFrame(ListOfEventsFrame.this);
+					new newEventFrame(configScreen, ListOfEventsFrame.this);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -348,7 +352,7 @@ public class ListOfEventsFrame extends JFrame {
 
     }
     
-    private static void addFileToZip(ZipOutputStream zipOut, File file, String zipPath) throws IOException {
+    public static void addFileToZip(ZipOutputStream zipOut, File file, String zipPath) throws IOException {
         if (file.exists() && file.isFile()) {
             try (FileInputStream fis = new FileInputStream(file)) {
                 ZipEntry zipEntry = new ZipEntry(zipPath);
@@ -404,8 +408,7 @@ public class ListOfEventsFrame extends JFrame {
             Path tempDir = Files.createTempDirectory("zip_extract_"); // Crée un dossier temporaire
             unzipFile(zipFile, tempDir); // Extraction du ZIP
 
-            File extractedFolder = tempDir.toFile();
-//            System.out.println("path extracted folder : "+extractedFolder);
+            //            System.out.println("path extracted folder : "+extractedFolder);
             // Récupérer le vrai dossier d'extraction (évite le dossier intermédiaire)
             File extractedFolder2 = getRealExtractedFolder(tempDir.toFile());
 //            System.out.println("path real extracted folder : "+extractedFolder2);
@@ -605,7 +608,7 @@ public class ListOfEventsFrame extends JFrame {
      */
     public static File askUserForZipFile() {
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Sélectionnez un fichier ZIP");
+        fileChooser.setDialogTitle("Select ZIP File");
         fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Fichiers ZIP", "zip"));
 
         int userSelection = fileChooser.showOpenDialog(null);

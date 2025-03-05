@@ -4,10 +4,12 @@
 package Players;
 
 import java.awt.Container;
+import java.awt.GraphicsDevice;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.MediaTracker;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -112,6 +114,8 @@ public class ModifyPlayersFrame extends JFrame{
     /** The birthdate chooser. */
     private JDateChooser birthdateChooser;
     
+    private String lastFolder = null;
+    
 	/**
 	 * Instantiates a new modify players frame.
 	 *
@@ -136,7 +140,7 @@ public class ModifyPlayersFrame extends JFrame{
 	 * @param bddChoosen the bdd choosen
 	 * @param selectedRow the selected row
 	 */
-	public ModifyPlayersFrame(ListOfPlayersFrame parentFrame, String iD, String sexe, String playerName, String playerSurname, String displayName, 
+	public ModifyPlayersFrame(GraphicsDevice configScreen, ListOfPlayersFrame parentFrame, String iD, String sexe, String playerName, String playerSurname, String displayName, 
 			String acroNat,String country, String flag, String bithdate, String imgJoueur, String ranking, String height, String hand, String age, 
 			String weight, String prize, String birthplace, String cityResidence,String teteDeSerie, String bddChoosen, int selectedRow) {
 		this.currentImage = imgJoueur;
@@ -146,6 +150,9 @@ public class ModifyPlayersFrame extends JFrame{
 		setTitle("Modify players : "+playerName +" "+playerSurname);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(400, 900);
+        Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
+        setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
+        
         ImageIcon logoIcon = new ImageIcon("icon.png");
         // V�rifiez si l'ic�ne a �t� charg�e avec succ�s
         if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
@@ -241,7 +248,8 @@ public class ModifyPlayersFrame extends JFrame{
      // Ajoutez un gestionnaire d'action au bouton "Load" pour charger une nouvelle image
         loadImageButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) { 
-            	String newImgPath = ImageUtility.chargerFichier();
+            	String newImgPath = ImageUtility.chargerFichier(lastFolder);
+            	lastFolder = newImgPath;
                 ImageUtility.enregistrerFichier(newImgPath, "PlayersImages");
                 currentImage = "PlayersImages"+File.separator+ImageUtility.getNameFile(newImgPath);
                 System.out.println("++++ image charger : "+currentImage);

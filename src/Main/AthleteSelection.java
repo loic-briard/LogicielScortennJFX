@@ -7,7 +7,9 @@ package Main;
  * fenetre qui permet de choisir les joueurs participant au tournoi depuis les liste de joueur cree
  */
 import java.awt.BorderLayout;
+import java.awt.GraphicsDevice;
 import java.awt.MediaTracker;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -81,6 +83,8 @@ public class AthleteSelection extends JFrame {
 
 	/** The choosen BDD. */
 	private String choosenBDD;
+	
+	private JFrame frameForMessage;
 
 	/**
 	 * Instantiates a new athlete selection.
@@ -89,10 +93,13 @@ public class AthleteSelection extends JFrame {
 	 * @throws SQLException           the SQL exception
 	 * @throws ClassNotFoundException the class not found exception
 	 */
-	public AthleteSelection(String choosenBDD) throws SQLException, ClassNotFoundException {
+	public AthleteSelection(GraphicsDevice configScreen, String choosenBDD) throws SQLException, ClassNotFoundException {
 		setTitle("Selection of Players");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(1050, 600); // Augmentez la largeur de la fen�tre pour mieux afficher les donn�es
+		// Obtenir l'emplacement de l'écran secondaire
+        Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
+        setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
 		ImageIcon logoIcon = new ImageIcon("icon.png");
 		// V�rifiez si l'ic�ne a �t� charg�e avec succ�s
 		if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
@@ -102,6 +109,7 @@ public class AthleteSelection extends JFrame {
 			System.err.println("- Impossible de charger l'icone.");
 		}
 		this.choosenBDD = choosenBDD;
+		this.frameForMessage = this;
 		allJoueurs = BDD_v2.getAllJoueurs(choosenBDD);
 		// R�cup�rez les donn�es des joueurs depuis la base de donn�es.
 		String[][] playerDataList = BDD_v2.getAllPlayersInfoFromDatabase(choosenBDD);
@@ -170,7 +178,7 @@ public class AthleteSelection extends JFrame {
 		ActionListener actionValidate = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int choice = JOptionPane.showConfirmDialog(null, "Do you want to update age of players?",
+				int choice = JOptionPane.showConfirmDialog(frameForMessage, "Do you want to update age of players?",
 						"Players age update", JOptionPane.YES_NO_OPTION);
 				if(choice == JOptionPane.YES_OPTION)
 					System.out.println("update Age players selected");

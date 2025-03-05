@@ -110,18 +110,23 @@ public class GlobalSettings {
     }
     
     public void getGlobalSettingsFromJson() {
-		try (Reader reader = new FileReader("Config" + File.separator + "globalSettings.json")) {
-			JsonElement jsonElement = JsonParser.parseReader(reader);
-			if (jsonElement.isJsonObject()) {
-				JsonObject configObject = jsonElement.getAsJsonObject();
-				setNameMaxLength(configObject.getAsJsonPrimitive("name").getAsInt());	
-				setSurnameMaxLength(configObject.getAsJsonPrimitive("surname").getAsInt());	
-				setCityResidenceMaxLength(configObject.getAsJsonPrimitive("residence").getAsInt());	
-				setBirthPlaceMaxLength(configObject.getAsJsonPrimitive("birthplace").getAsInt());	
-				setSpaceLength(configObject.getAsJsonPrimitive("space").getAsInt());	
+		File configFile = new File("Config" + File.separator + "globalSettings.json");
+		if (configFile.exists()) {
+			try (Reader reader = new FileReader("Config" + File.separator + "globalSettings.json")) {
+				JsonElement jsonElement = JsonParser.parseReader(reader);
+				if (jsonElement.isJsonObject()) {
+					JsonObject configObject = jsonElement.getAsJsonObject();
+					setNameMaxLength(configObject.getAsJsonPrimitive("name").getAsInt());
+					setSurnameMaxLength(configObject.getAsJsonPrimitive("surname").getAsInt());
+					setCityResidenceMaxLength(configObject.getAsJsonPrimitive("residence").getAsInt());
+					setBirthPlaceMaxLength(configObject.getAsJsonPrimitive("birthplace").getAsInt());
+					setSpaceLength(configObject.getAsJsonPrimitive("space").getAsInt());
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		} else {
+			saveSettingsToJson();
 		}
 	}
     

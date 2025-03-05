@@ -4,6 +4,8 @@
 package Event;
 
 import java.awt.BorderLayout;
+import java.awt.GraphicsDevice;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -42,10 +44,13 @@ private static final long serialVersionUID = 1L;
 	 * @param parentFrame the parent frame
 	 * @throws SQLException the SQL exception
 	 */
-	public newEventFrame(ListOfEventsFrame parentFrame) throws SQLException{
+	public newEventFrame(GraphicsDevice configScreen,ListOfEventsFrame parentFrame) throws SQLException{
 		setTitle("New Event ");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(500, 200);
+        Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
+        setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
+        
         // Ajoutez le champ de texte pour le nom
         nameField = new JTextField("name");
         

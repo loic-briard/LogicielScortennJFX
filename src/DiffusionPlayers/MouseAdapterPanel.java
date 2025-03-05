@@ -79,7 +79,7 @@ public class MouseAdapterPanel extends MouseAdapter {
 //		System.out.println("composant : "+panel.getName()+"|"+xMoved+"|"+yMoved);
 		panel.setLocation(xMoved, yMoved);
 		
-		if (this.playerfordifusion2.getTypeFen() == "full") {
+		if (this.playerfordifusion2.getTypeFen() == "full" || this.playerfordifusion2.getTypeFen() == "tab") {
 			int space = GlobalSettings.getInstance().getSpaceLength();
 			switch (panel.getName()) {
 			case "Name":
@@ -150,13 +150,13 @@ public class MouseAdapterPanel extends MouseAdapter {
 	    ArrayList<PlayerForDiffusion> listPlayerDiffusionTree = new ArrayList<>();
 
 	    if ((windowConfigurationPlayerInfos == null || !windowConfigurationPlayerInfos.isDisplayable())) {// la fenetre full n'existe pas
-	    	System.out.println("Creation de la fenetre de config full");
+	    	System.out.println("handleFullCase => Creation de la fenetre de config full");
 	        createNewFullWindowConfig(tableauPlayerDiffusionTree, listPlayerDiffusionTree);
 	    } else if (windowConfigurationPlayerInfos.getTypeFenetre().equals("full") && !full) {//la fenetre existe donc mettre a jour joueur electionne si il existe pas l'inserer
-	    	System.out.println("Fen config full existe, update spinner selected joueur, si selected joueur doesn't exist l'inserer");
+	    	System.out.println("handleFullCase => Fen config full existe, update spinner selected joueur, si selected joueur doesn't exist l'inserer");
 	        updateExistingFullWindowConfig(listPlayerDiffusionTree);
 	    } else if(full){// si arrive ici ca veut dire qu'il faut afficher tout les joueurs selectionne de l'arbre (btn full)
-	    	System.out.println("Creation fen configfull a partir des joueur selectione dans windows tournament tree");
+	    	System.out.println("handleFullCase => Creation fen configfull a partir des joueur selectione dans windows tournament tree");
 	        recreateFullWindowConfig(tableauPlayerDiffusionTree, listPlayerDiffusionTree);
 	    }
 	    
@@ -174,7 +174,7 @@ public class MouseAdapterPanel extends MouseAdapter {
 	 * @param listPlayerDiffusionTree the list player diffusion tree
 	 */
 	private void createNewFullWindowConfig(PlayerForDiffusion[] tableauPlayerDiffusionTree, ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {
-	    windowConfigurationPlayerInfos = new WindowConfigurationPlayerInfos(frameForDiffusion, "full");
+	    windowConfigurationPlayerInfos = new WindowConfigurationPlayerInfos(this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getConfigScreen(), frameForDiffusion, "full");
 	    for (PlayerForDiffusion player : tableauPlayerDiffusionTree) {
 	        if (player != null) {
 	            addPlayerToFullConfig(player, listPlayerDiffusionTree);
@@ -199,7 +199,7 @@ public class MouseAdapterPanel extends MouseAdapter {
 	    }
 	    int playerIndex = findPlayerIndex(listPlayerDiffusionTree);
 	    if (playerIndex == -1) {
-	    	System.out.println("insertion d'un joeur");
+	    	System.out.println("updateExistingFullWindowConfig => insertion d'un joeur");
 	    	insertPlayerToFullConfig(playerfordifusion2, listPlayerDiffusionTree);
 	    }
 	    windowConfigurationPlayerInfos.getTabPolice().setListPlayer(listPlayerDiffusionTree);

@@ -141,4 +141,9 @@ public class Background {
 	public void setImage_5(String image_5) {
 		this.image_5 = image_5;
 	}
+	
+	public String[] getAllImage() {
+		String[] allImg = {this.image_1,this.image_2,this.image_3,this.image_4,this.image_5};
+		return allImg;
+	}
 }

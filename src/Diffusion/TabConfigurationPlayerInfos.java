@@ -123,7 +123,7 @@ public class TabConfigurationPlayerInfos extends JPanel {
      * Confirm tab player.
      */
     public void confirmTabPlayer() {
-        System.out.println("Update position elements player from windowConfigurationPlayerInfos");
+        System.out.println("confirmTabPlayer => Update position elements player from windowConfigurationPlayerInfos");
         for (Map.Entry<String, JSpinner> entry : spinners.entrySet()) {
             String key = entry.getKey();
             if (key.endsWith("X")) {
@@ -221,19 +221,40 @@ public class TabConfigurationPlayerInfos extends JPanel {
      * @param y the y
      */
     private void setPositionImg(int x, int y) {
-        TabPolice tabPolice = infosPlayerDetails.getPlacementFrameTwoPlayer().getTabPolice();
+//        TabPolice tabPolice = infosPlayerDetails.getPlacementFrameTwoPlayer().getTabPolice();
+//        int taille = (int) tabPolice.TailleImg.getValue();
+//        infosPlayerDetails.playerImg.setVisible(tabPolice.checkboxImg.isSelected());
+//        infosPlayerDetails.tailleImgJoueur = taille;
+//        JLabel labelImg = new ImageUtility(joueur.getImgJoueur(), taille);
+//        infosPlayerDetails.playerImg.removeAll();
+//        infosPlayerDetails.playerImg.add(labelImg);
+//        infosPlayerDetails.playerImg.setLocation(x, y);
+//        displayFrame.revalidate();
+//        displayFrame.repaint();
+//        infosPlayerDetails.playerImg.setSize(labelImg.getWidth(), labelImg.getHeight());
+//        displayFrame.revalidate();
+//        displayFrame.repaint();
+    	TabPolice tabPolice = infosPlayerDetails.getPlacementFrameTwoPlayer().getTabPolice();
         int taille = (int) tabPolice.TailleImg.getValue();
+
         infosPlayerDetails.playerImg.setVisible(tabPolice.checkboxImg.isSelected());
         infosPlayerDetails.tailleImgJoueur = taille;
         JLabel labelImg = new ImageUtility(joueur.getImgJoueur(), taille);
+
         infosPlayerDetails.playerImg.removeAll();
         infosPlayerDetails.playerImg.add(labelImg);
-        infosPlayerDetails.playerImg.setLocation(x, y);
+//        infosPlayerDetails.playerImg.setLocation(x, y);
         displayFrame.revalidate();
         displayFrame.repaint();
-        infosPlayerDetails.playerImg.setSize(labelImg.getWidth(), labelImg.getHeight());
+        // Nouvelle correction
+        infosPlayerDetails.playerImg.setBounds(x, y, labelImg.getWidth(), taille); //setPreferredSize(new Dimension(labelImg.getWidth(), labelImg.getHeight()));
+        infosPlayerDetails.playerImg.revalidate();
+        infosPlayerDetails.playerImg.repaint();
+
         displayFrame.revalidate();
         displayFrame.repaint();
+        
+        System.out.println("setPositionImg => taille img = "+taille+", taille LABEL = "+labelImg.getWidth()+" x "+labelImg.getHeight()+", taille PANEL = "+infosPlayerDetails.playerImg.getWidth()+" x "+infosPlayerDetails.playerImg.getHeight());
     }
 
     /**
@@ -243,19 +264,43 @@ public class TabConfigurationPlayerInfos extends JPanel {
      * @param y the y
      */
     private void setPositionFlag(int x, int y) {
-        TabPolice tabPolice = infosPlayerDetails.getPlacementFrameTwoPlayer().getTabPolice();
-        int taille = (int) tabPolice.TailleFlag.getValue();
-        infosPlayerDetails.playerFlag.setVisible(tabPolice.checkboxFlag.isSelected());
-        infosPlayerDetails.tailleImgFlag = taille;
-        JLabel labelFlag = new ImageUtility(infosPlayerDetails.FlagLabel.getImagePath(), taille);
-		infosPlayerDetails.playerFlag.removeAll();
-		infosPlayerDetails.playerFlag.add(labelFlag);
-		infosPlayerDetails.playerFlag.setLocation(x, y);
-		displayFrame.revalidate();
-		displayFrame.repaint();
-		infosPlayerDetails.playerFlag.setSize(labelFlag.getWidth(), labelFlag.getHeight());
-		displayFrame.revalidate();
-		displayFrame.repaint();
+//        TabPolice tabPolice = infosPlayerDetails.getPlacementFrameTwoPlayer().getTabPolice();
+//        int taille = (int) tabPolice.TailleFlag.getValue();
+//        
+//        infosPlayerDetails.playerFlag.setVisible(tabPolice.checkboxFlag.isSelected());
+//        infosPlayerDetails.tailleImgFlag = taille;
+//        System.out.println("taille du drapeau : "+taille);
+//        JLabel labelFlag = new ImageUtility(infosPlayerDetails.FlagLabel.getImagePath(), taille);
+//		infosPlayerDetails.playerFlag.removeAll();
+//		infosPlayerDetails.playerFlag.add(labelFlag);
+//		infosPlayerDetails.playerFlag.setLocation(x, y);
+//		displayFrame.revalidate();
+//		displayFrame.repaint();
+//		infosPlayerDetails.playerFlag.setSize(labelFlag.getWidth(), labelFlag.getHeight());
+//		System.out.println("taille du LABEL drapeau : "+labelFlag.getWidth()+" x "+labelFlag.getHeight());
+//		System.out.println("taille du PANEL drapeau : "+infosPlayerDetails.playerFlag.getWidth()+" x "+infosPlayerDetails.playerFlag.getHeight());
+//		displayFrame.revalidate();
+//		displayFrame.repaint();
+    	TabPolice tabPolice = infosPlayerDetails.getPlacementFrameTwoPlayer().getTabPolice();
+	    int taille = (int) tabPolice.TailleFlag.getValue();
+
+	    infosPlayerDetails.playerFlag.setVisible(tabPolice.checkboxFlag.isSelected());
+	    infosPlayerDetails.tailleImgFlag = taille;
+
+	    JLabel labelFlag = new ImageUtility(infosPlayerDetails.FlagLabel.getImagePath(), taille);
+	    infosPlayerDetails.playerFlag.removeAll();
+	    infosPlayerDetails.playerFlag.add(labelFlag);
+//	    infosPlayerDetails.playerFlag.setLocation(x, y);
+	    displayFrame.revalidate();
+	    displayFrame.repaint();
+	    // Nouvelle correction
+	    infosPlayerDetails.playerFlag.setBounds(x, y, labelFlag.getWidth(), taille);//setPreferredSize(new Dimension(labelFlag.getWidth(), labelFlag.getHeight()));
+//	    infosPlayerDetails.playerFlag.revalidate();
+//	    infosPlayerDetails.playerFlag.repaint();
+
+	    displayFrame.revalidate();
+	    displayFrame.repaint();
+        System.out.println("setPositionImg => taille flag = "+taille+", taille LABEL = "+labelFlag.getWidth()+" x "+labelFlag.getHeight()+", taille PANEL = "+infosPlayerDetails.playerFlag.getWidth()+" x "+infosPlayerDetails.playerFlag.getHeight());
     }
 
     /**

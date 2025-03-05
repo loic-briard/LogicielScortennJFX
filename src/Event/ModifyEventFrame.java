@@ -6,6 +6,8 @@ package Event;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GraphicsDevice;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -50,13 +52,16 @@ public class ModifyEventFrame extends JFrame {
 	 * @param backgroundCurrentName the background current name
 	 * @throws SQLException the SQL exception
 	 */
-	public ModifyEventFrame(ListOfEventsFrame parentFrame, String currentName, String backgroundCurrentName) throws SQLException{
+	public ModifyEventFrame(GraphicsDevice configScreen, ListOfEventsFrame parentFrame, String currentName, String backgroundCurrentName) throws SQLException{
 		this.currentName = currentName;
 		this.backgroundCurrentName = backgroundCurrentName;
 		
 		setTitle("Modify Event : "+currentName);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(500, 100);
+        Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
+        setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
+        
         // Ajoutez le champ de texte pour le nom
         nameField = new JTextField(this.currentName);
         nameField.setPreferredSize(new Dimension(200, 30));

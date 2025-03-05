@@ -4,10 +4,12 @@
 package Players;
 
 import java.awt.Container;
+import java.awt.GraphicsDevice;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.MediaTracker;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -123,6 +125,8 @@ public class newPlayerFrame extends JFrame {
 	/** The bdd choosen. */
 	private String bddChoosen;
 	
+	private String lastFolder = null;;
+	
 	/** The date format. */
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 	
@@ -136,10 +140,12 @@ public class newPlayerFrame extends JFrame {
 	 * @param bddChoosen the bdd choosen
 	 * @throws SQLException the SQL exception
 	 */
-	public newPlayerFrame(ListOfPlayersFrame parentFrame, String bddChoosen) throws SQLException {
+	public newPlayerFrame(GraphicsDevice configScreen, ListOfPlayersFrame parentFrame, String bddChoosen) throws SQLException {
 		setTitle("New players ");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		
+		Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
+        setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
+        
 		ImageIcon logoIcon = new ImageIcon("icon.png");
 		// V�rifiez si l'ic�ne a �t� charg�e avec succ�s
 		if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
@@ -286,7 +292,8 @@ public class newPlayerFrame extends JFrame {
 		// Ajoutez un gestionnaire d'action au bouton "Load" pour charger une nouvelle image
 		loadImageButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String newImgPath = ImageUtility.chargerFichier();
+				String newImgPath = ImageUtility.chargerFichier(lastFolder);
+				lastFolder = newImgPath;
 				ImageUtility.enregistrerFichier(newImgPath, "PlayersImages");
 				currentImage = "PlayersImages" + File.separator + ImageUtility.getNameFile(newImgPath);
 				System.out.println("++++ image selectionne : "+currentImage);
@@ -325,7 +332,7 @@ public class newPlayerFrame extends JFrame {
 
 		                String[] data = BDD_v2.getObjectJoueur(bddChoosen, player.getNom());
 		                String flagImagePath = BDD_v2.getFlagImagePathByAcronym(data[5]);
-		                String playerImagePath = data[6];
+		                String playerImagePath = data[7];
 		                if (playerImagePath == null)
 		                    playerImagePath = "clear.png";
 		                CustomTableModelJoueur model = (CustomTableModelJoueur) parentFrame.playersTable.getModel();

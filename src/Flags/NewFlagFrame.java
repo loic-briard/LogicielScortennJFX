@@ -21,6 +21,7 @@ public class NewFlagFrame extends JFrame {
     private JPanel imagePreviewPanel;
     private String currentImage;
     private JButton loadButton;
+    private String lastFolder = null;
 
     /**
      * Instantiates a new modify flag frame.
@@ -31,12 +32,15 @@ public class NewFlagFrame extends JFrame {
      * @param imgPath           the image path
      * @param selectedRow       the selected row
      */
-    public NewFlagFrame(ListOfFlag parentFrame) {
+    public NewFlagFrame(GraphicsDevice configScreen, ListOfFlag parentFrame) {
         loadButton = new JButton("Load");
 
         setTitle("new Flag : ");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(500, 550);
+        Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
+        setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
+        
         
         ImageIcon logoIcon = new ImageIcon("icon.png");
         if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
@@ -85,7 +89,8 @@ public class NewFlagFrame extends JFrame {
 
         loadButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String newImgPath = ImageUtility.chargerFichier();
+                String newImgPath = ImageUtility.chargerFichier(lastFolder);
+                lastFolder = newImgPath;
                 ImageUtility.enregistrerFichier(newImgPath, "flag");
                 currentImage = "flag" + File.separator + ImageUtility.getNameFile(newImgPath);
                 System.out.println("++++ chemin vers le drapeau : " + newImgPath);

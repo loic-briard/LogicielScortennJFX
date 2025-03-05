@@ -36,6 +36,8 @@ public class WindowTournamentTree extends JFrame {
 	
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	private static int bgSGT = 110;
 
 	/** The selected joueurs. */
 	private final ArrayList<Joueur> selectedJoueurs;
@@ -86,9 +88,12 @@ public class WindowTournamentTree extends JFrame {
 	private ZoomablePanel zoomBackground;
 	
 	private JComboBox<String>[] tabComboBox;
+	
+	private GraphicsDevice configScreen;
 
 	/**
 	 * Instantiates a new window tournament tree.
+	 * @param configScreen 
 	 *
 	 * @param selectedJoueurs the selected joueurs
 	 * @param event the event
@@ -98,12 +103,13 @@ public class WindowTournamentTree extends JFrame {
 	 * @throws SQLException the SQL exception
 	 */
 	@SuppressWarnings("unchecked")
-	public WindowTournamentTree(ArrayList<Joueur> selectedJoueurs, Evenement event,
+	public WindowTournamentTree(GraphicsDevice configScreen, ArrayList<Joueur> selectedJoueurs, Evenement event,
 			WindowBroadcastPublic diffusionFrame, int nbJoueur) throws ClassNotFoundException, SQLException {
 		this.selectedJoueurs = selectedJoueurs;
 		this.windowBroadcastPublic = diffusionFrame;
 		this.event = event;
 		this.nbJoueur = nbJoueur;
+		this.configScreen = configScreen;
 		this.tabPlayerForTree = new PlayerForDiffusion[nbJoueur];
 		this.playerPanel = new JPanel[4];
 		if(this.selectedJoueurs.get(this.selectedJoueurs.size()-1).getNom() != "QUALIFIER")
@@ -112,9 +118,8 @@ public class WindowTournamentTree extends JFrame {
 		tabComboBox = new JComboBox[this.nbJoueur];
 		
 		setupFrame();
-		this.panelAnimationConfiguration = new PanelAnimationConfiguration(this);
-		setupPanels();
-		setupBottomPanel();
+		
+		
 		finalizeSetup();
 		
 
@@ -135,14 +140,36 @@ public class WindowTournamentTree extends JFrame {
 
 	/**
 	 * Setup frame.
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
 	 */
-	private void setupFrame() {
+	private void setupFrame() throws ClassNotFoundException, SQLException {
 		setTitle("Broadcast configuration");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(800, 800);
 		setLocationRelativeTo(null);
 		setIconImage(new ImageIcon("icon.png").getImage());
-
+        // Obtenir l'emplacement de l'écran secondaire
+        Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
+        setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
+        
+        // Ajouter un JScrollPane pour permettre le défilement
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new BorderLayout());
+        
+        this.panelAnimationConfiguration = new PanelAnimationConfiguration(this);
+        setupPanels(contentPanel);
+        setupBottomPanel();
+        
+        // Définir une hauteur adaptable en fonction du nombre de joueurs
+//        int heightNeeded = Math.max(800, (nbJoueur / 4) * 50); // Ajuste la hauteur minimum
+//        contentPanel.setPreferredSize(new Dimension(780, heightNeeded));
+        JScrollPane scrollPane = new JScrollPane(contentPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16); // Pour un défilement fluide
+        
+        getContentPane().add(scrollPane, BorderLayout.CENTER);
+        
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -155,13 +182,13 @@ public class WindowTournamentTree extends JFrame {
 			}
 		});
 
-		ConfigurationSaveLoad.initJson(nbJoueur, this.eventName());
+		ConfigurationSaveLoad.initJson(this.nbJoueur, this.eventName());
 	}
 
 	/**
 	 * Setup panels.
 	 */
-	private void setupPanels() {
+	private void setupPanels(JPanel panel) {
 		Border contour = BorderFactory.createLineBorder(Color.black);
 		// Créez un conteneur pour les sections supérieures
 		JPanel topSectionsPanel = new JPanel();
@@ -190,9 +217,9 @@ public class WindowTournamentTree extends JFrame {
 		bottomSectionsPanel.add(bottomRightPanel);
 
 		// Ajoutez les conteneurs des sections é votre fenétre
-		setLayout(new BorderLayout());
-		add(topSectionsPanel, BorderLayout.NORTH);
-		add(bottomSectionsPanel, BorderLayout.CENTER);
+		panel.setLayout(new BorderLayout());
+		panel.add(topSectionsPanel, BorderLayout.NORTH);
+		panel.add(bottomSectionsPanel, BorderLayout.CENTER);
 	}
 
 	/**
@@ -313,13 +340,15 @@ public class WindowTournamentTree extends JFrame {
 		
 		btnSaveConfigAnimation.addActionListener(
 				e -> {
-					int choice = JOptionPane.showConfirmDialog(null, "Do you want to update animation?",
+					int choice = JOptionPane.showConfirmDialog(this, "Do you want to update animation?",
 							"Animation update", JOptionPane.YES_NO_OPTION);
 					if(choice == JOptionPane.YES_OPTION) {
 						System.out.println("update animationselected");
 						ConfigurationSaveLoad.saveConfigAnimation(panelAnimationConfiguration, this.eventName());
-					}else
+					}else {
 						System.out.println("don't update animation selected");
+						ConfigurationSaveLoad.setConfigAnimation(this.eventName(),panelAnimationConfiguration);
+					}
 				});
 		bottomPanel.add(btnSaveConfigAnimation, BorderLayout.SOUTH);
 		add(bottomPanel, BorderLayout.SOUTH);
@@ -354,7 +383,7 @@ public class WindowTournamentTree extends JFrame {
 //			zoomBackground.add(imageFond);
 //			zoomBackground.setLocation(this.windowBroadcastPublic.getWidth() / 2,this.windowBroadcastPublic.getHeight() / 2 );
 //			zoomBackground.setSize(10,10);
-//			windowBroadcastPublic.addContent(55, zoomBackground);
+//			windowBroadcastPublic.addContent(bgSGT, zoomBackground);
 			
 			System.gc();
 			Joueur soloPlayer = foundPlayer(selectedItem);
@@ -399,9 +428,8 @@ public class WindowTournamentTree extends JFrame {
 						tabPlayerForTree[ligne].getMouseAdapterPanel().handleFullCase(false);
 					}
 					
-					if (windowConfigPlayer == null || !windowConfigPlayer.isDisplayable()
-							|| windowConfigPlayer.getTypeFenetre() == "full") {
-						windowConfigPlayer = new WindowConfigurationPlayerInfos(windowBroadcastPublic, "player");
+					if (windowConfigPlayer == null || !windowConfigPlayer.isDisplayable()|| windowConfigPlayer.getTypeFenetre() == "full") {
+						windowConfigPlayer = new WindowConfigurationPlayerInfos(getConfigScreen(), windowBroadcastPublic, "player");
 					} else {
 						windowConfigPlayer.tabbedPane.removeAll();
 						windowConfigPlayer.tabbedPane.revalidate();
@@ -441,7 +469,7 @@ public class WindowTournamentTree extends JFrame {
 		displayFondJoueur("game");
 		System.out.println("P1 : "+playerIndex1+", P2 : "+playerIndex2);
 //		SwingUtilities.invokeLater(() -> {
-			if (playerIndex1 < selectedJoueurs.size() && playerIndex2 < selectedJoueurs.size()) {
+//			if (playerIndex1 < selectedJoueurs.size() && playerIndex2 < selectedJoueurs.size()) {
 				Joueur Player1 = foundPlayer((String) tabComboBox[playerIndex1].getSelectedItem());
 				Joueur Player2 = foundPlayer((String) tabComboBox[playerIndex2].getSelectedItem());
 //			PlayerForDiffusion PlayerDetails1 = new PlayerForDiffusion(this.eventName(), windowBroadcastPublic, "game",0);
@@ -465,7 +493,7 @@ public class WindowTournamentTree extends JFrame {
 				// Si la fenetre est null on la creer
 				if (windowConfigPlayer == null || !windowConfigPlayer.isDisplayable()
 						|| windowConfigPlayer.getTypeFenetre() == "full") {
-					windowConfigPlayer = new WindowConfigurationPlayerInfos(windowBroadcastPublic, "game");
+					windowConfigPlayer = new WindowConfigurationPlayerInfos(getConfigScreen(),windowBroadcastPublic, "game");
 				} else {
 					windowConfigPlayer.tabbedPane.removeAll();
 					windowConfigPlayer.tabbedPane.revalidate();
@@ -482,8 +510,8 @@ public class WindowTournamentTree extends JFrame {
 							+ playerForDiffusion.getNumeroPlayer());
 				}
 				windowConfigPlayer.setTabPolice(new TabPolice(ListSelectedJoueur, windowConfigPlayer));
-			} else
-				System.out.println("    ERROR find the to player for game");
+//			} else
+//				System.out.println("    ERROR find the to player for game");
 			windowConfigPlayer.pack();
 //		});
 	}
@@ -507,8 +535,7 @@ public class WindowTournamentTree extends JFrame {
 			for (int i = 0; i < (nbJoueur / 4); i++) {
 				// System.out.println((nbJoueur / 4) * indexPanel + i);
 				Joueur Player = foundPlayer((String) tabComboBox[(nbJoueur / 4) * indexPanel + i].getSelectedItem());
-				PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.event, windowBroadcastPublic,
-						panelAnimationConfiguration, "tab", i);
+				PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.event, windowBroadcastPublic,						panelAnimationConfiguration, "tab", i);
 				int ligne = (nbJoueur / 4) * indexPanel + i + 1;
 				try {
 					if (Player != null) {
@@ -522,7 +549,7 @@ public class WindowTournamentTree extends JFrame {
 			panelAnimationConfiguration.zoomPanel(zoomBackground, this.windowBroadcastPublic, null);
 			if (windowConfigPlayer == null || !windowConfigPlayer.isDisplayable()
 					|| windowConfigPlayer.getTypeFenetre() == "full") {
-				windowConfigPlayer = new WindowConfigurationPlayerInfos(windowBroadcastPublic, "tab");
+				windowConfigPlayer = new WindowConfigurationPlayerInfos(getConfigScreen(), windowBroadcastPublic, "tab");
 			} else {
 				windowConfigPlayer.tabbedPane.removeAll();
 				windowConfigPlayer.tabbedPane.revalidate();
@@ -554,7 +581,8 @@ public class WindowTournamentTree extends JFrame {
 	 * Handle full competition.
 	 */
 	private void handleFullCompetition() {
-		windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_4());
+		windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_1());
+		windowBroadcastPublic.removeLayerContent(bgSGT);// nettoyage du layer
 		windowBroadcastPublic.removeLayerContent(JLayeredPane.MODAL_LAYER);// nettoyage du layer
 		windowBroadcastPublic.removeLayerContent(JLayeredPane.PALETTE_LAYER);// nettoyage du layer
 
@@ -572,8 +600,7 @@ public class WindowTournamentTree extends JFrame {
 				if (Player != null) {
 					int ligne = y * (totalPlayers / 4) + i + 1;
 					if (tabPlayerForTree[ligne - 1] == null) {
-						PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.event, windowBroadcastPublic,
-								panelAnimationConfiguration, "full", y * (totalPlayers / 4) + i);
+						PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.event, windowBroadcastPublic, panelAnimationConfiguration, "full", y * (totalPlayers / 4) + i);
 						tabPlayerForTree[ligne - 1] = PlayerDetails;
 					}
 					try {
@@ -599,7 +626,7 @@ public class WindowTournamentTree extends JFrame {
 	 * Toggle background.
 	 */
 	private void toggleBackground() {
-//		windowBroadcastPublic.removeLayerContent(55);
+//		windowBroadcastPublic.removeLayerContent(bgSGT);
 //		ZoomablePanel testBackground = new ZoomablePanel();
 //		testBackground.setLayout(null);
 //		testBackground.setOpaque(false);
@@ -609,7 +636,7 @@ public class WindowTournamentTree extends JFrame {
 //		testBackground.add(imageFond);
 //		testBackground.setLocation(this.windowBroadcastPublic.getWidth() / 2,this.windowBroadcastPublic.getHeight() / 2 );
 //		testBackground.setSize(10,10);
-//		windowBroadcastPublic.addContent(55, testBackground);
+//		windowBroadcastPublic.addContent(bgSGT, testBackground);
 //		panelAnimationConfiguration.zoomPanel(testBackground, this.windowBroadcastPublic, null);
 		
     	if(fondButtonAppuyer == false)
@@ -675,7 +702,7 @@ public class WindowTournamentTree extends JFrame {
 	 */
 	private void displayFondJoueur(String typeJoueur) {
 		// nettoyage du layer du fond du joueur
-		windowBroadcastPublic.removeLayerContent(55);
+		windowBroadcastPublic.removeLayerContent(bgSGT);
 		zoomBackground.removeAll();
 		switch (typeJoueur) {
 		case "player":
@@ -686,7 +713,7 @@ public class WindowTournamentTree extends JFrame {
 			zoomBackground.add(imageFond);
 			zoomBackground.setSize(this.windowBroadcastPublic.getWidth()/10,this.windowBroadcastPublic.getHeight()/10);
 			zoomBackground.setLocation((this.windowBroadcastPublic.getWidth()/2)-(zoomBackground.getWidth()/2), (this.windowBroadcastPublic.getHeight()/2)-(zoomBackground.getHeight()/2));
-			windowBroadcastPublic.addContent(55, zoomBackground);
+			windowBroadcastPublic.addContent(bgSGT, zoomBackground);
 			break;
 		case "game":
 			System.out.println("-- fond pour joueur game --");
@@ -696,7 +723,7 @@ public class WindowTournamentTree extends JFrame {
 			zoomBackground.add(imageFond2);
 			zoomBackground.setLocation(this.windowBroadcastPublic.getWidth() / 2,this.windowBroadcastPublic.getHeight() / 2 );
 			zoomBackground.setSize(10,10);
-			windowBroadcastPublic.addContent(55, zoomBackground);
+			windowBroadcastPublic.addContent(bgSGT, zoomBackground);
 			break;
 		case "tab":
 			System.out.println("-- fond pour joueur tab --");
@@ -706,7 +733,7 @@ public class WindowTournamentTree extends JFrame {
 			zoomBackground.add(imageFond3);
 			zoomBackground.setLocation(this.windowBroadcastPublic.getWidth() / 2,this.windowBroadcastPublic.getHeight() / 2 );
 			zoomBackground.setSize(10,10);
-			windowBroadcastPublic.addContent(55, zoomBackground);
+			windowBroadcastPublic.addContent(bgSGT, zoomBackground);
 			break;
 
 		default:
@@ -758,6 +785,10 @@ public class WindowTournamentTree extends JFrame {
 	 */
 	public PanelAnimationConfiguration getPanelAnimationConfiguration() {
 		return panelAnimationConfiguration;
+	}
+	
+	public GraphicsDevice getConfigScreen() {
+		return configScreen;
 	}
 
 	/**

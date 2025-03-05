@@ -9,11 +9,11 @@ public class GlobalSettingsUI {
 
     private static JFrame parametersWindow = null;
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(GlobalSettingsUI::createAndShowGUI);
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(GlobalSettingsUI::createAndShowGUI);
+//    }
 
-    private static void createAndShowGUI() {
+    private static void createAndShowGUI(GraphicsDevice configScreen) {
         // Récupération de l'instance GlobalSettings
         GlobalSettings settings = GlobalSettings.getInstance();
 
@@ -23,6 +23,9 @@ public class GlobalSettingsUI {
         frame.setSize(400, 300);
         frame.setLayout(new GridBagLayout());
         frame.setIconImage(new ImageIcon("icon.png").getImage());
+        Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
+        frame.setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - frame.getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - frame.getHeight()) / 2)); // Positionner la fenêtre
+        
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -115,11 +118,11 @@ public class GlobalSettingsUI {
         frame.setVisible(true);
     }
 
-    public static void openListParametersWindow() {
+    public static void openListParametersWindow(GraphicsDevice configScreen) {
         if (parametersWindow == null || !parametersWindow.isVisible()) {
             parametersWindow = new JFrame("Global Settings");
             parametersWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            createAndShowGUI();
+            createAndShowGUI(configScreen);
         } else {
             parametersWindow.toFront();
             parametersWindow.setState(JFrame.NORMAL);

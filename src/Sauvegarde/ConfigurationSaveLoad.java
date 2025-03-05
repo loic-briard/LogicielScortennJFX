@@ -296,7 +296,7 @@ public class ConfigurationSaveLoad {
 				playerElement.setPositionY(panel.getY());
 				playerPolice.setVisible(panel.isVisible());
 				if (panel.getName().equals("ImgJoueur") || panel.getName().equals("ImgFlag")) {
-					// System.out.println("taille : " + panel.getName() + panel.getHeight());
+					 System.out.println("taille des images : " + panel.getName() + panel.getHeight());
 					playerPolice.setTaille((int) panel.getHeight());
 				}
 				if (panel.getComponents()[0] instanceof JLabel)
@@ -323,8 +323,7 @@ public class ConfigurationSaveLoad {
 	 * @param typeWindows the type windows
 	 * @param JoueurDetails the joueur details
 	 */
-	public static void saveWindowsMultiTab(String nomEvent, String typeWindows,
-			ArrayList<Map<JPanel, JLabel>> JoueurDetails) {
+	public static void saveWindowsMultiTab(String nomEvent, String typeWindows,	ArrayList<Map<JPanel, JLabel>> JoueurDetails) {
 		ConfigurationSaveLoad eventData = loadConfigFromFile("Config/" + nomEvent + "/" + typeWindows + ".json");
 		if (eventData == null) {
 			System.out.println("Content from : " + "Config/" + nomEvent + "/" + typeWindows + ".json" + " is empty !");
@@ -433,8 +432,8 @@ public class ConfigurationSaveLoad {
 					playerElement.setPositionY(panel.getY());
 
 					playerPoliceFull.setVisible(panel.isVisible());
+//					System.out.println("taille de " + panel.getName() + ", panel : "+panel.getHeight()+", label : "+panel.getComponents()[0].getHeight());
 					if (panel.getName().equals("ImgJoueur") || panel.getName().equals("ImgFlag")) {
-						// System.out.println("taille : " + panel.getName() + panel.getHeight());
 						playerPoliceFull.setTaille((int) panel.getHeight());
 					}
 					if (panel.getComponents()[0] instanceof JLabel)
@@ -902,6 +901,7 @@ public class ConfigurationSaveLoad {
 			listFileName.add("player.json");
 			listFileName.add("game.json");
 			listFileName.add("tab.json");
+			listFileName.add("full.json");
 			listFileName.add("animation.json");
 			Path targetPath = Paths.get("config" + File.separator + nomEvent);
 			// Créer le dossier destination s'il n'existe pas
@@ -910,7 +910,7 @@ public class ConfigurationSaveLoad {
 				System.out.println("Dossier destination créé : " + targetPath);
 				for (String fileName : listFileName) {
 
-					Path sourcePath = Paths.get("config" + File.separator + "default", fileName);
+					Path sourcePath = Paths.get("config" + File.separator + "default" +File.separator + nbJoueur, fileName);
 					// Construire le chemin complet du fichier destination
 					Path destinationFile = targetPath.resolve(sourcePath.getFileName());
 
@@ -918,8 +918,8 @@ public class ConfigurationSaveLoad {
 					Files.copy(sourcePath, destinationFile, StandardCopyOption.REPLACE_EXISTING);
 					System.out.println("Fichier copié avec succès : " + destinationFile);
 				}
-				ElementJoueurFull defaultData = createDefaultElementJoueurFull(nbJoueur);
-				saveConfigToFileFull(defaultData, "config" + File.separator + nomEvent, "full.json");
+//				ElementJoueurFull defaultData = createDefaultElementJoueurFull(nbJoueur);
+//				saveConfigToFileFull(defaultData, "config" + File.separator + nomEvent, "full.json");
 			}
 			
 
@@ -928,62 +928,62 @@ public class ConfigurationSaveLoad {
 		}
 	}
 
-	/**
-	 * Creates the default element joueur full.
-	 *
-	 * @param nbJoueur the nb joueur
-	 * @return the element joueur full
-	 */
-	private static ElementJoueurFull createDefaultElementJoueurFull(int nbJoueur) {
-		ElementJoueurFull defaultData = new ElementJoueurFull();
-		// Initialiser les joueurs (par exemple, 2 joueurs)
-		for (int i = 0; i < nbJoueur; i++) {
-			Map<String, Map<String, ElementJoueur>> playerMap = new HashMap<>();
-			Map<String, ElementJoueur> elements = new HashMap<>();
-
-			String[] elementNames = { "Prizetotal", "Birthplace", "ImgJoueur", "Rank", "Birthdate", "Hand", "Weight",
-					"Name", "Acronyme", "Country",  "CityResidence", "Line", "Height", "ImgFlag", "Surname", "Age","Seeding" };
-			int j = 0;
-			for (String elementName : elementNames) {
-				int posY = 100+i*100;
-				if(i >= nbJoueur/2)
-					posY = (i-nbJoueur/2)*100;
-				int posX = j*20;
-				if(i >= nbJoueur/2)
-					posX =j*20+1500;
-				ElementJoueur element = new ElementJoueur();
-				element.setPositionX(posX);
-				element.setPositionY(posY);
-				elements.put(elementName, element);
-				j++;
-
-			}
-
-			playerMap.put("player" + i, elements);
-			defaultData.getPlayer().add(playerMap);
-		}
-
-		// Initialiser playerPolice
-		Map<String, ElementPoliceJoueur> playerPolice = new HashMap<>();
-		String[] elementNames = { "Prizetotal", "Birthplace", "ImgJoueur", "Rank", "Birthdate", "Hand", "Weight",
-				"Name", "Acronyme", "Country",  "CityResidence", "Line", "Height", "ImgFlag", "Surname", "Age","Seeding" };
-
-		for (String elementName : elementNames) {
-			ElementPoliceJoueur policeElement = new ElementPoliceJoueur();
-			if (elementName == "Name" || elementName == "Surname" || elementName == "Acronyme")
-				policeElement.setVisible(true);
-			else
-				policeElement.setVisible(false);
-			policeElement.setFont("Arial,1,25");
-			policeElement.setColor("0,0,0");
-			policeElement.setTaille(0);
-			playerPolice.put(elementName, policeElement);
-		}
-
-		defaultData.getPlayerPolice().putAll(playerPolice);
-
-		return defaultData;
-	}
+//	/**
+//	 * Creates the default element joueur full.
+//	 *
+//	 * @param nbJoueur the nb joueur
+//	 * @return the element joueur full
+//	 */
+//	private static ElementJoueurFull createDefaultElementJoueurFull(int nbJoueur) {
+//		ElementJoueurFull defaultData = new ElementJoueurFull();
+//		// Initialiser les joueurs (par exemple, 2 joueurs)
+//		for (int i = 0; i < nbJoueur; i++) {
+//			Map<String, Map<String, ElementJoueur>> playerMap = new HashMap<>();
+//			Map<String, ElementJoueur> elements = new HashMap<>();
+//
+//			String[] elementNames = { "Prizetotal", "Birthplace", "ImgJoueur", "Rank", "Birthdate", "Hand", "Weight",
+//					"Name", "Acronyme", "Country",  "CityResidence", "Line", "Height", "ImgFlag", "Surname", "Age","Seeding" };
+//			int j = 0;
+//			for (String elementName : elementNames) {
+//				int posY = 100+i*100;
+//				if(i >= nbJoueur/2)
+//					posY = (i-nbJoueur/2)*100;
+//				int posX = j*20;
+//				if(i >= nbJoueur/2)
+//					posX =j*20+1500;
+//				ElementJoueur element = new ElementJoueur();
+//				element.setPositionX(posX);
+//				element.setPositionY(posY);
+//				elements.put(elementName, element);
+//				j++;
+//
+//			}
+//
+//			playerMap.put("player" + i, elements);
+//			defaultData.getPlayer().add(playerMap);
+//		}
+//
+//		// Initialiser playerPolice
+//		Map<String, ElementPoliceJoueur> playerPolice = new HashMap<>();
+//		String[] elementNames = { "Prizetotal", "Birthplace", "ImgJoueur", "Rank", "Birthdate", "Hand", "Weight",
+//				"Name", "Acronyme", "Country",  "CityResidence", "Line", "Height", "ImgFlag", "Surname", "Age","Seeding" };
+//
+//		for (String elementName : elementNames) {
+//			ElementPoliceJoueur policeElement = new ElementPoliceJoueur();
+//			if (elementName == "Name" || elementName == "Surname" || elementName == "Acronyme")
+//				policeElement.setVisible(true);
+//			else
+//				policeElement.setVisible(false);
+//			policeElement.setFont("Arial,1,25");
+//			policeElement.setColor("0,0,0");
+//			policeElement.setTaille(0);
+//			playerPolice.put(elementName, policeElement);
+//		}
+//
+//		defaultData.getPlayerPolice().putAll(playerPolice);
+//
+//		return defaultData;
+//	}
 
 	/**
 	 * Font serializer.

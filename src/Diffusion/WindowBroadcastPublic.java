@@ -34,6 +34,7 @@ public class WindowBroadcastPublic extends JFrame {
     
     /** The animation frame. */
     private PanelAnimationConfiguration animationFrame;
+    private GraphicsDevice screen;
 
     /**
      * Instantiates a new window broadcast public.
@@ -44,6 +45,7 @@ public class WindowBroadcastPublic extends JFrame {
      */
     public WindowBroadcastPublic(Evenement eventChoosen, GraphicsDevice screen, Dimension windowDimension) {
     	this.actualEvent = eventChoosen;        
+    	this.screen = screen;        
     	setupFrame(screen, windowDimension);
         
         layeredPane = new JLayeredPane();
@@ -181,6 +183,7 @@ public class WindowBroadcastPublic extends JFrame {
      * @return the animation frame
      */
     public PanelAnimationConfiguration getAnimationFrame() { return animationFrame; }
+    public GraphicsDevice getScreen() { return screen; }
     
     /**
      * Gets the window tournament tree from broadcast.

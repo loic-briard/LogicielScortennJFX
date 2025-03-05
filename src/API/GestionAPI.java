@@ -738,7 +738,7 @@ public class GestionAPI {
                 String dossierImages = "PlayersImages";
                 String s_joueurDisplayName = BDD_v2.getJoueurParID(id, bddname).getDisplay_name();
 //                s_joueurDisplayName.replace(" ", "_");
-                String nomFichier = s_joueurDisplayName.replace(" ", "_") + "png"; // Nom du fichier peut être l'ID du joueur avec extension png
+                String nomFichier = s_joueurDisplayName.replace(" ", "_") + ".png"; // Nom du fichier peut être l'ID du joueur avec extension png
 
                 // Assurez-vous que le dossier existe
                 File dossier = new File(dossierImages);

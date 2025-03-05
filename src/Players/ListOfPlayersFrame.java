@@ -6,14 +6,24 @@ package Players;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GraphicsDevice;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.MediaTracker;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
@@ -40,6 +50,8 @@ public JTable playersTable;
     /** The table model. */
     private CustomTableModelJoueur tableModel;
     
+    private static final String PLAYERS_IMAGES_DIR = "PlayersImages/";
+    
     /** The scroll pane. */
     private JScrollPane scrollPane;
     
@@ -60,6 +72,7 @@ public JTable playersTable;
 	private static final int IMAGE_HEIGHT = 60;
 	
 	private MenuPrincipal parentFrame;
+	private static JFrame frameForMessageFrame; 
 
 	/**
 	 * Instantiates a new list of players frame.
@@ -67,11 +80,14 @@ public JTable playersTable;
 	 * @throws SQLException the SQL exception
 	 * @throws ClassNotFoundException the class not found exception
 	 */
-	public ListOfPlayersFrame(MenuPrincipal menuPrincipal) throws SQLException, ClassNotFoundException {
+	public ListOfPlayersFrame(GraphicsDevice configScreen, MenuPrincipal menuPrincipal) throws SQLException, ClassNotFoundException {
 		this.parentFrame = menuPrincipal;
 		setTitle("List of Players");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(1400, 600); // Augmentez la largeur de la fen�tre pour mieux afficher les donn�es
+		Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
+        setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
+        
 		ImageIcon logoIcon = new ImageIcon("icon.png");
 		// V�rifiez si l'ic�ne a �t� charg�e avec succ�s
 		if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
@@ -296,7 +312,7 @@ public JTable playersTable;
 						bddPLayersComboBox.setSelectedIndex(-1);
 						scrollPane.setVisible(false);
 						parentFrame.refreshPlayerTableCombobox();
-					} catch (SQLException e1) {
+					} catch (SQLException | ClassNotFoundException e1) {
 						e1.printStackTrace();
 					}
 				}else
@@ -334,7 +350,7 @@ public JTable playersTable;
 					String cityResidence = (String) playersTable.getValueAt(selectedRow, 17);
 					String teteDeSerie = (String) playersTable.getValueAt(selectedRow, 18);
 
-					new ModifyPlayersFrame(ListOfPlayersFrame.this, ID, sexe, playerName, playerSurname, DisplayName, acroNat,country, string_flag, bithdate, string_joueur, ranking, height, hand, age, weight, prize,
+					new ModifyPlayersFrame(configScreen, ListOfPlayersFrame.this, ID, sexe, playerName, playerSurname, DisplayName, acroNat,country, string_flag, bithdate, string_joueur, ranking, height, hand, age, weight, prize,
 							birthplace, cityResidence,teteDeSerie, (String) bddPLayersComboBox.getSelectedItem(),selectedRow);
 				}
 			}
@@ -351,7 +367,7 @@ public JTable playersTable;
 						// Supprimez la ligne du mod�le de tableau
 			            CustomTableModelJoueur model = (CustomTableModelJoueur) playersTable.getModel();
 			            model.removeRow(selectedRow);
-					} catch (SQLException e1) {
+					} catch (SQLException | ClassNotFoundException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} // a modifier pour event
@@ -361,81 +377,34 @@ public JTable playersTable;
 		newButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					new newPlayerFrame(ListOfPlayersFrame.this, (String) bddPLayersComboBox.getSelectedItem());
+					new newPlayerFrame(configScreen, ListOfPlayersFrame.this, (String) bddPLayersComboBox.getSelectedItem());
 				} catch (SQLException e1) {
 					clignotementActif = true;
 					changerContourTemporaire(bddPLayersComboBox);
-					JOptionPane.showMessageDialog(null, "no database selected", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(frameForMessageFrame, "no database selected", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
 		
 		exportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				BDD_v2.exportTable((String) bddPLayersComboBox.getSelectedItem());
+				BDD_v2.exportTableToZip(null, (String) bddPLayersComboBox.getSelectedItem());
+//				BDD_v2.exportTable((String) bddPLayersComboBox.getSelectedItem());
 			}
 		});
 		importButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Cr�er une bo�te de dialogue de s�lection de fichier
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setDialogTitle("Select CSV File");
-                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                String fileName = "";
-                // Afficher la bo�te de dialogue de s�lection de fichier
-                int returnValue = fileChooser.showOpenDialog(null);
-                if (returnValue == JFileChooser.APPROVE_OPTION) {
-                    // R�cup�rer le fichier s�lectionn� par l'utilisateur
-                    File selectedFile = fileChooser.getSelectedFile();
-                    String filePath = selectedFile.getAbsolutePath();
-                    fileName = selectedFile.getName().replace(".csv", "");
-                    try {
-                        // Appeler la m�thode d'importation de CSV avec le chemin du fichier
-                        BDD_v2.importCSV(fileName, filePath);
-                        JOptionPane.showMessageDialog(null, "CSV file imported successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    } catch (SQLException | IOException | ClassNotFoundException ex) {
-                        JOptionPane.showMessageDialog(null, "Error importing CSV file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                        ex.printStackTrace();
-                    }
-                }
                 try {
-					BDD_v2.getAllListPlayerTableName();
+					importZipFile();
 					updateComboboxTable();
+					parentFrame.refreshPlayerTableCombobox();
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				bddPLayersComboBox.setSelectedItem(fileName.toUpperCase());
-			    String selectedEventBDD = (String) bddPLayersComboBox.getSelectedItem();
-			    System.out.println("Creation de la bdd du fichier " + selectedEventBDD);
-
-                if (selectedEventBDD != null) {
-					try {
-						tableData = BDD_v2.DataJoueur(selectedEventBDD);
-					} catch (ClassNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					SwingUtilities.invokeLater(() -> {
-						tableModel.setNewData(tableData);
-						tableModel.loadImages();
-					});
-					buttonsAndSearchPanel.setVisible(true);
-					scrollPane.setVisible(true);
-					deleteTableButton.setVisible(true);
-					exportButton.setVisible(true);
-					try {
-						parentFrame.refreshPlayerTableCombobox();
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-                }
 			}
 		});
+		ListOfPlayersFrame.frameForMessageFrame = this;
 	}
 	/**
 	 * Changer contour temporaire.
@@ -486,4 +455,120 @@ public JTable playersTable;
 		BDD_v2.getAllListPlayerTableName();
 		bddPLayersComboBox.setModel(new DefaultComboBoxModel<>(BDD_v2.tabBdd.toArray(new String[0])));
 	}
+	
+	/**
+     * Importe un fichier ZIP contenant un CSV et des images de joueurs.
+     */
+    public static void importZipFile() {
+        // 📌 Demander à l'utilisateur de choisir un ZIP
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Select ZIP File");
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int returnValue = fileChooser.showOpenDialog(frameForMessageFrame);
+
+        if (returnValue != JFileChooser.APPROVE_OPTION) {
+            System.out.println("Importation annulée.");
+            return;
+        }
+
+        File zipFile = fileChooser.getSelectedFile();
+        System.out.println("ZIP sélectionné : " + zipFile.getAbsolutePath());
+
+        // Extraire les fichiers du ZIP
+        try {
+            Path tempDir = Files.createTempDirectory("zip_extract_");
+            unzipFile(zipFile, tempDir);
+
+            // Trouver le fichier CSV extrait et l'importer
+            File extractedFolder = tempDir.toFile();
+            File csvFile = findCSVFile(extractedFolder);
+            if (csvFile != null) {
+                String tableName = csvFile.getName().replace(".csv", "");
+                BDD_v2.importCSV(tableName, csvFile.getAbsolutePath());
+                JOptionPane.showMessageDialog(frameForMessageFrame, "CSV importé avec succès !");
+            } else {
+                JOptionPane.showMessageDialog(frameForMessageFrame, "Aucun fichier CSV trouvé dans le ZIP !");
+            }
+
+            // Déplacer les images extraites vers PlayersImages/
+            File playerImagesFolder = new File(extractedFolder, "player_image");
+            if (playerImagesFolder.exists()) {
+                moveImagesToPlayersImages(playerImagesFolder);
+            } else {
+                System.out.println("Aucun dossier 'player_image' trouvé.");
+            }
+
+            JOptionPane.showMessageDialog(frameForMessageFrame, "Importation terminée !");
+        } catch (IOException | SQLException | ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(frameForMessageFrame, "Erreur lors de l'importation : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Décompresse un ZIP dans un dossier temporaire.
+     */
+    private static void unzipFile(File zipFile, Path outputDir) throws IOException {
+        try (ZipInputStream zipIn = new ZipInputStream(new FileInputStream(zipFile))) {
+            ZipEntry entry;
+            while ((entry = zipIn.getNextEntry()) != null) {
+                File extractedFile = new File(outputDir.toFile(), entry.getName());
+
+                if (entry.isDirectory()) {
+                    extractedFile.mkdirs();
+                } else {
+                    extractedFile.getParentFile().mkdirs();
+                    try (FileOutputStream fos = new FileOutputStream(extractedFile)) {
+                        byte[] buffer = new byte[1024];
+                        int length;
+                        while ((length = zipIn.read(buffer)) > 0) {
+                            fos.write(buffer, 0, length);
+                        }
+                    }
+                }
+                zipIn.closeEntry();
+            }
+        }
+    }
+
+    /**
+     * Recherche un fichier CSV dans un dossier extrait.
+     * @return Le fichier CSV trouvé ou `null` si absent.
+     */
+    private static File findCSVFile(File folder) {
+        File[] files = folder.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.getName().toLowerCase().endsWith(".csv")) {
+                    System.out.println("Fichier CSV trouvé : " + file.getAbsolutePath());
+                    return file;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Déplace toutes les images extraites vers le dossier `PlayersImages/`.
+     */
+    private static void moveImagesToPlayersImages(File sourceDir) {
+        if (!sourceDir.exists()) return;
+
+        File destinationDir = new File(PLAYERS_IMAGES_DIR);
+        if (!destinationDir.exists()) destinationDir.mkdirs(); // Crée `PlayersImages/` s'il n'existe pas
+
+        File[] imageFiles = sourceDir.listFiles();
+        if (imageFiles != null) {
+            for (File file : imageFiles) {
+                File newFile = new File(destinationDir, file.getName());
+                try {
+                    Files.move(file.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    System.out.println("Image déplacée : " + newFile.getAbsolutePath());
+                } catch (IOException e) {
+                    System.err.println("Erreur de déplacement : " + file.getName());
+                }
+            }
+        }
+    }
+ 
 }

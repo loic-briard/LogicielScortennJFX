@@ -2,7 +2,9 @@ package Background;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.GraphicsDevice;
 import java.awt.MediaTracker;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -33,14 +35,18 @@ public class ListOfBackgroundFrame extends JFrame {
 
 	/**
 	 * Instantiates a new list of background frame.
+	 * @param configScreen 
 	 *
 	 * @throws SQLException the SQL exception
 	 */
-	public ListOfBackgroundFrame() throws SQLException {
+	public ListOfBackgroundFrame(GraphicsDevice configScreen) throws SQLException {
 		// Initialisation de la fen�tre
 		setTitle("List of Background");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setSize(1400, 500);
+		setSize(1200, 500);
+		// Obtenir l'emplacement de l'écran secondaire
+        Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
+        setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
 		ImageIcon logoIcon = new ImageIcon("icon.png");
         // V�rifiez si l'ic�ne a �t� charg�e avec succ�s
         if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
@@ -137,7 +143,7 @@ public class ListOfBackgroundFrame extends JFrame {
 					}
 
 					// Ouvrir une fen�tre de modification avec ces donn�es
-					new ModifyBackgroundFrame(ListOfBackgroundFrame.this, backgroundName, imagePaths[0], imagePaths[1], imagePaths[2], imagePaths[3], imagePaths[4]);
+					new ModifyBackgroundFrame(configScreen,ListOfBackgroundFrame.this, backgroundName, imagePaths[0], imagePaths[1], imagePaths[2], imagePaths[3], imagePaths[4]);
 				}
 			}
 		});
@@ -160,7 +166,7 @@ public class ListOfBackgroundFrame extends JFrame {
 		});
 		newButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new newBackgroundFrame(ListOfBackgroundFrame.this);
+				new newBackgroundFrame(configScreen,ListOfBackgroundFrame.this);
 			}
 		});
 	}

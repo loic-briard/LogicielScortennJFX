@@ -5,7 +5,9 @@ package Flags;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.GraphicsDevice;
 import java.awt.MediaTracker;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -65,11 +67,14 @@ public JTable flagTable;
      *
      * @throws SQLException the SQL exception
      */
-    public ListOfFlag() throws SQLException {
+    public ListOfFlag(GraphicsDevice configScreen) throws SQLException {
         // Initialisation de la fen�tre
         setTitle("List of Flags");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(800, 600);
+        Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
+        setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
+        
         ImageIcon logoIcon = new ImageIcon("icon.png");
         // V�rifiez si l'ic�ne a �t� charg�e avec succ�s
         if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
@@ -135,7 +140,7 @@ public JTable flagTable;
         newButton.addActionListener(new ActionListener() {
         	@Override
         	public void actionPerformed(ActionEvent e) {
-        			new NewFlagFrame(ListOfFlag.this);
+        			new NewFlagFrame(configScreen, ListOfFlag.this);
         	}
         });
         modifyButton.addActionListener(new ActionListener() {
@@ -151,7 +156,7 @@ public JTable flagTable;
 					String string_flag = img_flag.getDescription();
 //					String imgPath = imageUtility.getImagePath();
 					// Ouvrir une fen�tre de modification avec ces donn�es
-					new ModifyFlagFrame(ListOfFlag.this, flagName, flagNameCountry, string_flag,selectedRow);
+					new ModifyFlagFrame(configScreen, ListOfFlag.this, flagName, flagNameCountry, string_flag,selectedRow);
 				}
 			}
 		});
@@ -166,6 +171,9 @@ public JTable flagTable;
         			try {
 						BDD_v2.deleteFlag(flagName);
 					} catch (SQLException | IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (ClassNotFoundException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}

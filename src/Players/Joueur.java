@@ -328,6 +328,7 @@ public class Joueur {
 	 * @return the img joueur
 	 */
 	public String getImgJoueur() {
+		System.out.println("image joueur  : "+imgJoueur);
 		return imgJoueur;
 	}
 

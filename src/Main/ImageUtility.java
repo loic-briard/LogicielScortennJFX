@@ -116,9 +116,12 @@ public class ImageUtility extends JLabel {
      *
      * @return the string
      */
-    public static String chargerFichier() {
+    public static String chargerFichier(String lastFolder) {
 		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+		if(lastFolder != null)
+			fileChooser.setCurrentDirectory(new File(lastFolder).getParentFile());
+		else
+			fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 		fileChooser.setFileFilter(new FileNameExtensionFilter("Images/xls", "jpg", "png", "gif","xls"));
 		int returnValue = fileChooser.showOpenDialog(null);
 
@@ -185,5 +188,8 @@ public class ImageUtility extends JLabel {
         // Obtenir le nom du fichier source
         String sourceFileName = sourceFile.getName();    
         return sourceFileName;
+    }
+    public  int getWidthImgUtility() {
+    	return this.width;
     }
 }
