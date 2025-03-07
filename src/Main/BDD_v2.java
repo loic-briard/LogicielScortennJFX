@@ -108,7 +108,7 @@ public class BDD_v2 {
 	 * @throws ClassNotFoundException the class not found exception
 	 * @throws SQLException           the SQL exception
 	 */
-	static void deconnexionBDD() throws ClassNotFoundException, SQLException {
+	public static void deconnexionBDD() throws ClassNotFoundException, SQLException {
 		try {
 			if (connection != null) {
 				connection.close();
@@ -132,8 +132,8 @@ public class BDD_v2 {
 		requete += "DROP TABLE WTA IF EXISTS;";
 		requete += "DROP TABLE ATP IF EXISTS;";
 //		requete += "DROP TABLE LIST_8_JOUEUR IF EXISTS;";
-//		requete += "DROP TABLE Background IF EXISTS;";
-//		requete += "DROP TABLE Event IF EXISTS;";
+		requete += "DROP TABLE Background IF EXISTS;";
+		requete += "DROP TABLE Event IF EXISTS;";
 //		requete += "DROP TABLE FLAG IF EXISTS;";
 
 		executerRequeteSQL(requete);
@@ -262,35 +262,34 @@ public class BDD_v2 {
 	 */
 	public static void insertionJoueurDansBDD(Joueur joueur, String bddName)
 			throws SQLException, ClassNotFoundException {
-		try {
-			String requete = "INSERT INTO " + bddName
-					+ " (id, Sexe, Nom, Prenom, NomAfficher, Nat, Country, Birthdate, ImgJoueur, Ranking, height, hand, age, weight, PRIZETOTAL, BIRTHPLACE, CityResidence,TETEDESERIE)"
-					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
+		String requete = "INSERT INTO " + bddName
+				+ " (id, Sexe, Nom, Prenom, NomAfficher, Nat, Country, Birthdate, ImgJoueur, Ranking, height, hand, age, weight, PRIZETOTAL, BIRTHPLACE, CityResidence,TETEDESERIE)"
+				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
 
-			try (PreparedStatement preparedStatement = connection.prepareStatement(requete)) {
-				preparedStatement.setInt(1, joueur.getID());
-				preparedStatement.setString(2, joueur.getSexe());
-				preparedStatement.setString(3, joueur.getNom());
-				preparedStatement.setString(4, joueur.getPrenom());
-				preparedStatement.setString(5, joueur.getDisplay_name());
-				preparedStatement.setString(6, joueur.getNatio_acronyme());
-				preparedStatement.setString(7, joueur.getCountry());
-				preparedStatement.setString(8, joueur.getBirthDate());
-				preparedStatement.setString(9, joueur.getImgJoueur());
-				preparedStatement.setInt(10, joueur.getRank());
-				preparedStatement.setString(11, joueur.getTaille() + "");
-				preparedStatement.setString(12, joueur.getMain());
-				preparedStatement.setInt(13, joueur.getAge());
-				preparedStatement.setString(14, joueur.getWeight() + "");
-				preparedStatement.setString(15, joueur.getPrizetotal());
-				preparedStatement.setString(16, joueur.getBirthPlace());
-				preparedStatement.setString(17, joueur.getCityResidence());
-				preparedStatement.setString(18, joueur.getTeteDeSerie());
+		try (PreparedStatement preparedStatement = connection.prepareStatement(requete)) {
+			preparedStatement.setInt(1, joueur.getID());
+			preparedStatement.setString(2, joueur.getSexe());
+			preparedStatement.setString(3, joueur.getNom());
+			preparedStatement.setString(4, joueur.getPrenom());
+			preparedStatement.setString(5, joueur.getDisplay_name());
+			preparedStatement.setString(6, joueur.getNatio_acronyme());
+			preparedStatement.setString(7, joueur.getCountry());
+			preparedStatement.setString(8, joueur.getBirthDate());
+			preparedStatement.setString(9, joueur.getImgJoueur());
+			preparedStatement.setInt(10, joueur.getRank());
+			preparedStatement.setString(11, joueur.getTaille() + "");
+			preparedStatement.setString(12, joueur.getMain());
+			preparedStatement.setInt(13, joueur.getAge());
+			preparedStatement.setString(14, joueur.getWeight() + "");
+			preparedStatement.setString(15, joueur.getPrizetotal());
+			preparedStatement.setString(16, joueur.getBirthPlace());
+			preparedStatement.setString(17, joueur.getCityResidence());
+			preparedStatement.setString(18, joueur.getTeteDeSerie());
 
-				preparedStatement.executeUpdate();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+			preparedStatement.executeUpdate();
+		}catch (SQLException e1) {
+			System.out.println(joueur.toString());
+			e1.printStackTrace();
 		}
 	}
 
@@ -740,8 +739,9 @@ public class BDD_v2 {
 				}
 			}
 		} else {
-			imagePath = "clear.png";
+			imagePath = "resources"+File.separator+"imgInterface"+File.separator+"clear.png";
 		}
+		
 		return imagePath;
 	}
 
@@ -1171,7 +1171,7 @@ public class BDD_v2 {
 				updateStatement.executeUpdate();
 			}
 			System.out.println("  - event " + eventName + " has been deleted");
-			Path targetPath = Paths.get("config" + File.separator + eventName);
+			Path targetPath = Paths.get("resouces"+File.separator+"config" + File.separator + eventName);
 			ConfigurationSaveLoad.deleteFolder(targetPath);
 		} else {
 			System.out.println("  ! event hasn't been deleted");
@@ -1468,7 +1468,7 @@ public class BDD_v2 {
 			while (resultSet.next()) {
 				if (resultSet.next()) {
 					// si la case est case est vide
-					if (resultSet.getString("ImgJoueur") == "clear.png" || resultSet.getString("ImgJoueur") == null
+					if (resultSet.getString("ImgJoueur") == "resources"+File.separator+"imgInterface"+File.separator+"clear.png" || resultSet.getString("ImgJoueur") == null
 							|| resultSet.getString("ImgJoueur") == "" || resultSet.getString("ImgJoueur").isEmpty()) {
 						b_image_existe = false;
 						System.out.println("  ! image missing");
@@ -1537,11 +1537,11 @@ public class BDD_v2 {
 					executerRequeteSQL("CREATE TABLE " + table
 							+ " (Nom VARCHAR(120) PRIMARY KEY, Img_1 varchar(255), Img_2 varchar(255), Img_3 varchar(255), Img_4 varchar(255), Img_5 varchar(255));");
 
-					backgroundExample.setImage_1("Background" + File.separator + "1bgFull32.png");
-					backgroundExample.setImage_2("Background" + File.separator + "2bgPlayer.png");
-					backgroundExample.setImage_3("Background" + File.separator + "3bgGame.png");
-					backgroundExample.setImage_4("Background" + File.separator + "4bgTab32.png");
-					backgroundExample.setImage_5("Background" + File.separator + "5bgWaitin.png");
+					backgroundExample.setImage_1("resources"+File.separator+"Background" + File.separator + "1bgFull32.png");
+					backgroundExample.setImage_2("resources"+File.separator+"Background" + File.separator + "2bgPlayer.png");
+					backgroundExample.setImage_3("resources"+File.separator+"Background" + File.separator + "3bgGame.png");
+					backgroundExample.setImage_4("resources"+File.separator+"Background" + File.separator + "4bgTab32.png");
+					backgroundExample.setImage_5("resources"+File.separator+"Background" + File.separator + "5bgWaiting.png");
 					BDD_v2.insertionBackgroundDansBDD(backgroundExample);
 				} else if (table.equals("Event")) {
 					executerRequeteSQL("CREATE TABLE " + table + " (Nom VARCHAR(120) PRIMARY KEY, NomBG VARCHAR(120));");

@@ -50,7 +50,7 @@ public JTable playersTable;
     /** The table model. */
     private CustomTableModelJoueur tableModel;
     
-    private static final String PLAYERS_IMAGES_DIR = "PlayersImages/";
+    private static final String PLAYERS_IMAGES_DIR =  "resources"+File.separator+"PlayersImages/";
     
     /** The scroll pane. */
     private JScrollPane scrollPane;
@@ -88,7 +88,7 @@ public JTable playersTable;
 		Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
         setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
         
-		ImageIcon logoIcon = new ImageIcon("icon.png");
+		ImageIcon logoIcon = new ImageIcon("resources"+File.separator+"imgInterface"+File.separator+"icon.png");
 		// V�rifiez si l'ic�ne a �t� charg�e avec succ�s
 		if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
 			setIconImage(logoIcon.getImage());

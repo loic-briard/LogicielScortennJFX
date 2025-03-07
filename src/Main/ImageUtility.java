@@ -50,7 +50,7 @@ public class ImageUtility extends JLabel {
             if(imagePath != "" || imagePath != "''") {
             	System.out.println("  image existe, chemin vers l'image : "+this.imagePath);
             	originalImage = ImageIO.read(new File(this.imagePath));
-            }else originalImage = ImageIO.read(new File("clear.png"));
+            }else originalImage = ImageIO.read(new File("resources"+File.separator+"imgInterface"+File.separator+"clear.png"));
             	
             
             if(height>0) {

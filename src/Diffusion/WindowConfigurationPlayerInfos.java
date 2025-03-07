@@ -13,6 +13,7 @@ import java.awt.Font;
 import java.awt.GraphicsDevice;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,7 +84,7 @@ autre}
 	private String nameEvent;
 	
 	/** The Constant CONFIG_DIR. */
-	private static final String CONFIG_DIR = "Config/";
+	private static final String CONFIG_DIR = "resources"+File.separator+"Config/";
 	
 	/** The Constant JSON_EXT. */
 	private static final String JSON_EXT = ".json";
@@ -187,7 +188,7 @@ autre}
         setTitle("Configuration Player Information :  "+this.frameType.toString().toLowerCase());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(500, 700);
-        setIconImage(new ImageIcon("icon.png").getImage());
+        setIconImage(new ImageIcon("resources"+File.separator+"imgInterface"+File.separator+"icon.png").getImage());
         Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
         setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
         
@@ -329,7 +330,7 @@ autre}
             }
         }
         
-        ElementJoueurFull ReadJson = ConfigurationSaveLoad.readJsonFileFull("Config/" + displayFrame.getNameEvent() + "/" + frameType.toString().toLowerCase() + ".json");
+        ElementJoueurFull ReadJson = ConfigurationSaveLoad.readJsonFileFull( "resources"+File.separator+"Config/"+ displayFrame.getNameEvent() + "/" + frameType.toString().toLowerCase() + ".json");
         ConfigurationSaveLoad.updateElementJoueurFull(displayFrame.getNameEvent(), ReadJson, elementJoueurFull);
     }
     

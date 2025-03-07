@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 public class GlobalSettingsUI {
 
@@ -22,7 +23,7 @@ public class GlobalSettingsUI {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(400, 300);
         frame.setLayout(new GridBagLayout());
-        frame.setIconImage(new ImageIcon("icon.png").getImage());
+        frame.setIconImage(new ImageIcon("resources"+File.separator+"imgInterface"+File.separator+"icon.png").getImage());
         Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
         frame.setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - frame.getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - frame.getHeight()) / 2)); // Positionner la fenêtre
         

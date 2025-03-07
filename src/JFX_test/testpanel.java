@@ -28,7 +28,7 @@ public class testpanel extends JFrame{
         panel.setBackground(Color.BLUE);
 
         // Ajouter l’image dans le JPanel
-        ImageUtility imageLabel = new ImageUtility("flag/BRA.png", 200);
+        ImageUtility imageLabel = new ImageUtility("ressources/Background/1bgFull32.png", 200);///Tournoi_Tennis_JavaFX_v2/resources/Background/1bgFull32.png
         panel.add(imageLabel);
         panel.setSize(imageLabel.getWidthImgUtility(), 200);
         // Centrer le panel dans la fenêtre

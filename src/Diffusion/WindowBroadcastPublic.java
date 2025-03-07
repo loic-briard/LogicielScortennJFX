@@ -9,7 +9,9 @@ package Diffusion;
 
 import javax.swing.*;
 import Event.Evenement;
+
 import java.awt.*;
+import java.io.File;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -54,7 +56,6 @@ public class WindowBroadcastPublic extends JFrame {
         backgroundLabel = new JLabel();
         backgroundLabel.setBounds(0, 0, this.getWidth(), this.getHeight());
         setBackgroundImage(eventChoosen.getBackground().getImage_1()); // Mettre le chemin de l'image initiale
-//        setBackgroundImage("black.jpg"); // Mettre le chemin de l'image initiale
         layeredPane.add(backgroundLabel, JLayeredPane.DEFAULT_LAYER);
         
         this.add(layeredPane);
@@ -78,7 +79,7 @@ public class WindowBroadcastPublic extends JFrame {
 		// D�finissez la position initiale de la fen�tre sur le deuxi�me �cran
 		setLocation(bounds.x, bounds.y);
 
-		ImageIcon logoIcon = new ImageIcon("icon.png");
+		ImageIcon logoIcon = new ImageIcon("resources"+File.separator+"imgInterface"+File.separator+"icon.png");
 		// V�rifiez si l'ic�ne a �t� charg�e avec succ�s
 		if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
 			setIconImage(logoIcon.getImage());

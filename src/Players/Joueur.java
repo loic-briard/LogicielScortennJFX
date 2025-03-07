@@ -328,7 +328,7 @@ public class Joueur {
 	 * @return the img joueur
 	 */
 	public String getImgJoueur() {
-		System.out.println("image joueur  : "+imgJoueur);
+//		System.out.println("image joueur  : "+imgJoueur);
 		return imgJoueur;
 	}
 
@@ -460,7 +460,7 @@ public class Joueur {
 	 */
 	@Override
 	public String toString() {
-		return "Joueur [ID=" + ID + ", " + sexe + ", " + nom + ", " + prenom + ", display name=" + display_name + ", nationalit�=" + natio_acronyme +", "+country+ ", main=" + main
+		return "Joueur [ID=" + ID + ", " + sexe + ", " + nom + ", " + prenom + ", display name=" + display_name + ", nationalit�=" + natio_acronyme +", country = "+country+ ", main=" + main
 				+ ", birthDate=" + birthDate + ", BirthPlace=" + BirthPlace + ", CityResidence=" + CityResidence + ", imgJoueur=" + imgJoueur + ", prizetotal=" + prizetotal + ", rank=" + rank
 				+ ", taille=" + taille + "cm, age=" + age + ", weight=" + weight + "kg, tete de serie = "+teteDeSerie+"]";
 	}

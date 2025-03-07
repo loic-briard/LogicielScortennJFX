@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.GraphicsDevice;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -33,7 +34,7 @@ class LoadingDialog extends JDialog {
         setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
 
 		// Charger et redimensionner le GIF
-		ImageIcon originalIcon = new ImageIcon("loading.gif"); // Charge l'image
+		ImageIcon originalIcon = new ImageIcon("resources"+File.separator+"imgInterface"+File.separator+"loading.gif"); // Charge l'image
 		Image scaledImage = originalIcon.getImage().getScaledInstance(200, 200, Image.SCALE_DEFAULT);
 		ImageIcon resizedIcon = new ImageIcon(scaledImage);
 

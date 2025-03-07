@@ -30,7 +30,7 @@ public class newBackgroundFrame extends JFrame {
         
         
         // Charger l'icône de la fenêtre
-        ImageIcon logoIcon = new ImageIcon("icon.png");
+        ImageIcon logoIcon = new ImageIcon("resources"+File.separator+"imgInterface"+File.separator+"icon.png");
         if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
             setIconImage(logoIcon.getImage());
         } else {
@@ -43,7 +43,7 @@ public class newBackgroundFrame extends JFrame {
         loadButtons = new JButton[5];
         
         for (int i = 0; i < 5; i++) {
-            currentImages[i] = "Background/transparent.png";
+            currentImages[i] = "resources"+File.separator+"Background"+File.separator+"transparent.png";
             imageLabels[i] = new JLabel(new ImageUtility(currentImages[i], 150).getIcon());
             loadButtons[i] = new JButton(buttonName[i]);
             final int index = i;
@@ -82,8 +82,8 @@ public class newBackgroundFrame extends JFrame {
         String newImgPath = ImageUtility.chargerFichier(lastFolder);
         if (newImgPath != null) {
             lastFolder = newImgPath;
-            ImageUtility.enregistrerFichier(newImgPath, "Background");
-            currentImages[index] = "Background" + File.separator + ImageUtility.getNameFile(newImgPath);
+            ImageUtility.enregistrerFichier(newImgPath, "resources"+File.separator+"Background");
+            currentImages[index] = "resources"+File.separator+"Background" + File.separator + ImageUtility.getNameFile(newImgPath);
             imageLabels[index].setIcon(new ImageUtility(currentImages[index], 150).getIcon());
             revalidate();
             repaint();

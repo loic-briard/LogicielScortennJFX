@@ -46,8 +46,8 @@ public class MenuPrincipal extends JFrame {
     private static final String TITLE = "Main Menu";
     
     /** The Constant ICON_PATH. */
-    private static final String ICON_PATH = "icon.png";
-    private static final String ERREUR_CONNEXION_PATH = "erreur_connexion.png";
+    private static final String ICON_PATH = "resources"+File.separator+"imgInterface"+File.separator+"icon.png";
+    private static final String ERREUR_CONNEXION_PATH = "resources"+File.separator+"imgInterface"+File.separator+"erreur_connexion.png";
     
     /** The athlete selection. */
     private AthleteSelection athleteSelection;
@@ -419,7 +419,7 @@ public class MenuPrincipal extends JFrame {
         eventComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	String path = "Config"+File.separator+eventComboBox.getSelectedItem()+File.separator+"full.json";
+            	String path =  "resources"+File.separator+"Config"+File.separator+eventComboBox.getSelectedItem()+File.separator+"full.json";
             	File nbjoueur = new File(path);
             	if(nbjoueur.exists()) {
             		ElementJoueurFull elementJoueurFull = ConfigurationSaveLoad.readJsonFileFull(path);

@@ -52,7 +52,7 @@ public class ListOfEventsFrame extends JFrame {
 	
 	/** The parent frame. */
 	private MenuPrincipal parentFrame; // R�f�rence � la fen�tre ListOfEventsFrame
-	private static final String CONFIG_DIR = "Config"+File.separator;
+	private static final String CONFIG_DIR = "ressources"+File.separator+"Config"+File.separator;
 
 	/**
 	 * Instantiates a new list of events frame.
@@ -69,7 +69,7 @@ public class ListOfEventsFrame extends JFrame {
         Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
         setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
         
-        ImageIcon logoIcon = new ImageIcon("icon.png");
+        ImageIcon logoIcon = new ImageIcon("resources"+File.separator+"imgInterface"+File.separator+"icon.png");
         // V�rifiez si l'ic�ne a �t� charg�e avec succ�s
         if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
             setIconImage(logoIcon.getImage());
@@ -217,6 +217,7 @@ public class ListOfEventsFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					new newEventFrame(configScreen, ListOfEventsFrame.this);
+					refreshData();
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -299,6 +300,10 @@ public class ListOfEventsFrame extends JFrame {
             }
         }
         this.parentFrame.refreshEventComboBox();
+        
+        String[] eventNames = BDD_v2.getNamesFromDatabase("event");
+        eventComboBox.setModel(new DefaultComboBoxModel<>(eventNames));
+        
     }
 	
 	/**
@@ -309,8 +314,8 @@ public class ListOfEventsFrame extends JFrame {
      */
     public static void createZipFile(String eventName, File zipFile) throws SQLException {
     	List<File> jsonFiles= new ArrayList<File>();
-    	File globalsettingFile = new File("config"+File.separator+"globalSettings.json");
-    	File directory = new File("config"+File.separator+eventName);
+    	File globalsettingFile = new File(CONFIG_DIR+File.separator+"globalSettings.json");
+    	File directory = new File(CONFIG_DIR+File.separator+eventName);
     	if (directory.exists() && directory.isDirectory()) {
             File[] files = directory.listFiles((dir, name) -> name.endsWith(".json"));
             if (files != null) {

@@ -10,7 +10,6 @@ import java.util.Map;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
 import Sauvegarde.GlobalSettingSave;
 
 public class GlobalSettings {
@@ -24,6 +23,7 @@ public class GlobalSettings {
     private int cityResidenceMaxLength;
     private int birthPlaceMaxLength;
     private int space;
+    private String path =  "resources"+File.separator+"Config";
 
     // Constructeur privé pour empêcher l'instanciation directe
     private GlobalSettings() {
@@ -106,13 +106,13 @@ public class GlobalSettings {
     
     public void saveSettingsToJson() {
     	saveSettings.setMapSetting(createMapSetting());
-    	saveSettings.saveSettingToJson("Config", "globalSettings.json");
+    	saveSettings.saveSettingToJson(path, "globalSettings.json");
     }
     
     public void getGlobalSettingsFromJson() {
-		File configFile = new File("Config" + File.separator + "globalSettings.json");
+		File configFile = new File(path + File.separator + "globalSettings.json");
 		if (configFile.exists()) {
-			try (Reader reader = new FileReader("Config" + File.separator + "globalSettings.json")) {
+			try (Reader reader = new FileReader(path + File.separator + "globalSettings.json")) {
 				JsonElement jsonElement = JsonParser.parseReader(reader);
 				if (jsonElement.isJsonObject()) {
 					JsonObject configObject = jsonElement.getAsJsonObject();

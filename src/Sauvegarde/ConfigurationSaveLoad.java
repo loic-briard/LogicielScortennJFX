@@ -276,7 +276,7 @@ public class ConfigurationSaveLoad {
 	 */
 	public static void saveWindows(String nomEvent, String typeWindows, Map<JPanel, JLabel> JoueurDetailsP1,
 			Map<JPanel, JLabel> JoueurDetailsP2) {
-		ConfigurationSaveLoad eventData = loadConfigFromFile("Config/" + nomEvent + "/player.json");
+		ConfigurationSaveLoad eventData = loadConfigFromFile( "resources"+File.separator+"Config/" + nomEvent+ "/player.json");
 		if (eventData == null) {
 			System.out.println("Content from : " + "Config/" + nomEvent + "/player.json" + " is empty !");
 			eventData = new ConfigurationSaveLoad();
@@ -307,7 +307,7 @@ public class ConfigurationSaveLoad {
 				elementsOnePlayer.getOnePlayerPolice().put(panel.getName(), playerPolice);
 			}
 			System.out.println("PLAYER save completed");
-			saveConfigToFile(elementsOnePlayer, "Config/" + nomEvent, "player.json");
+			saveConfigToFile(elementsOnePlayer, "resources"+File.separator+"Config/" + nomEvent, "player.json");
 			break;
 
 		default:
@@ -324,7 +324,7 @@ public class ConfigurationSaveLoad {
 	 * @param JoueurDetails the joueur details
 	 */
 	public static void saveWindowsMultiTab(String nomEvent, String typeWindows,	ArrayList<Map<JPanel, JLabel>> JoueurDetails) {
-		ConfigurationSaveLoad eventData = loadConfigFromFile("Config/" + nomEvent + "/" + typeWindows + ".json");
+		ConfigurationSaveLoad eventData = loadConfigFromFile( "resources"+File.separator+"Config/" + nomEvent +File.separator+ typeWindows + ".json");
 		if (eventData == null) {
 			System.out.println("Content from : " + "Config/" + nomEvent + "/" + typeWindows + ".json" + " is empty !");
 			eventData = new ConfigurationSaveLoad();
@@ -370,7 +370,7 @@ public class ConfigurationSaveLoad {
 				k++;
 			}
 			System.out.println("GAME save completed");
-			saveConfigToFileGame(elementsGamePlayer, "Config/" + nomEvent, "game.json");
+			saveConfigToFileGame(elementsGamePlayer, "resources"+File.separator+"Config/" + nomEvent, "game.json");
 			break;
 		case "tab":
 			int i = 0;
@@ -410,7 +410,7 @@ public class ConfigurationSaveLoad {
 				i++;
 			}
 			System.out.println("TAB save completed");
-			saveConfigToFileTab(elementsTabPlayer, "Config/" + nomEvent, "tab.json");
+			saveConfigToFileTab(elementsTabPlayer, "resources"+File.separator+"Config/" + nomEvent, "tab.json");
 			break;
 		case "full":
 			int j = 0;
@@ -568,7 +568,7 @@ public class ConfigurationSaveLoad {
 //	        System.out.println("Element: " + entry.getKey() + " Visible: " + police.isVisible() + " Font: " + police.getFont() + " Color: " + police.getColor() + " Taille: " + police.getTaille());
 //	    }
 
-		saveConfigToFileFull(original, "Config/" + nomEvent, "full.json");
+		saveConfigToFileFull(original, "resources"+File.separator+"Config/" + nomEvent, "full.json");
 		System.out.println("FULL save completed");
 
 	}
@@ -580,7 +580,7 @@ public class ConfigurationSaveLoad {
 	 * @param source the source
 	 */
 	public static void replacePlayerDataFull(String nomEvent, ElementJoueurFull source) {
-		ElementJoueurFull target = readJsonFileFull("Config/" + nomEvent + "/" + "full.json");
+		ElementJoueurFull target = readJsonFileFull( "resources"+File.separator+"Config/" + nomEvent + "/" + "full.json");
 //
 //	    System.out.println("--Elements in full from json:");
 //	    for (Map<String, Map<String, ElementJoueur>> playerMap : target.getPlayer()) {
@@ -643,7 +643,7 @@ public class ConfigurationSaveLoad {
 //	        System.out.println("Element: " + entry.getKey() + " Visible: " + police.isVisible() + " Font: " + police.getFont() + " Color: " + police.getColor() + " Taille: " + police.getTaille());
 //	    }
 
-		saveConfigToFileFull(target, "Config/" + nomEvent, "full.json");
+		saveConfigToFileFull(target, "resources"+File.separator+"Config/" + nomEvent, "full.json");
 		System.out.println("FULL save completed");
 	}
 
@@ -903,20 +903,20 @@ public class ConfigurationSaveLoad {
 			listFileName.add("tab.json");
 			listFileName.add("full.json");
 			listFileName.add("animation.json");
-			Path targetPath = Paths.get("config" + File.separator + nomEvent);
+			Path targetPath = Paths.get("resources"+File.separator+"Config" + File.separator + nomEvent);
 			// Créer le dossier destination s'il n'existe pas
 			if (!Files.exists(targetPath)) {
 				Files.createDirectories(targetPath);
 				System.out.println("Dossier destination créé : " + targetPath);
 				for (String fileName : listFileName) {
 
-					Path sourcePath = Paths.get("config" + File.separator + "default" +File.separator + nbJoueur, fileName);
+					Path sourcePath = Paths.get("resources"+File.separator+"Config" + File.separator + "default" +File.separator + nbJoueur, fileName);
 					// Construire le chemin complet du fichier destination
 					Path destinationFile = targetPath.resolve(sourcePath.getFileName());
 
 					// Copier le fichier
 					Files.copy(sourcePath, destinationFile, StandardCopyOption.REPLACE_EXISTING);
-					System.out.println("Fichier copié avec succès : " + destinationFile);
+					System.out.println(sourcePath+" Fichier copié avec succès : " + destinationFile);
 				}
 //				ElementJoueurFull defaultData = createDefaultElementJoueurFull(nbJoueur);
 //				saveConfigToFileFull(defaultData, "config" + File.separator + nomEvent, "full.json");
@@ -1098,7 +1098,7 @@ public class ConfigurationSaveLoad {
 	 * @param panelanimation the panelanimation
 	 */
 	public static void setConfigAnimation(String nomEvent, PanelAnimationConfiguration panelanimation) {
-		try (Reader reader = new FileReader("Config/" + nomEvent+ File.separator + "animation.json")) {
+		try (Reader reader = new FileReader("resources"+File.separator+"Config/" + nomEvent+ File.separator + "animation.json")) {
 			JsonElement jsonElement = JsonParser.parseReader(reader);
 			if (jsonElement.isJsonObject()) {
 				JsonObject configObject = jsonElement.getAsJsonObject();

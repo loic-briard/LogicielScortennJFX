@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -100,7 +101,7 @@ public class AthleteSelection extends JFrame {
 		// Obtenir l'emplacement de l'écran secondaire
         Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
         setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
-		ImageIcon logoIcon = new ImageIcon("icon.png");
+		ImageIcon logoIcon = new ImageIcon("resources"+File.separator+"imgInterface"+File.separator+"icon.png");
 		// V�rifiez si l'ic�ne a �t� charg�e avec succ�s
 		if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
 			setIconImage(logoIcon.getImage());

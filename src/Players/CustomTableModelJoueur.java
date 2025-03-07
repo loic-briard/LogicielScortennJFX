@@ -34,7 +34,7 @@ public class CustomTableModelJoueur extends AbstractTableModel {
     private ExecutorService imageLoader = Executors.newFixedThreadPool(2);
     
     /** The loading icon. */
-    private ImageIcon loadingIcon = new ImageIcon("loading.png");
+    private ImageIcon loadingIcon = new ImageIcon("resources"+File.separator+"imgInterface"+File.separator+"loading.png");
     
     /** The image cache. */
     private ConcurrentHashMap<String, ImageIcon> imageCache = new ConcurrentHashMap<>();
@@ -53,7 +53,7 @@ public class CustomTableModelJoueur extends AbstractTableModel {
             this.data.add(row);
         }
         // Redimensionner l'icône de chargement
-        this.loadingIcon = resizeIcon(new ImageIcon("loading.png"));
+        this.loadingIcon = resizeIcon(new ImageIcon("resources"+File.separator+"imgInterface"+File.separator+"loading.png"));
     }
 
     /**

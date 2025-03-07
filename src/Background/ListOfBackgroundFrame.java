@@ -7,6 +7,7 @@ import java.awt.MediaTracker;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
@@ -47,7 +48,7 @@ public class ListOfBackgroundFrame extends JFrame {
 		// Obtenir l'emplacement de l'écran secondaire
         Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
         setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
-		ImageIcon logoIcon = new ImageIcon("icon.png");
+		ImageIcon logoIcon = new ImageIcon( "resources"+File.separator+"imgInterface"+File.separator+"icon.png");
         // V�rifiez si l'ic�ne a �t� charg�e avec succ�s
         if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
             setIconImage(logoIcon.getImage());

@@ -356,7 +356,7 @@ public class Drapeau {
 		try {
 		    if (MainJFX.openOnEclipse) {
 		        // Mode Eclipse: Acc�s direct aux fichiers
-		        File folder = new File("flag/");
+		        File folder = new File("resources"+File.separator+"flag"+File.separator);
 		        if (folder.exists() && folder.isDirectory() && folder.canRead()) {
 		            File[] files = folder.listFiles((dir, name) -> name.endsWith(".png") || name.endsWith(".jpg")); // Filtre pour les images
 		            for (File file : files) {

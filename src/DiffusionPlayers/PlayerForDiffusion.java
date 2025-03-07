@@ -13,6 +13,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.Point;
+import java.io.File;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -231,7 +232,7 @@ public class PlayerForDiffusion extends JPanel{
 	private ZoomablePanel panelPlayerGlobal;
 	
 	/** The Constant CONFIG_DIR. */
-	private static final String CONFIG_DIR = "Config/";
+	private static final String CONFIG_DIR = "resources"+File.separator+"Config/";
 	
 	/** The Constant JSON_EXT. */
 	private static final String JSON_EXT = ".json";

@@ -3,6 +3,7 @@ package Flags;
 import javax.swing.*;
 import Main.BDD_v2;
 import Main.ImageUtility;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,7 +43,7 @@ public class NewFlagFrame extends JFrame {
         setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
         
         
-        ImageIcon logoIcon = new ImageIcon("icon.png");
+        ImageIcon logoIcon = new ImageIcon("resources"+File.separator+"imgInterface"+File.separator+"icon.png");
         if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
             setIconImage(logoIcon.getImage());
         } else {

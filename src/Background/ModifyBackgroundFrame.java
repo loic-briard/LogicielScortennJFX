@@ -30,7 +30,7 @@ public class ModifyBackgroundFrame extends JFrame {
         setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
         
         // Charger l'icône de la fenêtre
-        ImageIcon logoIcon = new ImageIcon("icon.png");
+        ImageIcon logoIcon = new ImageIcon("resources"+File.separator+"imgInterface"+File.separator+"icon.png");
         if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
             setIconImage(logoIcon.getImage());
         } else {
@@ -81,8 +81,8 @@ public class ModifyBackgroundFrame extends JFrame {
         String newImgPath = ImageUtility.chargerFichier(lastFolder);
         if (newImgPath != null) {
             lastFolder = newImgPath;
-            ImageUtility.enregistrerFichier(newImgPath, "Background");
-            currentImages[index] = "Background" + File.separator + ImageUtility.getNameFile(newImgPath);
+            ImageUtility.enregistrerFichier(newImgPath, "resources"+File.separator+"Background");
+            currentImages[index] = "resources"+File.separator+"Background" + File.separator + ImageUtility.getNameFile(newImgPath);
             imageLabels[index].setIcon(new ImageUtility(currentImages[index], 150).getIcon());
             revalidate();
             repaint();

@@ -153,7 +153,7 @@ public class ModifyPlayersFrame extends JFrame{
         Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
         setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
         
-        ImageIcon logoIcon = new ImageIcon("icon.png");
+        ImageIcon logoIcon = new ImageIcon("resources"+File.separator+"imgInterface"+File.separator+"icon.png");
         // V�rifiez si l'ic�ne a �t� charg�e avec succ�s
         if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
             setIconImage(logoIcon.getImage());
@@ -250,8 +250,8 @@ public class ModifyPlayersFrame extends JFrame{
             public void actionPerformed(ActionEvent e) { 
             	String newImgPath = ImageUtility.chargerFichier(lastFolder);
             	lastFolder = newImgPath;
-                ImageUtility.enregistrerFichier(newImgPath, "PlayersImages");
-                currentImage = "PlayersImages"+File.separator+ImageUtility.getNameFile(newImgPath);
+                ImageUtility.enregistrerFichier(newImgPath,  "resources"+File.separator+"PlayersImages");
+                currentImage =  "resources"+File.separator+"PlayersImages"+File.separator+ImageUtility.getNameFile(newImgPath);
                 System.out.println("++++ image charger : "+currentImage);
                 // Chargez les images actuelles et affichez-les dans les JLabels
                 updatePlayerImagePreview(currentImage);

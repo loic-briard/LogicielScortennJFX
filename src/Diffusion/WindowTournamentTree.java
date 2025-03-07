@@ -25,6 +25,7 @@ import DiffusionPlayers.ZoomablePanel;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -114,7 +115,7 @@ public class WindowTournamentTree extends JFrame {
 		this.playerPanel = new JPanel[4];
 		if(this.selectedJoueurs.get(this.selectedJoueurs.size()-1).getNom() != "QUALIFIER")
 			this.selectedJoueurs.add(this.selectedJoueurs.size(), new Joueur(0, "men", "QUALIFIER", " ", "QUALIFIER", " "," ",
-				" ", "clear.png", 0, 0, " ", 0, 0, " ", " ", " "," "));
+				" ", "resources"+File.separator+"imgInterface"+File.separator+"clear.png", 0, 0, " ", 0, 0, " ", " ", " "," "));
 		tabComboBox = new JComboBox[this.nbJoueur];
 		
 		setupFrame();
@@ -148,7 +149,7 @@ public class WindowTournamentTree extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(800, 800);
 		setLocationRelativeTo(null);
-		setIconImage(new ImageIcon("icon.png").getImage());
+		setIconImage(new ImageIcon("resources"+File.separator+"imgInterface"+File.separator+"icon.png").getImage());
         // Obtenir l'emplacement de l'écran secondaire
         Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
         setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
@@ -157,6 +158,7 @@ public class WindowTournamentTree extends JFrame {
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BorderLayout());
         
+        ConfigurationSaveLoad.initJson(this.nbJoueur, this.eventName());
         this.panelAnimationConfiguration = new PanelAnimationConfiguration(this);
         setupPanels(contentPanel);
         setupBottomPanel();
@@ -182,7 +184,6 @@ public class WindowTournamentTree extends JFrame {
 			}
 		});
 
-		ConfigurationSaveLoad.initJson(this.nbJoueur, this.eventName());
 	}
 
 	/**
@@ -389,6 +390,8 @@ public class WindowTournamentTree extends JFrame {
 			Joueur soloPlayer = foundPlayer(selectedItem);
 			if(soloPlayer.getNom() != "QUALIFIER")
 				displayFondJoueur("player");
+			else
+				windowBroadcastPublic.removeLayerContent(bgSGT);// nettoyage du layer
 			ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
 			int ligne = playerIndex + (nbJoueur / 4) * panelIndex;
 //			SwingUtilities.invokeLater(() -> {
@@ -654,7 +657,7 @@ public class WindowTournamentTree extends JFrame {
 	 */
 	private void toggleBlackBackground() throws ClassNotFoundException, SQLException {
 		if (blackButtonAppuyer == false)
-			windowBroadcastPublic.setBackgroundImageLayered("black.jpg", JLayeredPane.POPUP_LAYER);
+			windowBroadcastPublic.setBackgroundImageLayered("resources"+File.separator+"imgInterface"+File.separator+"black.jpg", JLayeredPane.POPUP_LAYER);
 		else
 			windowBroadcastPublic.removeLayerContent(JLayeredPane.POPUP_LAYER);
 		blackButtonAppuyer = !blackButtonAppuyer;
