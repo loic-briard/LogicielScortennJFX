@@ -52,7 +52,7 @@ public class ListOfEventsFrame extends JFrame {
 	
 	/** The parent frame. */
 	private MenuPrincipal parentFrame; // R�f�rence � la fen�tre ListOfEventsFrame
-	private static final String CONFIG_DIR = "ressources"+File.separator+"Config"+File.separator;
+	private static final String CONFIG_DIR = "resources"+File.separator+"Config"+File.separator;
 
 	/**
 	 * Instantiates a new list of events frame.
@@ -503,7 +503,7 @@ public class ListOfEventsFrame extends JFrame {
                 if (imageFiles != null) {
                     System.out.println("Images dans " + file.getName() + " :");
            
-                    File destImg = new File("Background"+File.separator);
+                    File destImg = new File("resources"+File.separator+"Background"+File.separator);
                     for (File fileImagesBg : imageFiles) {
 						copyFolder(fileImagesBg, destImg);
 						String indexImg = fileImagesBg.getName().split("_")[0];
@@ -511,19 +511,19 @@ public class ListOfEventsFrame extends JFrame {
 						System.out.println("   - index img : "+indexImg+", name img : "+nameImg);
 						switch (indexImg) {
 						case "0":
-							importBackground.setImage_1("Background"+File.separator+nameImg);
+							importBackground.setImage_1("resources"+File.separator+"Background"+File.separator+nameImg);
 							break;
 						case "1":
-							importBackground.setImage_2("Background"+File.separator+nameImg);
+							importBackground.setImage_2("resources"+File.separator+"Background"+File.separator+nameImg);
 							break;
 						case "2":
-							importBackground.setImage_3("Background"+File.separator+nameImg);
+							importBackground.setImage_3("resources"+File.separator+"Background"+File.separator+nameImg);
 							break;
 						case "3":
-							importBackground.setImage_4("Background"+File.separator+nameImg);
+							importBackground.setImage_4("resources"+File.separator+"Background"+File.separator+nameImg);
 							break;
 						case "4":
-							importBackground.setImage_5("Background"+File.separator+nameImg);
+							importBackground.setImage_5("resources"+File.separator+"Background"+File.separator+nameImg);
 							break;
 
 						default:

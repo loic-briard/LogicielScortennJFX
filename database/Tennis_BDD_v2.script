@@ -28,7 +28,7 @@ SET FILES NIO TRUE
 SET FILES NIO SIZE 256
 SET FILES LOG TRUE
 SET FILES LOG SIZE 50
-SET FILES CHECK 60021
+SET FILES CHECK 62978
 SET DATABASE COLLATION "SQL_TEXT" PAD SPACE
 CREATE USER SA PASSWORD DIGEST 'd41d8cd98f00b204e9800998ecf8427e'
 ALTER USER SA SET LOCAL TRUE
@@ -38,6 +38,7 @@ CREATE MEMORY TABLE PUBLIC.BACKGROUND(NOM VARCHAR(120) PRIMARY KEY,IMG_1 VARCHAR
 CREATE MEMORY TABLE PUBLIC.EVENT(NOM VARCHAR(120) PRIMARY KEY,NOMBG VARCHAR(120))
 CREATE MEMORY TABLE PUBLIC.ATP(ID INTEGER PRIMARY KEY,SEXE VARCHAR(15),NOM VARCHAR(100),PRENOM VARCHAR(100),NOMAFFICHER VARCHAR(100),NAT VARCHAR(10),COUNTRY VARCHAR(100),BIRTHDATE VARCHAR(50),IMGJOUEUR VARCHAR(255),RANKING INTEGER,HEIGHT VARCHAR(10),HAND VARCHAR(25),AGE VARCHAR(10),WEIGHT VARCHAR(20),PRIZETOTAL VARCHAR(60),BIRTHPLACE VARCHAR(200),CITYRESIDENCE VARCHAR(200),TETEDESERIE VARCHAR(20),FOREIGN KEY(NAT) REFERENCES PUBLIC.FLAG(NOMACRO))
 CREATE MEMORY TABLE PUBLIC.WTA(ID INTEGER PRIMARY KEY,SEXE VARCHAR(15),NOM VARCHAR(100),PRENOM VARCHAR(100),NOMAFFICHER VARCHAR(100),NAT VARCHAR(10),COUNTRY VARCHAR(100),BIRTHDATE VARCHAR(50),IMGJOUEUR VARCHAR(255),RANKING INTEGER,HEIGHT VARCHAR(10),HAND VARCHAR(25),AGE VARCHAR(10),WEIGHT VARCHAR(20),PRIZETOTAL VARCHAR(60),BIRTHPLACE VARCHAR(200),CITYRESIDENCE VARCHAR(200),TETEDESERIE VARCHAR(20),FOREIGN KEY(NAT) REFERENCES PUBLIC.FLAG(NOMACRO))
+CREATE MEMORY TABLE PUBLIC.TESTRETOURS(ID INTEGER PRIMARY KEY,SEXE VARCHAR(15),NOM VARCHAR(100),PRENOM VARCHAR(100),NOMAFFICHER VARCHAR(100),NAT VARCHAR(10),COUNTRY VARCHAR(100),BIRTHDATE VARCHAR(50),IMGJOUEUR VARCHAR(255),RANKING INTEGER,HEIGHT VARCHAR(10),HAND VARCHAR(25),AGE VARCHAR(10),WEIGHT VARCHAR(20),PRIZETOTAL VARCHAR(60),BIRTHPLACE VARCHAR(200),CITYRESIDENCE VARCHAR(200),TETEDESERIE VARCHAR(20),FOREIGN KEY(NAT) REFERENCES PUBLIC.FLAG(NOMACRO))
 ALTER SEQUENCE SYSTEM_LOBS.LOB_ID RESTART WITH 1
 SET DATABASE DEFAULT INITIAL SCHEMA PUBLIC
 GRANT USAGE ON DOMAIN INFORMATION_SCHEMA.CARDINAL_NUMBER TO PUBLIC
@@ -302,7 +303,9 @@ INSERT INTO FLAG VALUES('ZWE','Zimbabwe','resources\flag\ZWE.png')
 INSERT INTO FLAG VALUES('blank','blank','resources\flag\blank.png')
 INSERT INTO FLAG VALUES('clear','clear','resources\flag\clear.png')
 INSERT INTO BACKGROUND VALUES('backgroundExample32','resources\Background\1bgFull32.png','resources\Background\2bgPlayer.png','resources\Background\3bgGame.png','resources\Background\4bgTab32.png','resources\Background\5bgWaiting.png')
+INSERT INTO BACKGROUND VALUES('backgroundExampleTEST','resources\Background\1bgFull32.png','resources\Background\2bgPlayer.png','resources\Background\3bgGame.png','resources\Background\4bgTab32.png','resources\Background\5bgWaiting.png')
 INSERT INTO EVENT VALUES('eventExample32','backgroundExample32')
+INSERT INTO EVENT VALUES('eventExampleTEST','backgroundExampleTEST')
 INSERT INTO ATP VALUES(14414,'homme','Gasquet','Richard','R. Gasquet','FRA','France','','resources\imgInterface\clear.png',147,'0','','0','0','','','','')
 INSERT INTO ATP VALUES(14548,'homme','Wawrinka','Stan','S. Wawrinka','CHE','Switzerland','','resources\imgInterface\clear.png',166,'0','','0','0','','','','')
 INSERT INTO ATP VALUES(14844,'homme','Monfils','Ga\u00ebl','G. Monfils','FRA','France','','resources\imgInterface\clear.png',45,'0','','0','0','','','','')
@@ -470,7 +473,7 @@ INSERT INTO ATP VALUES(113979,'homme','Ficovich','Juan Pablo','J. P. Ficovich','
 INSERT INTO ATP VALUES(115463,'homme','Tiurnev','Evgenii','E. Tiurnev','RUS','Russia','','resources\imgInterface\clear.png',415,'0','','0','0','','','','')
 INSERT INTO ATP VALUES(117866,'homme','Mukund','Mukund','S. Mukund','IND','India','','resources\imgInterface\clear.png',439,'0','','0','0','','','','')
 INSERT INTO ATP VALUES(117916,'homme','Shapovalov','Denis','D. Shapovalov','CAN','Canada','','resources\imgInterface\clear.png',28,'0','','0','0','','','','')
-INSERT INTO ATP VALUES(118166,'homme','Bakshi','Aleksandre','A. Bakshi','GEO','Georgia','','resources\imgInterface\clear.png',466,'0','','0','0','','','','')
+INSERT INTO ATP VALUES(118166,'homme','Bakshi','Aleksandre','A. Bakshi','GEO','Georgia','15/07/1997','resources\PlayersImages\A._Bakshi.png',472,'18','left-handed','27','73','94\u202f405\u20ac','Tbilisi, Georgia','Tbilisi','')
 INSERT INTO ATP VALUES(119140,'homme','Ellis','Blake','B. Ellis','AUS','Australia','','resources\imgInterface\clear.png',295,'0','','0','0','','','','')
 INSERT INTO ATP VALUES(119248,'homme','Ruud','Casper','C. Ruud','NOR','Norway','','resources\imgInterface\clear.png',6,'0','','0','0','','','','')
 INSERT INTO ATP VALUES(120958,'homme','Bertran','Peter','P. Bertran','DOM','Dominican Republic','','resources\imgInterface\clear.png',464,'0','','0','0','','','','')

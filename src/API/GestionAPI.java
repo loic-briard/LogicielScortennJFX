@@ -44,7 +44,7 @@ public class GestionAPI {
 	public static String s_reponse = "";
 
 	/** The s cle API. */
-	public static String s_cleAPI = "7fb7968a03mshd012795cea9a38bp1a4c84jsn2816ff2c7b61";// c837b75253mshe24f11571463ee5p17f8b3jsn31aa86731177
+	public static String s_cleAPI = "c837b75253mshe24f11571463ee5p17f8b3jsn31aa86731177";// c837b75253mshe24f11571463ee5p17f8b3jsn31aa86731177
 																							// |
 																							// 7fb7968a03mshd012795cea9a38bp1a4c84jsn2816ff2c7b61
 
