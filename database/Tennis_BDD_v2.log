@@ -1,9 +1,0 @@
-/*C2*/SET SCHEMA PUBLIC
-DELETE FROM ATP WHERE ID=15894
-INSERT INTO ATP VALUES(15894,'homme','Mannarino','Adrian','A. Mannarino','FRA','France','','resources\PlayersImages\A._Mannarino.png',143,'0','','0','0','','','','')
-COMMIT
-DELETE FROM ATP WHERE ID=15894
-INSERT INTO ATP VALUES(15894,'homme','Mannarino','Adrian','A. Mannarino','FRA','France','29/06/1988','resources\PlayersImages\A._Mannarino.png',145,'18','left-handed','36','79','10\u202f990\u202f603\u20ac','Soisy-sous-Montmorency, France','Valletta, Malta','')
-COMMIT
-INSERT INTO TESTRETOURS VALUES(1,'Men','Mannarino','Adrian','A. Mannarino','FRA','France','29/06/1988','resources\PlayersImages\A._Mannarino.png',145,'18','left-handed','36','79','10\u202f990\u202f603\u20ac','Soisy-sous-Montmorency, France','Valletta, Malta','')
-COMMIT

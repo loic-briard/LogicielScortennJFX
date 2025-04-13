@@ -127,7 +127,7 @@ public class ImageUtility extends JLabel {
 
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = fileChooser.getSelectedFile();
-			String filePath = selectedFile.getAbsolutePath();
+			String filePath = selectedFile.getPath();
 			System.out.println("++ file Path : " + filePath + ", selected File : " + selectedFile);
 			return filePath;
 		} else
@@ -145,7 +145,7 @@ public class ImageUtility extends JLabel {
     public static void enregistrerFichier (String sourceFilePath, String destinationDirectoryPath) {
         File sourceFile = new File(sourceFilePath);
         File destinationDirectory = new File(destinationDirectoryPath);
-
+        
         // V�rifier si le fichier source existe
         if (!sourceFile.exists() || !sourceFile.isFile()) {
             System.err.println("Le fichier source n'existe pas ou n'est pas un fichier valide.");

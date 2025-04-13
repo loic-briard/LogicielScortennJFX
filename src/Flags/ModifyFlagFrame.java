@@ -88,8 +88,8 @@ public class ModifyFlagFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String newImgPath = ImageUtility.chargerFichier(lastFolder);
                 lastFolder = newImgPath;
-                ImageUtility.enregistrerFichier(newImgPath, "flag");
-                currentImage = "flag" + File.separator + ImageUtility.getNameFile(newImgPath);
+                ImageUtility.enregistrerFichier(newImgPath, "resources"+File.separator+"flag");
+                currentImage = "resources"+File.separator+"flag" + File.separator + ImageUtility.getNameFile(newImgPath);
                 System.out.println("++++ chemin vers le drapeau : " + imgPath);
                 updateImagePreviews();
             }

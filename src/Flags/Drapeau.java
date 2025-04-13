@@ -354,7 +354,7 @@ public class Drapeau {
 	 */
 	public static void chargerDrapeau() {
 		try {
-		    if (MainJFX.openOnEclipse) {
+//		    if (MainJFX.openOnEclipse) {
 		        // Mode Eclipse: Acc�s direct aux fichiers
 		        File folder = new File("resources"+File.separator+"flag"+File.separator);
 		        if (folder.exists() && folder.isDirectory() && folder.canRead()) {
@@ -370,29 +370,29 @@ public class Drapeau {
 		        } else {
 		            System.err.println("---- Le dossier de drapeaux est introuvable ou inaccessible.");
 		        }
-		    } else {
-		    	// Mode JAR: Utilisation de getResourceAsStream pour acc�der aux ressources
-                // Supposons que nous avons un fichier 'flag_manifest.txt' qui liste tous les fichiers drapeaux
-                InputStream manifestStream = MainJFX.class.getClassLoader().getResourceAsStream("manifest.txt");
-                if (manifestStream != null) {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(manifestStream));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        // Pour chaque ligne (nom de fichier) dans le manifeste, chargez le drapeau correspondant
-                        InputStream flagStream = MainJFX.class.getClassLoader().getResourceAsStream("flag/" + line);
-                        if (flagStream != null) {
-                        	String nameWithoutExtension = line.substring(0, line.lastIndexOf('.'));
-                            // Ici, vous pouvez utiliser l'image charg�e, par exemple l'ins�rer dans la base de donn�es
-                            BDD_v2.insertionDrapeauDansBDD(new Drapeau(nameWithoutExtension, getFullName(nameWithoutExtension),"flag/" + line));
-                            System.out.println("++++ Drapeau charge: " + line);
-                        } else {
-                            System.err.println("---- Impossible de charger le drapeau: " + line);
-                        }
-                    }
-                } else {
-                    System.err.println("---- Impossible de trouver le manifeste des drapeaux.");
-                }
-		    }
+//		    } else {
+//		    	// Mode JAR: Utilisation de getResourceAsStream pour acc�der aux ressources
+//                // Supposons que nous avons un fichier 'flag_manifest.txt' qui liste tous les fichiers drapeaux
+//                InputStream manifestStream = MainJFX.class.getClassLoader().getResourceAsStream("manifest.txt");
+//                if (manifestStream != null) {
+//                    BufferedReader reader = new BufferedReader(new InputStreamReader(manifestStream));
+//                    String line;
+//                    while ((line = reader.readLine()) != null) {
+//                        // Pour chaque ligne (nom de fichier) dans le manifeste, chargez le drapeau correspondant
+//                        InputStream flagStream = MainJFX.class.getClassLoader().getResourceAsStream("flag/" + line);
+//                        if (flagStream != null) {
+//                        	String nameWithoutExtension = line.substring(0, line.lastIndexOf('.'));
+//                            // Ici, vous pouvez utiliser l'image charg�e, par exemple l'ins�rer dans la base de donn�es
+//                            BDD_v2.insertionDrapeauDansBDD(new Drapeau(nameWithoutExtension, getFullName(nameWithoutExtension),"flag/" + line));
+//                            System.out.println("++++ Drapeau charge: " + line);
+//                        } else {
+//                            System.err.println("---- Impossible de charger le drapeau: " + line);
+//                        }
+//                    }
+//                } else {
+//                    System.err.println("---- Impossible de trouver le manifeste des drapeaux.");
+//                }
+//		    }
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}

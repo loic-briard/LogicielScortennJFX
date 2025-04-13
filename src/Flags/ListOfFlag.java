@@ -155,6 +155,9 @@ public JTable flagTable;
 //					ImageUtility imageUtility = (ImageUtility) flagTable.getValueAt(selectedRow, 1);
 					ImageIcon img_flag = (ImageIcon) flagTable.getValueAt(selectedRow, 2);
 					String string_flag = img_flag.getDescription();
+					if(string_flag == null)
+						string_flag = "resources/flag/clear.png";
+					System.out.println("debug nom image : "+string_flag);
 //					String imgPath = imageUtility.getImagePath();
 					// Ouvrir une fen�tre de modification avec ces donn�es
 					new ModifyFlagFrame(configScreen, ListOfFlag.this, flagName, flagNameCountry, string_flag,selectedRow);
