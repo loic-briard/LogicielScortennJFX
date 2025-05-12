@@ -2,6 +2,7 @@
  * 
  */
 package Main;
+
 /*
  * fenetre d'accueil avec :
  * - modification des evenements
@@ -38,165 +39,124 @@ import Sauvegarde.ElementJoueurFull;
  * The Class MenuPrincipal.
  */
 public class MenuPrincipal extends JFrame {
-    
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = 1L;
-    
-    /** The Constant TITLE. */
-    private static final String TITLE = "Main Menu";
-    
-    /** The Constant ICON_PATH. */
-    private static final String ICON_PATH = "resources"+File.separator+"imgInterface"+File.separator+"icon.png";
-    private static final String ERREUR_CONNEXION_PATH = "resources"+File.separator+"imgInterface"+File.separator+"erreur_connexion.png";
-    
-    /** The athlete selection. */
-    private AthleteSelection athleteSelection;
-    
-    /** The list events window. */
-    private JFrame listEventsWindow;
-    
-    /** The list BG window. */
-    private JFrame listBGWindow;
-    
-    /** The list players window. */
-    private JFrame listPlayersWindow;
-    
-    /** The flags window. */
-    private JFrame flagsWindow;
-    
-    /** The actual screen. */
-    private String actualScreen = "";
 
-    /** The event combo box. */
-    private JComboBox<String> eventComboBox;
-    
-    /** The bdd P layers combo box. */
-    private static JComboBox<String> bddPLayersComboBox;
-    
-    /** The spinner nb joueur. */
-    private JSpinner spinnerNbJoueur;
-    
-    /** The spinner screen. */
-    private JSpinner spinnerScreen;
-    
-    /** The size fenetre X. */
-    private JSpinner sizeFenetreX;
-    
-    /** The size fenetre Y. */
-    private JSpinner sizeFenetreY;
-    
-    /** The select athlete button. */
-    private JButton selectAthleteButton;
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1L;
 
-    /**
-     * Instantiates a new menu principal.
-     */
-    public MenuPrincipal() {
-        initializeFrame();
-        createMenuBar();
-        createMainPanel();
-        setVisible(true);
+	/** The Constant TITLE. */
+	private static final String TITLE = "Main Menu";
+
+	/** The Constant ICON_PATH. */
+	private static final String ICON_PATH = "resources" + File.separator + "imgInterface" + File.separator + "icon.png";
+	private static final String ERREUR_CONNEXION_PATH = "resources" + File.separator + "imgInterface" + File.separator
+			+ "erreur_connexion.png";
+
+	/** The athlete selection. */
+	private AthleteSelection athleteSelection;
+
+	/** The list events window. */
+	private JFrame listEventsWindow;
+
+	/** The list BG window. */
+	private JFrame listBGWindow;
+
+	/** The list players window. */
+	private JFrame listPlayersWindow;
+
+	/** The flags window. */
+	private JFrame flagsWindow;
+
+	/** The actual screen. */
+	private String actualScreen = "";
+
+	/** The event combo box. */
+	private JComboBox<String> eventComboBox;
+
+	/** The bdd P layers combo box. */
+	private static JComboBox<String> bddPLayersComboBox;
+
+	/** The spinner nb joueur. */
+	private JSpinner spinnerNbJoueur;
+
+	/** The spinner screen. */
+	private JSpinner spinnerScreen;
+
+	/** The size fenetre X. */
+	private JSpinner sizeFenetreX;
+
+	/** The size fenetre Y. */
+	private JSpinner sizeFenetreY;
+
+	/** The select athlete button. */
+	private JButton selectAthleteButton;
+
+	private ArrayList<Joueur> selectedPlayers = new ArrayList<Joueur>();
+
+	/**
+	 * Instantiates a new menu principal.
+	 */
+	public MenuPrincipal() {
+		initializeFrame();
+		createMenuBar();
+		createMainPanel();
+		setVisible(true);
 //        this.pack();
-    }
+	}
 
-    /**
-     * Initialize frame.
-     */
-    private void initializeFrame() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	/**
+	 * Initialize frame.
+	 */
+	private void initializeFrame() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setTitle(TITLE);
-        setIconImage(new ImageIcon(ICON_PATH).getImage());
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                try {
-                    BDD_v2.deconnexionBDD();
-                } catch (ClassNotFoundException | SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-    }
+		setTitle(TITLE);
+		setIconImage(new ImageIcon(ICON_PATH).getImage());
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				try {
+					BDD_v2.deconnexionBDD();
+				} catch (ClassNotFoundException | SQLException ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
+	}
 
-    /**
-     * Creates the menu bar.
-     */
-    private void createMenuBar() {
-        JMenuBar menuBar = new JMenuBar();
-        menuBar.add(createMenuItem("Events", e -> openListEventsWindow()));
-        menuBar.add(createMenuItem("Background", e -> openListBGWindow()));
-        menuBar.add(createMenuItem("Players", e -> openListPlayersWindow()));
-        menuBar.add(createMenuItem("Flags", e -> openListFlagsWindow()));
-        menuBar.add(createMenuItem("Parameters", e -> openListParametersWindow()));
-        setJMenuBar(menuBar);
-    }	
+	/**
+	 * Creates the menu bar.
+	 */
+	private void createMenuBar() {
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.add(createMenuItem("Events", e -> openListEventsWindow()));
+		menuBar.add(createMenuItem("Background", e -> openListBGWindow()));
+		menuBar.add(createMenuItem("Players", e -> openListPlayersWindow()));
+		menuBar.add(createMenuItem("Flags", e -> openListFlagsWindow()));
+		menuBar.add(createMenuItem("Parameters", e -> openListParametersWindow()));
+		setJMenuBar(menuBar);
+	}
 
-    /**
-     * Creates the menu item.
-     *
-     * @param name the name
-     * @param listener the listener
-     * @return the j menu item
-     */
-    private JMenuItem createMenuItem(String name, ActionListener listener) {
-        JMenuItem menuItem = new JMenuItem(name);
-        menuItem.addActionListener(listener);
-        return menuItem;
-    }
+	/**
+	 * Creates the menu item.
+	 *
+	 * @param name     the name
+	 * @param listener the listener
+	 * @return the j menu item
+	 */
+	private JMenuItem createMenuItem(String name, ActionListener listener) {
+		JMenuItem menuItem = new JMenuItem(name);
+		menuItem.addActionListener(listener);
+		return menuItem;
+	}
 
-    /**
-     * Open list events window.
-     */
+	/**
+	 * Open list events window.
+	 */
 	private void openListEventsWindow() {
 		if (listEventsWindow == null || !listEventsWindow.isVisible()) {
 			// Afficher l'écran de chargement
-			LoadingDialog loadingDialog = new LoadingDialog(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))]);
-			loadingDialog.showLoading();
-
-	        // Charger la fenêtre dans un thread séparé
-	        SwingWorker<Void, Void> worker = new SwingWorker<>() {
-	            @Override
-	            protected Void doInBackground() throws Exception {
-	                try {
-	                    listEventsWindow = new ListOfEventsFrame(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))], MenuPrincipal.this);
-	                } catch (SQLException e) {
-	                    e.printStackTrace();
-	                }
-	                return null;
-	            }
-
-	            @Override
-	            protected void done() {
-	                // Fermer l'écran de chargement une fois le chargement terminé
-	                loadingDialog.hideLoading();
-	                SwingUtilities.invokeLater(() -> {
-	                    listEventsWindow.setVisible(true);
-//	                    listEventsWindow.setAlwaysOnTop(true); // Force au premier plan temporairement
-	                    listEventsWindow.toFront();
-	                    listEventsWindow.requestFocus();
-	                    
-	                    // Désactive `AlwaysOnTop` après 500ms pour éviter qu'elle reste bloquée au-dessus
-//	                    new javax.swing.Timer(500, evt -> listEventsWindow.setAlwaysOnTop(false)).setRepeats(false);
-	                });
-	                
-	            }
-	        };
-	        worker.execute();
-	        
-		} else {
-			listEventsWindow.toFront();
-			listEventsWindow.setState(JFrame.NORMAL);
-		}
-	}
-
-    /**
-     * Open list BG window.
-     */
-	private void openListBGWindow() {
-		if (listBGWindow == null || !listBGWindow.isVisible()) {
-			// Afficher l'écran de chargement
-			LoadingDialog loadingDialog = new LoadingDialog(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))]);
+			LoadingDialog loadingDialog = new LoadingDialog(GraphicsEnvironment.getLocalGraphicsEnvironment()
+					.getScreenDevices()[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))]);
 			loadingDialog.showLoading();
 
 			// Charger la fenêtre dans un thread séparé
@@ -204,7 +164,59 @@ public class MenuPrincipal extends JFrame {
 				@Override
 				protected Void doInBackground() throws Exception {
 					try {
-						listBGWindow = new ListOfBackgroundFrame(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))]);
+						listEventsWindow = new ListOfEventsFrame(
+								GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[Integer
+										.parseInt(actualScreen.substring(actualScreen.length() - 1))],
+								MenuPrincipal.this);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+					return null;
+				}
+
+				@Override
+				protected void done() {
+					// Fermer l'écran de chargement une fois le chargement terminé
+					loadingDialog.hideLoading();
+					SwingUtilities.invokeLater(() -> {
+						listEventsWindow.setVisible(true);
+//	                    listEventsWindow.setAlwaysOnTop(true); // Force au premier plan temporairement
+						listEventsWindow.toFront();
+						listEventsWindow.requestFocus();
+
+						// Désactive `AlwaysOnTop` après 500ms pour éviter qu'elle reste bloquée
+						// au-dessus
+//	                    new javax.swing.Timer(500, evt -> listEventsWindow.setAlwaysOnTop(false)).setRepeats(false);
+					});
+
+				}
+			};
+			worker.execute();
+
+		} else {
+			listEventsWindow.toFront();
+			listEventsWindow.setState(JFrame.NORMAL);
+		}
+	}
+
+	/**
+	 * Open list BG window.
+	 */
+	private void openListBGWindow() {
+		if (listBGWindow == null || !listBGWindow.isVisible()) {
+			// Afficher l'écran de chargement
+			LoadingDialog loadingDialog = new LoadingDialog(GraphicsEnvironment.getLocalGraphicsEnvironment()
+					.getScreenDevices()[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))]);
+			loadingDialog.showLoading();
+
+			// Charger la fenêtre dans un thread séparé
+			SwingWorker<Void, Void> worker = new SwingWorker<>() {
+				@Override
+				protected Void doInBackground() throws Exception {
+					try {
+						listBGWindow = new ListOfBackgroundFrame(
+								GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[Integer
+										.parseInt(actualScreen.substring(actualScreen.length() - 1))]);
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
@@ -234,582 +246,603 @@ public class MenuPrincipal extends JFrame {
 		}
 	}
 
-    /**
-     * Open list players window.
-     */
-    private void openListPlayersWindow() {
-        if (listPlayersWindow == null || !listPlayersWindow.isVisible()) {
-            try {
-                listPlayersWindow = new ListOfPlayersFrame(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))], this);
-            } catch (SQLException | ClassNotFoundException ex) {
-                ex.printStackTrace();
-            }
-        } else {
-            listPlayersWindow.toFront();
-            listPlayersWindow.setState(JFrame.NORMAL);
-        }
-    }
+	/**
+	 * Open list players window.
+	 */
+	private void openListPlayersWindow() {
+		if (listPlayersWindow == null || !listPlayersWindow.isVisible()) {
+			try {
+				listPlayersWindow = new ListOfPlayersFrame(GraphicsEnvironment.getLocalGraphicsEnvironment()
+						.getScreenDevices()[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))], this);
+			} catch (SQLException | ClassNotFoundException ex) {
+				ex.printStackTrace();
+			}
+		} else {
+			listPlayersWindow.toFront();
+			listPlayersWindow.setState(JFrame.NORMAL);
+		}
+	}
 
-    /**
-     * Open list flags window.
-     */
-    private void openListFlagsWindow() {
-        if (flagsWindow == null || !flagsWindow.isVisible()) {
-            try {
-                flagsWindow = new ListOfFlag(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))]);
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        } else {
-            flagsWindow.toFront();
-            flagsWindow.setState(JFrame.NORMAL);
-        }
-    }
-    
-    private void openListParametersWindow() {
-    	GlobalSettingsUI.openListParametersWindow(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))]);
-    }
-    
-    /**
-     * Creates the main panel.
-     */
-    private void createMainPanel() {
-        // Create a main panel with a gradient background
-        JPanel mainPanel = new JPanel() {
-            /**
+	/**
+	 * Open list flags window.
+	 */
+	private void openListFlagsWindow() {
+		if (flagsWindow == null || !flagsWindow.isVisible()) {
+			try {
+				flagsWindow = new ListOfFlag(GraphicsEnvironment.getLocalGraphicsEnvironment()
+						.getScreenDevices()[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))]);
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		} else {
+			flagsWindow.toFront();
+			flagsWindow.setState(JFrame.NORMAL);
+		}
+	}
+
+	private void openListParametersWindow() {
+		GlobalSettingsUI.openListParametersWindow(GraphicsEnvironment.getLocalGraphicsEnvironment()
+				.getScreenDevices()[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))]);
+	}
+
+	/**
+	 * Creates the main panel.
+	 */
+	private void createMainPanel() {
+		// Create a main panel with a gradient background
+		JPanel mainPanel = new JPanel() {
+			/**
 			 * 
 			 */
 			private static final long serialVersionUID = 1L;
 
 			@Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2d = (Graphics2D) g;
-                int w = getWidth();
-                int h = getHeight();
-                GradientPaint gp = new GradientPaint(0, 0, new Color(50, 53, 53), 0, h, new Color(55, 58, 58));
-                g2d.setPaint(gp);
-                g2d.fillRect(0, 0, w, h);
-            }
-        };
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        
-        // Add a title panel
-        JPanel titlePanel = createTitlePanel();
-        mainPanel.add(Box.createVerticalStrut(30));
-        mainPanel.add(titlePanel);
-        
-        // Add the dimension panel
-        JPanel dimensionPanel = createStyledDimensionPanel();
-        mainPanel.add(Box.createVerticalStrut(20));
-        mainPanel.add(dimensionPanel);
-        
-        // Add the selection panel
-        JPanel selectionPanel = createStyledSelectionPanel();
-        mainPanel.add(Box.createVerticalStrut(20));
-        mainPanel.add(selectionPanel);
-        
-        // Add the screen selection panel
-        JPanel screenPanel = createStyledScreenSelectionPanel();
-        mainPanel.add(Box.createVerticalStrut(20));
-        mainPanel.add(screenPanel);
-        
-        mainPanel.add(Box.createVerticalStrut(30));
-        add(mainPanel);
-    }
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				Graphics2D g2d = (Graphics2D) g;
+				int w = getWidth();
+				int h = getHeight();
+				GradientPaint gp = new GradientPaint(0, 0, new Color(50, 53, 53), 0, h, new Color(55, 58, 58));
+				g2d.setPaint(gp);
+				g2d.fillRect(0, 0, w, h);
+			}
+		};
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
-    /**
-     * Creates the title panel.
-     *
-     * @return the j panel
-     */
-    private JPanel createTitlePanel() {
-        JPanel panel = new JPanel();
-        panel.setOpaque(false);
-        
-        if(!InternetChecker.isInternetAvailable()) {
-        	ImageUtility connexionImage = new ImageUtility(ERREUR_CONNEXION_PATH, 50);
-        	panel.add(connexionImage);
-        }
-        
-        JLabel titleLabel = new JLabel("Tournament Management System");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
-        titleLabel.setForeground(Color.WHITE);
-        panel.add(titleLabel);
-        
-        return panel;
-    }
+		// Add a title panel
+		JPanel titlePanel = createTitlePanel();
+		mainPanel.add(Box.createVerticalStrut(30));
+		mainPanel.add(titlePanel);
 
-    /**
-     * Creates the styled dimension panel.
-     *
-     * @return the j panel
-     */
-    private JPanel createStyledDimensionPanel() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10));
-        panel.setOpaque(false);
-        panel.setBorder(createStyledBorder("Window Dimensions"));
+		// Add the dimension panel
+		JPanel dimensionPanel = createStyledDimensionPanel();
+		mainPanel.add(Box.createVerticalStrut(20));
+		mainPanel.add(dimensionPanel);
 
-        JLabel widthLabel = createStyledLabel("Width:");
-        JLabel heightLabel = createStyledLabel("Height:");
-        
-        sizeFenetreX = createStyledSpinner(new SpinnerNumberModel(0, 0, 10000, 10));
-        sizeFenetreY = createStyledSpinner(new SpinnerNumberModel(0, 0, 10000, 10));
+		// Add the selection panel
+		JPanel selectionPanel = createStyledSelectionPanel();
+		mainPanel.add(Box.createVerticalStrut(20));
+		mainPanel.add(selectionPanel);
 
-        panel.add(widthLabel);
-        panel.add(sizeFenetreX);
-        panel.add(heightLabel);
-        panel.add(sizeFenetreY);
+		// Add the screen selection panel
+		JPanel screenPanel = createStyledScreenSelectionPanel();
+		mainPanel.add(Box.createVerticalStrut(20));
+		mainPanel.add(screenPanel);
 
-        return panel;
-    }
+		mainPanel.add(Box.createVerticalStrut(30));
+		add(mainPanel);
+	}
 
-    /**
-     * Creates the styled selection panel.
-     *
-     * @return the j panel
-     */
-    private JPanel createStyledSelectionPanel() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
-        panel.setOpaque(false);
-        panel.setBorder(createStyledBorder("Tournament Setup"));
+	/**
+	 * Creates the title panel.
+	 *
+	 * @return the j panel
+	 */
+	private JPanel createTitlePanel() {
+		JPanel panel = new JPanel();
+		panel.setOpaque(false);
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 10, 5, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+		if (!InternetChecker.isInternetAvailable()) {
+			ImageUtility connexionImage = new ImageUtility(ERREUR_CONNEXION_PATH, 50);
+			panel.add(connexionImage);
+		}
 
-        // Event Selection
-        gbc.gridx = 0; gbc.gridy = 0;
-        panel.add(createStyledLabel("Event:"), gbc);
-        
-        gbc.gridx = 1;
-        eventComboBox = createStyledComboBox(BDD_v2.getNamesFromDatabase("event"));
-        eventComboBox.setSelectedIndex(-1);
-        panel.add(eventComboBox, gbc);
-        
-        
+		JLabel titleLabel = new JLabel("Tournament Management System");
+		titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
+		titleLabel.setForeground(Color.WHITE);
+		panel.add(titleLabel);
 
-        // Player List Selection
-        gbc.gridx = 0; gbc.gridy = 1;
-        panel.add(createStyledLabel("Player List:"), gbc);
-        
-        gbc.gridx = 1;
-        bddPLayersComboBox = createStyledComboBox(BDD_v2.tabBdd.toArray(new String[0]));
-        bddPLayersComboBox.setSelectedIndex(-1);
-        panel.add(bddPLayersComboBox, gbc);
+		return panel;
+	}
 
-        // Number of Players
-        gbc.gridx = 0; gbc.gridy = 2;
-        panel.add(createStyledLabel("Players:"), gbc);
-        
-        gbc.gridx = 1;
-        Integer[] allowedValues = {8, 16, 32, 64};
-        spinnerNbJoueur = createStyledSpinner(new SpinnerListModel(allowedValues));
-        panel.add(spinnerNbJoueur, gbc);
+	/**
+	 * Creates the styled dimension panel.
+	 *
+	 * @return the j panel
+	 */
+	private JPanel createStyledDimensionPanel() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10));
+		panel.setOpaque(false);
+		panel.setBorder(createStyledBorder("Window Dimensions"));
 
-        // Buttons
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
-        buttonPanel.setOpaque(false);
-        
-        selectAthleteButton = createStyledButton("Select Players");
-        selectAthleteButton.addActionListener(e -> openAthleteSelection());
-        
-        eventComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	String path =  "resources"+File.separator+"Config"+File.separator+eventComboBox.getSelectedItem()+File.separator+"full.json";
-            	File nbjoueur = new File(path);
-            	if(nbjoueur.exists()) {
-            		ElementJoueurFull elementJoueurFull = ConfigurationSaveLoad.readJsonFileFull(path);
-            		System.out.println(elementJoueurFull.getPlayer().size());
-            		for (Integer integer : allowedValues) {
-						if(elementJoueurFull.getPlayer().size() == integer)
-							spinnerNbJoueur.setValue(integer);           		
+		JLabel widthLabel = createStyledLabel("Width:");
+		JLabel heightLabel = createStyledLabel("Height:");
+
+		sizeFenetreX = createStyledSpinner(new SpinnerNumberModel(0, 0, 10000, 10));
+		sizeFenetreY = createStyledSpinner(new SpinnerNumberModel(0, 0, 10000, 10));
+
+		panel.add(widthLabel);
+		panel.add(sizeFenetreX);
+		panel.add(heightLabel);
+		panel.add(sizeFenetreY);
+
+		return panel;
+	}
+
+	/**
+	 * Creates the styled selection panel.
+	 *
+	 * @return the j panel
+	 */
+	private JPanel createStyledSelectionPanel() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridBagLayout());
+		panel.setOpaque(false);
+		panel.setBorder(createStyledBorder("Tournament Setup"));
+
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(5, 10, 5, 10);
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+
+		// Event Selection
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		panel.add(createStyledLabel("Event:"), gbc);
+
+		gbc.gridx = 1;
+		eventComboBox = createStyledComboBox(BDD_v2.getNamesFromDatabase("event"));
+		eventComboBox.setSelectedIndex(-1);
+		panel.add(eventComboBox, gbc);
+
+		// Player List Selection
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		panel.add(createStyledLabel("Player List:"), gbc);
+
+		gbc.gridx = 1;
+		bddPLayersComboBox = createStyledComboBox(BDD_v2.tabBdd.toArray(new String[0]));
+		bddPLayersComboBox.setSelectedIndex(-1);
+		panel.add(bddPLayersComboBox, gbc);
+
+		// Number of Players
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		panel.add(createStyledLabel("Players:"), gbc);
+
+		gbc.gridx = 1;
+		Integer[] allowedValues = { 8, 16, 32, 64 };
+		spinnerNbJoueur = createStyledSpinner(new SpinnerListModel(allowedValues));
+		panel.add(spinnerNbJoueur, gbc);
+
+		// Buttons
+		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+		buttonPanel.setOpaque(false);
+
+		selectAthleteButton = createStyledButton("Select Players");
+		selectAthleteButton.addActionListener(e -> openAthleteSelection());
+
+		eventComboBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String path = "resources" + File.separator + "Config" + File.separator + eventComboBox.getSelectedItem()
+						+ File.separator + "full.json";
+				File nbjoueur = new File(path);
+				if (nbjoueur.exists()) {
+					ElementJoueurFull elementJoueurFull = ConfigurationSaveLoad.readJsonFileFull(path);
+					System.out.println(elementJoueurFull.getPlayer().size());
+					for (Integer integer : allowedValues) {
+						if (elementJoueurFull.getPlayer().size() == integer)
+							spinnerNbJoueur.setValue(integer);
 					}
-            	}else
-            		System.out.println(" ! pas de dossier config pour cet event ! ");
-            }
-        });
-        
-        JButton diffusionButton = createStyledButtonStart("Start Tournament");
-        diffusionButton.addActionListener(e -> {
-            try {
-                handleDiffusionButton();
-            } catch (ClassNotFoundException | SQLException e1) {
-                e1.printStackTrace();
-            }
-        });
-        
-        buttonPanel.add(selectAthleteButton);
-        buttonPanel.add(diffusionButton);
+				} else
+					System.out.println(" ! pas de dossier config pour cet event ! ");
+			}
+		});
+		bddPLayersComboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				selectedPlayers.clear();
+			}
+		});
 
-        gbc.gridx = 0; gbc.gridy = 3;
-        gbc.gridwidth = 2;
-        gbc.insets = new Insets(20, 10, 10, 10);
-        panel.add(buttonPanel, gbc);
+		JButton diffusionButton = createStyledButtonStart("Start Tournament");
+		diffusionButton.addActionListener(e -> {
+			try {
+				handleDiffusionButton();
+			} catch (ClassNotFoundException | SQLException e1) {
+				e1.printStackTrace();
+			}
+		});
 
-        return panel;
-    }
+		buttonPanel.add(selectAthleteButton);
+		buttonPanel.add(diffusionButton);
 
-    /**
-     * Creates the styled screen selection panel.
-     *
-     * @return the j panel
-     */
-    private JPanel createStyledScreenSelectionPanel() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
-        panel.setOpaque(false);
-        panel.setBorder(createStyledBorder("Display Configuration"));
+		gbc.gridx = 0;
+		gbc.gridy = 3;
+		gbc.gridwidth = 2;
+		gbc.insets = new Insets(20, 10, 10, 10);
+		panel.add(buttonPanel, gbc);
 
-        Point location = getLocation();
-        GraphicsDevice[] screens = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-        String[] str_screens = new String[screens.length];
-        JLabel actualDisplayLabel = createStyledLabel("Current Screen: "+actualScreen);
-        int i =0;
-        for (GraphicsDevice screen : screens) {
-            Rectangle bounds = screen.getDefaultConfiguration().getBounds();
-            str_screens[i] = screen.getIDstring().substring(screen.getIDstring().length() - 1);
-            if (bounds.contains(location)) {
-                actualScreen = screen.getIDstring();
-                actualDisplayLabel.setText("Current screen : " + actualScreen.substring(actualScreen.length() - 1));
-                revalidate();
-                repaint();
-                //break;
-            }
-            i++;
-        }
-        spinnerScreen = createStyledSpinner(new SpinnerListModel(str_screens));
-        if(str_screens.length > 1) {
-            spinnerScreen.setValue(str_screens[1]);
-        }
+		return panel;
+	}
 
-        panel.add(actualDisplayLabel);
-        panel.add(createStyledLabel("Target Screen:"));
-        panel.add(spinnerScreen);
-        updateActualScreen(actualDisplayLabel);
+	/**
+	 * Creates the styled screen selection panel.
+	 *
+	 * @return the j panel
+	 */
+	private JPanel createStyledScreenSelectionPanel() {
+		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+		panel.setOpaque(false);
+		panel.setBorder(createStyledBorder("Display Configuration"));
 
-        return panel;
-    }
+		Point location = getLocation();
+		GraphicsDevice[] screens = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+		String[] str_screens = new String[screens.length];
+		JLabel actualDisplayLabel = createStyledLabel("Current Screen: " + actualScreen);
+		int i = 0;
+		for (GraphicsDevice screen : screens) {
+			Rectangle bounds = screen.getDefaultConfiguration().getBounds();
+			str_screens[i] = screen.getIDstring().substring(screen.getIDstring().length() - 1);
+			if (bounds.contains(location)) {
+				actualScreen = screen.getIDstring();
+				actualDisplayLabel.setText("Current screen : " + actualScreen.substring(actualScreen.length() - 1));
+				revalidate();
+				repaint();
+				// break;
+			}
+			i++;
+		}
+		spinnerScreen = createStyledSpinner(new SpinnerListModel(str_screens));
+		if (str_screens.length > 1) {
+			spinnerScreen.setValue(str_screens[1]);
+		}
 
-    /**
-     * Handle diffusion button.
-     *
-     * @throws ClassNotFoundException the class not found exception
-     * @throws SQLException the SQL exception
-     */
-    // Keeping original functionality for athlete selection and diffusion
-    private void handleDiffusionButton() throws ClassNotFoundException, SQLException {
-        if (eventComboBox.getSelectedItem() == null) {
-            blinkComponentBorder(eventComboBox, 3);
-        } else if(bddPLayersComboBox.getSelectedItem() == null) {
-            blinkComponentBorder(bddPLayersComboBox, 3);
-        } else if(athleteSelection == null || athleteSelection.getSelectedPlayers().size() < 1) {
-            makeButtonBlink(selectAthleteButton, 3);
-        } else if((int) spinnerNbJoueur.getValue() == 0) {
-            blinkComponentBorder(spinnerNbJoueur, 3);
-        }else {
+		panel.add(actualDisplayLabel);
+		panel.add(createStyledLabel("Target Screen:"));
+		panel.add(spinnerScreen);
+		updateActualScreen(actualDisplayLabel);
+
+		return panel;
+	}
+
+	/**
+	 * Handle diffusion button.
+	 *
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws SQLException           the SQL exception
+	 */
+	// Keeping original functionality for athlete selection and diffusion
+	private void handleDiffusionButton() throws ClassNotFoundException, SQLException {
+		if (eventComboBox.getSelectedItem() == null) {
+			blinkComponentBorder(eventComboBox, 3);
+		} else if (bddPLayersComboBox.getSelectedItem() == null) {
+			blinkComponentBorder(bddPLayersComboBox, 3);
+		} else if (athleteSelection == null || athleteSelection.getSelectedPlayers().size() < 1) {
+			makeButtonBlink(selectAthleteButton, 3);
+		} else if ((int) spinnerNbJoueur.getValue() == 0) {
+			blinkComponentBorder(spinnerNbJoueur, 3);
+		} else {
 //        	System.out.println(GlobalSettings.getInstance().getNameMaxLength());
-            ArrayList<Joueur> selectedPlayers = athleteSelection.getSelectedPlayers();
-            displaySelectedPlayers(selectedPlayers);
-            createDiffusionWindow(selectedPlayers);
-        }
-    }
+//			selectedPlayers = athleteSelection.getSelectedPlayers();
+			displaySelectedPlayers(selectedPlayers);
+			createDiffusionWindow(selectedPlayers);
+		}
+	}
 
-    /**
-     * Blink component border.
-     *
-     * @param component the component
-     * @param blinkCount the blink count
-     */
-    // Original blink methods with adapted styling
-    public static void blinkComponentBorder(JComponent component, int blinkCount) {
-        final int[] count = {0};
-        final boolean[] isRed = {false};
-        final Border originalBorder = component.getBorder();
-        final Color errorColor = new Color(255, 69, 58);
+	/**
+	 * Blink component border.
+	 *
+	 * @param component  the component
+	 * @param blinkCount the blink count
+	 */
+	// Original blink methods with adapted styling
+	public static void blinkComponentBorder(JComponent component, int blinkCount) {
+		final int[] count = { 0 };
+		final boolean[] isRed = { false };
+		final Border originalBorder = component.getBorder();
+		final Color errorColor = new Color(255, 69, 58);
 
-        Timer timer = new Timer(250, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (count[0] >= blinkCount * 2) {
-                    ((Timer) e.getSource()).stop();
-                    component.setBorder(originalBorder);
-                    return;
-                }
+		Timer timer = new Timer(250, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (count[0] >= blinkCount * 2) {
+					((Timer) e.getSource()).stop();
+					component.setBorder(originalBorder);
+					return;
+				}
 
-                if (isRed[0]) {
-                    component.setBorder(originalBorder);
-                } else {
-                    component.setBorder(BorderFactory.createLineBorder(errorColor, 2));
-                }
+				if (isRed[0]) {
+					component.setBorder(originalBorder);
+				} else {
+					component.setBorder(BorderFactory.createLineBorder(errorColor, 2));
+				}
 
-                isRed[0] = !isRed[0];
-                count[0]++;
-                component.repaint();
-            }
-        });
+				isRed[0] = !isRed[0];
+				count[0]++;
+				component.repaint();
+			}
+		});
 
-        timer.start();
-    }
+		timer.start();
+	}
 
 	/**
 	 * Make button blink.
 	 *
 	 * @param button the button
-	 * @param times the times
+	 * @param times  the times
 	 */
 	public void makeButtonBlink(JButton button, int times) {
-        final int[] count = {0};
-        final Border originalBorder = button.getBorder();
-        final Color originalBg = button.getBackground();
-        final Color errorColor = new Color(255, 69, 58);
+		final int[] count = { 0 };
+		final Border originalBorder = button.getBorder();
+		final Color originalBg = button.getBackground();
+		final Color errorColor = new Color(255, 69, 58);
 
-        Timer timer = new Timer(250, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (count[0] >= times * 2) {
-                    ((Timer)e.getSource()).stop();
-                    button.setBorder(originalBorder);
-                    button.setBackground(originalBg);
-                } else {
-                    if (count[0] % 2 == 0) {
-                        button.setBorder(BorderFactory.createLineBorder(errorColor, 2));
-                        button.setBackground(errorColor);
-                    } else {
-                        button.setBorder(originalBorder);
-                        button.setBackground(originalBg);
-                    }
-                    count[0]++;
-                }
-            }
-        });
-        timer.start();
-    }
+		Timer timer = new Timer(250, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (count[0] >= times * 2) {
+					((Timer) e.getSource()).stop();
+					button.setBorder(originalBorder);
+					button.setBackground(originalBg);
+				} else {
+					if (count[0] % 2 == 0) {
+						button.setBorder(BorderFactory.createLineBorder(errorColor, 2));
+						button.setBackground(errorColor);
+					} else {
+						button.setBorder(originalBorder);
+						button.setBackground(originalBg);
+					}
+					count[0]++;
+				}
+			}
+		});
+		timer.start();
+	}
 
-    /**
-     * Creates the styled label.
-     *
-     * @param text the text
-     * @return the j label
-     */
-    // Helper methods for styling components
-    private JLabel createStyledLabel(String text) {
-        JLabel label = new JLabel(text);
-        label.setForeground(Color.WHITE);
-        label.setFont(new Font("Arial", Font.PLAIN, 14));
-        return label;
-    }
+	/**
+	 * Creates the styled label.
+	 *
+	 * @param text the text
+	 * @return the j label
+	 */
+	// Helper methods for styling components
+	private JLabel createStyledLabel(String text) {
+		JLabel label = new JLabel(text);
+		label.setForeground(Color.WHITE);
+		label.setFont(new Font("Arial", Font.PLAIN, 14));
+		return label;
+	}
 
-    /**
-     * Creates the styled spinner.
-     *
-     * @param model the model
-     * @return the j spinner
-     */
-    private JSpinner createStyledSpinner(SpinnerModel model) {
-        JSpinner spinner = new JSpinner(model);
-        spinner.setPreferredSize(new Dimension(100, 30));
-        spinner.getEditor().setBackground(new Color(40, 43, 43));
-        ((JSpinner.DefaultEditor)spinner.getEditor()).getTextField().setForeground(Color.WHITE);
-        spinner.setBorder(BorderFactory.createLineBorder(new Color(150, 150, 150), 1));
-        return spinner;
-    }
+	/**
+	 * Creates the styled spinner.
+	 *
+	 * @param model the model
+	 * @return the j spinner
+	 */
+	private JSpinner createStyledSpinner(SpinnerModel model) {
+		JSpinner spinner = new JSpinner(model);
+		spinner.setPreferredSize(new Dimension(100, 30));
+		spinner.getEditor().setBackground(new Color(40, 43, 43));
+		((JSpinner.DefaultEditor) spinner.getEditor()).getTextField().setForeground(Color.WHITE);
+		spinner.setBorder(BorderFactory.createLineBorder(new Color(150, 150, 150), 1));
+		return spinner;
+	}
 
-    /**
-     * Creates the styled combo box.
-     *
-     * @param strings the strings
-     * @return the j combo box
-     */
-    private JComboBox<String> createStyledComboBox(String[] strings) {
-        JComboBox<String> comboBox = new JComboBox<String>(strings);
-        comboBox.setBackground(new Color(40, 43, 43));
-        comboBox.setForeground(Color.WHITE);
-        comboBox.setPreferredSize(new Dimension(200, 30));
-        comboBox.setBorder(BorderFactory.createLineBorder(new Color(150, 150, 150), 1));
-        return comboBox;
-    }
+	/**
+	 * Creates the styled combo box.
+	 *
+	 * @param strings the strings
+	 * @return the j combo box
+	 */
+	private JComboBox<String> createStyledComboBox(String[] strings) {
+		JComboBox<String> comboBox = new JComboBox<String>(strings);
+		comboBox.setBackground(new Color(40, 43, 43));
+		comboBox.setForeground(Color.WHITE);
+		comboBox.setPreferredSize(new Dimension(200, 30));
+		comboBox.setBorder(BorderFactory.createLineBorder(new Color(150, 150, 150), 1));
+		return comboBox;
+	}
 
-    /**
-     * Creates the styled button.
-     *
-     * @param text the text
-     * @return the j button
-     */
-    private JButton createStyledButton(String text) {
-        JButton button = new JButton(text);
-        button.setBackground(new Color(40, 43, 43));
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setFont(new Font("Arial", Font.BOLD, 14));
-        button.setBorder(BorderFactory.createLineBorder(new Color(150, 150, 150), 1));
-        button.setPreferredSize(new Dimension(150, 35));
-        
-        button.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent e) {
-                if (button.isEnabled()) {
-                    button.setBackground(new Color(60,63,63));
-                }
-            }
-            public void mouseExited(MouseEvent e) {
-                if (button.isEnabled()) {
-                    button.setBackground(new Color(40, 43, 43));
-                }
-            }
-        });
-        
-        return button;
-    }
-    
-    /**
-     * Creates the styled button start.
-     *
-     * @param text the text
-     * @return the j button
-     */
-    private JButton createStyledButtonStart(String text) {
-        JButton button = new JButton(text);
-        button.setBackground(new Color(0, 101, 24));
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setFont(new Font("Arial", Font.BOLD, 14));
-        button.setBorder(BorderFactory.createLineBorder(new Color(150, 150, 150), 1));
-        button.setPreferredSize(new Dimension(150, 35));
-        
-        button.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent e) {
-                if (button.isEnabled()) {
-                    button.setBackground(new Color(0,209,49));
-                }
-            }
-            public void mouseExited(MouseEvent e) {
-                if (button.isEnabled()) {
-                    button.setBackground(new Color(0, 101, 24));
-                }
-            }
-        });
-        
-        return button;
-    }
+	/**
+	 * Creates the styled button.
+	 *
+	 * @param text the text
+	 * @return the j button
+	 */
+	private JButton createStyledButton(String text) {
+		JButton button = new JButton(text);
+		button.setBackground(new Color(40, 43, 43));
+		button.setForeground(Color.WHITE);
+		button.setFocusPainted(false);
+		button.setFont(new Font("Arial", Font.BOLD, 14));
+		button.setBorder(BorderFactory.createLineBorder(new Color(150, 150, 150), 1));
+		button.setPreferredSize(new Dimension(150, 35));
 
-    /**
-     * Creates the styled border.
-     *
-     * @param title the title
-     * @return the border
-     */
-    private Border createStyledBorder(String title) {
-        TitledBorder titledBorder = BorderFactory.createTitledBorder(
-            BorderFactory.createLineBorder(new Color(150, 150, 150), 1),
-            title
-        );
-        titledBorder.setTitleFont(new Font("Arial", Font.BOLD, 16));
-        titledBorder.setTitleColor(Color.WHITE);
-        
-        Border margin = BorderFactory.createEmptyBorder(10, 10, 10, 10);
-        return BorderFactory.createCompoundBorder(titledBorder, margin);
-    }
+		button.addMouseListener(new MouseAdapter() {
+			public void mouseEntered(MouseEvent e) {
+				if (button.isEnabled()) {
+					button.setBackground(new Color(60, 63, 63));
+				}
+			}
 
-    /**
-     * Update actual screen.
-     *
-     * @param actualDisplayLabel the actual display label
-     */
-    private void updateActualScreen(JLabel actualDisplayLabel) {
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentMoved(ComponentEvent e) {
-                Point location = getLocation();
-                GraphicsDevice[] screens = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-                
-                for (GraphicsDevice screen : screens) {
-                    Rectangle bounds = screen.getDefaultConfiguration().getBounds();
-                    if (bounds.contains(location)) {
-                        actualScreen = screen.getIDstring();
-                        actualDisplayLabel.setText("Current screen : " + actualScreen.substring(actualScreen.length() - 1));
-                        revalidate();
-                        repaint();
-                        break;
-                    }
-                }
-            }
-        });
-    }
+			public void mouseExited(MouseEvent e) {
+				if (button.isEnabled()) {
+					button.setBackground(new Color(40, 43, 43));
+				}
+			}
+		});
 
-    /**
-     * Open athlete selection.
-     */
-    private void openAthleteSelection() {
-        try {
-        	if(bddPLayersComboBox.getSelectedItem() == null) {
-                blinkComponentBorder(bddPLayersComboBox, 3);
-            } else
-            	athleteSelection = new AthleteSelection(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))], (String) bddPLayersComboBox.getSelectedItem());
-        } catch (SQLException | ClassNotFoundException e1) {
-            e1.printStackTrace();
-        }
-    }
+		return button;
+	}
 
-    /**
-     * Display selected players.
-     *
-     * @param selectedPlayers the selected players
-     */
-    private void displaySelectedPlayers(ArrayList<Joueur> selectedPlayers) {
-        StringBuilder playersInfo = new StringBuilder("Selected players :\n");
-        for (Joueur joueur : selectedPlayers) {
-            playersInfo.append(joueur.getNom()).append(" ").append(joueur.getPrenom()).append("\n");
-        }
-        JOptionPane.showMessageDialog(this, playersInfo.toString(), "Selected players", JOptionPane.INFORMATION_MESSAGE);
-    }
+	/**
+	 * Creates the styled button start.
+	 *
+	 * @param text the text
+	 * @return the j button
+	 */
+	private JButton createStyledButtonStart(String text) {
+		JButton button = new JButton(text);
+		button.setBackground(new Color(0, 101, 24));
+		button.setForeground(Color.WHITE);
+		button.setFocusPainted(false);
+		button.setFont(new Font("Arial", Font.BOLD, 14));
+		button.setBorder(BorderFactory.createLineBorder(new Color(150, 150, 150), 1));
+		button.setPreferredSize(new Dimension(150, 35));
 
-    /**
-     * Creates the diffusion window.
-     *
-     * @param selectedPlayers the selected players
-     * @throws ClassNotFoundException the class not found exception
-     * @throws SQLException the SQL exception
-     */
-    private void createDiffusionWindow(ArrayList<Joueur> selectedPlayers) throws ClassNotFoundException, SQLException {
-        String selectedEvent = (String) eventComboBox.getSelectedItem();
-        Evenement eventChoosen = new Evenement(selectedEvent);
-        try {
-        	eventChoosen = BDD_v2.getEvenementByName(selectedEvent);
-        } catch (SQLException e1) {
-        	e1.printStackTrace();
-        }
-        if (eventChoosen.getBackground() != null) {
-	        GraphicsDevice[] screens = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-	        GraphicsDevice selectedScreen = screens[Integer.parseInt((String)spinnerScreen.getValue())];
-	        GraphicsDevice configScreen = screens[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))];
-	        WindowBroadcastPublic diffusionFrame = new WindowBroadcastPublic(eventChoosen, selectedScreen, new Dimension((int)sizeFenetreX.getValue(), (int)sizeFenetreY.getValue()));
-	        System.out.println("--> ecran actuel : "+actualScreen);
-	        WindowTournamentTree windowTournamentTree = new WindowTournamentTree(configScreen, selectedPlayers, eventChoosen, diffusionFrame, (int) spinnerNbJoueur.getValue());
-	        diffusionFrame.setWindowTournamentTreeFromBroadcast(windowTournamentTree);
-	        System.out.println("-> Selected event : " + eventChoosen.getNom() + ", player list : " + bddPLayersComboBox.getSelectedItem() + ", number of players : " + (int) spinnerNbJoueur.getValue()+" ,taille fenetre "+diffusionFrame.getSize().getWidth()+"x"+diffusionFrame.getSize().getHeight()+"<-");
-        }else {
-        	JOptionPane.showMessageDialog(this, "The event have no background", "Erreur", JOptionPane.ERROR_MESSAGE);
-        }
-    }
+		button.addMouseListener(new MouseAdapter() {
+			public void mouseEntered(MouseEvent e) {
+				if (button.isEnabled()) {
+					button.setBackground(new Color(0, 209, 49));
+				}
+			}
 
-    /**
-     * Refresh event combo box.
-     */
-    public void refreshEventComboBox() {
-        String[] eventNames = BDD_v2.getNamesFromDatabase("event");
-        eventComboBox.setModel(new DefaultComboBoxModel<>(eventNames));
-        //eventComboBox.setSelectedIndex(-1);
-    }
+			public void mouseExited(MouseEvent e) {
+				if (button.isEnabled()) {
+					button.setBackground(new Color(0, 101, 24));
+				}
+			}
+		});
 
-    /**
-     * Refresh player table combobox.
-     *
-     * @throws SQLException the SQL exception
-     */
-    public void refreshPlayerTableCombobox() throws SQLException {
-        BDD_v2.getAllListPlayerTableName();
-        bddPLayersComboBox.setModel(new DefaultComboBoxModel<>(BDD_v2.tabBdd.toArray(new String[0])));
-    }
+		return button;
+	}
+
+	/**
+	 * Creates the styled border.
+	 *
+	 * @param title the title
+	 * @return the border
+	 */
+	private Border createStyledBorder(String title) {
+		TitledBorder titledBorder = BorderFactory
+				.createTitledBorder(BorderFactory.createLineBorder(new Color(150, 150, 150), 1), title);
+		titledBorder.setTitleFont(new Font("Arial", Font.BOLD, 16));
+		titledBorder.setTitleColor(Color.WHITE);
+
+		Border margin = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+		return BorderFactory.createCompoundBorder(titledBorder, margin);
+	}
+
+	/**
+	 * Update actual screen.
+	 *
+	 * @param actualDisplayLabel the actual display label
+	 */
+	private void updateActualScreen(JLabel actualDisplayLabel) {
+		addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentMoved(ComponentEvent e) {
+				Point location = getLocation();
+				GraphicsDevice[] screens = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+
+				for (GraphicsDevice screen : screens) {
+					Rectangle bounds = screen.getDefaultConfiguration().getBounds();
+					if (bounds.contains(location)) {
+						actualScreen = screen.getIDstring();
+						actualDisplayLabel
+								.setText("Current screen : " + actualScreen.substring(actualScreen.length() - 1));
+						revalidate();
+						repaint();
+						break;
+					}
+				}
+			}
+		});
+	}
+
+	/**
+	 * Open athlete selection.
+	 */
+	private void openAthleteSelection() {
+		try {
+			if (bddPLayersComboBox.getSelectedItem() == null) {
+				blinkComponentBorder(bddPLayersComboBox, 3);
+			} else {
+				athleteSelection = new AthleteSelection(GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))],
+						(String) bddPLayersComboBox.getSelectedItem(), selectedPlayers);
+				selectedPlayers = athleteSelection.getSelectedPlayers();
+			}
+		} catch (SQLException | ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	/**
+	 * Display selected players.
+	 *
+	 * @param selectedPlayers the selected players
+	 */
+	private void displaySelectedPlayers(ArrayList<Joueur> selectedPlayers) {
+		StringBuilder playersInfo = new StringBuilder("Selected players :\n");
+		for (Joueur joueur : selectedPlayers) {
+			playersInfo.append(joueur.getNom()).append(" ").append(joueur.getPrenom()).append("\n");
+		}
+		JOptionPane.showMessageDialog(this, playersInfo.toString(), "Selected players",
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	/**
+	 * Creates the diffusion window.
+	 *
+	 * @param selectedPlayers the selected players
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws SQLException           the SQL exception
+	 */
+	private void createDiffusionWindow(ArrayList<Joueur> selectedPlayers) throws ClassNotFoundException, SQLException {
+		String selectedEvent = (String) eventComboBox.getSelectedItem();
+		Evenement eventChoosen = new Evenement(selectedEvent);
+		try {
+			eventChoosen = BDD_v2.getEvenementByName(selectedEvent);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		if (eventChoosen.getBackground() != null) {
+			GraphicsDevice[] screens = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+			GraphicsDevice selectedScreen = screens[Integer.parseInt((String) spinnerScreen.getValue())];
+			GraphicsDevice configScreen = screens[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))];
+			WindowBroadcastPublic diffusionFrame = new WindowBroadcastPublic(eventChoosen, selectedScreen,
+					new Dimension((int) sizeFenetreX.getValue(), (int) sizeFenetreY.getValue()));
+			System.out.println("--> ecran actuel : " + actualScreen);
+			WindowTournamentTree windowTournamentTree = new WindowTournamentTree(configScreen, selectedPlayers,
+					eventChoosen, diffusionFrame, (int) spinnerNbJoueur.getValue());
+			diffusionFrame.setWindowTournamentTreeFromBroadcast(windowTournamentTree);
+			System.out.println("-> Selected event : " + eventChoosen.getNom() + ", player list : "
+					+ bddPLayersComboBox.getSelectedItem() + ", number of players : " + (int) spinnerNbJoueur.getValue()
+					+ " ,taille fenetre " + diffusionFrame.getSize().getWidth() + "x"
+					+ diffusionFrame.getSize().getHeight() + "<-");
+		} else {
+			JOptionPane.showMessageDialog(this, "The event have no background", "Erreur", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	/**
+	 * Refresh event combo box.
+	 */
+	public void refreshEventComboBox() {
+		String[] eventNames = BDD_v2.getNamesFromDatabase("event");
+		eventComboBox.setModel(new DefaultComboBoxModel<>(eventNames));
+		// eventComboBox.setSelectedIndex(-1);
+	}
+
+	/**
+	 * Refresh player table combobox.
+	 *
+	 * @throws SQLException the SQL exception
+	 */
+	public void refreshPlayerTableCombobox() throws SQLException {
+		BDD_v2.getAllListPlayerTableName();
+		bddPLayersComboBox.setModel(new DefaultComboBoxModel<>(BDD_v2.tabBdd.toArray(new String[0])));
+	}
 }

@@ -28,7 +28,7 @@ SET FILES NIO TRUE
 SET FILES NIO SIZE 256
 SET FILES LOG TRUE
 SET FILES LOG SIZE 50
-SET FILES CHECK 66743
+SET FILES CHECK 80821
 SET DATABASE COLLATION "SQL_TEXT" PAD SPACE
 CREATE USER SA PASSWORD DIGEST 'd41d8cd98f00b204e9800998ecf8427e'
 ALTER USER SA SET LOCAL TRUE
@@ -305,6 +305,7 @@ INSERT INTO FLAG VALUES('blank','blank','resources\flag\blank.png')
 INSERT INTO FLAG VALUES('clear','clear','resources\flag\clear.png')
 INSERT INTO BACKGROUND VALUES('backgroundExample32','resources\Background\1bgFull32.png','resources\Background\2bgPlayer.png','resources\Background\3bgGame.png','resources\Background\4bgTab32.png','resources\Background\5bgWaiting.png')
 INSERT INTO BACKGROUND VALUES('backgroundExampleTEST','resources\Background\ROANNEdraw32-2024.png','resources\Background\2bgPlayer.png','resources\Background\3bgGame.png','resources\Background\ROANNEdraw8-2024.png','resources\Background\5bgWaiting.png')
+INSERT INTO EVENT VALUES('delete test3','backgroundExampleTEST')
 INSERT INTO EVENT VALUES('eventExample32','backgroundExample32')
 INSERT INTO EVENT VALUES('eventExampleTEST','backgroundExampleTEST')
 INSERT INTO ATP VALUES(14414,'homme','Gasquet','Richard','R. Gasquet','FRA','France','18/06/1986','resources\PlayersImages\R._Gasquet.png',148,'183','right-handed','38','79','17\u202f731\u202f974\u20ac','Beziers, France','Neuchatel, Switzerland','')

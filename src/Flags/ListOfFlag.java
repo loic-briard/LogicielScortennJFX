@@ -24,6 +24,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import Main.BDD_v2;
 
 // TODO: Auto-generated Javadoc
@@ -36,17 +39,13 @@ public class ListOfFlag extends JFrame {
     private static final long serialVersionUID = 1L;
     
     /** The search field. */
-    private JTextField searchField;
+    private JTextField searchField= new JTextField();
     
     /** The new button. */
     private JButton newButton;
     /** The modify button. */
     private JButton modifyButton;
     private JButton deleteButton;
-	
-	/** The search button. */
-	private JButton searchButton;
-//	private SwingWorker<Void, Object[]> worker;
 	
 	/** The flag table. */
 public JTable flagTable;
@@ -113,30 +112,66 @@ public JTable flagTable;
         // Bouton "Modifier"
         modifyButton = new JButton("Modify");
         deleteButton = new JButton("Delete");
-     // Bouton "Search"
-        searchButton = new JButton("Search");
+     new JButton("Search");
         
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panel.add(searchField);
-        panel.add(searchButton);
+//        panel.add(searchButton);
         panel.add(newButton);
         panel.add(modifyButton);
         panel.add(deleteButton);
         add(panel,BorderLayout.NORTH);
+     // Ajouter un �couteur pour le champ de recherche
+        searchField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateSelection();
+            }
 
-        // Ajout du gestionnaire d'�v�nements pour le bouton "Search"
-        searchButton.addActionListener(e -> {
-            String searchText = searchField.getText().trim().toUpperCase();
-            if (!searchText.isEmpty()) {
-                for (int row = 0; row < flagTable.getRowCount(); row++) {
-                    String cellValue = flagTable.getValueAt(row, 1).toString(); // Assurez-vous d'adapter le num�ro de colonne
-                    if (cellValue.equals(searchText)) {
-                        flagTable.scrollRectToVisible(flagTable.getCellRect(row, 1, true));
-                        break; // Arr�tez la recherche apr�s avoir trouv� la premi�re correspondance
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateSelection();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateSelection();
+            }
+
+            private void updateSelection() {
+                String searchText = searchField.getText().trim().toLowerCase();
+                CustomTableModelFlag model = (CustomTableModelFlag) flagTable.getModel(); // Utilisez CustomTableModel ici
+
+                for (int row = 0; row < model.getRowCount(); row++) {
+                    String countryname = (String) model.getValueAt(row, 1).toString().toLowerCase();
+                    boolean match = countryname.contains(searchText);
+
+                    if (match) {
+                        // D�s�lectionnez toutes les autres lignes
+                    	flagTable.clearSelection();
+                        // S�lectionnez uniquement la ligne correspondante
+                    	flagTable.getSelectionModel().setSelectionInterval(row, row);
+                        // Faites d�filer jusqu'� la ligne s�lectionn�e pour la rendre visible
+                    	flagTable.scrollRectToVisible(flagTable.getCellRect(row, 0, true));
+                        break; // Sortez de la boucle d�s qu'une correspondance est trouv�e
                     }
                 }
             }
         });
+
+//        // Ajout du gestionnaire d'�v�nements pour le bouton "Search"
+//        searchButton.addActionListener(e -> {
+//            String searchText = searchField.getText().trim().toUpperCase();
+//            if (!searchText.isEmpty()) {
+//                for (int row = 0; row < flagTable.getRowCount(); row++) {
+//                    String cellValue = flagTable.getValueAt(row, 1).toString(); // Assurez-vous d'adapter le num�ro de colonne
+//                    if (cellValue.equals(searchText)) {
+//                        flagTable.scrollRectToVisible(flagTable.getCellRect(row, 1, true));
+//                        break; // Arr�tez la recherche apr�s avoir trouv� la premi�re correspondance
+//                    }
+//                }
+//            }
+//        });
         
         newButton.addActionListener(new ActionListener() {
         	@Override

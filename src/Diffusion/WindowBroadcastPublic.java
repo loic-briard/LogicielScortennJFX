@@ -8,6 +8,8 @@ package Diffusion;
  */
 
 import javax.swing.*;
+
+import Animation.PanelAnimationConfiguration;
 import Event.Evenement;
 
 import java.awt.*;
@@ -146,9 +148,9 @@ public class WindowBroadcastPublic extends JFrame {
      * @param layer the layer
      * @param Content the content
      */
-    public void addContentLabel(Integer layer, JLabel Content) {
-    	layeredPane.add(Content, layer);
-    }
+//    public void addContentLabel(Integer layer, JLabel Content) {
+//    	layeredPane.add(Content, layer);
+//    }
 
     /**
      * Removes the layer content.

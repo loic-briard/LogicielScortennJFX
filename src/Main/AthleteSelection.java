@@ -41,6 +41,7 @@ import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import org.json.JSONException;
 
@@ -91,10 +92,11 @@ public class AthleteSelection extends JFrame {
 	 * Instantiates a new athlete selection.
 	 *
 	 * @param choosenBDD the choosen BDD
+	 * @param selectedPlayers 
 	 * @throws SQLException           the SQL exception
 	 * @throws ClassNotFoundException the class not found exception
 	 */
-	public AthleteSelection(GraphicsDevice configScreen, String choosenBDD) throws SQLException, ClassNotFoundException {
+	public AthleteSelection(GraphicsDevice configScreen, String choosenBDD, ArrayList<Joueur> previousSelectedPlayers) throws SQLException, ClassNotFoundException {
 		setTitle("Selection of Players");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(1050, 600); // Augmentez la largeur de la fen�tre pour mieux afficher les donn�es
@@ -118,7 +120,7 @@ public class AthleteSelection extends JFrame {
 		// Triez les joueurs par ordre alphab�tique en fonction de leur nom d'affichage.
 		Arrays.sort(playerDataList, (a, b) -> a[0].compareTo(b[0]));
 
-		String[] columnNames = { "Display name", "ID" };
+		String[] columnNames = { "Name", "Surname" };
 //        DefaultTableModel modelLeft = new DefaultTableModel(playerDataList, columnNames);
 //        allPlayersTable = new JTable(modelLeft);
 		allPlayersTable = new JTable(playerDataList, columnNames) {
@@ -186,13 +188,13 @@ public class AthleteSelection extends JFrame {
 				else
 					System.out.println("don't update Age players selected");
 				for (int row = 0; row < modelRightTable.getRowCount(); row++) {
-					String displayName = (String) modelRightTable.getValueAt(row, 0);
+					String name = (String) modelRightTable.getValueAt(row, 0);
 					// Recherchez le joueur correspondant dans votre liste de joueurs compl�te
 					for (Joueur joueur : allJoueurs) {
-						if (joueur.getDisplay_name().equals(displayName)) {
+						if (joueur.getNom().equals(name)) {
 							Joueur joueurAvecVerif = null;
 							try {
-								joueurAvecVerif = BDD_v2.getJoueurParID(joueur.getID(), choosenBDD);
+								joueurAvecVerif = BDD_v2.getJoueurParNom(joueur.getNom(), choosenBDD);
 								if (choice == JOptionPane.YES_OPTION) {
 									// R�cup�rer la date de naissance du joueur
 									String dobString = joueurAvecVerif.getBirthDate();
@@ -299,43 +301,52 @@ public class AthleteSelection extends JFrame {
 		// Ajouter le panneau de recherche en haut de la fen�tre
 		add(searchPanel, BorderLayout.NORTH);
 
-		// Ajouter un �couteur pour le champ de recherche
-		searchField.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				updateSelection();
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				updateSelection();
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				updateSelection();
-			}
-
-			private void updateSelection() {
-				String searchText = searchField.getText().trim().toLowerCase();
-				DefaultTableModel model = (DefaultTableModel) allPlayersTable.getModel();
-
-				for (int row = 0; row < model.getRowCount(); row++) {
-					String displayName = (String) model.getValueAt(row, 0).toString().toLowerCase();
-					boolean match = displayName.contains(searchText);
-
-					if (match) {
-						// D�s�lectionnez toutes les autres lignes
-						allPlayersTable.clearSelection();
-						// S�lectionnez uniquement la ligne correspondante
-						allPlayersTable.getSelectionModel().setSelectionInterval(row, row);
-						// Faites d�filer jusqu'� la ligne s�lectionn�e pour la rendre visible
-						allPlayersTable.scrollRectToVisible(allPlayersTable.getCellRect(row, 0, true));
-						break; // Sortez de la boucle d�s qu'une correspondance est trouv�e
-					}
+		if(previousSelectedPlayers != null) {
+			for (Joueur players : previousSelectedPlayers) {
+				if(players.getNom()!="QUALIFIER"){
+					String[] joueur = new String[] { players.getNom(), players.getPrenom() };
+					modelRightTable.addRow(joueur);
 				}
 			}
-		});
+		}
+		// Ajouter un �couteur pour le champ de recherche
+        searchField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateSelection();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateSelection();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateSelection();
+            }
+
+            private void updateSelection() {
+                String searchText = searchField.getText().trim().toLowerCase();
+                TableModel model = allPlayersTable.getModel();   // import javax.swing.table.TableModel;
+
+
+                for (int row = 0; row < model.getRowCount(); row++) {
+                    String playerName = (String) model.getValueAt(row, 0).toString().toLowerCase();
+                    boolean match = playerName.contains(searchText);
+
+                    if (match) {
+                        // D�s�lectionnez toutes les autres lignes
+                    	allPlayersTable.clearSelection();
+                        // S�lectionnez uniquement la ligne correspondante
+                    	allPlayersTable.getSelectionModel().setSelectionInterval(row, row);
+                        // Faites d�filer jusqu'� la ligne s�lectionn�e pour la rendre visible
+                    	allPlayersTable.scrollRectToVisible(allPlayersTable.getCellRect(row, 0, true));
+                        break; // Sortez de la boucle d�s qu'une correspondance est trouv�e
+                    }
+                }
+            }
+        });
 
 		setVisible(true);
 	}
@@ -356,12 +367,12 @@ public class AthleteSelection extends JFrame {
 		int selectedRow = allPlayersTable.getSelectedRow();
 		if (selectedRow >= 0) {
 			// Obtenez les donn�es de la ligne s�lectionn�e
-			String displayName = (String) allPlayersTable.getValueAt(selectedRow, 0);
-			String id = (String) allPlayersTable.getValueAt(selectedRow, 1);
-			String[] joueur = new String[] { displayName, id };
+			String name = (String) allPlayersTable.getValueAt(selectedRow, 0);
+			String surname = (String) allPlayersTable.getValueAt(selectedRow, 1);
+			String[] joueur = new String[] { name, surname };
 			modelRightTable.addRow(joueur);
 			try {
-				MainJFX.API.insertionsInfosSupJoueur(Integer.parseInt(id), choosenBDD);
+				MainJFX.API.insertionsInfosSupJoueur(BDD_v2.getJoueurParNom(name, choosenBDD).getID(), choosenBDD);
 			} catch (ClassNotFoundException | IOException | InterruptedException | JSONException | SQLException e1) {
 				e1.printStackTrace();
 			}

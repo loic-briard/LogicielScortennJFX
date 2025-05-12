@@ -28,7 +28,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
-import Diffusion.PanelAnimationConfiguration;
+import Animation.PanelAnimationConfiguration;
 
 // TODO: Auto-generated Javadoc
 class ElementOneJoueur {
@@ -90,7 +90,7 @@ class ElementJoueurTab {
  * The Class ConfigurationSaveLoad.
  */
 public class ConfigurationSaveLoad {
-	
+
 	/** The locations. */
 	private Map<String, Object> locations = new HashMap<>();
 
@@ -115,7 +115,7 @@ public class ConfigurationSaveLoad {
 	/**
 	 * Save config to file.
 	 *
-	 * @param data the data
+	 * @param data     the data
 	 * @param filePath the file path
 	 * @param fileName the file name
 	 */
@@ -146,8 +146,8 @@ public class ConfigurationSaveLoad {
 	 * Save config to file game.
 	 *
 	 * @param elementsTwoPlayer the elements two player
-	 * @param filePath the file path
-	 * @param fileName the file name
+	 * @param filePath          the file path
+	 * @param fileName          the file name
 	 */
 	// Méthode pour sauvegarder les données de configuration au format JSON
 	public static void saveConfigToFileGame(ElementJoueurGame elementsTwoPlayer, String filePath, String fileName) {
@@ -175,7 +175,7 @@ public class ConfigurationSaveLoad {
 	/**
 	 * Save config to file tab.
 	 *
-	 * @param data the data
+	 * @param data     the data
 	 * @param filePath the file path
 	 * @param fileName the file name
 	 */
@@ -205,7 +205,7 @@ public class ConfigurationSaveLoad {
 	/**
 	 * Save config to file full.
 	 *
-	 * @param data the data
+	 * @param data     the data
 	 * @param filePath the file path
 	 * @param fileName the file name
 	 */
@@ -269,14 +269,15 @@ public class ConfigurationSaveLoad {
 	/**
 	 * Save windows.
 	 *
-	 * @param nomEvent the nom event
-	 * @param typeWindows the type windows
+	 * @param nomEvent        the nom event
+	 * @param typeWindows     the type windows
 	 * @param JoueurDetailsP1 the joueur details P 1
 	 * @param JoueurDetailsP2 the joueur details P 2
 	 */
 	public static void saveWindows(String nomEvent, String typeWindows, Map<JPanel, JLabel> JoueurDetailsP1,
 			Map<JPanel, JLabel> JoueurDetailsP2) {
-		ConfigurationSaveLoad eventData = loadConfigFromFile( "resources"+File.separator+"Config/" + nomEvent+ "/player.json");
+		ConfigurationSaveLoad eventData = loadConfigFromFile(
+				"resources" + File.separator + "Config/" + nomEvent + "/player.json");
 		if (eventData == null) {
 			System.out.println("Content from : " + "Config/" + nomEvent + "/player.json" + " is empty !");
 			eventData = new ConfigurationSaveLoad();
@@ -296,7 +297,7 @@ public class ConfigurationSaveLoad {
 				playerElement.setPositionY(panel.getY());
 				playerPolice.setVisible(panel.isVisible());
 				if (panel.getName().equals("ImgJoueur") || panel.getName().equals("ImgFlag")) {
-					 System.out.println("taille des images : " + panel.getName() + panel.getHeight());
+					System.out.println("taille des images : " + panel.getName() + panel.getHeight());
 					playerPolice.setTaille((int) panel.getHeight());
 				}
 				if (panel.getComponents()[0] instanceof JLabel)
@@ -307,7 +308,7 @@ public class ConfigurationSaveLoad {
 				elementsOnePlayer.getOnePlayerPolice().put(panel.getName(), playerPolice);
 			}
 			System.out.println("PLAYER save completed");
-			saveConfigToFile(elementsOnePlayer, "resources"+File.separator+"Config/" + nomEvent, "player.json");
+			saveConfigToFile(elementsOnePlayer, "resources" + File.separator + "Config/" + nomEvent, "player.json");
 			break;
 
 		default:
@@ -319,12 +320,14 @@ public class ConfigurationSaveLoad {
 	/**
 	 * Save windows multi tab.
 	 *
-	 * @param nomEvent the nom event
-	 * @param typeWindows the type windows
+	 * @param nomEvent      the nom event
+	 * @param typeWindows   the type windows
 	 * @param JoueurDetails the joueur details
 	 */
-	public static void saveWindowsMultiTab(String nomEvent, String typeWindows,	ArrayList<Map<JPanel, JLabel>> JoueurDetails) {
-		ConfigurationSaveLoad eventData = loadConfigFromFile( "resources"+File.separator+"Config/" + nomEvent +File.separator+ typeWindows + ".json");
+	public static void saveWindowsMultiTab(String nomEvent, String typeWindows,
+			ArrayList<Map<JPanel, JLabel>> JoueurDetails) {
+		ConfigurationSaveLoad eventData = loadConfigFromFile(
+				"resources" + File.separator + "Config/" + nomEvent + File.separator + typeWindows + ".json");
 		if (eventData == null) {
 			System.out.println("Content from : " + "Config/" + nomEvent + "/" + typeWindows + ".json" + " is empty !");
 			eventData = new ConfigurationSaveLoad();
@@ -370,7 +373,7 @@ public class ConfigurationSaveLoad {
 				k++;
 			}
 			System.out.println("GAME save completed");
-			saveConfigToFileGame(elementsGamePlayer, "resources"+File.separator+"Config/" + nomEvent, "game.json");
+			saveConfigToFileGame(elementsGamePlayer, "resources" + File.separator + "Config/" + nomEvent, "game.json");
 			break;
 		case "tab":
 			int i = 0;
@@ -410,7 +413,7 @@ public class ConfigurationSaveLoad {
 				i++;
 			}
 			System.out.println("TAB save completed");
-			saveConfigToFileTab(elementsTabPlayer, "resources"+File.separator+"Config/" + nomEvent, "tab.json");
+			saveConfigToFileTab(elementsTabPlayer, "resources" + File.separator + "Config/" + nomEvent, "tab.json");
 			break;
 		case "full":
 			int j = 0;
@@ -522,7 +525,7 @@ public class ConfigurationSaveLoad {
 	 *
 	 * @param nomEvent the nom event
 	 * @param original the original
-	 * @param partial the partial
+	 * @param partial  the partial
 	 */
 	public static void updateElementJoueurFull(String nomEvent, ElementJoueurFull original, ElementJoueurFull partial) {
 		// Update players
@@ -568,7 +571,7 @@ public class ConfigurationSaveLoad {
 //	        System.out.println("Element: " + entry.getKey() + " Visible: " + police.isVisible() + " Font: " + police.getFont() + " Color: " + police.getColor() + " Taille: " + police.getTaille());
 //	    }
 
-		saveConfigToFileFull(original, "resources"+File.separator+"Config/" + nomEvent, "full.json");
+		saveConfigToFileFull(original, "resources" + File.separator + "Config/" + nomEvent, "full.json");
 		System.out.println("FULL save completed");
 
 	}
@@ -577,10 +580,11 @@ public class ConfigurationSaveLoad {
 	 * Replace player data full.
 	 *
 	 * @param nomEvent the nom event
-	 * @param source the source
+	 * @param source   the source
 	 */
 	public static void replacePlayerDataFull(String nomEvent, ElementJoueurFull source) {
-		ElementJoueurFull target = readJsonFileFull( "resources"+File.separator+"Config/" + nomEvent + "/" + "full.json");
+		ElementJoueurFull target = readJsonFileFull(
+				"resources" + File.separator + "Config/" + nomEvent + "/" + "full.json");
 //
 //	    System.out.println("--Elements in full from json:");
 //	    for (Map<String, Map<String, ElementJoueur>> playerMap : target.getPlayer()) {
@@ -643,7 +647,7 @@ public class ConfigurationSaveLoad {
 //	        System.out.println("Element: " + entry.getKey() + " Visible: " + police.isVisible() + " Font: " + police.getFont() + " Color: " + police.getColor() + " Taille: " + police.getTaille());
 //	    }
 
-		saveConfigToFileFull(target, "resources"+File.separator+"Config/" + nomEvent, "full.json");
+		saveConfigToFileFull(target, "resources" + File.separator + "Config/" + nomEvent, "full.json");
 		System.out.println("FULL save completed");
 	}
 
@@ -775,12 +779,11 @@ public class ConfigurationSaveLoad {
 
 	/**
 	 * Gets the element police.
-	 *
 	 * @param emplacement the emplacement
-	 * @param eventName the event name
+	 * @param eventName   the event name
 	 * @param typeFenetre the type fenetre
-	 * @param nomElement the nom element
-	 * @param index the index
+	 * @param nomElement  the nom element
+	 * @param index       the index
 	 * @return the element police
 	 */
 	public ElementPoliceJoueur getElementPolice(String emplacement, String eventName, String typeFenetre,
@@ -841,9 +844,9 @@ public class ConfigurationSaveLoad {
 	 * @param nbPlayer the nb player
 	 * @param filePath the file path
 	 * @return the all element visible
-	 * @throws JsonIOException the json IO exception
+	 * @throws JsonIOException     the json IO exception
 	 * @throws JsonSyntaxException the json syntax exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException         Signals that an I/O exception has occurred.
 	 */
 	public Map<String, Map<String, Object>> getAllElementVisible(int nbPlayer, String filePath)
 			throws JsonIOException, JsonSyntaxException, IOException {
@@ -903,25 +906,25 @@ public class ConfigurationSaveLoad {
 			listFileName.add("tab.json");
 			listFileName.add("full.json");
 			listFileName.add("animation.json");
-			Path targetPath = Paths.get("resources"+File.separator+"Config" + File.separator + nomEvent);
+			Path targetPath = Paths.get("resources" + File.separator + "Config" + File.separator + nomEvent);
 			// Créer le dossier destination s'il n'existe pas
 			if (!Files.exists(targetPath)) {
 				Files.createDirectories(targetPath);
 				System.out.println("Dossier destination créé : " + targetPath);
 				for (String fileName : listFileName) {
 
-					Path sourcePath = Paths.get("resources"+File.separator+"Config" + File.separator + "default" +File.separator + nbJoueur, fileName);
+					Path sourcePath = Paths.get("resources" + File.separator + "Config" + File.separator + "default"
+							+ File.separator + nbJoueur, fileName);
 					// Construire le chemin complet du fichier destination
 					Path destinationFile = targetPath.resolve(sourcePath.getFileName());
 
 					// Copier le fichier
 					Files.copy(sourcePath, destinationFile, StandardCopyOption.REPLACE_EXISTING);
-					System.out.println(sourcePath+" Fichier copié avec succès : " + destinationFile);
+					System.out.println(sourcePath + " Fichier copié avec succès : " + destinationFile);
 				}
 //				ElementJoueurFull defaultData = createDefaultElementJoueurFull(nbJoueur);
 //				saveConfigToFileFull(defaultData, "config" + File.separator + nomEvent, "full.json");
 			}
-			
 
 		} catch (IOException e) {
 			System.err.println("Erreur lors de la copie du fichier : " + e.getMessage());
@@ -1025,7 +1028,7 @@ public class ConfigurationSaveLoad {
 	 * Save config animation.
 	 *
 	 * @param panelAnimation the panel animation
-	 * @param nomEvent the nom event
+	 * @param nomEvent       the nom event
 	 */
 	public static void saveConfigAnimation(PanelAnimationConfiguration panelAnimation, String nomEvent) {
 		AnimationSave animationSave = new AnimationSave();
@@ -1058,13 +1061,13 @@ public class ConfigurationSaveLoad {
 		mapAnimationTournamentTree.put("color", ColorSerializer(panelAnimation.getPathTreeColor()));
 		animationSave.setMapAnimationTournamenTree(mapAnimationTournamentTree);
 
-		saveConfigAnimationToJson(animationSave, "Config/" + nomEvent, "animation.json");
+		saveConfigAnimationToJson(animationSave, "resources/Config/" + nomEvent, "animation.json");
 	}
 
 	/**
 	 * Save config animation to json.
 	 *
-	 * @param data the data
+	 * @param data     the data
 	 * @param filePath the file path
 	 * @param fileName the file name
 	 */
@@ -1094,39 +1097,55 @@ public class ConfigurationSaveLoad {
 	/**
 	 * Sets the config animation.
 	 *
-	 * @param nomEvent the nom event
+	 * @param nomEvent       the nom event
 	 * @param panelanimation the panelanimation
 	 */
 	public static void setConfigAnimation(String nomEvent, PanelAnimationConfiguration panelanimation) {
-		try (Reader reader = new FileReader("resources"+File.separator+"Config/" + nomEvent+ File.separator + "animation.json")) {
+		try (Reader reader = new FileReader(
+				"resources" + File.separator + "Config/" + nomEvent + File.separator + "animation.json")) {
 			JsonElement jsonElement = JsonParser.parseReader(reader);
 			if (jsonElement.isJsonObject()) {
 				JsonObject configObject = jsonElement.getAsJsonObject();
-				panelanimation.setDisplayJFullCheckBox(configObject.getAsJsonPrimitive("checkboxDisplayPlayerTree").getAsBoolean());
-				
-				panelanimation.setZoomAnimationCheckBox(configObject.getAsJsonObject("mapZoom").getAsJsonPrimitive("checkbox").getAsBoolean());
-				panelanimation.setZoomAnimationSpinner(configObject.getAsJsonObject("mapZoom").getAsJsonPrimitive("duration").getAsInt());
-				
-				panelanimation.setLabelAnimationCheckBox(configObject.getAsJsonObject("mapLabel").getAsJsonPrimitive("checkbox").getAsBoolean());
-				panelanimation.setLabelAnimationSpinner(configObject.getAsJsonObject("mapLabel").getAsJsonPrimitive("duration").getAsInt());
-				
-				panelanimation.setxLeftSpinner(configObject.getAsJsonObject("mapTournamenTree").getAsJsonPrimitive("positionLeft").getAsInt());
-				panelanimation.setxRightSpinner(configObject.getAsJsonObject("mapTournamenTree").getAsJsonPrimitive("positionRight").getAsInt());
-				panelanimation.setTreeColor(parseColor(configObject.getAsJsonObject("mapTournamenTree").getAsJsonPrimitive("color").getAsString()));
-				panelanimation.setDisplayTreeCheckBox(configObject.getAsJsonObject("mapTournamenTree").getAsJsonPrimitive("checkbox").getAsBoolean());
-				panelanimation.setWidthTreeSpinner(configObject.getAsJsonObject("mapTournamenTree").getAsJsonPrimitive("width").getAsInt());
-				panelanimation.setThicknessTreeSpinner(configObject.getAsJsonObject("mapTournamenTree").getAsJsonPrimitive("thickness").getAsInt());
-				
-				panelanimation.setClignotementNumberTreeSpinner(configObject.getAsJsonObject("mapAnimationTournamenTree").getAsJsonPrimitive("blink").getAsInt());
-				panelanimation.setAnimationTimeTreeSpinner(configObject.getAsJsonObject("mapAnimationTournamenTree").getAsJsonPrimitive("duration").getAsInt());
-				panelanimation.setPathTreeColor(parseColor(configObject.getAsJsonObject("mapAnimationTournamenTree").getAsJsonPrimitive("color").getAsString()));
-				panelanimation.setAnimationTreeCheckBox(configObject.getAsJsonObject("mapAnimationTournamenTree").getAsJsonPrimitive("checkbox").getAsBoolean());				
+				panelanimation.setDisplayJFullCheckBox(
+						configObject.getAsJsonPrimitive("checkboxDisplayPlayerTree").getAsBoolean());
+
+				panelanimation.setZoomAnimationCheckBox(
+						configObject.getAsJsonObject("mapZoom").getAsJsonPrimitive("checkbox").getAsBoolean());
+				panelanimation.setZoomAnimationSpinner(
+						configObject.getAsJsonObject("mapZoom").getAsJsonPrimitive("duration").getAsInt());
+
+				panelanimation.setLabelAnimationCheckBox(
+						configObject.getAsJsonObject("mapLabel").getAsJsonPrimitive("checkbox").getAsBoolean());
+				panelanimation.setLabelAnimationSpinner(
+						configObject.getAsJsonObject("mapLabel").getAsJsonPrimitive("duration").getAsInt());
+
+				panelanimation.setxLeftSpinner(
+						configObject.getAsJsonObject("mapTournamenTree").getAsJsonPrimitive("positionLeft").getAsInt());
+				panelanimation.setxRightSpinner(configObject.getAsJsonObject("mapTournamenTree")
+						.getAsJsonPrimitive("positionRight").getAsInt());
+				panelanimation.setTreeColor(parseColor(
+						configObject.getAsJsonObject("mapTournamenTree").getAsJsonPrimitive("color").getAsString()));
+				panelanimation.setDisplayTreeCheckBox(
+						configObject.getAsJsonObject("mapTournamenTree").getAsJsonPrimitive("checkbox").getAsBoolean());
+				panelanimation.setWidthTreeSpinner(
+						configObject.getAsJsonObject("mapTournamenTree").getAsJsonPrimitive("width").getAsInt());
+				panelanimation.setThicknessTreeSpinner(
+						configObject.getAsJsonObject("mapTournamenTree").getAsJsonPrimitive("thickness").getAsInt());
+
+				panelanimation.setClignotementNumberTreeSpinner(configObject
+						.getAsJsonObject("mapAnimationTournamenTree").getAsJsonPrimitive("blink").getAsInt());
+				panelanimation.setAnimationTimeTreeSpinner(configObject.getAsJsonObject("mapAnimationTournamenTree")
+						.getAsJsonPrimitive("duration").getAsInt());
+				panelanimation.setPathTreeColor(parseColor(configObject.getAsJsonObject("mapAnimationTournamenTree")
+						.getAsJsonPrimitive("color").getAsString()));
+				panelanimation.setAnimationTreeCheckBox(configObject.getAsJsonObject("mapAnimationTournamenTree")
+						.getAsJsonPrimitive("checkbox").getAsBoolean());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Delete folder.
 	 *
@@ -1149,33 +1168,32 @@ public class ConfigurationSaveLoad {
 //            }
 //        });
 //    }
-	
+
 	public static void deleteFolder(Path dir) throws IOException {
-        if (!Files.exists(dir)) {
-            System.out.println("❌ Le dossier n'existe pas : " + dir);
-            return; // Évite de tenter une suppression inutile
-        }
+		if (!Files.exists(dir)) {
+			System.out.println("❌ Le dossier n'existe pas : " + dir);
+			return; // Évite de tenter une suppression inutile
+		}
 
-        Files.walkFileTree(dir, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                if (Files.exists(file)) {
-                    Files.delete(file); // Supprime chaque fichier
-                    System.out.println("✔ Fichier supprimé : " + file);
-                }
-                return FileVisitResult.CONTINUE;
-            }
+		Files.walkFileTree(dir, new SimpleFileVisitor<Path>() {
+			@Override
+			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+				if (Files.exists(file)) {
+					Files.delete(file); // Supprime chaque fichier
+					System.out.println("✔ Fichier supprimé : " + file);
+				}
+				return FileVisitResult.CONTINUE;
+			}
 
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                if (Files.exists(dir)) {
-                    Files.delete(dir); // Supprime le dossier après avoir supprimé son contenu
-                    System.out.println("✔ Dossier supprimé : " + dir);
-                }
-                return FileVisitResult.CONTINUE;
-            }
-        });
-    }
-
+			@Override
+			public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+				if (Files.exists(dir)) {
+					Files.delete(dir); // Supprime le dossier après avoir supprimé son contenu
+					System.out.println("✔ Dossier supprimé : " + dir);
+				}
+				return FileVisitResult.CONTINUE;
+			}
+		});
+	}
 
 }

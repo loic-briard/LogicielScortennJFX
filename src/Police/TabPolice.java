@@ -36,6 +36,8 @@ public class TabPolice extends JPanel {
 	
 	/** The checkbox surname. */
 	public JCheckBox checkboxSurname;
+	/** The checkbox surname. */
+	public JCheckBox checkboxDisplayName;
 	
 	/** The checkbox acro. */
 	public JCheckBox checkboxAcro;
@@ -112,6 +114,7 @@ public class TabPolice extends JPanel {
 		listPlayer.get(0).playerAcro.isVisible();
 		checkboxName = new JCheckBox("Display name",listPlayer.get(0).playerName.isVisible());
 		checkboxSurname = new JCheckBox("Display surname",listPlayer.get(0).playerSurname.isVisible());
+		checkboxDisplayName = new JCheckBox("Display Dysplay Name",listPlayer.get(0).playerDisplayName.isVisible());
 		checkboxAcro = new JCheckBox("Display acronym",listPlayer.get(0).playerAcro.isVisible());
 		checkboxCountry = new JCheckBox("Display country",listPlayer.get(0).playerCountry.isVisible());
 		checkboxImg = new JCheckBox("Display image",listPlayer.get(0).playerImg.isVisible());
@@ -133,6 +136,7 @@ public class TabPolice extends JPanel {
 
 		JButton buttonFontName = new JButton("Choose Font");
 		JButton buttonFontSurname = new JButton("Choose Font");
+		JButton buttonFontDisplayName = new JButton("Choose Font");
 		JButton buttonFontAcro = new JButton("Choose Font");
 		JButton buttonFontCountry = new JButton("Choose Font");
 		JButton buttonFontRank = new JButton("Choose Font");
@@ -168,6 +172,18 @@ public class TabPolice extends JPanel {
 					playerForDiffusion.policeSurname.setNewfont(fontSelector.getPoliceComlet());
 					playerForDiffusion.policeSurname.setNewColor(fontSelector.getChoosenColor());
 					playerForDiffusion.playerSurname.setSize(playerForDiffusion.playerSurname.getComponents()[0].getPreferredSize());
+				}
+			}
+		});
+		buttonFontDisplayName.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FontSelector fontSelector = new FontSelector(listPlayer.get(0).playerDisplayName.getComponents()[0].getFont(), listPlayer.get(0).playerDisplayName.getComponents()[0].getForeground());
+				for (PlayerForDiffusion playerForDiffusion : listPlayer) {
+					playerForDiffusion.playerDisplayName.getComponents()[0].setFont(fontSelector.getPoliceComlet());
+					playerForDiffusion.playerDisplayName.getComponents()[0].setForeground(fontSelector.getChoosenColor());
+					playerForDiffusion.policeDisplayName.setNewfont(fontSelector.getPoliceComlet());
+					playerForDiffusion.policeDisplayName.setNewColor(fontSelector.getChoosenColor());
+					playerForDiffusion.playerDisplayName.setSize(playerForDiffusion.playerDisplayName.getComponents()[0].getPreferredSize());
 				}
 			}
 		});
@@ -344,6 +360,10 @@ public class TabPolice extends JPanel {
 		addComponent(panelTab, gbc, new JLabel("Surname :"), 0, choixColonne);
 		addComponent(panelTab, gbc, checkboxSurname, 1, choixColonne);
 		addComponent(panelTab, gbc, buttonFontSurname, 2, choixColonne);
+		choixColonne++;
+		addComponent(panelTab, gbc, new JLabel("Display Name :"), 0, choixColonne);
+		addComponent(panelTab, gbc, checkboxDisplayName, 1, choixColonne);
+		addComponent(panelTab, gbc, buttonFontDisplayName, 2, choixColonne);
 		choixColonne++;
 		addComponent(panelTab, gbc, new JLabel("Img player :"), 0, choixColonne);
 		addComponent(panelTab, gbc, checkboxImg, 1, choixColonne);

@@ -1,13 +1,16 @@
 /*
  * 
  */
-package Diffusion;
+package Animation;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import Diffusion.PanelTournamentTree;
+import Diffusion.WindowBroadcastPublic;
+import Diffusion.WindowTournamentTree;
 import DiffusionPlayers.BackgroundPanel;
 import DiffusionPlayers.PlayerForDiffusion;
 import DiffusionPlayers.ZoomablePanel;
@@ -546,6 +549,7 @@ public class PanelAnimationConfiguration extends JPanel {
 	 * @param onComplete the on complete
 	 */
 	public void animateLABEL(JPanel panel, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, Integer layer, JLayeredPane layeredPane, Runnable onComplete) {
+		System.out.println("isLabelAnimationEnabled "+isLabelAnimationEnabled());
 	    if(!isLabelAnimationEnabled()) {
 	        if(onComplete != null)
 	            onComplete.run();
@@ -742,6 +746,81 @@ public class PanelAnimationConfiguration extends JPanel {
             });
         }
 	}
+//	public void zoomPanel(JPanel panel, WindowBroadcastPublic frame, Runnable onComplete) {
+//
+//		int durationMs = getZoomAnimationDuration();
+//		if (!isZoomAnimationEnabled() || durationMs <= 0) { // pas d’anim
+//			panel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
+//			if (onComplete != null)
+//				onComplete.run();
+//			return;
+//		}
+//
+//		/*
+//		 * -------------------------------------------------------------------- * 1.
+//		 * Installe / récupère le JLayer + UI autour du panel à animer *
+//		 * --------------------------------------------------------------------
+//		 */
+//		SnapshotLayerUI ui;
+//		JLayer<JComponent> layer;
+//		if (panel.getParent() instanceof JLayer<?>) { // déjà wrapé
+//			layer = (JLayer<JComponent>) panel.getParent();
+//			ui = (SnapshotLayerUI) layer.getUI();
+//		} else {
+//			ui = new SnapshotLayerUI();
+//			layer = new JLayer<>(panel, ui);
+//
+//			Container parent = panel.getParent();
+//			int z = parent.getComponentZOrder(panel); // garde l’ordre Z
+//			parent.remove(panel);
+//			parent.add(layer, z);
+//			parent.revalidate();
+//		}
+//
+//		/*
+//		 * -------------------------------------------------------------------- * 2.
+//		 * Prépare le snapshot + état initial *
+//		 * --------------------------------------------------------------------
+//		 */
+//		ui.takeSnapshot(panel);
+//		ui.setFocus(new Point(layer.getWidth() / 2, layer.getHeight() / 2));
+//		ui.setScale(0.0);
+//		layer.repaint();
+//
+//		/*
+//		 * -------------------------------------------------------------------- * 3.
+//		 * Boucle d’animation 120 FPS + easeOutSine + cut-off *
+//		 * --------------------------------------------------------------------
+//		 */
+//		final long begin = System.nanoTime();
+//		final long duration = durationMs * 1_000_000L; // µs → ns
+//		final double CUT = 0.002; // ≈1 px / 500 px
+//		final double[] prev = { 0.0 };
+//
+//		Timer timer = new Timer(8, null); // 8 ms ≈ 120 Hz
+//		timer.addActionListener(ev -> {
+//			double t = (System.nanoTime() - begin) / (double) duration;
+//			if (t >= 1)
+//				t = 1;
+//
+//			double ease = Math.sin((t * Math.PI) / 2); // easeOutSine
+//			double next = ease;
+//
+//			if (Math.abs(next - prev[0]) < CUT || t >= 1)
+//				next = 1.0;
+//			ui.setScale(next);
+//			prev[0] = next;
+//			layer.repaint();
+//
+//			if (next >= 1.0) {
+//				((Timer) ev.getSource()).stop();
+//				ui.releaseSnapshot(panel); // restitue la vue
+//				if (onComplete != null)
+//					onComplete.run();
+//			}
+//		});
+//		timer.start();
+//	}
 
     /**
      * Interpolate point.
@@ -855,6 +934,14 @@ public class PanelAnimationConfiguration extends JPanel {
     private int interpolateColorComponent(int start, int end, double progress) {
         return (int) (start + progress * (end - start));
     }
+    /** Retourne le conteneur réel dans lequel on peut add() des composants,
+     *  qu’il soit ou non déjà emballé dans un JLayer. */
+    public static JComponent getRealView(JComponent possibleLayerView) {
+        return (possibleLayerView.getParent() instanceof JLayer<?>)
+               ? (JComponent) ((JLayer<?>) possibleLayerView.getParent()).getView()   // cas emballé
+               : possibleLayerView;                                      // cas normal
+    }
+
     
     /**
      * The Class AnimationData.

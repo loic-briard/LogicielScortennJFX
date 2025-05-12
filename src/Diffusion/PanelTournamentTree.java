@@ -4,6 +4,7 @@
 package Diffusion;
 import javax.swing.*;
 
+import Animation.PanelAnimationConfiguration;
 import DiffusionPlayers.PlayerForDiffusion;
 
 import java.awt.*;

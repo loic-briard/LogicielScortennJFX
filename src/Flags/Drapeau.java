@@ -3,15 +3,11 @@
  */
 package Flags;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
 import Main.BDD_v2;
-import Main.MainJFX;
 
 // TODO: Auto-generated Javadoc
 /**

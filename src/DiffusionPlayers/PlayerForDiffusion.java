@@ -23,9 +23,11 @@ import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-import Diffusion.PanelAnimationConfiguration;
+
+import Animation.PanelAnimationConfiguration;
 import Diffusion.WindowBroadcastPublic;
 import Diffusion.WindowConfigurationPlayerInfos;
+import Diffusion.WindowTournamentTree;
 import Event.Evenement;
 import GlobalSettings.GlobalSettings;
 import Main.BDD_v2;
@@ -50,6 +52,9 @@ public class PlayerForDiffusion extends JPanel{
 	
 	/** The player surname. */
 	public JPanel playerSurname;
+	
+	/** The player surname. */
+	public JPanel playerDisplayName;
 	
 	/** The player img. */
 	public JPanel playerImg;
@@ -102,6 +107,8 @@ public class PlayerForDiffusion extends JPanel{
 	
 	/** The Surname label. */
 	public JLabel SurnameLabel;
+	/** The Surname label. */
+	public JLabel DisplayNameLabel;
 	
 	/** The Img label. */
 	public ImageUtility ImgLabel;
@@ -154,6 +161,8 @@ public class PlayerForDiffusion extends JPanel{
 	
 	/** The police surname. */
 	public chosenPolice policeSurname;
+	/** The police surname. */
+	public chosenPolice policeDisplayName;
 	
 	/** The police acro. */
 	public chosenPolice policeAcro;
@@ -210,6 +219,8 @@ public class PlayerForDiffusion extends JPanel{
 	/** The window configuration player infos. */
 	private WindowConfigurationPlayerInfos windowConfigurationPlayerInfos;
 	
+	private WindowTournamentTree windowTournamentTree;
+
 	/** The map joueur details. */
 	public JoueurDetails mapJoueurDetails;
 	
@@ -274,7 +285,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	 *
 	 * @param placementFrameTwoPlayer the new placement frame two player
 	 */
-	public void setPlacementFrameTwoPlayer(WindowConfigurationPlayerInfos placementFrameTwoPlayer) {
+	public void setWindowConfigurationPlayerInfos(WindowConfigurationPlayerInfos placementFrameTwoPlayer) {
 		this.windowConfigurationPlayerInfos = placementFrameTwoPlayer;
 	}
 	
@@ -332,7 +343,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	 * @param typeFrame the type frame
 	 * @param numeroPlayer the numero player
 	 */
-	public PlayerForDiffusion(Evenement nomEvent, WindowBroadcastPublic diffusionFrame,PanelAnimationConfiguration panelAnimationConfig,String typeFrame, int numeroPlayer) {
+	public PlayerForDiffusion(Evenement nomEvent, WindowBroadcastPublic diffusionFrame,PanelAnimationConfiguration panelAnimationConfig,String typeFrame, int numeroPlayer, WindowTournamentTree windowTournamentTree) {
 		this.frameForDiffusion = diffusionFrame;
 		this.typeFen = typeFrame;
 		this.nomEvent = nomEvent.getNom();
@@ -340,13 +351,14 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 		this.numeroPlayer = numeroPlayer;
 //		this.animationFrame = frameForDiffusion.getAnimationFrame();
 		this.animationPanel = panelAnimationConfig;
+		this.windowTournamentTree = windowTournamentTree;
 		globalsettings = GlobalSettings.getInstance();
 		playerfordifusion2 = this;
 
 		initializePolice();
 		createPlayerPanels();
 		recupInfosPlayer(getEmplacementPlayer());
-		mouseAdapterPanel = new MouseAdapterPanel(playerfordifusion2, playerfordifusion2, this.frameForDiffusion);
+		mouseAdapterPanel = new MouseAdapterPanel(playerfordifusion2, playerfordifusion2, this.frameForDiffusion, this.windowTournamentTree);
 		
 		
 //		this.frameForDiffusion.removeLayerContent(55);
@@ -364,6 +376,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	private void initializePolice() {
 		policeName = createPolice() ;
 		policeSurname = createPolice() ;
+		policeDisplayName = createPolice() ;
 		policeAcro = createPolice() ;
 		policeCountry = createPolice() ;
 		policeRank = createPolice() ;
@@ -395,12 +408,13 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	 * Creates the player panels.
 	 */
 	private void createPlayerPanels() {
-	    String[] panelNames = {"Name", "Surname", "ImgJoueur", "ImgFlag", "Acronyme", "Country", "Rank", "Birthdate", "Birthplace", "Height", "Weight", "Hand", "Age", "Prizetotal", "CityResidence","Seeding", "Line"};
+	    String[] panelNames = {"Name", "Surname", "DisplayName","ImgJoueur", "ImgFlag", "Acronyme", "Country", "Rank", "Birthdate", "Birthplace", "Height", "Weight", "Hand", "Age", "Prizetotal", "CityResidence","Seeding", "Line"};
 	    for (String name : panelNames) {
 	        JPanel panel = createPlayerPanel(name);
 	        switch (name) {
 	            case "Name": playerName = panel; break;
 	            case "Surname": playerSurname = panel; break;
+	            case "DisplayName": playerDisplayName = panel; break;
 	            case "ImgJoueur": playerImg = panel; break;
 	            case "ImgFlag": playerFlag = panel; break;
 	            case "Acronyme": playerAcro = panel; break;
@@ -434,7 +448,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 //		}
 	    panel.setOpaque(false);
 	    panel.setName(name);
-	    MouseAdapterPanel mouseAdapter = new MouseAdapterPanel(panel, this.playerfordifusion2, this.frameForDiffusion);
+	    MouseAdapterPanel mouseAdapter = new MouseAdapterPanel(panel, this.playerfordifusion2, this.frameForDiffusion, this.windowTournamentTree);
 	    panel.addMouseListener(mouseAdapter);
 	    panel.addMouseMotionListener(mouseAdapter);
 	    return panel;
@@ -499,6 +513,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 		Map<JPanel, LabelInfo> playerInfo = new LinkedHashMap<>();
 	    playerInfo.put(playerName, new LabelInfo(substringMethod(joueur.getNom(), globalsettings.getNameMaxLength()) , policeName));
 	    playerInfo.put(playerSurname, new LabelInfo(substringMethod(joueur.getPrenom(), globalsettings.getSurnameMaxLength()), policeSurname));
+	    playerInfo.put(playerDisplayName, new LabelInfo(joueur.getDisplay_name(), policeDisplayName));
 	    playerInfo.put(playerAcro, new LabelInfo(joueur.getNatio_acronyme(), policeAcro));
 	    playerInfo.put(playerCountry, new LabelInfo(joueur.getCountry(), policeCountry));
 	    playerInfo.put(playerRank, new LabelInfo(String.valueOf(joueur.getRank()), policeRank));
@@ -555,7 +570,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	    panelPlayerGlobal.setOpaque(false);
 	    panelPlayerGlobal.setName(this.joueur.getNom());
 	    // Ajouter tous les panneaux au panneau global
-	    Arrays.asList(playerName, playerSurname, playerAcro,playerCountry, playerRank, playerBirthdate, playerBirthplace,
+	    Arrays.asList(playerName, playerSurname, playerDisplayName,playerAcro,playerCountry, playerRank, playerBirthdate, playerBirthplace,
 	                  playerHeight, playerWeight, playerHand, playerAge, playerPrizetotal, playerCityresidence,playerTeteDeSerie,
 	                  playerLine, playerImg, playerFlag).forEach(panelPlayerGlobal::addComponent);
 	}
@@ -723,7 +738,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	private void setDefaultPositions() {
 	    System.out.println("! Config in JSON null --> defaut config");
 	    int y = 0;
-	    for (JPanel panel : Arrays.asList(playerName, playerSurname, playerAcro, playerCountry, playerRank, playerBirthdate, 
+	    for (JPanel panel : Arrays.asList(playerName, playerSurname, playerDisplayName,playerAcro, playerCountry, playerRank, playerBirthdate, 
 	                                      playerBirthplace, playerHeight, playerWeight, playerHand, playerAge, 
 	                                      playerPrizetotal, playerCityresidence, playerTeteDeSerie, playerLine)) {
 	        panel.setLocation(10, y);
@@ -744,6 +759,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	    Map<String, Object[]> elements = new HashMap<>();
 	    elements.put("Surname", new Object[]{playerSurname, policeSurname});
 	    elements.put("Name", new Object[]{playerName, policeName});
+	    elements.put("DisplayName", new Object[]{playerDisplayName, policeDisplayName});
 	    elements.put("Acronyme", new Object[]{playerAcro, policeAcro});
 	    elements.put("Country", new Object[]{playerCountry, policeCountry});
 	    elements.put("Rank", new Object[]{playerRank, policeRank});
@@ -893,6 +909,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 		mapJoueurDetails = new JoueurDetails();
 		mapJoueurDetails.addDetails(this.playerName, this.nameLabel);
 		mapJoueurDetails.addDetails(this.playerSurname, this.SurnameLabel);
+		mapJoueurDetails.addDetails(this.playerDisplayName, this.DisplayNameLabel);
 		mapJoueurDetails.addDetails(this.playerImg, this.ImgLabel);
 		mapJoueurDetails.addDetails(this.playerFlag, this.FlagLabel);
 		mapJoueurDetails.addDetails(this.playerAcro, this.AcroLabel);

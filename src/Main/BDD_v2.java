@@ -777,14 +777,15 @@ public class BDD_v2 {
 	public static String[][] getAllPlayersInfoFromDatabase(String bddName) throws SQLException {
 		String[][] playersInfo = new String[compterNbElementsBDD(bddName)][];
 
-		String query = "SELECT id, NomAfficher FROM " + bddName;
+		String query = "SELECT NOM, PRENOM FROM " + bddName;
 
 		try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
 			int row = 0; // Pour suivre l'index de la premi�re dimension (les joueurs)
 			while (resultSet.next()) {
-				int id = resultSet.getInt("id");
-				String displayName = resultSet.getString("NomAfficher");
-				String[] playerData = { displayName, String.valueOf(id) };
+//				int id = resultSet.getInt("id");
+				String name = resultSet.getString("nom");
+				String surname = resultSet.getString("prenom");
+				String[] playerData = { name, surname};
 				playersInfo[row] = playerData;
 				row++; // Passez au joueur suivant
 			}
@@ -1171,7 +1172,7 @@ public class BDD_v2 {
 				updateStatement.executeUpdate();
 			}
 			System.out.println("  - event " + eventName + " has been deleted");
-			Path targetPath = Paths.get("resouces"+File.separator+"config" + File.separator + eventName);
+			Path targetPath = Paths.get("resources"+File.separator+"config" + File.separator + eventName);
 			ConfigurationSaveLoad.deleteFolder(targetPath);
 		} else {
 			System.out.println("  ! event hasn't been deleted");

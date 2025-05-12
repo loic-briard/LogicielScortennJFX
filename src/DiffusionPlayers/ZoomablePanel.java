@@ -45,7 +45,7 @@ public class ZoomablePanel extends JPanel {
     public void addComponent(Component comp) {
         add(comp);
     }
-
+//
     /**
      * Paint component.
      *

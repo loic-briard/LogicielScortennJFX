@@ -10,7 +10,7 @@
         },
         "ImgJoueur": {
             "positionX": 729,
-            "positionY": 376
+            "positionY": 374
         },
         "Rank": {
             "positionX": 801,
@@ -25,8 +25,8 @@
             "positionY": 724
         },
         "Seeding": {
-            "positionX": 888,
-            "positionY": 747
+            "positionX": 1161,
+            "positionY": 740
         },
         "Weight": {
             "positionX": 725,
@@ -37,8 +37,8 @@
             "positionY": 304
         },
         "Acronyme": {
-            "positionX": 1088,
-            "positionY": 388
+            "positionX": 1066,
+            "positionY": 404
         },
         "CityResidence": {
             "positionX": 923,
@@ -58,13 +58,17 @@
         },
         "ImgFlag": {
             "positionX": 1009,
-            "positionY": 439
+            "positionY": 441
         },
         "Surname": {
-            "positionX": 1003,
-            "positionY": 305
+            "positionX": 978,
+            "positionY": 306
         },
         "Age": {
+            "positionX": 922,
+            "positionY": 781
+        },
+        "DisplayName": {
             "positionX": 922,
             "positionY": 781
         }
@@ -107,7 +111,7 @@
             "taille": 0
         },
         "Seeding": {
-            "visible": true,
+            "visible": false,
             "font": "Arial,1,30",
             "color": "102,102,102",
             "taille": 0
@@ -167,6 +171,12 @@
             "taille": 0
         },
         "Age": {
+            "visible": true,
+            "font": "Arial,0,30",
+            "color": "102,102,102",
+            "taille": 0
+        },
+        "DisplayName": {
             "visible": true,
             "font": "Arial,0,30",
             "color": "102,102,102",

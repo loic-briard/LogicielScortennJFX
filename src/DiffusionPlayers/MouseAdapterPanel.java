@@ -9,15 +9,15 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 import javax.swing.JPanel;
 
 import Diffusion.TabConfigurationPlayerInfos;
 import Diffusion.WindowBroadcastPublic;
-import Diffusion.WindowConfigurationPlayerInfos;
+import Diffusion.WindowTournamentTree;
 import GlobalSettings.GlobalSettings;
-import Police.TabPolice;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -37,8 +37,7 @@ public class MouseAdapterPanel extends MouseAdapter {
 	/** The frame for diffusion. */
 	private WindowBroadcastPublic frameForDiffusion;
 	
-	/** The window configuration player infos. */
-	private WindowConfigurationPlayerInfos windowConfigurationPlayerInfos;
+	private WindowTournamentTree windowTournamentTree;
 
 	/**
 	 * Instantiates a new mouse adapter panel.
@@ -47,11 +46,11 @@ public class MouseAdapterPanel extends MouseAdapter {
 	 * @param playerfordifusion the playerfordifusion
 	 * @param diffusionWindow the diffusion window
 	 */
-	public MouseAdapterPanel(JPanel panel, PlayerForDiffusion playerfordifusion, WindowBroadcastPublic diffusionWindow) {
+	public MouseAdapterPanel(JPanel panel, PlayerForDiffusion playerfordifusion, WindowBroadcastPublic diffusionWindow, WindowTournamentTree WindowTournamentTree) {
 		this.panel = panel;
 		this.playerfordifusion2 = playerfordifusion;
 		this.frameForDiffusion = diffusionWindow;
-//		this.windowConfigurationPlayerInfos = windowConfigurationPlayer;
+		this.windowTournamentTree = WindowTournamentTree;
 	}
 
 	/**
@@ -77,6 +76,8 @@ public class MouseAdapterPanel extends MouseAdapter {
 		
 		int yMoved = thisY + (e.getY() - prevPos.y);
 //		System.out.println("composant : "+panel.getName()+"|"+xMoved+"|"+yMoved);
+
+		//mise à jour des fenetres de configurations
 		panel.setLocation(xMoved, yMoved);
 		
 		if (this.playerfordifusion2.getTypeFen() == "full" || this.playerfordifusion2.getTypeFen() == "tab") {
@@ -109,35 +110,42 @@ public class MouseAdapterPanel extends MouseAdapter {
 	public void mouseReleased(MouseEvent e) {
 	    String typeFen = playerfordifusion2.getTypeFen();
 	    int playerIndex = playerfordifusion2.getNumeroPlayer();
-	    this.windowConfigurationPlayerInfos = playerfordifusion2.getPlacementFrameTwoPlayer();
+	    //this.windowConfigurationPlayerInfos = playerfordifusion2.getPlacementFrameTwoPlayer();
 	    switch (typeFen) {
 	        case "player":
 	        case "game":
 	        case "tab":
-	            handleStandardCase(typeFen, playerIndex);
+	        	if (this.windowTournamentTree.windowConfigPlayer != null ) {
+	        		System.out.println("boucle dragged ");
+		        	int tabIndex = typeFen.equals("player") ? 0 : playerIndex;
+		        	this.windowTournamentTree.windowConfigPlayer.getAllTab().setSelectedIndex(tabIndex);
+//		        	this.windowConfigurationPlayerInfos.getAllTab().setSelectedIndex(tabIndex);
+		        	updateSelectedTab(typeFen);
+	        	}
 	            break;
 	        case "full":
-	            handleFullCase(false);
+	        	if (this.windowTournamentTree.windowConfigPlayerFull != null )
+	        		handleFullCase(false);
 	            break;
 	        default:
 	            throw new IllegalArgumentException("Unexpected value: " + typeFen);
 	    }
-
-//	    System.out.println("Type de fenetre du joueur créé : " + windowConfigurationPlayerInfos.getTypeFenetre());
+	    System.out.println(playerfordifusion2.getJoueur().toString() +" Dragged "+typeFen);
+//    System.out.println("Type de fenetre du joueur créé : " + windowConfigurationPlayerInfos.getTypeFenetre());
 	}
-	
 	/**
 	 * Handle standard case.
 	 *
 	 * @param typeFen the type fen
 	 * @param playerIndex the player index
 	 */
-	private void handleStandardCase(String typeFen, int playerIndex) {
-	    int tabIndex = typeFen.equals("player") ? 0 : playerIndex;
-	    windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(tabIndex);
-	    updateSelectedTab(typeFen);
-	}
-
+//	public void handleStandardCase(String typeFen, ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {
+//	    int tabIndex = typeFen.equals("player") ? 0 : playerIndex;
+//	    windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(tabIndex);
+//	    updateSelectedTab(typeFen);
+//	    
+	 // création/mise à jour de la fenetre de config de tab
+		
 	/**
 	 * Handle full case.
 	 *
@@ -145,124 +153,15 @@ public class MouseAdapterPanel extends MouseAdapter {
 	 */
 	//newPlayer = true quand player cliquer depuis window tournament tree
 	public void handleFullCase(boolean full) {
-		this.windowConfigurationPlayerInfos = playerfordifusion2.getPlacementFrameTwoPlayer();
-	    PlayerForDiffusion[] tableauPlayerDiffusionTree = frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree();
-	    ArrayList<PlayerForDiffusion> listPlayerDiffusionTree = new ArrayList<>();
-
-	    if ((windowConfigurationPlayerInfos == null || !windowConfigurationPlayerInfos.isDisplayable())) {// la fenetre full n'existe pas
-	    	System.out.println("handleFullCase => Creation de la fenetre de config full");
-	        createNewFullWindowConfig(tableauPlayerDiffusionTree, listPlayerDiffusionTree);
-	    } else if (windowConfigurationPlayerInfos.getTypeFenetre().equals("full") && !full) {//la fenetre existe donc mettre a jour joueur electionne si il existe pas l'inserer
-	    	System.out.println("handleFullCase => Fen config full existe, update spinner selected joueur, si selected joueur doesn't exist l'inserer");
-	        updateExistingFullWindowConfig(listPlayerDiffusionTree);
-	    } else if(full){// si arrive ici ca veut dire qu'il faut afficher tout les joueurs selectionne de l'arbre (btn full)
-	    	System.out.println("handleFullCase => Creation fen configfull a partir des joueur selectione dans windows tournament tree");
-	        recreateFullWindowConfig(tableauPlayerDiffusionTree, listPlayerDiffusionTree);
-	    }
-	    
-	    windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(findPlayerIndex(listPlayerDiffusionTree));
-	    updateSelectedTab("full");
-	    windowConfigurationPlayerInfos.pack();
-	    frameForDiffusion.getWindowTournamentTreeFromBroadcast().getPanelAnimationConfiguration().getPanelTournamentTree().setPlayer(playerfordifusion2.getNumeroPlayer(), playerfordifusion2);
-//	    animationPanel.getPanelTournamentTree().setPlayer(numeroPlayer, playerfordifusion2);
-	}
-
-	/**
-	 * Creates the new full window config.
-	 *
-	 * @param tableauPlayerDiffusionTree the tableau player diffusion tree
-	 * @param listPlayerDiffusionTree the list player diffusion tree
-	 */
-	private void createNewFullWindowConfig(PlayerForDiffusion[] tableauPlayerDiffusionTree, ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {
-	    windowConfigurationPlayerInfos = new WindowConfigurationPlayerInfos(this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getConfigScreen(), frameForDiffusion, "full");
-	    for (PlayerForDiffusion player : tableauPlayerDiffusionTree) {
-	        if (player != null) {
-	            addPlayerToFullConfig(player, listPlayerDiffusionTree);
-	        }
-	    }
-	    finalizeFullWindowConfig(listPlayerDiffusionTree);
-	}
-
-	/**
-	 * Update existing full window config.
-	 *
-	 * @param listPlayerDiffusionTree the list player diffusion tree
-	 */
-	private void updateExistingFullWindowConfig(ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {
-	    for (int i = 0; i < windowConfigurationPlayerInfos.tabbedPane.getTabCount() - 1; i++) {
-	        Component selectedComponent = windowConfigurationPlayerInfos.tabbedPane.getComponentAt(i);
-	        if (selectedComponent instanceof TabConfigurationPlayerInfos) {
-	            TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;
-	            listPlayerDiffusionTree.add(currentTab.getInfosPlayerDetails());
-//	            listPlayerDiffusionTree.add(playerfordifusion2);
-	        }
-	    }
-	    int playerIndex = findPlayerIndex(listPlayerDiffusionTree);
-	    if (playerIndex == -1) {
-	    	System.out.println("updateExistingFullWindowConfig => insertion d'un joeur");
-	    	insertPlayerToFullConfig(playerfordifusion2, listPlayerDiffusionTree);
-	    }
-	    windowConfigurationPlayerInfos.getTabPolice().setListPlayer(listPlayerDiffusionTree);
-	}
-
-	/**
-	 * Recreate full window config.
-	 *
-	 * @param tableauPlayerDiffusionTree the tableau player diffusion tree
-	 * @param listPlayerDiffusionTree the list player diffusion tree
-	 */
-	private void recreateFullWindowConfig(PlayerForDiffusion[] tableauPlayerDiffusionTree, ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {
-	    windowConfigurationPlayerInfos.tabbedPane.removeAll();
-	    windowConfigurationPlayerInfos.setTypeFenetre("full");
-	    for (PlayerForDiffusion player : tableauPlayerDiffusionTree) {
-	        if (player != null) {
-	            addPlayerToFullConfig(player, listPlayerDiffusionTree);
-	        }
-	    }
-	    finalizeFullWindowConfig(listPlayerDiffusionTree);
-	}
-
-	/**
-	 * Adds the player to full config.
-	 *
-	 * @param player the player
-	 * @param listPlayerDiffusionTree the list player diffusion tree
-	 */
-	private void addPlayerToFullConfig(PlayerForDiffusion player, ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {
-	    listPlayerDiffusionTree.add(player);
-	    player.setPlacementFrameTwoPlayer(windowConfigurationPlayerInfos);
-	    TabConfigurationPlayerInfos tabFull = new TabConfigurationPlayerInfos(player, player.getJoueur(), frameForDiffusion, windowConfigurationPlayerInfos);
-	    windowConfigurationPlayerInfos.addTabJoueur(tabFull);
-//	    windowConfigurationPlayerInfos.insertTabJoueur(tabFull,listPlayerDiffusionTree.size());
-	    System.out.println("FULL player to display : " + player.getJoueur().getNom());
-	}
-	
-	/**
-	 * Insert player to full config.
-	 *
-	 * @param player the player
-	 * @param listPlayerDiffusionTree the list player diffusion tree
-	 */
-	private void insertPlayerToFullConfig(PlayerForDiffusion player, ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {
-	    player.setPlacementFrameTwoPlayer(windowConfigurationPlayerInfos);
-	    TabConfigurationPlayerInfos tabFull = new TabConfigurationPlayerInfos(player, player.getJoueur(), frameForDiffusion, windowConfigurationPlayerInfos);
-	    windowConfigurationPlayerInfos.insertTabJoueur(tabFull,listPlayerDiffusionTree.size());
-	    listPlayerDiffusionTree.add(player);
-	    System.out.println("FULL player to display : " + player.getJoueur().getNom());
-	}
-
-	/**
-	 * Finalize full window config.
-	 *
-	 * @param listPlayerDiffusionTree the list player diffusion tree
-	 */
-	private void finalizeFullWindowConfig(ArrayList<PlayerForDiffusion> listPlayerDiffusionTree) {
-	    if (!listPlayerDiffusionTree.isEmpty()) {
-	        windowConfigurationPlayerInfos.setTabPolice(new TabPolice(listPlayerDiffusionTree, windowConfigurationPlayerInfos));
-	        windowConfigurationPlayerInfos.pack();
-	    }
-	    frameForDiffusion.getWindowTournamentTreeFromBroadcast().setWindowConfigPlayerFull(windowConfigurationPlayerInfos);
-	    System.out.println("!!init windows config full");
+//		this.windowTournamentTree.windowConfigPlayerFull = playerfordifusion2.getPlacementFrameTwoPlayer();
+		if ((windowTournamentTree.windowConfigPlayerFull != null || windowTournamentTree.windowConfigPlayerFull.isDisplayable())) {// la fenetre full existe
+		    //PlayerForDiffusion[] tableauPlayerDiffusionTree = frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree();
+		    ArrayList<PlayerForDiffusion> listPlayerDiffusionTree = new ArrayList<>(Arrays.asList(windowTournamentTree.tabPlayerForTree));
+		    windowTournamentTree.windowConfigPlayerFull.tabbedPane.setSelectedIndex(findPlayerIndex(listPlayerDiffusionTree));
+		    updateSelectedTab("full");
+		    windowTournamentTree.windowConfigPlayerFull.pack();
+		    frameForDiffusion.getWindowTournamentTreeFromBroadcast().getPanelAnimationConfiguration().getPanelTournamentTree().setPlayer(playerfordifusion2.getNumeroPlayer(), playerfordifusion2);
+		}
 	}
 	
 	/**
@@ -271,7 +170,11 @@ public class MouseAdapterPanel extends MouseAdapter {
 	 * @param typeFen the type fen
 	 */
 	private void updateSelectedTab(String typeFen) {
-	    Component selectedComponent = windowConfigurationPlayerInfos.tabbedPane.getSelectedComponent();
+		Component selectedComponent = null;
+		if(typeFen != "full") 
+			selectedComponent = windowTournamentTree.windowConfigPlayer.tabbedPane.getSelectedComponent();
+		else
+			selectedComponent = windowTournamentTree.windowConfigPlayerFull.tabbedPane.getSelectedComponent();
 	    
 	    if (selectedComponent instanceof TabConfigurationPlayerInfos) {
 	        TabConfigurationPlayerInfos currentTab = (TabConfigurationPlayerInfos) selectedComponent;
@@ -279,7 +182,10 @@ public class MouseAdapterPanel extends MouseAdapter {
 	        currentTab.refreshSpinner(playerfordifusion2);
 	    } else {
 	        System.out.println("Error: Selected component is not an instance of TabConfigurationPlayerInfos");
-	        windowConfigurationPlayerInfos.tabbedPane.setSelectedIndex(playerfordifusion2.getNumeroPlayer() + 1);
+	        if(typeFen != "full") 
+	        	windowTournamentTree.windowConfigPlayer.tabbedPane.setSelectedIndex(playerfordifusion2.getNumeroPlayer() + 1);
+			else
+				windowTournamentTree.windowConfigPlayerFull.tabbedPane.setSelectedIndex(playerfordifusion2.getNumeroPlayer() + 1);
 	    }
 	}
 	

@@ -93,7 +93,7 @@ public class NewFlagFrame extends JFrame {
                 String newImgPath = ImageUtility.chargerFichier(lastFolder);
                 lastFolder = newImgPath;
                 ImageUtility.enregistrerFichier(newImgPath, "resources"+File.separator+"flag");
-                currentImage = "flag" + File.separator + ImageUtility.getNameFile(newImgPath);
+                currentImage = "resources" + File.separator+"flag" + File.separator + ImageUtility.getNameFile(newImgPath);
                 System.out.println("++++ chemin vers le drapeau : " + newImgPath);
                 updateImagePreviews();
             }
