@@ -25,6 +25,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 import Animation.PanelAnimationConfiguration;
+import Animation.ZoomablePanel;
 import Diffusion.WindowBroadcastPublic;
 import Diffusion.WindowConfigurationPlayerInfos;
 import Diffusion.WindowTournamentTree;
@@ -620,6 +621,18 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 //	        		System.out.println("Player taille panel depart zoom : " + panelPlayerGlobal.getWidth() + "x" + panelPlayerGlobal.getHeight() + ", position : " + panelPlayerGlobal.getLocation().x + "x" + panelPlayerGlobal.getLocation().y);
 
 	        		this.animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, this::animatePlayerElements);
+	        		
+//	        		frameForDiffusion.getLayeredPane().add(panelPlayerGlobal, JLayeredPane.MODAL_LAYER);
+//	        		ZoomAnimator.zoomPanelNoSnapshot(animationPanel, frameForDiffusion, panelPlayerGlobal, JLayeredPane.MODAL_LAYER, this::animatePlayerElements);
+	        		// panelJoueur est déjà configuré (labels, images…) mais pas encore animé.
+//	        		frameForDiffusion.getLayeredPane().add(panelPlayerGlobal, JLayeredPane.MODAL_LAYER);
+//
+//	        		ZoomAnimator.zoomIn(
+//	        				this.animationPanel,
+//	        				frameForDiffusion,     // la JFrame
+//	        				panelPlayerGlobal,               // composant à zoomer
+//	        		        JLayeredPane.MODAL_LAYER,  // même couche
+//	        		        this::animatePlayerElements);                     // callback optionnel
 	        	}else
 	        		displayPlayerFull();
 	        	

@@ -20,8 +20,8 @@ import javax.swing.border.Border;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import Animation.PanelAnimationConfiguration;
+import Animation.ZoomablePanel;
 import DiffusionPlayers.PlayerForDiffusion;
-import DiffusionPlayers.ZoomablePanel;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -126,10 +126,8 @@ public class WindowTournamentTree extends JFrame {
 		
 		setupFrame();
 		
-		
 		finalizeSetup();
-		
-
+	
 		playerForDifusionSolo = new PlayerForDiffusion(this.event, windowBroadcastPublic, panelAnimationConfiguration,"player", 0,this);
 		playerForDifusionGame1 = new PlayerForDiffusion(this.event, windowBroadcastPublic, panelAnimationConfiguration,"game", 0,this);
 		playerForDifusionGame2 = new PlayerForDiffusion(this.event, windowBroadcastPublic, panelAnimationConfiguration,"game", 1,this);
@@ -433,6 +431,13 @@ public class WindowTournamentTree extends JFrame {
 					try {
 						tabPlayerForTree[ligne].setPlayer(soloPlayer, ligne + 1);
 						panelAnimationConfiguration.zoomPanel(zoomBackground, this.windowBroadcastPublic, null);
+//						 SwingUtilities.invokeLater(() -> {ZoomAnimator.zoomIn(
+//		        				this.panelAnimationConfiguration,
+//		        				windowBroadcastPublic,     // la JFrame
+//		        				zoomBackground,               // composant à zoomer
+//		        		        JLayeredPane.MODAL_LAYER,  // même couche
+//		        		        null);  
+//						 });
 					} catch (ClassNotFoundException | SQLException e) {
 						e.printStackTrace();
 					}
@@ -452,6 +457,34 @@ public class WindowTournamentTree extends JFrame {
 					}
 					if (soloPlayer.getNom() != "QUALIFIER")
 						this.windowBroadcastPublic.addContent(JLayeredPane.MODAL_LAYER, playerForDifusionSolo);
+					
+//					ZoomablePanel animePlayerXFond = new ZoomablePanel();
+//					animePlayerXFond.add(playerForDifusionSolo.getPanelGlobal());
+//					animePlayerXFond.add(zoomBackground);
+//					animePlayerXFond.setSize(windowBroadcastPublic.getSize());
+//					animePlayerXFond.setOpaque(false);
+//					animePlayerXFond.setVisible(true);
+//					windowBroadcastPublic.getLayeredPane().add(animePlayerXFond, JLayeredPane.MODAL_LAYER);
+//
+//	        		ZoomAnimator.zoomIn(
+//	        				this.panelAnimationConfiguration,
+//	        				windowBroadcastPublic,     // la JFrame
+//	        				animePlayerXFond,               // composant à zoomer
+//	        		        JLayeredPane.MODAL_LAYER,  // même couche
+//	        		        null);
+					
+//					ArrayList<JPanel> listPanelToAniamte = new ArrayList<JPanel>();
+//					listPanelToAniamte.add(playerForDifusionSolo.getPanelGlobal());
+//					ImageUtility imageFond = new ImageUtility(event.getBackground().getImage_2(), 0);
+//					imageFond.setLocation(0, 0);
+//					imageFond.setSize(imageFond.getPreferredSize());
+//					zoomBackground.add(imageFond);
+//					zoomBackground.setSize(this.windowBroadcastPublic.getWidth()/10,this.windowBroadcastPublic.getHeight()/10);
+//					zoomBackground.setLocation((this.windowBroadcastPublic.getWidth()/2)-(zoomBackground.getWidth()/2), (this.windowBroadcastPublic.getHeight()/2)-(zoomBackground.getHeight()/2));
+//					windowBroadcastPublic.addContent(bgSGT, zoomBackground);
+//					listPanelToAniamte.add(zoomBackground);
+//	        		this.panelAnimationConfiguration.zoomPanels(listPanelToAniamte, windowBroadcastPublic,null);
+
 				}
 				// création/mise à jour de la fenetre de config de game
 				if (windowConfigPlayer != null) {
@@ -807,6 +840,7 @@ public class WindowTournamentTree extends JFrame {
 	private void displayWindowConfig() {
 		if (this.windowConfigPlayer == null || !this.windowConfigPlayer.isDisplayable()|| this.windowConfigPlayer.getTypeFenetre() == "full") {
 			this.windowConfigPlayer = new WindowConfigurationPlayerInfos(getConfigScreen(), windowBroadcastPublic, typeFen);
+			this.windowConfigPlayer.setLocation(this.windowConfigPlayer.getX()/2, this.windowConfigPlayer.getY());
 		} else {
 			this.windowConfigPlayer.tabbedPane.removeAll();
 			this.windowConfigPlayer.tabbedPane.revalidate();
@@ -861,6 +895,7 @@ public class WindowTournamentTree extends JFrame {
 	        this.windowConfigPlayerFull.pack();
 	        System.out.println("!!init windows config full");
 	        this.windowConfigPlayerFull.setVisible(true);
+	        this.windowConfigPlayerFull.setLocation(this.windowConfigPlayerFull.getX()+this.windowConfigPlayerFull.getWidth()/2, this.windowConfigPlayerFull.getY());
 	    }
 	}
 	

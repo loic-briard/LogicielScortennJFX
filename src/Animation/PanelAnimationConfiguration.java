@@ -13,7 +13,6 @@ import Diffusion.WindowBroadcastPublic;
 import Diffusion.WindowTournamentTree;
 import DiffusionPlayers.BackgroundPanel;
 import DiffusionPlayers.PlayerForDiffusion;
-import DiffusionPlayers.ZoomablePanel;
 import Main.ImageUtility;
 import Sauvegarde.ConfigurationSaveLoad;
 
@@ -669,158 +668,146 @@ public class PanelAnimationConfiguration extends JPanel {
 	 * @param frame the frame
 	 * @param onComplete the on complete
 	 */
-	public void zoomPanel(JPanel panel, WindowBroadcastPublic frame, Runnable onComplete) {
-//		System.out.println("Animation ZOOM "+panel.getName());
-        int initialWidth = panel.getWidth();
-        int initialHeight = panel.getHeight();
-        int targetWidth = frame.getWidth();
-        int targetHeight = frame.getHeight();
-        Point initialLocation = panel.getLocation();
-        System.out.println("Animation ZOOM "+panel.getName()+"intial location "+initialLocation.toString()+", taille intial "+initialWidth+"x"+initialHeight);
-        int duration = getZoomAnimationDuration();
-        if (!isZoomAnimationEnabled()) {
-            panel.setBounds(0, 0, targetWidth, targetHeight);
-            panel.revalidate();
-            panel.repaint();
-            if (onComplete != null) {
-                onComplete.run();
-            }
-        } else {
-            final long startTime = System.nanoTime();
-            final int widthDiff = targetWidth - initialWidth;
-            final int heightDiff = targetHeight - initialHeight;
-            
-            // Désactiver le double buffering
-            panel.setDoubleBuffered(false);
-
-            Timer timer = new Timer(10, null); // Augmentation de la fréquence des mises à jour 16 = 60fps, 25 = 40fps
-            timer.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-//                    long elapsedTime = System.currentTimeMillis() - startTime;
-//                    double progress = Math.min((double) elapsedTime / duration, 1.0);
-                    long elapsedTime = (System.nanoTime() - startTime) / 1_000_000;
-                    double progress = Math.min(1.0,(double) elapsedTime / duration);
-                    
-//                    double easedProgress = easeInOutCubic(progress); // Utilisation d'une autre fonction d'easing
-//                    double easedProgress = easeInOutQuad(progress); // Utilisation d'une autre fonction d'easing
-                    double easedProgress = 0.15 + 0.85 * easeInOutQuad(progress);
-//                    double easedProgress = 0.15 + 0.85 * easeInOutCubic(progress);
-//                    double easedProgress = 0.15 + 0.85 * easeInOutSine(progress);
-//                    double easedProgress = 0.15 + 0.85 * progress;
-
-                    int newWidth = (int) (initialWidth + easedProgress * widthDiff);
-                    int newHeight = (int) (initialHeight + easedProgress * heightDiff);
-
-                    // Calcul de la nouvelle position pour garder le panel centré
-                    int newX = initialLocation.x + (initialWidth - newWidth) / 2;
-                    int newY = initialLocation.y + (initialHeight - newHeight) / 2;
-
-
-                    SwingUtilities.invokeLater(() -> {
-                        panel.setBounds(newX, newY, newWidth, newHeight);
-
-                        if (panel instanceof ZoomablePanel) {
-                        	((ZoomablePanel) panel).setScale(easedProgress);
-                        }
-                        if (panel instanceof BackgroundPanel) {
-                            ((BackgroundPanel) panel).setScale(easedProgress);
-                        }
-
-//                        panel.revalidate();
-//                        panel.repaint();
-                    });
-
-                    if (progress >= 1.0) {
-                        timer.stop();
-                        if (onComplete != null) {
-                        	panel.setDoubleBuffered(true);
-                            SwingUtilities.invokeLater(onComplete);
-                        }
-                    }
-                }
-            });
-            timer.setCoalesce(true); // Combine les événements en retard
-            SwingUtilities.invokeLater(() -> {
-            	timer.start();
-            });
-        }
-	}
 //	public void zoomPanel(JPanel panel, WindowBroadcastPublic frame, Runnable onComplete) {
+////		System.out.println("Animation ZOOM "+panel.getName());
+//        int initialWidth = panel.getWidth();
+//        int initialHeight = panel.getHeight();
+//        int targetWidth = frame.getWidth();
+//        int targetHeight = frame.getHeight();
+//        Point initialLocation = panel.getLocation();
+//        System.out.println("Animation ZOOM "+panel.getName()+"intial location "+initialLocation.toString()+", taille intial "+initialWidth+"x"+initialHeight);
+//        int duration = getZoomAnimationDuration();
+//        if (!isZoomAnimationEnabled()) {
+//            panel.setBounds(0, 0, targetWidth, targetHeight);
+//            panel.revalidate();
+//            panel.repaint();
+//            if (onComplete != null) {
+//                onComplete.run();
+//            }
+//        } else {
+//            final long startTime = System.nanoTime();
+//            final int widthDiff = targetWidth - initialWidth;
+//            final int heightDiff = targetHeight - initialHeight;
+//            
+//            // Désactiver le double buffering
+//            panel.setDoubleBuffered(false);
 //
-//		int durationMs = getZoomAnimationDuration();
-//		if (!isZoomAnimationEnabled() || durationMs <= 0) { // pas d’anim
-//			panel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
-//			if (onComplete != null)
-//				onComplete.run();
-//			return;
-//		}
+//            Timer timer = new Timer(10, null); // Augmentation de la fréquence des mises à jour 16 = 60fps, 25 = 40fps
+//            timer.addActionListener(new ActionListener() {
+//                @Override
+//                public void actionPerformed(ActionEvent e) {
+////                    long elapsedTime = System.currentTimeMillis() - startTime;
+////                    double progress = Math.min((double) elapsedTime / duration, 1.0);
+//                    long elapsedTime = (System.nanoTime() - startTime) / 1_000_000;
+//                    double progress = Math.min(1.0,(double) elapsedTime / duration);
+//                    
+////                    double easedProgress = easeInOutCubic(progress); // Utilisation d'une autre fonction d'easing
+////                    double easedProgress = easeInOutQuad(progress); // Utilisation d'une autre fonction d'easing
+//                    double easedProgress = 0.15 + 0.85 * easeInOutQuad(progress);
+////                    double easedProgress = 0.15 + 0.85 * easeInOutCubic(progress);
+////                    double easedProgress = 0.15 + 0.85 * easeInOutSine(progress);
+////                    double easedProgress = 0.15 + 0.85 * progress;
 //
-//		/*
-//		 * -------------------------------------------------------------------- * 1.
-//		 * Installe / récupère le JLayer + UI autour du panel à animer *
-//		 * --------------------------------------------------------------------
-//		 */
-//		SnapshotLayerUI ui;
-//		JLayer<JComponent> layer;
-//		if (panel.getParent() instanceof JLayer<?>) { // déjà wrapé
-//			layer = (JLayer<JComponent>) panel.getParent();
-//			ui = (SnapshotLayerUI) layer.getUI();
-//		} else {
-//			ui = new SnapshotLayerUI();
-//			layer = new JLayer<>(panel, ui);
+//                    int newWidth = (int) (initialWidth + easedProgress * widthDiff);
+//                    int newHeight = (int) (initialHeight + easedProgress * heightDiff);
 //
-//			Container parent = panel.getParent();
-//			int z = parent.getComponentZOrder(panel); // garde l’ordre Z
-//			parent.remove(panel);
-//			parent.add(layer, z);
-//			parent.revalidate();
-//		}
+//                    // Calcul de la nouvelle position pour garder le panel centré
+//                    int newX = initialLocation.x + (initialWidth - newWidth) / 2;
+//                    int newY = initialLocation.y + (initialHeight - newHeight) / 2;
 //
-//		/*
-//		 * -------------------------------------------------------------------- * 2.
-//		 * Prépare le snapshot + état initial *
-//		 * --------------------------------------------------------------------
-//		 */
-//		ui.takeSnapshot(panel);
-//		ui.setFocus(new Point(layer.getWidth() / 2, layer.getHeight() / 2));
-//		ui.setScale(0.0);
-//		layer.repaint();
 //
-//		/*
-//		 * -------------------------------------------------------------------- * 3.
-//		 * Boucle d’animation 120 FPS + easeOutSine + cut-off *
-//		 * --------------------------------------------------------------------
-//		 */
-//		final long begin = System.nanoTime();
-//		final long duration = durationMs * 1_000_000L; // µs → ns
-//		final double CUT = 0.002; // ≈1 px / 500 px
-//		final double[] prev = { 0.0 };
+//                    SwingUtilities.invokeLater(() -> {
+//                        panel.setBounds(newX, newY, newWidth, newHeight);
 //
-//		Timer timer = new Timer(8, null); // 8 ms ≈ 120 Hz
-//		timer.addActionListener(ev -> {
-//			double t = (System.nanoTime() - begin) / (double) duration;
-//			if (t >= 1)
-//				t = 1;
+//                        if (panel instanceof ZoomablePanel) {
+//                        	((ZoomablePanel) panel).setScale(easedProgress);
+//                        }
+//                        if (panel instanceof BackgroundPanel) {
+//                            ((BackgroundPanel) panel).setScale(easedProgress);
+//                        }
 //
-//			double ease = Math.sin((t * Math.PI) / 2); // easeOutSine
-//			double next = ease;
+////                        panel.revalidate();
+////                        panel.repaint();
+//                    });
 //
-//			if (Math.abs(next - prev[0]) < CUT || t >= 1)
-//				next = 1.0;
-//			ui.setScale(next);
-//			prev[0] = next;
-//			layer.repaint();
-//
-//			if (next >= 1.0) {
-//				((Timer) ev.getSource()).stop();
-//				ui.releaseSnapshot(panel); // restitue la vue
-//				if (onComplete != null)
-//					onComplete.run();
-//			}
-//		});
-//		timer.start();
+//                    if (progress >= 1.0) {
+//                        timer.stop();
+//                        if (onComplete != null) {
+//                        	panel.setDoubleBuffered(true);
+//                            SwingUtilities.invokeLater(onComplete);
+//                        }
+//                    }
+//                }
+//            });
+//            timer.setCoalesce(true); // Combine les événements en retard
+//            SwingUtilities.invokeLater(() -> {
+//            	timer.start();
+//            });
+//        }
 //	}
+	public void zoomPanel(JPanel panel, WindowBroadcastPublic frame, Runnable onComplete) {
+
+	    int initialW = panel.getWidth();
+	    int initialH = panel.getHeight();
+	    int targetW  = frame.getWidth();
+	    int targetH  = frame.getHeight();
+	    
+	    // centre actuel du panel et centre de la fenêtre
+	    Point initialLoc = new Point(frame.getWidth()/2, frame.getHeight()/2);
+	    int initialCenterX = initialLoc.x + initialW / 2;
+	    int initialCenterY = initialLoc.y + initialH / 2;
+	    int frameCenterX   = targetW / 2;
+	    int frameCenterY   = targetH / 2;
+
+	    int duration = getZoomAnimationDuration();
+	    if (!isZoomAnimationEnabled()) {
+	        panel.setBounds(frameCenterX - targetW / 2,
+	                        frameCenterY - targetH / 2,
+	                        targetW, targetH);
+	        if (onComplete != null) onComplete.run();
+	        return;
+	    }
+
+	    final long start = System.nanoTime();
+	    final int dW = targetW - initialW;
+	    final int dH = targetH - initialH;
+
+	    panel.setDoubleBuffered(false);
+	    Timer timer = new Timer(2, null);
+	    timer.addActionListener(ev -> {
+	        long ms      = (System.nanoTime() - start) / 1_000_000;
+	        double prog  = Math.min(1.0, (double) ms / duration);
+	        double eased = 0.15 + 0.85 * easeInOutQuad(prog);
+//	        double eased = 0.15 + 0.85 * prog;//linear
+
+	        int w  = (int) (initialW + eased * dW);
+	        int h  = (int) (initialH + eased * dH);
+
+	        // centre intermédiaire = interpolation linéaire entre les deux centres
+	        int cx = (int) (initialCenterX + (frameCenterX - initialCenterX) * eased);
+	        int cy = (int) (initialCenterY + (frameCenterY - initialCenterY) * eased);
+
+	        int x = cx - w / 2;
+	        int y = cy - h / 2;
+
+	        SwingUtilities.invokeLater(() -> {
+	            panel.setBounds(x, y, w, h);
+	            if (panel instanceof ZoomablePanel)
+	                ((ZoomablePanel) panel).setScale(eased);
+	            if (panel instanceof BackgroundPanel)
+	                ((BackgroundPanel) panel).setScale(eased);
+	        });
+
+	        if (prog >= 1.0) {
+	            timer.stop();
+	            panel.setDoubleBuffered(true);
+	            if (onComplete != null) SwingUtilities.invokeLater(onComplete);
+	        }
+	    });
+	    timer.setCoalesce(true);
+	    SwingUtilities.invokeLater(timer::start);
+	}
+
 
     /**
      * Interpolate point.

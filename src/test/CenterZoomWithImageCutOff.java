@@ -6,7 +6,6 @@ import java.nio.file.Paths;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.plaf.LayerUI;
 
 
 /* ---------- 2. Exemple complet ------------------------------------ */

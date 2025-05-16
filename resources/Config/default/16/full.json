@@ -69,6 +69,10 @@
                 "Age": {
                     "positionX": 280,
                     "positionY": 100
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
                 }
             }
         },
@@ -141,6 +145,10 @@
                 "Age": {
                     "positionX": 280,
                     "positionY": 200
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
                 }
             }
         },
@@ -213,6 +221,10 @@
                 "Age": {
                     "positionX": 280,
                     "positionY": 300
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
                 }
             }
         },
@@ -285,6 +297,10 @@
                 "Age": {
                     "positionX": 280,
                     "positionY": 400
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
                 }
             }
         },
@@ -357,6 +373,10 @@
                 "Age": {
                     "positionX": 1780,
                     "positionY": 0
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
                 }
             }
         },
@@ -429,6 +449,10 @@
                 "Age": {
                     "positionX": 1780,
                     "positionY": 100
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
                 }
             }
         },
@@ -501,6 +525,10 @@
                 "Age": {
                     "positionX": 1780,
                     "positionY": 200
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
                 }
             }
         },
@@ -573,6 +601,10 @@
                 "Age": {
                     "positionX": 1780,
                     "positionY": 300
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
                 }
             }
         },
@@ -645,6 +677,10 @@
                 "Age": {
                     "positionX": 280,
                     "positionY": 100
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
                 }
             }
         },
@@ -717,6 +753,10 @@
                 "Age": {
                     "positionX": 280,
                     "positionY": 200
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
                 }
             }
         },
@@ -789,6 +829,10 @@
                 "Age": {
                     "positionX": 280,
                     "positionY": 300
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
                 }
             }
         },
@@ -861,6 +905,10 @@
                 "Age": {
                     "positionX": 280,
                     "positionY": 400
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
                 }
             }
         },
@@ -933,6 +981,10 @@
                 "Age": {
                     "positionX": 1780,
                     "positionY": 0
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
                 }
             }
         },
@@ -1005,6 +1057,10 @@
                 "Age": {
                     "positionX": 1780,
                     "positionY": 100
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
                 }
             }
         },
@@ -1077,6 +1133,10 @@
                 "Age": {
                     "positionX": 1780,
                     "positionY": 200
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
                 }
             }
         },
@@ -1149,6 +1209,10 @@
                 "Age": {
                     "positionX": 1780,
                     "positionY": 300
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
                 }
             }
         }
@@ -1254,6 +1318,12 @@
             "visible": false,
             "font": "Arial,1,25",
             "color": "0,0,0",
+            "taille": 0
+        },
+        "DisplayName": {
+            "visible": false,
+            "font": "Arial,0,30",
+            "color": "102,102,102",
             "taille": 0
         }
     }

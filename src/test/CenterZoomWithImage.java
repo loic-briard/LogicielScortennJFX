@@ -1,8 +1,6 @@
 package test;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -15,7 +13,11 @@ public class CenterZoomWithImage {
 
     /* ---- LayerUI identique à l’exemple précédent ---- */
     static class ZoomUI extends LayerUI<JComponent> {
-        private double scale = 1e-3;
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private double scale = 1e-3;
         private Point  focus = new Point();
 
         @Override

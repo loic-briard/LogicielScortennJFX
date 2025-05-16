@@ -8,6 +8,7 @@ package Main;
  */
 import java.awt.BorderLayout;
 import java.awt.GraphicsDevice;
+import java.awt.HeadlessException;
 import java.awt.MediaTracker;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -147,14 +148,24 @@ public class AthleteSelection extends JFrame {
 		addButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ajoutPlyareToSelectedList();
+				try {
+					ajoutPlyareToSelectedList();
+				} catch (HeadlessException | ClassNotFoundException | SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		allPlayersTable.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					ajoutPlyareToSelectedList();
+					try {
+						ajoutPlyareToSelectedList();
+					} catch (HeadlessException | ClassNotFoundException | SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}
 		});
@@ -362,21 +373,35 @@ public class AthleteSelection extends JFrame {
 
 	/**
 	 * Ajout plyare to selected list.
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
+	 * @throws HeadlessException 
 	 */
-	public void ajoutPlyareToSelectedList() {
+	public void ajoutPlyareToSelectedList() throws HeadlessException, ClassNotFoundException, SQLException {
 		int selectedRow = allPlayersTable.getSelectedRow();
 		if (selectedRow >= 0) {
 			// Obtenez les donn�es de la ligne s�lectionn�e
 			String name = (String) allPlayersTable.getValueAt(selectedRow, 0);
 			String surname = (String) allPlayersTable.getValueAt(selectedRow, 1);
 			String[] joueur = new String[] { name, surname };
-			modelRightTable.addRow(joueur);
-			try {
-				MainJFX.API.insertionsInfosSupJoueur(BDD_v2.getJoueurParNom(name, choosenBDD).getID(), choosenBDD);
-			} catch (ClassNotFoundException | IOException | InterruptedException | JSONException | SQLException e1) {
-				e1.printStackTrace();
-			}
+			
+			if (BDD_v2.verifInfosManquante(BDD_v2.getJoueurParNom(name, choosenBDD).getID(), choosenBDD)) {
 
+				int choice = JOptionPane.showConfirmDialog(frameForMessage, "The player selected from ATP/WTA is not complete. Do you want to update it ?",
+						"Player update", JOptionPane.YES_NO_OPTION);
+				if (choice == JOptionPane.YES_OPTION) {
+					System.out.println("update players "+name+" selected");
+					try {
+						MainJFX.API.insertionsInfosSupJoueur(BDD_v2.getJoueurParNom(name, choosenBDD).getID(), choosenBDD);
+					} catch (ClassNotFoundException | IOException | InterruptedException | JSONException
+							| SQLException e1) {
+						e1.printStackTrace();
+					}
+				}else
+					System.out.println("don't update players "+name+" selected");
+
+			}
+			modelRightTable.addRow(joueur);					
 		}
 	}
 

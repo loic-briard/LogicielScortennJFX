@@ -28,7 +28,7 @@ SET FILES NIO TRUE
 SET FILES NIO SIZE 256
 SET FILES LOG TRUE
 SET FILES LOG SIZE 50
-SET FILES CHECK 80821
+SET FILES CHECK 98691
 SET DATABASE COLLATION "SQL_TEXT" PAD SPACE
 CREATE USER SA PASSWORD DIGEST 'd41d8cd98f00b204e9800998ecf8427e'
 ALTER USER SA SET LOCAL TRUE
@@ -305,9 +305,7 @@ INSERT INTO FLAG VALUES('blank','blank','resources\flag\blank.png')
 INSERT INTO FLAG VALUES('clear','clear','resources\flag\clear.png')
 INSERT INTO BACKGROUND VALUES('backgroundExample32','resources\Background\1bgFull32.png','resources\Background\2bgPlayer.png','resources\Background\3bgGame.png','resources\Background\4bgTab32.png','resources\Background\5bgWaiting.png')
 INSERT INTO BACKGROUND VALUES('backgroundExampleTEST','resources\Background\ROANNEdraw32-2024.png','resources\Background\2bgPlayer.png','resources\Background\3bgGame.png','resources\Background\ROANNEdraw8-2024.png','resources\Background\5bgWaiting.png')
-INSERT INTO EVENT VALUES('delete test3','backgroundExampleTEST')
-INSERT INTO EVENT VALUES('eventExample32','backgroundExample32')
-INSERT INTO EVENT VALUES('eventExampleTEST','backgroundExampleTEST')
+INSERT INTO EVENT VALUES('EVENT_EXAMPLE_32','backgroundExampleTEST')
 INSERT INTO ATP VALUES(14414,'homme','Gasquet','Richard','R. Gasquet','FRA','France','18/06/1986','resources\PlayersImages\R._Gasquet.png',148,'183','right-handed','38','79','17\u202f731\u202f974\u20ac','Beziers, France','Neuchatel, Switzerland','')
 INSERT INTO ATP VALUES(14548,'homme','Wawrinka','Stan','S. Wawrinka','CHE','Switzerland','','resources\imgInterface\clear.png',166,'0','','0','0','','','','')
 INSERT INTO ATP VALUES(14844,'homme','Monfils','Ga\u00ebl','G. Monfils','FRA','France','','resources\imgInterface\clear.png',45,'0','','0','0','','','','')
@@ -689,7 +687,7 @@ INSERT INTO ATP VALUES(273679,'homme','Atmane','Terence','T. Atmane','FRA','Fran
 INSERT INTO ATP VALUES(273680,'homme','Cobolli','Flavio','F. Cobolli','ITA','Italy','','resources\imgInterface\clear.png',39,'0','','0','0','','','','')
 INSERT INTO ATP VALUES(274435,'homme','Dostanic','Stefan','S. Dostanic','USA','United States','','resources\imgInterface\clear.png',481,'0','','0','0','','','','')
 INSERT INTO ATP VALUES(275471,'homme','Schoolkate','Tristan','T. Schoolkate','AUS','Australia','','resources\imgInterface\clear.png',126,'0','','0','0','','','','')
-INSERT INTO ATP VALUES(275923,'homme','Alcaraz','Carlos','C. Alcaraz','ESP','Spain','','resources\imgInterface\clear.png',3,'0','','0','0','','','','')
+INSERT INTO ATP VALUES(275923,'homme','Alcaraz','Carlos','C. Alcaraz','ESP','Spain','05/05/2003','resources\PlayersImages\C._Alcaraz.png',3,'183','right-handed','22','74','33\u202f796\u202f582\u20ac','El Palmar, Murcia, Spain','El Palmar, Murcia, Spain','')
 INSERT INTO ATP VALUES(275948,'homme','Fearnley','Jacob','J. Fearnley','GBR','United Kingdom','','resources\imgInterface\clear.png',81,'0','','0','0','','','','')
 INSERT INTO ATP VALUES(277179,'homme','Houkes','Max','M. Houkes','NLD','Netherlands','','resources\imgInterface\clear.png',287,'0','','0','0','','','','')
 INSERT INTO ATP VALUES(280151,'homme','Diallo','Gabriel','G. Diallo','CAN','Canada','','resources\imgInterface\clear.png',85,'0','','0','0','','','','')
@@ -709,7 +707,7 @@ INSERT INTO ATP VALUES(294337,'homme','Bellucci','Mattia','M. Bellucci','ITA','I
 INSERT INTO ATP VALUES(295178,'homme','Kachmazov','Alibek','A. Kachmazov','RUS','Russia','','resources\imgInterface\clear.png',176,'0','','0','0','','','','')
 INSERT INTO ATP VALUES(295881,'homme','Binda','Alexandr','A. Binda','ITA','Italy','','resources\imgInterface\clear.png',479,'0','','0','0','','','','')
 INSERT INTO ATP VALUES(296369,'homme','Stricker','Dominic','D. Stricker','CHE','Switzerland','','resources\imgInterface\clear.png',285,'0','','0','0','','','','')
-INSERT INTO ATP VALUES(297139,'homme','Aboian','Valerio','V. Aboian','ARG','Argentina','','resources\imgInterface\clear.png',480,'0','','0','0','','','','')
+INSERT INTO ATP VALUES(297139,'homme','Aboian','Valerio','V. Aboian','ARG','Argentina','14/06/2002','resources\PlayersImages\V._Aboian.png',434,'183','left-handed','22','73','86\u202f113\u20ac','Buenos Aires',' ','')
 INSERT INTO ATP VALUES(297199,'homme','Kodat','Toby','T. Kodat','USA','United States','','resources\imgInterface\clear.png',354,'0','','0','0','','','','')
 INSERT INTO ATP VALUES(298247,'homme','Svajda','Zachary','Z. Svajda','USA','United States','','resources\imgInterface\clear.png',194,'0','','0','0','','','','')
 INSERT INTO ATP VALUES(298795,'homme','Mochizuki','Shintaro','S. Mochizuki','JPN','Japan','','resources\imgInterface\clear.png',153,'0','','0','0','','','','')

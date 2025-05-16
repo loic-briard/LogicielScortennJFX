@@ -1,1 +1,1330 @@
-{"tab":[{"player0":{"Prizetotal":{"positionX":0,"positionY":0},"Birthplace":{"positionX":0,"positionY":0},"ImgJoueur":{"positionX":551,"positionY":36},"Rank":{"positionX":0,"positionY":0},"Birthdate":{"positionX":0,"positionY":0},"Hand":{"positionX":0,"positionY":0},"Seeding":{"positionX":1009,"positionY":30},"Weight":{"positionX":0,"positionY":0},"Name":{"positionX":609,"positionY":30},"Acronyme":{"positionX":1308,"positionY":24},"CityResidence":{"positionX":0,"positionY":0},"Line":{"positionX":518,"positionY":24},"Country":{"positionX":1580,"positionY":357},"Height":{"positionX":0,"positionY":0},"ImgFlag":{"positionX":1188,"positionY":38},"Surname":{"positionX":861,"positionY":30},"Age":{"positionX":0,"positionY":0}}},{"player1":{"Prizetotal":{"positionX":0,"positionY":0},"Birthplace":{"positionX":0,"positionY":0},"ImgJoueur":{"positionX":552,"positionY":172},"Rank":{"positionX":0,"positionY":0},"Birthdate":{"positionX":0,"positionY":0},"Hand":{"positionX":0,"positionY":0},"Seeding":{"positionX":743,"positionY":91},"Weight":{"positionX":0,"positionY":0},"Name":{"positionX":608,"positionY":91},"Acronyme":{"positionX":1307,"positionY":92},"CityResidence":{"positionX":0,"positionY":0},"Line":{"positionX":518,"positionY":87},"Country":{"positionX":1580,"positionY":655},"Height":{"positionX":0,"positionY":0},"ImgFlag":{"positionX":1187,"positionY":100},"Surname":{"positionX":684,"positionY":91},"Age":{"positionX":0,"positionY":0}}},{"player2":{"Prizetotal":{"positionX":0,"positionY":0},"Birthplace":{"positionX":0,"positionY":0},"ImgJoueur":{"positionX":552,"positionY":307},"Rank":{"positionX":0,"positionY":0},"Birthdate":{"positionX":0,"positionY":0},"Hand":{"positionX":0,"positionY":0},"Seeding":{"positionX":1005,"positionY":157},"Weight":{"positionX":0,"positionY":0},"Name":{"positionX":612,"positionY":157},"Acronyme":{"positionX":1306,"positionY":158},"CityResidence":{"positionX":0,"positionY":0},"Line":{"positionX":518,"positionY":154},"Country":{"positionX":1580,"positionY":300},"Height":{"positionX":0,"positionY":0},"ImgFlag":{"positionX":1186,"positionY":167},"Surname":{"positionX":777,"positionY":157},"Age":{"positionX":0,"positionY":0}}},{"player3":{"Prizetotal":{"positionX":0,"positionY":0},"Birthplace":{"positionX":0,"positionY":0},"ImgJoueur":{"positionX":552,"positionY":428},"Rank":{"positionX":0,"positionY":0},"Birthdate":{"positionX":0,"positionY":0},"Hand":{"positionX":0,"positionY":0},"Seeding":{"positionX":1036,"positionY":217},"Weight":{"positionX":0,"positionY":0},"Name":{"positionX":611,"positionY":217},"Acronyme":{"positionX":1310,"positionY":222},"CityResidence":{"positionX":0,"positionY":0},"Line":{"positionX":518,"positionY":217},"Country":{"positionX":1580,"positionY":300},"Height":{"positionX":0,"positionY":0},"ImgFlag":{"positionX":1186,"positionY":231},"Surname":{"positionX":731,"positionY":217},"Age":{"positionX":0,"positionY":0}}},{"player4":{"Prizetotal":{"positionX":0,"positionY":0},"Birthplace":{"positionX":0,"positionY":0},"ImgJoueur":{"positionX":552,"positionY":558},"Rank":{"positionX":0,"positionY":0},"Birthdate":{"positionX":0,"positionY":0},"Hand":{"positionX":0,"positionY":0},"Seeding":{"positionX":958,"positionY":287},"Weight":{"positionX":0,"positionY":0},"Name":{"positionX":611,"positionY":287},"Acronyme":{"positionX":1310,"positionY":288},"CityResidence":{"positionX":0,"positionY":0},"Line":{"positionX":518,"positionY":284},"Country":{"positionX":1580,"positionY":357},"Height":{"positionX":0,"positionY":0},"ImgFlag":{"positionX":1185,"positionY":296},"Surname":{"positionX":841,"positionY":287},"Age":{"positionX":0,"positionY":0}}},{"player5":{"Prizetotal":{"positionX":0,"positionY":0},"Birthplace":{"positionX":0,"positionY":0},"ImgJoueur":{"positionX":552,"positionY":687},"Rank":{"positionX":0,"positionY":0},"Birthdate":{"positionX":0,"positionY":0},"Hand":{"positionX":0,"positionY":0},"Seeding":{"positionX":884,"positionY":350},"Weight":{"positionX":0,"positionY":0},"Name":{"positionX":611,"positionY":350},"Acronyme":{"positionX":1314,"positionY":351},"CityResidence":{"positionX":0,"positionY":0},"Line":{"positionX":518,"positionY":346},"Country":{"positionX":1580,"positionY":655},"Height":{"positionX":0,"positionY":0},"ImgFlag":{"positionX":1185,"positionY":360},"Surname":{"positionX":765,"positionY":350},"Age":{"positionX":0,"positionY":0}}},{"player6":{"Prizetotal":{"positionX":0,"positionY":0},"Birthplace":{"positionX":0,"positionY":0},"ImgJoueur":{"positionX":552,"positionY":827},"Rank":{"positionX":0,"positionY":0},"Birthdate":{"positionX":0,"positionY":0},"Hand":{"positionX":0,"positionY":0},"Seeding":{"positionX":1008,"positionY":417},"Weight":{"positionX":0,"positionY":0},"Name":{"positionX":608,"positionY":417},"Acronyme":{"positionX":1318,"positionY":418},"CityResidence":{"positionX":0,"positionY":0},"Line":{"positionX":518,"positionY":415},"Country":{"positionX":1580,"positionY":300},"Height":{"positionX":0,"positionY":0},"ImgFlag":{"positionX":1185,"positionY":429},"Surname":{"positionX":860,"positionY":417},"Age":{"positionX":0,"positionY":0}}},{"player7":{"Prizetotal":{"positionX":0,"positionY":0},"Birthplace":{"positionX":0,"positionY":0},"ImgJoueur":{"positionX":552,"positionY":945},"Rank":{"positionX":0,"positionY":0},"Birthdate":{"positionX":0,"positionY":0},"Hand":{"positionX":0,"positionY":0},"Seeding":{"positionX":742,"positionY":479},"Weight":{"positionX":0,"positionY":0},"Name":{"positionX":607,"positionY":479},"Acronyme":{"positionX":1318,"positionY":479},"CityResidence":{"positionX":0,"positionY":0},"Line":{"positionX":518,"positionY":477},"Country":{"positionX":1580,"positionY":300},"Height":{"positionX":0,"positionY":0},"ImgFlag":{"positionX":1184,"positionY":489},"Surname":{"positionX":683,"positionY":479},"Age":{"positionX":0,"positionY":0}}},{"player8":{"Prizetotal":{"positionX":0,"positionY":0},"Birthplace":{"positionX":0,"positionY":0},"ImgJoueur":{"positionX":552,"positionY":98},"Rank":{"positionX":0,"positionY":0},"Birthdate":{"positionX":0,"positionY":0},"Hand":{"positionX":0,"positionY":0},"Seeding":{"positionX":1002,"positionY":545},"Weight":{"positionX":0,"positionY":0},"Name":{"positionX":609,"positionY":545},"Acronyme":{"positionX":1314,"positionY":547},"CityResidence":{"positionX":0,"positionY":0},"Line":{"positionX":518,"positionY":544},"Country":{"positionX":1580,"positionY":357},"Height":{"positionX":0,"positionY":0},"ImgFlag":{"positionX":1185,"positionY":553},"Surname":{"positionX":774,"positionY":545},"Age":{"positionX":0,"positionY":0}}},{"player9":{"Prizetotal":{"positionX":0,"positionY":0},"Birthplace":{"positionX":0,"positionY":0},"ImgJoueur":{"positionX":552,"positionY":172},"Rank":{"positionX":0,"positionY":0},"Birthdate":{"positionX":0,"positionY":0},"Hand":{"positionX":0,"positionY":0},"Seeding":{"positionX":1038,"positionY":607},"Weight":{"positionX":0,"positionY":0},"Name":{"positionX":613,"positionY":607},"Acronyme":{"positionX":1314,"positionY":613},"CityResidence":{"positionX":0,"positionY":0},"Line":{"positionX":518,"positionY":607},"Country":{"positionX":1580,"positionY":655},"Height":{"positionX":0,"positionY":0},"ImgFlag":{"positionX":1186,"positionY":621},"Surname":{"positionX":733,"positionY":607},"Age":{"positionX":0,"positionY":0}}},{"player10":{"Prizetotal":{"positionX":0,"positionY":0},"Birthplace":{"positionX":0,"positionY":0},"ImgJoueur":{"positionX":552,"positionY":307},"Rank":{"positionX":0,"positionY":0},"Birthdate":{"positionX":0,"positionY":0},"Hand":{"positionX":0,"positionY":0},"Seeding":{"positionX":961,"positionY":679},"Weight":{"positionX":0,"positionY":0},"Name":{"positionX":614,"positionY":679},"Acronyme":{"positionX":1313,"positionY":679},"CityResidence":{"positionX":0,"positionY":0},"Line":{"positionX":518,"positionY":673},"Country":{"positionX":1580,"positionY":300},"Height":{"positionX":0,"positionY":0},"ImgFlag":{"positionX":1186,"positionY":688},"Surname":{"positionX":844,"positionY":679},"Age":{"positionX":0,"positionY":0}}},{"player11":{"Prizetotal":{"positionX":0,"positionY":0},"Birthplace":{"positionX":0,"positionY":0},"ImgJoueur":{"positionX":552,"positionY":428},"Rank":{"positionX":0,"positionY":0},"Birthdate":{"positionX":0,"positionY":0},"Hand":{"positionX":0,"positionY":0},"Seeding":{"positionX":889,"positionY":741},"Weight":{"positionX":0,"positionY":0},"Name":{"positionX":616,"positionY":741},"Acronyme":{"positionX":1310,"positionY":742},"CityResidence":{"positionX":0,"positionY":0},"Line":{"positionX":518,"positionY":735},"Country":{"positionX":1580,"positionY":300},"Height":{"positionX":0,"positionY":0},"ImgFlag":{"positionX":1186,"positionY":749},"Surname":{"positionX":770,"positionY":741},"Age":{"positionX":0,"positionY":0}}},{"player12":{"Prizetotal":{"positionX":0,"positionY":0},"Birthplace":{"positionX":0,"positionY":0},"ImgJoueur":{"positionX":552,"positionY":558},"Rank":{"positionX":0,"positionY":0},"Birthdate":{"positionX":0,"positionY":0},"Hand":{"positionX":0,"positionY":0},"Seeding":{"positionX":1014,"positionY":806},"Weight":{"positionX":0,"positionY":0},"Name":{"positionX":614,"positionY":806},"Acronyme":{"positionX":1319,"positionY":809},"CityResidence":{"positionX":0,"positionY":0},"Line":{"positionX":518,"positionY":800},"Country":{"positionX":1580,"positionY":357},"Height":{"positionX":0,"positionY":0},"ImgFlag":{"positionX":1187,"positionY":817},"Surname":{"positionX":866,"positionY":806},"Age":{"positionX":0,"positionY":0}}},{"player13":{"Prizetotal":{"positionX":0,"positionY":0},"Birthplace":{"positionX":0,"positionY":0},"ImgJoueur":{"positionX":552,"positionY":687},"Rank":{"positionX":0,"positionY":0},"Birthdate":{"positionX":0,"positionY":0},"Hand":{"positionX":0,"positionY":0},"Seeding":{"positionX":751,"positionY":869},"Weight":{"positionX":0,"positionY":0},"Name":{"positionX":616,"positionY":869},"Acronyme":{"positionX":1317,"positionY":870},"CityResidence":{"positionX":0,"positionY":0},"Line":{"positionX":518,"positionY":866},"Country":{"positionX":1580,"positionY":655},"Height":{"positionX":0,"positionY":0},"ImgFlag":{"positionX":1187,"positionY":879},"Surname":{"positionX":692,"positionY":869},"Age":{"positionX":0,"positionY":0}}},{"player14":{"Prizetotal":{"positionX":0,"positionY":0},"Birthplace":{"positionX":0,"positionY":0},"ImgJoueur":{"positionX":552,"positionY":827},"Rank":{"positionX":0,"positionY":0},"Birthdate":{"positionX":0,"positionY":0},"Hand":{"positionX":0,"positionY":0},"Seeding":{"positionX":1011,"positionY":937},"Weight":{"positionX":0,"positionY":0},"Name":{"positionX":618,"positionY":937},"Acronyme":{"positionX":1316,"positionY":937},"CityResidence":{"positionX":0,"positionY":0},"Line":{"positionX":518,"positionY":934},"Country":{"positionX":1580,"positionY":300},"Height":{"positionX":0,"positionY":0},"ImgFlag":{"positionX":1191,"positionY":948},"Surname":{"positionX":783,"positionY":937},"Age":{"positionX":0,"positionY":0}}},{"player15":{"Prizetotal":{"positionX":0,"positionY":0},"Birthplace":{"positionX":0,"positionY":0},"ImgJoueur":{"positionX":552,"positionY":945},"Rank":{"positionX":0,"positionY":0},"Birthdate":{"positionX":0,"positionY":0},"Hand":{"positionX":0,"positionY":0},"Seeding":{"positionX":1045,"positionY":995},"Weight":{"positionX":0,"positionY":0},"Name":{"positionX":620,"positionY":995},"Acronyme":{"positionX":1319,"positionY":1000},"CityResidence":{"positionX":0,"positionY":0},"Line":{"positionX":518,"positionY":997},"Country":{"positionX":1580,"positionY":300},"Height":{"positionX":0,"positionY":0},"ImgFlag":{"positionX":1193,"positionY":1009},"Surname":{"positionX":740,"positionY":995},"Age":{"positionX":0,"positionY":0}}}],"playerPolice":{"Prizetotal":{"visible":false,"font":"Arial,1,25","color":"0,0,0","taille":0},"Birthplace":{"visible":false,"font":"Arial,1,25","color":"0,0,0","taille":0},"ImgJoueur":{"visible":false,"font":"Segoe UI,0,12","color":"187,187,187","taille":40},"Rank":{"visible":false,"font":"Arial,1,25","color":"0,0,0","taille":0},"Birthdate":{"visible":false,"font":"Arial,1,25","color":"0,0,0","taille":0},"Hand":{"visible":false,"font":"Arial,1,25","color":"0,0,0","taille":0},"Seeding":{"visible":true,"font":"Arial,1,45","color":"0,0,0","taille":0},"Weight":{"visible":false,"font":"Arial,1,25","color":"0,0,0","taille":0},"Name":{"visible":true,"font":"Arial,1,45","color":"0,0,0","taille":0},"Acronyme":{"visible":true,"font":"Arial,1,45","color":"51,51,51","taille":0},"CityResidence":{"visible":false,"font":"Arial,1,25","color":"0,0,0","taille":0},"Line":{"visible":true,"font":"Arial,3,50","color":"0,0,0","taille":0},"Country":{"visible":false,"font":"Arial,1,25","color":"0,0,0","taille":0},"Height":{"visible":false,"font":"Arial,1,25","color":"0,0,0","taille":0},"ImgFlag":{"visible":true,"font":"Segoe UI,0,12","color":"187,187,187","taille":35},"Surname":{"visible":true,"font":"Arial,1,45","color":"0,0,0","taille":0},"Age":{"visible":false,"font":"Arial,1,25","color":"0,0,0","taille":0}}}
+{
+    "tab": [
+        {
+            "player0": {
+                "Prizetotal": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthplace": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgJoueur": {
+                    "positionX": 551,
+                    "positionY": 36
+                },
+                "Rank": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthdate": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Hand": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Seeding": {
+                    "positionX": 1009,
+                    "positionY": 30
+                },
+                "Weight": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Name": {
+                    "positionX": 609,
+                    "positionY": 30
+                },
+                "Acronyme": {
+                    "positionX": 1308,
+                    "positionY": 24
+                },
+                "CityResidence": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Line": {
+                    "positionX": 518,
+                    "positionY": 24
+                },
+                "Country": {
+                    "positionX": 1580,
+                    "positionY": 357
+                },
+                "Height": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgFlag": {
+                    "positionX": 1188,
+                    "positionY": 38
+                },
+                "Surname": {
+                    "positionX": 861,
+                    "positionY": 30
+                },
+                "Age": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
+                }
+            }
+        },
+        {
+            "player1": {
+                "Prizetotal": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthplace": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgJoueur": {
+                    "positionX": 552,
+                    "positionY": 172
+                },
+                "Rank": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthdate": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Hand": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Seeding": {
+                    "positionX": 743,
+                    "positionY": 91
+                },
+                "Weight": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Name": {
+                    "positionX": 608,
+                    "positionY": 91
+                },
+                "Acronyme": {
+                    "positionX": 1307,
+                    "positionY": 92
+                },
+                "CityResidence": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Line": {
+                    "positionX": 518,
+                    "positionY": 87
+                },
+                "Country": {
+                    "positionX": 1580,
+                    "positionY": 655
+                },
+                "Height": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgFlag": {
+                    "positionX": 1187,
+                    "positionY": 100
+                },
+                "Surname": {
+                    "positionX": 684,
+                    "positionY": 91
+                },
+                "Age": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
+                }
+            }
+        },
+        {
+            "player2": {
+                "Prizetotal": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthplace": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgJoueur": {
+                    "positionX": 552,
+                    "positionY": 307
+                },
+                "Rank": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthdate": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Hand": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Seeding": {
+                    "positionX": 1005,
+                    "positionY": 157
+                },
+                "Weight": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Name": {
+                    "positionX": 612,
+                    "positionY": 157
+                },
+                "Acronyme": {
+                    "positionX": 1306,
+                    "positionY": 158
+                },
+                "CityResidence": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Line": {
+                    "positionX": 518,
+                    "positionY": 154
+                },
+                "Country": {
+                    "positionX": 1580,
+                    "positionY": 300
+                },
+                "Height": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgFlag": {
+                    "positionX": 1186,
+                    "positionY": 167
+                },
+                "Surname": {
+                    "positionX": 777,
+                    "positionY": 157
+                },
+                "Age": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
+                }
+            }
+        },
+        {
+            "player3": {
+                "Prizetotal": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthplace": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgJoueur": {
+                    "positionX": 552,
+                    "positionY": 428
+                },
+                "Rank": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthdate": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Hand": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Seeding": {
+                    "positionX": 1036,
+                    "positionY": 217
+                },
+                "Weight": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Name": {
+                    "positionX": 611,
+                    "positionY": 217
+                },
+                "Acronyme": {
+                    "positionX": 1310,
+                    "positionY": 222
+                },
+                "CityResidence": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Line": {
+                    "positionX": 518,
+                    "positionY": 217
+                },
+                "Country": {
+                    "positionX": 1580,
+                    "positionY": 300
+                },
+                "Height": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgFlag": {
+                    "positionX": 1186,
+                    "positionY": 231
+                },
+                "Surname": {
+                    "positionX": 731,
+                    "positionY": 217
+                },
+                "Age": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
+                }
+            }
+        },
+        {
+            "player4": {
+                "Prizetotal": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthplace": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgJoueur": {
+                    "positionX": 552,
+                    "positionY": 558
+                },
+                "Rank": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthdate": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Hand": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Seeding": {
+                    "positionX": 958,
+                    "positionY": 287
+                },
+                "Weight": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Name": {
+                    "positionX": 611,
+                    "positionY": 287
+                },
+                "Acronyme": {
+                    "positionX": 1310,
+                    "positionY": 288
+                },
+                "CityResidence": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Line": {
+                    "positionX": 518,
+                    "positionY": 284
+                },
+                "Country": {
+                    "positionX": 1580,
+                    "positionY": 357
+                },
+                "Height": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgFlag": {
+                    "positionX": 1185,
+                    "positionY": 296
+                },
+                "Surname": {
+                    "positionX": 841,
+                    "positionY": 287
+                },
+                "Age": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
+                }
+            }
+        },
+        {
+            "player5": {
+                "Prizetotal": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthplace": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgJoueur": {
+                    "positionX": 552,
+                    "positionY": 687
+                },
+                "Rank": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthdate": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Hand": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Seeding": {
+                    "positionX": 884,
+                    "positionY": 350
+                },
+                "Weight": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Name": {
+                    "positionX": 611,
+                    "positionY": 350
+                },
+                "Acronyme": {
+                    "positionX": 1314,
+                    "positionY": 351
+                },
+                "CityResidence": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Line": {
+                    "positionX": 518,
+                    "positionY": 346
+                },
+                "Country": {
+                    "positionX": 1580,
+                    "positionY": 655
+                },
+                "Height": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgFlag": {
+                    "positionX": 1185,
+                    "positionY": 360
+                },
+                "Surname": {
+                    "positionX": 765,
+                    "positionY": 350
+                },
+                "Age": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
+                }
+            }
+        },
+        {
+            "player6": {
+                "Prizetotal": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthplace": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgJoueur": {
+                    "positionX": 552,
+                    "positionY": 827
+                },
+                "Rank": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthdate": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Hand": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Seeding": {
+                    "positionX": 1008,
+                    "positionY": 417
+                },
+                "Weight": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Name": {
+                    "positionX": 608,
+                    "positionY": 417
+                },
+                "Acronyme": {
+                    "positionX": 1318,
+                    "positionY": 418
+                },
+                "CityResidence": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Line": {
+                    "positionX": 518,
+                    "positionY": 415
+                },
+                "Country": {
+                    "positionX": 1580,
+                    "positionY": 300
+                },
+                "Height": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgFlag": {
+                    "positionX": 1185,
+                    "positionY": 429
+                },
+                "Surname": {
+                    "positionX": 860,
+                    "positionY": 417
+                },
+                "Age": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
+                }
+            }
+        },
+        {
+            "player7": {
+                "Prizetotal": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthplace": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgJoueur": {
+                    "positionX": 552,
+                    "positionY": 945
+                },
+                "Rank": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthdate": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Hand": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Seeding": {
+                    "positionX": 742,
+                    "positionY": 479
+                },
+                "Weight": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Name": {
+                    "positionX": 607,
+                    "positionY": 479
+                },
+                "Acronyme": {
+                    "positionX": 1318,
+                    "positionY": 479
+                },
+                "CityResidence": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Line": {
+                    "positionX": 518,
+                    "positionY": 477
+                },
+                "Country": {
+                    "positionX": 1580,
+                    "positionY": 300
+                },
+                "Height": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgFlag": {
+                    "positionX": 1184,
+                    "positionY": 489
+                },
+                "Surname": {
+                    "positionX": 683,
+                    "positionY": 479
+                },
+                "Age": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
+                }
+            }
+        },
+        {
+            "player8": {
+                "Prizetotal": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthplace": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgJoueur": {
+                    "positionX": 552,
+                    "positionY": 98
+                },
+                "Rank": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthdate": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Hand": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Seeding": {
+                    "positionX": 1002,
+                    "positionY": 545
+                },
+                "Weight": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Name": {
+                    "positionX": 609,
+                    "positionY": 545
+                },
+                "Acronyme": {
+                    "positionX": 1314,
+                    "positionY": 547
+                },
+                "CityResidence": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Line": {
+                    "positionX": 518,
+                    "positionY": 544
+                },
+                "Country": {
+                    "positionX": 1580,
+                    "positionY": 357
+                },
+                "Height": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgFlag": {
+                    "positionX": 1185,
+                    "positionY": 553
+                },
+                "Surname": {
+                    "positionX": 774,
+                    "positionY": 545
+                },
+                "Age": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
+                }
+            }
+        },
+        {
+            "player9": {
+                "Prizetotal": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthplace": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgJoueur": {
+                    "positionX": 552,
+                    "positionY": 172
+                },
+                "Rank": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthdate": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Hand": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Seeding": {
+                    "positionX": 1038,
+                    "positionY": 607
+                },
+                "Weight": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Name": {
+                    "positionX": 613,
+                    "positionY": 607
+                },
+                "Acronyme": {
+                    "positionX": 1314,
+                    "positionY": 613
+                },
+                "CityResidence": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Line": {
+                    "positionX": 518,
+                    "positionY": 607
+                },
+                "Country": {
+                    "positionX": 1580,
+                    "positionY": 655
+                },
+                "Height": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgFlag": {
+                    "positionX": 1186,
+                    "positionY": 621
+                },
+                "Surname": {
+                    "positionX": 733,
+                    "positionY": 607
+                },
+                "Age": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
+                }
+            }
+        },
+        {
+            "player10": {
+                "Prizetotal": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthplace": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgJoueur": {
+                    "positionX": 552,
+                    "positionY": 307
+                },
+                "Rank": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthdate": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Hand": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Seeding": {
+                    "positionX": 961,
+                    "positionY": 679
+                },
+                "Weight": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Name": {
+                    "positionX": 614,
+                    "positionY": 679
+                },
+                "Acronyme": {
+                    "positionX": 1313,
+                    "positionY": 679
+                },
+                "CityResidence": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Line": {
+                    "positionX": 518,
+                    "positionY": 673
+                },
+                "Country": {
+                    "positionX": 1580,
+                    "positionY": 300
+                },
+                "Height": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgFlag": {
+                    "positionX": 1186,
+                    "positionY": 688
+                },
+                "Surname": {
+                    "positionX": 844,
+                    "positionY": 679
+                },
+                "Age": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
+                }
+            }
+        },
+        {
+            "player11": {
+                "Prizetotal": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthplace": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgJoueur": {
+                    "positionX": 552,
+                    "positionY": 428
+                },
+                "Rank": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthdate": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Hand": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Seeding": {
+                    "positionX": 889,
+                    "positionY": 741
+                },
+                "Weight": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Name": {
+                    "positionX": 616,
+                    "positionY": 741
+                },
+                "Acronyme": {
+                    "positionX": 1310,
+                    "positionY": 742
+                },
+                "CityResidence": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Line": {
+                    "positionX": 518,
+                    "positionY": 735
+                },
+                "Country": {
+                    "positionX": 1580,
+                    "positionY": 300
+                },
+                "Height": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgFlag": {
+                    "positionX": 1186,
+                    "positionY": 749
+                },
+                "Surname": {
+                    "positionX": 770,
+                    "positionY": 741
+                },
+                "Age": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
+                }
+            }
+        },
+        {
+            "player12": {
+                "Prizetotal": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthplace": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgJoueur": {
+                    "positionX": 552,
+                    "positionY": 558
+                },
+                "Rank": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthdate": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Hand": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Seeding": {
+                    "positionX": 1014,
+                    "positionY": 806
+                },
+                "Weight": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Name": {
+                    "positionX": 614,
+                    "positionY": 806
+                },
+                "Acronyme": {
+                    "positionX": 1319,
+                    "positionY": 809
+                },
+                "CityResidence": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Line": {
+                    "positionX": 518,
+                    "positionY": 800
+                },
+                "Country": {
+                    "positionX": 1580,
+                    "positionY": 357
+                },
+                "Height": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgFlag": {
+                    "positionX": 1187,
+                    "positionY": 817
+                },
+                "Surname": {
+                    "positionX": 866,
+                    "positionY": 806
+                },
+                "Age": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
+                }
+            }
+        },
+        {
+            "player13": {
+                "Prizetotal": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthplace": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgJoueur": {
+                    "positionX": 552,
+                    "positionY": 687
+                },
+                "Rank": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthdate": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Hand": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Seeding": {
+                    "positionX": 751,
+                    "positionY": 869
+                },
+                "Weight": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Name": {
+                    "positionX": 616,
+                    "positionY": 869
+                },
+                "Acronyme": {
+                    "positionX": 1317,
+                    "positionY": 870
+                },
+                "CityResidence": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Line": {
+                    "positionX": 518,
+                    "positionY": 866
+                },
+                "Country": {
+                    "positionX": 1580,
+                    "positionY": 655
+                },
+                "Height": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgFlag": {
+                    "positionX": 1187,
+                    "positionY": 879
+                },
+                "Surname": {
+                    "positionX": 692,
+                    "positionY": 869
+                },
+                "Age": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
+                }
+            }
+        },
+        {
+            "player14": {
+                "Prizetotal": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthplace": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgJoueur": {
+                    "positionX": 552,
+                    "positionY": 827
+                },
+                "Rank": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthdate": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Hand": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Seeding": {
+                    "positionX": 1011,
+                    "positionY": 937
+                },
+                "Weight": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Name": {
+                    "positionX": 618,
+                    "positionY": 937
+                },
+                "Acronyme": {
+                    "positionX": 1316,
+                    "positionY": 937
+                },
+                "CityResidence": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Line": {
+                    "positionX": 518,
+                    "positionY": 934
+                },
+                "Country": {
+                    "positionX": 1580,
+                    "positionY": 300
+                },
+                "Height": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgFlag": {
+                    "positionX": 1191,
+                    "positionY": 948
+                },
+                "Surname": {
+                    "positionX": 783,
+                    "positionY": 937
+                },
+                "Age": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
+                }
+            }
+        },
+        {
+            "player15": {
+                "Prizetotal": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthplace": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgJoueur": {
+                    "positionX": 552,
+                    "positionY": 945
+                },
+                "Rank": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Birthdate": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Hand": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Seeding": {
+                    "positionX": 1045,
+                    "positionY": 995
+                },
+                "Weight": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Name": {
+                    "positionX": 620,
+                    "positionY": 995
+                },
+                "Acronyme": {
+                    "positionX": 1319,
+                    "positionY": 1000
+                },
+                "CityResidence": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "Line": {
+                    "positionX": 518,
+                    "positionY": 997
+                },
+                "Country": {
+                    "positionX": 1580,
+                    "positionY": 300
+                },
+                "Height": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "ImgFlag": {
+                    "positionX": 1193,
+                    "positionY": 1009
+                },
+                "Surname": {
+                    "positionX": 740,
+                    "positionY": 995
+                },
+                "Age": {
+                    "positionX": 0,
+                    "positionY": 0
+                },
+                "DisplayName": {
+                    "positionX": 922,
+                    "positionY": 781
+                }
+            }
+        }
+    ],
+    "playerPolice": {
+        "Prizetotal": {
+            "visible": false,
+            "font": "Arial,1,25",
+            "color": "0,0,0",
+            "taille": 0
+        },
+        "Birthplace": {
+            "visible": false,
+            "font": "Arial,1,25",
+            "color": "0,0,0",
+            "taille": 0
+        },
+        "ImgJoueur": {
+            "visible": false,
+            "font": "Segoe UI,0,12",
+            "color": "187,187,187",
+            "taille": 40
+        },
+        "Rank": {
+            "visible": false,
+            "font": "Arial,1,25",
+            "color": "0,0,0",
+            "taille": 0
+        },
+        "Birthdate": {
+            "visible": false,
+            "font": "Arial,1,25",
+            "color": "0,0,0",
+            "taille": 0
+        },
+        "Hand": {
+            "visible": false,
+            "font": "Arial,1,25",
+            "color": "0,0,0",
+            "taille": 0
+        },
+        "Seeding": {
+            "visible": true,
+            "font": "Arial,1,45",
+            "color": "0,0,0",
+            "taille": 0
+        },
+        "Weight": {
+            "visible": false,
+            "font": "Arial,1,25",
+            "color": "0,0,0",
+            "taille": 0
+        },
+        "Name": {
+            "visible": true,
+            "font": "Arial,1,45",
+            "color": "0,0,0",
+            "taille": 0
+        },
+        "Acronyme": {
+            "visible": true,
+            "font": "Arial,1,45",
+            "color": "51,51,51",
+            "taille": 0
+        },
+        "CityResidence": {
+            "visible": false,
+            "font": "Arial,1,25",
+            "color": "0,0,0",
+            "taille": 0
+        },
+        "Line": {
+            "visible": true,
+            "font": "Arial,3,50",
+            "color": "0,0,0",
+            "taille": 0
+        },
+        "Country": {
+            "visible": false,
+            "font": "Arial,1,25",
+            "color": "0,0,0",
+            "taille": 0
+        },
+        "Height": {
+            "visible": false,
+            "font": "Arial,1,25",
+            "color": "0,0,0",
+            "taille": 0
+        },
+        "ImgFlag": {
+            "visible": true,
+            "font": "Segoe UI,0,12",
+            "color": "187,187,187",
+            "taille": 35
+        },
+        "Surname": {
+            "visible": true,
+            "font": "Arial,1,45",
+            "color": "0,0,0",
+            "taille": 0
+        },
+        "Age": {
+            "visible": false,
+            "font": "Arial,1,25",
+            "color": "0,0,0",
+            "taille": 0
+        },
+        "DisplayName": {
+            "visible": false,
+            "font": "Arial,0,30",
+            "color": "102,102,102",
+            "taille": 0
+        }
+    }
+}
