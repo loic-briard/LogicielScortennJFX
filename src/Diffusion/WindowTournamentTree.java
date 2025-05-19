@@ -276,7 +276,11 @@ public class WindowTournamentTree extends JFrame {
 		comboBox.setSelectedIndex(-1);
 
 		JButton playerButton = new JButton("Player");
-		playerButton.addActionListener(e -> handlePlayerSelection(comboBox, playerIndex, panelIndex));
+		playerButton.addActionListener(e ->
+		{
+			if (!panelAnimationConfiguration.isAnimRunning()) 
+				handlePlayerSelection(comboBox, playerIndex, panelIndex);
+		});
 		int ligne = playerIndex + (nbJoueur / 4) * panelIndex+1;
 		
 		tabComboBox[ligne-1] = comboBox;
@@ -300,7 +304,7 @@ public class WindowTournamentTree extends JFrame {
 		for (int i = 0; i < (nbJoueur / 8); i++) {
 			JButton gameButton = new JButton("Game");
 			int buttonIndex = i;
-			gameButton.addActionListener(e -> handleGameSelection(buttonIndex, indexPanel));
+			gameButton.addActionListener(e -> {if (!panelAnimationConfiguration.isAnimRunning()) handleGameSelection(buttonIndex, indexPanel);});
 			gamePanel.add(gameButton);
 		}
 
@@ -315,7 +319,7 @@ public class WindowTournamentTree extends JFrame {
 	 */
 	private JButton createTabButton(int indexPanel) {
 		JButton tabButton = new JButton("Tab");
-		tabButton.addActionListener(e -> handleTabSelection(indexPanel));
+		tabButton.addActionListener(e -> {if (!panelAnimationConfiguration.isAnimRunning()) handleTabSelection(indexPanel);});
 		return tabButton;
 	}
 
@@ -491,7 +495,7 @@ public class WindowTournamentTree extends JFrame {
 					windowConfigPlayer.tabbedPane.removeAll();
 					windowConfigPlayer.tabbedPane.revalidate();
 					windowConfigPlayer.tabbedPane.repaint();
-					windowConfigPlayer.setTypeFenetre("game");
+					windowConfigPlayer.setTypeFenetre("player");
 					updateWindowConfig();
 				}
 //			SwingUtilities.invokeLater(() -> {
@@ -633,7 +637,7 @@ public class WindowTournamentTree extends JFrame {
 				windowConfigPlayer.tabbedPane.removeAll();
 				windowConfigPlayer.tabbedPane.revalidate();
 				windowConfigPlayer.tabbedPane.repaint();
-				windowConfigPlayer.setTypeFenetre("game");
+				windowConfigPlayer.setTypeFenetre("tab");
 				updateWindowConfig();
 			}
 			// création/mise à jour de la fenetre de config de tab

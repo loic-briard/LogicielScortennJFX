@@ -550,7 +550,7 @@ public class PanelAnimationConfiguration extends JPanel {
 	public void animateLABEL(JPanel panel, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, Integer layer, JLayeredPane layeredPane, Runnable onComplete) {
 		System.out.println("isLabelAnimationEnabled "+isLabelAnimationEnabled());
 	    if(!isLabelAnimationEnabled()) {
-	        if(onComplete != null)
+	        if(onComplete != null) 
 	            onComplete.run();
 	    } else {
 //	        System.out.println("Animation LABEL");
@@ -588,12 +588,14 @@ public class PanelAnimationConfiguration extends JPanel {
 	 * @param onComplete the on complete
 	 */
 	private void animateLabel(JLabel label, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, int duration, JLayeredPane layeredPane, Integer layer, Runnable onComplete) {
-	    currentAnimationTimer = createTimer(true, duration, (progress) -> {
+	    animRunning = true;
+		currentAnimationTimer = createTimer(true, duration, (progress) -> {
 	        boolean targetReached = updateLabelProperties(label, targetLocation, targetSize, targetColor, targetFont, progress);
 	        if (progress >= 1.0 || targetReached) {
 	            currentAnimationTimer.stop();
+	            animRunning = false;                  // ► l’animation est finie
 	            if (onComplete != null) {
-	                onComplete.run();
+	                onComplete.run();              // ► l’animation est finie
 	            }
 	            cleanupAnimation(layeredPane, layer);
 	        }
@@ -771,7 +773,8 @@ public class PanelAnimationConfiguration extends JPanel {
 	    final long start = System.nanoTime();
 	    final int dW = targetW - initialW;
 	    final int dH = targetH - initialH;
-
+	    
+	    animRunning = true;
 	    panel.setDoubleBuffered(false);
 	    Timer timer = new Timer(2, null);
 	    timer.addActionListener(ev -> {
@@ -801,6 +804,7 @@ public class PanelAnimationConfiguration extends JPanel {
 	        if (prog >= 1.0) {
 	            timer.stop();
 	            panel.setDoubleBuffered(true);
+	            animRunning = false;                  // ► l’animation est finie
 	            if (onComplete != null) SwingUtilities.invokeLater(onComplete);
 	        }
 	    });
@@ -928,6 +932,9 @@ public class PanelAnimationConfiguration extends JPanel {
                ? (JComponent) ((JLayer<?>) possibleLayerView.getParent()).getView()   // cas emballé
                : possibleLayerView;                                      // cas normal
     }
+    
+    public volatile static boolean animRunning = false;   // accès cross-thread OK
+    public boolean isAnimRunning() { return animRunning; }
 
     
     /**

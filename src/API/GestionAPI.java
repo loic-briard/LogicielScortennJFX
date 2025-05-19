@@ -470,11 +470,12 @@ public class GestionAPI {
 			// recupération des differentes infos
 			int i_rankingValue = ranking.getInt("ranking");
 			JSONObject teamID = ranking.getJSONObject("team");
-
+			
 			String s_fullName = ranking.getString("rowName");
+//			System.out.println("fullname : "+s_fullName);
 
-			String s_name = teamID.getString("name").split("\\.")[teamID.getString("name").split("\\.").length - 1]
-					.trim().replace("-", " ");
+			String[] parts = teamID.getString("shortName").split("\\.");
+			String s_name  = parts[parts.length-1].trim().replace("-", " ");
 
 			int i_size_surname = s_fullName.split(" ").length - s_name.split(" ").length;
 			String s_surname = "";
@@ -482,8 +483,9 @@ public class GestionAPI {
 			for (int j = 0; j < i_size_surname; j++) {
 				s_surname += s_fullName.split(" ")[j] + " ";
 			}
-
-			String s_displayName = teamID.getString("shortName");
+//			System.out.println(" name : "+s_name+", surname : "+s_surname);
+			
+			String s_displayName = s_fullName;
 			String s_alpha3 = "";
 			if (teamID.has("country")) {
 				JSONObject countryObject = teamID.getJSONObject("country");
@@ -539,8 +541,8 @@ public class GestionAPI {
 
 			String s_fullName = ranking.getString("rowName");
 
-			String s_name = teamID.getString("name").split("\\.")[teamID.getString("name").split("\\.").length - 1]
-					.trim().replace("-", " ");
+			String[] parts = teamID.getString("shortName").split("\\.");
+			String s_name  = parts[parts.length-1].trim().replace("-", " ");
 
 			int i_size_surname = s_fullName.split(" ").length - s_name.split(" ").length;
 			String s_surname = "";
@@ -549,7 +551,7 @@ public class GestionAPI {
 				s_surname += s_fullName.split(" ")[j] + " ";
 			}
 
-			String s_displayName = teamID.getString("shortName");
+			String s_displayName = s_fullName;
 			String s_alpha3 = "";
 			if (teamID.has("country")) {
 				JSONObject countryObject = teamID.getJSONObject("country");

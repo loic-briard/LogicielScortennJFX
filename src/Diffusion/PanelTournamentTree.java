@@ -355,11 +355,13 @@ public class PanelTournamentTree extends JPanel {
         this.blinkCount = blinkCounts;
         this.currentBlinkCount = 0;
     	
+        PanelAnimationConfiguration.animRunning = true;
     	if (animationTimer != null) {
             animationTimer.stop();
         }
     	if (blinkCount == 0) {
             // Si blinkCount est 0, on change simplement la couleur pendant la durée spécifiée
+    		
             isBlinking = false;
             this.pathColor = selectedPlayerPathColor;
             animationTimer = new Timer(animationDuration, e -> {
@@ -367,6 +369,7 @@ public class PanelTournamentTree extends JPanel {
 //                selectedPlayerIndex = -10; // Reset l'index du joueur sélectionné
                 repaint();
                 ((Timer)e.getSource()).stop();
+                PanelAnimationConfiguration.animRunning = false;
             });
             animationTimer.setRepeats(false);
         }else {
@@ -374,6 +377,7 @@ public class PanelTournamentTree extends JPanel {
             isBlinking = true;
             this.pathColor = treeColor;
             int blinkInterval = animationDuration / (2 * blinkCount);
+//            PanelAnimationConfiguration.animRunning = true;
             animationTimer = new Timer(blinkInterval, e -> {
                 isBlinking = !isBlinking;
                 if(!isBlinking)
@@ -387,6 +391,7 @@ public class PanelTournamentTree extends JPanel {
                 	repaint();
 //                    selectedPlayerIndex = -10; // Reset l'index du joueur sélectionné
                     ((Timer)e.getSource()).stop();
+                    PanelAnimationConfiguration.animRunning = false;
                 }
             });
         }        

@@ -128,12 +128,12 @@ public class BDD_v2 {
 	public static void suppressionsDesTables() throws ClassNotFoundException, SQLException {
 		// nom des tales � d�finir
 		String requete = "";
-		requete += "DROP TABLE CUSTOM IF EXISTS;";
-		requete += "DROP TABLE WTA IF EXISTS;";
+//		requete += "DROP TABLE CUSTOM IF EXISTS;";
+//		requete += "DROP TABLE WTA IF EXISTS;";
 		requete += "DROP TABLE ATP IF EXISTS;";
 //		requete += "DROP TABLE LIST_8_JOUEUR IF EXISTS;";
-		requete += "DROP TABLE Background IF EXISTS;";
-		requete += "DROP TABLE Event IF EXISTS;";
+//		requete += "DROP TABLE Background IF EXISTS;";
+//		requete += "DROP TABLE Event IF EXISTS;";
 //		requete += "DROP TABLE FLAG IF EXISTS;";
 
 		executerRequeteSQL(requete);
