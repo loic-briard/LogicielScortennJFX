@@ -4,6 +4,7 @@
 package Main;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -111,7 +112,7 @@ public class MainJFX {
 	// M�thode pour tester si un dossier existe dans le JAR
 	private static void testFolderInJar(String folderName) throws IOException {
 		// Obtention du contenu du dossier depuis le JAR
-		InputStream inputStream = MainJFX.class.getClassLoader().getResourceAsStream(folderName);
+		InputStream inputStream = MainJFX.class.getClassLoader().getResourceAsStream("resources"+File.separator+folderName);
 		if (inputStream != null) {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 			System.out.println("+ Contenu du dossier \"" + folderName + "\" dans le JAR :");
