@@ -94,6 +94,9 @@ public class MainJFX {
 //		API.TAB_WTA();
 //		BDD_v2.insertionDrapeauDansBDD(new Drapeau("clear", "clear.png"));
 
+		System.setProperty("sun.java2d.opengl","true");
+		System.setProperty("sun.java2d.d3d","true");
+		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				MenuPrincipal app = new MenuPrincipal();

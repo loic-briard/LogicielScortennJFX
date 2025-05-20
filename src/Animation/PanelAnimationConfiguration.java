@@ -570,7 +570,7 @@ public class PanelAnimationConfiguration extends JPanel {
 	        
 			ghosts.add(animatedLabel);
 	        setupAnimatedLabel(animatedLabel, startLabel, panel, layeredPane, layer,targetSize);
-	        animateLabel(animatedLabel, targetLocation, targetSize, targetColor, targetFont, getLabelAnimationDuration(), layeredPane, onComplete);
+	        animateLabel(animatedLabel, targetLocation, targetSize, targetColor, targetFont, getLabelAnimationDuration(), layeredPane, onComplete,ghosts);
 	    }
 	}
 
@@ -614,6 +614,24 @@ public class PanelAnimationConfiguration extends JPanel {
     
     private static final DoubleUnaryOperator EASE =
             t -> t < .5 ? 2 * t * t : -1 + (4 - 2 * t) * t;   // quad in-out
+            
+            
+    /**
+     * Retourne un Rectangle qui englobe tous les ghosts.
+     * Si la liste est vide, renvoie null.
+     */
+    private static Rectangle unionOfAllGhostBounds(List<? extends JComponent> ghosts) {
+        Rectangle r = null;
+        for (JComponent c : ghosts) {
+            if (r == null) {
+                r = new Rectangle(c.getBounds());
+            } else {
+                r = r.union(c.getBounds());
+            }
+        }
+        return r;
+    }
+
 	/**
      * Fait glisser / redimensionner un JLabel jusqu'à la destination voulue.
      *
@@ -626,6 +644,7 @@ public class PanelAnimationConfiguration extends JPanel {
      * @param lp           layered pane de la fenêtre
      * @param baseLayer    couche de référence (POPUP_LAYER, etc.)
      * @param onComplete   callback facultatif à la fin
+	 * @param ghosts 
      */
     public void animateLabel(
             JLabel        label,
@@ -635,7 +654,7 @@ public class PanelAnimationConfiguration extends JPanel {
             Font          targetFont,   // null = inchangé
             int           durationMs,
             JLayeredPane  layeredPane,
-            Runnable      onComplete) {
+            Runnable      onComplete, List<JComponent> ghosts) {
 
         /* bornes INITIAL : on ne les touche plus après cette ligne */
         final int x0 = label.getX();
@@ -656,8 +675,10 @@ public class PanelAnimationConfiguration extends JPanel {
         animRunning = true;
         final long startNs = System.nanoTime();
 
-        Timer timer = new Timer(18, null);
+        Timer timer = new Timer(14, null);//60hz
         timer.addActionListener(e -> {
+        	
+            
             double   elapsedMs = (System.nanoTime() - startNs) / 1_000_000.0;
             double   t         = Math.min(1.0, elapsedMs / durationMs);
             double   p         = EASE.applyAsDouble(t);
@@ -676,7 +697,9 @@ public class PanelAnimationConfiguration extends JPanel {
                 if (targetFont != null)
                     label.setFont(targetFont.deriveFont(startSize + dSize * (float) p));
 
-                layeredPane.repaint();
+                Rectangle dirty = unionOfAllGhostBounds(ghosts);
+                if (dirty != null) layeredPane.repaint(dirty);
+//                layeredPane.repaint();
             });
 
             if (t >= 1.0) {                 // animation terminée
@@ -839,7 +862,8 @@ public class PanelAnimationConfiguration extends JPanel {
 	    
 	    animRunning = true;
 	    panel.setDoubleBuffered(false);
-	    Timer timer = new Timer(2, null);
+	    Timer timer = new Timer(14, null);
+	    timer.setCoalesce(true);
 	    timer.addActionListener(ev -> {
 	        long ms      = (System.nanoTime() - start) / 1_000_000;
 	        double prog  = Math.min(1.0, (double) ms / duration);

@@ -700,8 +700,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 			/* on mémorise le ghost avant de l’animer */
 //			ghosts.add(startPanel);
 
-			animationPanel.animateLABEL(startPanel, endPoint, endDim, endColor, endFont, JLayeredPane.POPUP_LAYER,frameForDiffusion.getLayeredPane(),
-					ghosts, () -> {
+			animationPanel.animateLABEL(startPanel, endPoint, endDim, endColor, endFont, JLayeredPane.POPUP_LAYER,frameForDiffusion.getLayeredPane(),ghosts, () -> {
 						/* callback appelé à la FIN de ce label */
 						if (remaining.decrementAndGet() == 0) { // ← dernier ?
 							/* ① on affiche le panneau définitif */
