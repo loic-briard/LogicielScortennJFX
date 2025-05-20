@@ -23,6 +23,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.List;
+import java.util.function.DoubleUnaryOperator;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -90,9 +92,6 @@ public class PanelAnimationConfiguration extends JPanel {
     /** The window tournament tree. */
     private WindowTournamentTree windowTournamentTree;
     
-    /** The current animation timer. */
-    private Timer currentAnimationTimer;
-
     /**
      * Instantiates a new panel animation configuration.
      *
@@ -547,7 +546,7 @@ public class PanelAnimationConfiguration extends JPanel {
 	 * @param layeredPane the layered pane
 	 * @param onComplete the on complete
 	 */
-	public void animateLABEL(JPanel panel, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, Integer layer, JLayeredPane layeredPane, Runnable onComplete) {
+	public void animateLABEL(JPanel panel, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, Integer layer, JLayeredPane layeredPane,List<JComponent> ghosts, Runnable onComplete) {
 		System.out.println("isLabelAnimationEnabled "+isLabelAnimationEnabled());
 	    if(!isLabelAnimationEnabled()) {
 	        if(onComplete != null) 
@@ -569,8 +568,9 @@ public class PanelAnimationConfiguration extends JPanel {
 				animatedLabel.setFont(targetFont);
 			}
 	        
-	        setupAnimatedLabel(animatedLabel, startLabel, panel, layeredPane, layer);
-	        animateLabel(animatedLabel, targetLocation, targetSize, targetColor, targetFont, getLabelAnimationDuration(), layeredPane, layer, onComplete);
+			ghosts.add(animatedLabel);
+	        setupAnimatedLabel(animatedLabel, startLabel, panel, layeredPane, layer,targetSize);
+	        animateLabel(animatedLabel, targetLocation, targetSize, targetColor, targetFont, getLabelAnimationDuration(), layeredPane, onComplete);
 	    }
 	}
 
@@ -587,49 +587,112 @@ public class PanelAnimationConfiguration extends JPanel {
 	 * @param layer the layer
 	 * @param onComplete the on complete
 	 */
-	private void animateLabel(JLabel label, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, int duration, JLayeredPane layeredPane, Integer layer, Runnable onComplete) {
-	    animRunning = true;
-		currentAnimationTimer = createTimer(true, duration, (progress) -> {
-	        boolean targetReached = updateLabelProperties(label, targetLocation, targetSize, targetColor, targetFont, progress);
-	        if (progress >= 1.0 || targetReached) {
-	            currentAnimationTimer.stop();
-	            animRunning = false;                  // ► l’animation est finie
-	            if (onComplete != null) {
-	                onComplete.run();              // ► l’animation est finie
-	            }
-	            cleanupAnimation(layeredPane, layer);
-	        }
-	    });
-	    currentAnimationTimer.start();
-	}
-
+//	private void animateLabel(JLabel label, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, int duration, JLayeredPane layeredPane, Integer layer, Runnable onComplete) {
+//	    animRunning = true;
+//		currentAnimationTimer = createTimer(true, duration, (progress) -> {
+//	        boolean targetReached = updateLabelProperties(label, targetLocation, targetSize, targetColor, targetFont, progress);
+//	        if (progress >= 1.0 || targetReached) {
+//	            currentAnimationTimer.stop();
+//	            animRunning = false;                  // ► l’animation est finie
+//	            if (onComplete != null) {
+//	                onComplete.run();              // ► l’animation est finie
+//	            }
+//	            cleanupAnimation(layeredPane, layer);
+//	        }
+//	    });
+//	    currentAnimationTimer.start();
+//	}
+	
+    /** Interpolation linéaire sur chaque canal ARGB. */
+    private static Color interpolateColor(Color c1, Color c2, float p) {
+        int a = (int) (c1.getAlpha() + (c2.getAlpha() - c1.getAlpha()) * p);
+        int r = (int) (c1.getRed  () + (c2.getRed  () - c1.getRed  ()) * p);
+        int g = (int) (c1.getGreen() + (c2.getGreen() - c1.getGreen()) * p);
+        int b = (int) (c1.getBlue () + (c2.getBlue () - c1.getBlue ()) * p);
+        return new Color(r, g, b, a);
+    }
+    
+    private static final DoubleUnaryOperator EASE =
+            t -> t < .5 ? 2 * t * t : -1 + (4 - 2 * t) * t;   // quad in-out
 	/**
-	 * Update label properties.
-	 *
-	 * @param label the label
-	 * @param targetLocation the target location
-	 * @param targetSize the target size
-	 * @param targetColor the target color
-	 * @param targetFont the target font
-	 * @param progress the progress
-	 * @return true, if successful
-	 */
-	private boolean updateLabelProperties(JLabel label, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, double progress) {
-	    Point startLocation = label.getLocation();
-	    Color startColor = label.getForeground();
-	    
-	    Point newLocation = interpolatePoint(startLocation, targetLocation, progress);
-	    label.setLocation(newLocation);
-	    label.setForeground(interpolateColor(startColor, targetColor, progress));
-	    if (label.getName() != ("image")) 
-	        label.setSize(label.getPreferredSize());
+     * Fait glisser / redimensionner un JLabel jusqu'à la destination voulue.
+     *
+     * @param label        le JLabel animé (déjà ajouté au layeredPane)
+     * @param targetLoc    position finale (coin gauche / haut)
+     * @param targetSize   taille finale
+     * @param targetColor  couleur finale (null = ne pas changer)
+     * @param targetFont   police finale  (null = ne pas changer)
+     * @param durationMs   durée totale en millisecondes
+     * @param lp           layered pane de la fenêtre
+     * @param baseLayer    couche de référence (POPUP_LAYER, etc.)
+     * @param onComplete   callback facultatif à la fin
+     */
+    public void animateLabel(
+            JLabel        label,
+            Point         targetLoc,
+            Dimension     targetSize,
+            Color         targetColor,  // null = inchangé
+            Font          targetFont,   // null = inchangé
+            int           durationMs,
+            JLayeredPane  layeredPane,
+            Runnable      onComplete) {
 
-	    label.revalidate();
-	    label.repaint();
+        /* bornes INITIAL : on ne les touche plus après cette ligne */
+        final int x0 = label.getX();
+        final int y0 = label.getY();
+        final int w0 = label.getWidth();
+        final int h0 = label.getHeight();
+        final Color startColor = label.getForeground();
+        final float startSize  = label.getFont().getSize2D();
 
-	    // Vérifier si la position actuelle est égale à la position cible
-	    return newLocation.equals(targetLocation);
-	}
+        final int dx = targetLoc.x        - x0;
+        final int dy = targetLoc.y        - y0;
+        final int dw = targetSize.width   - w0;
+        final int dh = targetSize.height  - h0;
+        final float dSize = targetFont != null
+                ? targetFont.getSize2D() - startSize
+                : 0;
+
+        animRunning = true;
+        final long startNs = System.nanoTime();
+
+        Timer timer = new Timer(18, null);
+        timer.addActionListener(e -> {
+            double   elapsedMs = (System.nanoTime() - startNs) / 1_000_000.0;
+            double   t         = Math.min(1.0, elapsedMs / durationMs);
+            double   p         = EASE.applyAsDouble(t);
+
+            int  x = x0 + (int) (dx * p);
+            int  y = y0 + (int) (dy * p);
+            int  w = w0 + (int) (dw * p);
+            int  h = h0 + (int) (dh * p);
+
+            SwingUtilities.invokeLater(() -> {
+                label.setBounds(x, y, w, h);
+
+                if (targetColor != null)
+                    label.setForeground(interpolateColor(startColor, targetColor, (float) p));
+
+                if (targetFont != null)
+                    label.setFont(targetFont.deriveFont(startSize + dSize * (float) p));
+
+                layeredPane.repaint();
+            });
+
+            if (t >= 1.0) {                 // animation terminée
+                timer.stop();
+                SwingUtilities.invokeLater(() -> {
+                	animRunning = false;
+                	if (onComplete != null) onComplete.run();
+//                	layeredPane.remove(label);      // <-- on enlève CE label
+//                    layeredPane.repaint();          // <-- rafraîchit la couche
+
+                });
+            }
+        });
+        timer.setCoalesce(true);
+        timer.start();
+    }
 	
 	/**
 	 * Ease in out sine.
@@ -812,64 +875,7 @@ public class PanelAnimationConfiguration extends JPanel {
 	    SwingUtilities.invokeLater(timer::start);
 	}
 
-
-    /**
-     * Interpolate point.
-     *
-     * @param start the start
-     * @param end the end
-     * @param progress the progress
-     * @return the point
-     */
-    private Point interpolatePoint(Point start, Point end, double progress) {
-        int newX = (int) (start.x + progress * (end.x - start.x));
-        int newY = (int) (start.y + progress * (end.y - start.y));
-        return new Point(newX, newY);
-    }
-
-    /**
-     * Creates the timer.
-     *
-     * @param zoom the zoom
-     * @param duration the duration
-     * @param callback the callback
-     * @return the timer
-     */
-    private Timer createTimer(boolean zoom,int duration, ProgressCallback callback) {
-        Timer timer = new Timer(5, null);
-        final long startTime = System.currentTimeMillis();
-
-        ActionListener listener = e -> {
-            long elapsed = System.currentTimeMillis() - startTime;
-            double progress = Math.min((double) elapsed / duration, 1.0);
-            if(zoom) {
-//            	progress = easeInOutCubic(progress); // Fonction d'interpolation plus douce
-            	progress = easeInOutQuad(progress); // Fonction d'interpolation plus douce
-            }
-            callback.onProgress(progress);
-            if (progress >= 1.0) {
-                timer.stop();
-            }
-        };
-
-        timer.addActionListener(listener);
-        return timer;
-    }
     
-    
-    /**
-     * The Interface ProgressCallback.
-     */
-    private interface ProgressCallback {
-        
-        /**
-         * On progress.
-         *
-         * @param progress the progress
-         */
-        void onProgress(double progress);
-    }
-
     /**
      * Setup animated label.
      *
@@ -878,53 +884,18 @@ public class PanelAnimationConfiguration extends JPanel {
      * @param panel the panel
      * @param layeredPane the layered pane
      * @param layer the layer
+     * @param targetSize 
      */
-    private void setupAnimatedLabel(JLabel animatedLabel, JLabel startLabel, JPanel panel, JLayeredPane layeredPane, Integer layer) {
+    private void setupAnimatedLabel(JLabel animatedLabel, JLabel startLabel, JPanel panel, JLayeredPane layeredPane, Integer layer, Dimension targetSize) {
         animatedLabel.setForeground(startLabel.getForeground());
         if(animatedLabel.getName() != ("image"))
-        	animatedLabel.setSize(panel.getSize());
+        	animatedLabel.setSize(targetSize);
+        if(animatedLabel.getName() == ("image"))
+        	animatedLabel.setLocation(startLabel.getX()-startLabel.getWidth()/2, startLabel.getY()-startLabel.getHeight()/2);
         animatedLabel.setLocation(panel.getLocation());
         layeredPane.add(animatedLabel, layer);
     }
 
-    /**
-     * Cleanup animation.
-     *
-     * @param layeredPane the layered pane
-     * @param layer the layer
-     */
-    private void cleanupAnimation(JLayeredPane layeredPane, Integer layer) {
-        Arrays.stream(layeredPane.getComponentsInLayer(layer)).forEach(layeredPane::remove);
-        layeredPane.repaint();
-        layeredPane.revalidate();
-    }
-
-    /**
-     * Interpolate color.
-     *
-     * @param start the start
-     * @param end the end
-     * @param progress the progress
-     * @return the color
-     */
-    private Color interpolateColor(Color start, Color end, double progress) {
-        int newRed = interpolateColorComponent(start.getRed(), end.getRed(), progress);
-        int newGreen = interpolateColorComponent(start.getGreen(), end.getGreen(), progress);
-        int newBlue = interpolateColorComponent(start.getBlue(), end.getBlue(), progress);
-        return new Color(newRed, newGreen, newBlue);
-    }
-
-    /**
-     * Interpolate color component.
-     *
-     * @param start the start
-     * @param end the end
-     * @param progress the progress
-     * @return the int
-     */
-    private int interpolateColorComponent(int start, int end, double progress) {
-        return (int) (start + progress * (end - start));
-    }
     /** Retourne le conteneur réel dans lequel on peut add() des composants,
      *  qu’il soit ou non déjà emballé dans un JLayer. */
     public static JComponent getRealView(JComponent possibleLayerView) {

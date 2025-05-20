@@ -15,11 +15,15 @@ import java.awt.GridBagLayout;
 import java.awt.Point;
 import java.io.File;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -650,12 +654,23 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 //		SwingUtilities.invokeLater(() -> {
 			PlayerForDiffusion endPlayer = this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer];
 			if (endPlayer != null) {
-				for (Component endComponent : endPlayer.getPanelGlobal().getComponents()) {
-					if (endComponent.isVisible()) {
-						Point endPoint = endComponent.getLocation();
-						animateTextElement(endComponent, endPoint);
-					}
-				}
+				List<Component> endComps = Arrays.stream(endPlayer.getPanelGlobal().getComponents())
+                        .filter(Component::isVisible)
+                        .toList();
+				
+				if (endComps.isEmpty()) {
+			        displayPlayerFullAndTournamentTreeAnimation();
+			        return;
+			    }
+				/* ② Compteur partagé et liste des ghosts */
+			    AtomicInteger remaining = new AtomicInteger(endComps.size());
+			    List<JComponent> ghosts = new ArrayList<>(endComps.size());
+				
+			    /* ③ Lancer chaque animation */
+			    endComps.forEach(endComp -> {
+			        Point endPt = endComp.getLocation();
+			        animateTextElement(endComp, endPt, remaining, ghosts);
+			    });
 			}
 //		});
 	}
@@ -665,24 +680,63 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	 *
 	 * @param endComponent the end component
 	 * @param endPoint the end point
+	 * @param remaining 
+	 * @param ghosts 
 	 */
-	private void animateTextElement(Component endComponent, Point endPoint) {
-	    for (Component startComponent : panelPlayerGlobal.getComponents()) {
-	        if (startComponent.getName().equals(endComponent.getName())) {
-	            JPanel endPanel = (JPanel) endComponent;
-	            JPanel startPanel = (JPanel) startComponent;
-	            Font endFont = endPanel.getComponents()[0].getFont();
-	            Color endColor = endPanel.getComponents()[0].getForeground();
-	            Dimension endDimension = endPanel.getPreferredSize();
-	            
-	            
-	            animationPanel.animateLABEL(startPanel, endPoint, endDimension, endColor, endFont, JLayeredPane.POPUP_LAYER,this.frameForDiffusion.getLayeredPane(),
-	                    () -> displayPlayerFullAndTournamentTreeAnimation()
-	                    );
-	            break;
-	        }
-	    }
+	private void animateTextElement(Component endComponent, Point endPoint, AtomicInteger remaining,List<JComponent> ghosts) {
+
+		for (Component startComponent : panelPlayerGlobal.getComponents()) {
+			if (!startComponent.getName().equals(endComponent.getName()))
+				continue;
+
+			JPanel startPanel = (JPanel) startComponent; // ← le “ghost”
+			JPanel endPanel = (JPanel) endComponent;
+
+			/* infos de destination */
+			Font endFont = endPanel.getComponents()[0].getFont();
+			Color endColor = endPanel.getComponents()[0].getForeground();
+			Dimension endDim = endPanel.getPreferredSize();
+
+			/* on mémorise le ghost avant de l’animer */
+//			ghosts.add(startPanel);
+
+			animationPanel.animateLABEL(startPanel, endPoint, endDim, endColor, endFont, JLayeredPane.POPUP_LAYER,frameForDiffusion.getLayeredPane(),
+					ghosts, () -> {
+						/* callback appelé à la FIN de ce label */
+						if (remaining.decrementAndGet() == 0) { // ← dernier ?
+							/* ① on affiche le panneau définitif */
+							displayPlayerFullAndTournamentTreeAnimation();
+
+							/* ② on enlève tous les ghosts d’un coup */
+							JLayeredPane lp = frameForDiffusion.getLayeredPane();
+							ghosts.forEach(lp::remove);
+							lp.repaint();
+						}
+					});
+			break;
+		}
 	}
+
+//	private void animateTextElement(Component endComponent, Point endPoint, AtomicInteger remaining, List<JComponent> ghosts) {
+//	    for (Component startComponent : panelPlayerGlobal.getComponents()) {
+//	        if (startComponent.getName().equals(endComponent.getName())) {
+//	            JPanel endPanel = (JPanel) endComponent;
+//	            JPanel startPanel = (JPanel) startComponent;
+//	            Font endFont = endPanel.getComponents()[0].getFont();
+//	            Color endColor = endPanel.getComponents()[0].getForeground();
+//	            Dimension endDimension = endPanel.getPreferredSize();
+//	            
+//	            animationPanel.animateLABEL(startPanel, endPoint, endDimension, endColor, endFont, JLayeredPane.POPUP_LAYER,this.frameForDiffusion.getLayeredPane(),
+//	            		() -> {
+//	                        // Décrément : si 0 => toutes les anim sont terminées
+//	                        if (remaining.decrementAndGet() == 0) {
+//	                            displayPlayerFullAndTournamentTreeAnimation();
+//	                        }
+//	                    });
+//	            break;
+//	        }
+//	    }
+//	}
 	
 	/**
 	 * Display player full.
