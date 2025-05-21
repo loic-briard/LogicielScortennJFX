@@ -12,8 +12,11 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,12 +26,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import Animation.PanelAnimationConfiguration;
+import Animation.ZoomAnimator;
 import Animation.ZoomablePanel;
 import Diffusion.WindowBroadcastPublic;
 import Diffusion.WindowConfigurationPlayerInfos;
@@ -489,8 +496,9 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	 * @param ligne the ligne
 	 * @throws ClassNotFoundException the class not found exception
 	 * @throws SQLException the SQL exception
+	 * @throws IOException 
 	 */
-	public void setPlayer(Joueur joueur, int ligne) throws ClassNotFoundException, SQLException {
+	public void setPlayer(Joueur joueur, int ligne) throws ClassNotFoundException, SQLException, IOException {
 	    this.joueur = joueur;
 //	    System.out.println("---> set player, taille infos : "+"name : "+globalsettings.getNameMaxLength()+", Surname : "+globalsettings.getSurnameMaxLength());
 	    // Créer une map pour stocker les informations du joueurS
@@ -578,14 +586,45 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	    Arrays.asList(playerName, playerSurname, playerDisplayName,playerAcro,playerCountry, playerRank, playerBirthdate, playerBirthplace,
 	                  playerHeight, playerWeight, playerHand, playerAge, playerPrizetotal, playerCityresidence,playerTeteDeSerie,
 	                  playerLine, playerImg, playerFlag).forEach(panelPlayerGlobal::addComponent);
+	    
+//	 // 2) on calcule la boîte englobante
+//	    int minLocX = 1920;
+//	    int maxLocX = 0;
+//	    int minLocY = 1080;
+//	    int maxLocY = 0;
+//	    for (Component c : panelPlayerGlobal.getComponents()) {
+//	    	
+//	    	if(c.isVisible()) {
+//	    		if(c.getLocation().x < minLocX)
+//	    			minLocX=c.getLocation().x;
+//	    		if(c.getLocation().x >  maxLocX)
+//	    			maxLocX=c.getLocation().x;
+//	    		if(c.getLocation().y < minLocY)
+//	    			minLocY=c.getLocation().y;
+//	    		if(c.getLocation().y>  maxLocY)
+//	    			maxLocY=c.getLocation().y;
+//	    	}
+//	    }
+//	    Dimension pref = new Dimension(maxLocX-minLocX,maxLocY-minLocY );
+//
+//	    // 3) taille minimale = boîte englobante
+//	    panelPlayerGlobal.setSize(pref);
+//	    panelPlayerGlobal.setPreferredSize(pref);
+//
+//	    // 4) on le place au centre de la fenêtre
+//	    int startX = frameForDiffusion.getWidth()  / 2 - pref.width  / 2;
+//	    int startY = frameForDiffusion.getHeight() / 2 - pref.height / 2;
+//	    
+//	    panelPlayerGlobal.setLocation(startX, startY);
 	}
 
 	/**
 	 * Update display.
 	 *
 	 * @param ligne the ligne
+	 * @throws IOException 
 	 */
-	private void updateDisplay(int ligne) {
+	private void updateDisplay(int ligne) throws IOException {
 	    this.setLayout(null);
 	    this.setOpaque(false);
 	    this.add(panelPlayerGlobal);
@@ -601,8 +640,9 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 
 	/**
 	 * Handle window type specific behavior.
+	 * @throws IOException 
 	 */
-	private void handleWindowTypeSpecificBehavior() {
+	private void handleWindowTypeSpecificBehavior() throws IOException {
 //    	panelAnimationConfiguration.zoomPanel(backgroundPanel, this.windowBroadcastPublic, null);
 	    switch (typeFen) {
 	        case "full":
@@ -611,32 +651,42 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	            break;
 	        case "player":
 	        	if(joueur.getNom()!="QUALIFIER") {
-//	        		this.setOpaque(true);
-//	        		this.setBackground(Color.cyan);
-	        		panelPlayerGlobal.setSize(frameForDiffusion.getWidth() / 10, frameForDiffusion.getHeight() / 10);
-	        		panelPlayerGlobal.setLocation((this.frameForDiffusion.getWidth() / 2) - (panelPlayerGlobal.getWidth() / 2), (this.frameForDiffusion.getHeight() / 2) - (panelPlayerGlobal.getHeight() / 2));
-//	        		panelPlayerGlobal.setOpaque(true);
-//	        		panelPlayerGlobal.setBackground(new Color(255, 125, 50, 50));
-//	        		panelPlayerGlobal.setBounds(0, 0, this.frameForDiffusion.getWidth(), this.frameForDiffusion.getHeight());
-	        		// Assurez-vous que la taille est appliquée immédiatement
-	        		panelPlayerGlobal.revalidate();
-	        		panelPlayerGlobal.repaint();
+//	        		ImageUtility imageFond = new ImageUtility(this.windowTournamentTree.getEvent().getBackground().getImage_2(), 0);
+//	        		imageFond.setSize(imageFond.getPreferredSize());
+//	    			imageFond.setLocation(this.frameForDiffusion.getWidth()/2 - imageFond.getWidth()/2, this.frameForDiffusion.getHeight()/2 - imageFond.getHeight()/2);
+//	    			System.out.println("image bounds : "+ imageFond.getBounds());
+	        		panelPlayerGlobal.setVisible(false);
+	    			// 1. Charge une seule fois
+	    			BufferedImage imgSource = ImageIO.read(new File(this.windowTournamentTree.getEvent().getBackground().getImage_2()));
+	    			// 2. Redimensionne une seule fois
+	    			int targetW = imgSource.getWidth();
+	    			int targetH = imgSource.getHeight();
+	    			Image scaled = imgSource.getScaledInstance(targetW, targetH, Image.SCALE_SMOOTH);
+	    			// 3. Place dans un JLabel/JPanel
+	    			JLabel fond = new JLabel(new ImageIcon(scaled));
+	    			Point loctionImgFond = new Point(this.frameForDiffusion.getWidth()/2 - targetW/2, this.frameForDiffusion.getHeight()/2 - targetH/2);
+	    			fond.setBounds(loctionImgFond.x, loctionImgFond.y, targetW, targetH);
+	    			// 4. Ajoute au panel
+	    			System.out.println("bouds de l'image de fond : "+fond.getBounds());
+	    			panelPlayerGlobal.add(fond); // add en premier pour que ce soit le fond
+	    			
+//	    			ImageUtility imageFond = new ImageUtility(this.windowTournamentTree.getEvent().getBackground().getImage_2(), 0);
+//	    			imageFond.setLocation(0, 0);
+//	    			imageFond.setSize(imageFond.getPreferredSize());
+//	    			panelPlayerGlobal.add(imageFond);
+//	        		
+	        		Dimension d = this.frameForDiffusion.getPreferredSize();
+	                panelPlayerGlobal.setSize(d);
+//	        	    int startX = frameForDiffusion.getWidth()  / 2 - panelPlayerGlobal.getWidth()  / 2;
+//	        	    int startY = frameForDiffusion.getHeight() / 2 - panelPlayerGlobal.getHeight() / 2;
+//	        	    panelPlayerGlobal.setLocation(startX, startY);
+	        	    panelPlayerGlobal.setLocation(0, 0);
 
-//	        		System.out.println("Player taille panel depart zoom : " + panelPlayerGlobal.getWidth() + "x" + panelPlayerGlobal.getHeight() + ", position : " + panelPlayerGlobal.getLocation().x + "x" + panelPlayerGlobal.getLocation().y);
-
-	        		this.animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, this::animatePlayerElements);
-	        		
-//	        		frameForDiffusion.getLayeredPane().add(panelPlayerGlobal, JLayeredPane.MODAL_LAYER);
-//	        		ZoomAnimator.zoomPanelNoSnapshot(animationPanel, frameForDiffusion, panelPlayerGlobal, JLayeredPane.MODAL_LAYER, this::animatePlayerElements);
-	        		// panelJoueur est déjà configuré (labels, images…) mais pas encore animé.
-//	        		frameForDiffusion.getLayeredPane().add(panelPlayerGlobal, JLayeredPane.MODAL_LAYER);
-//
-//	        		ZoomAnimator.zoomIn(
-//	        				this.animationPanel,
-//	        				frameForDiffusion,     // la JFrame
-//	        				panelPlayerGlobal,               // composant à zoomer
-//	        		        JLayeredPane.MODAL_LAYER,  // même couche
-//	        		        this::animatePlayerElements);                     // callback optionnel
+//	        		this.animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, this::animatePlayerElements);
+	        	    SwingUtilities.invokeLater(() -> {
+	        	    	ZoomAnimator.zoomIn(this.animationPanel, frameForDiffusion, panelPlayerGlobal, JLayeredPane.MODAL_LAYER, this::animatePlayerElements);                     // callback optionnel
+	        	    });
+	        	    
 	        	}else
 	        		displayPlayerFull();
 	        	
@@ -683,36 +733,40 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	 * @param remaining 
 	 * @param ghosts 
 	 */
-	private void animateTextElement(Component endComponent, Point endPoint, AtomicInteger remaining,List<JComponent> ghosts) {
+	private void animateTextElement(Component endComponent, Point endPoint, AtomicInteger remaining,
+			List<JComponent> ghosts) {
 
 		for (Component startComponent : panelPlayerGlobal.getComponents()) {
-			if (!startComponent.getName().equals(endComponent.getName()))
-				continue;
+			if (startComponent.getName() != null) {
+				if (!startComponent.getName().equals(endComponent.getName()))
+					continue;
 
-			JPanel startPanel = (JPanel) startComponent; // ← le “ghost”
-			JPanel endPanel = (JPanel) endComponent;
+				JPanel startPanel = (JPanel) startComponent; // ← le “ghost”
+				JPanel endPanel = (JPanel) endComponent;
 
-			/* infos de destination */
-			Font endFont = endPanel.getComponents()[0].getFont();
-			Color endColor = endPanel.getComponents()[0].getForeground();
-			Dimension endDim = endPanel.getPreferredSize();
+				/* infos de destination */
+				Font endFont = endPanel.getComponents()[0].getFont();
+				Color endColor = endPanel.getComponents()[0].getForeground();
+				Dimension endDim = endPanel.getPreferredSize();
 
-			/* on mémorise le ghost avant de l’animer */
+				/* on mémorise le ghost avant de l’animer */
 //			ghosts.add(startPanel);
 
-			animationPanel.animateLABEL(startPanel, endPoint, endDim, endColor, endFont, JLayeredPane.POPUP_LAYER,frameForDiffusion.getLayeredPane(),ghosts, () -> {
-						/* callback appelé à la FIN de ce label */
-						if (remaining.decrementAndGet() == 0) { // ← dernier ?
-							/* ① on affiche le panneau définitif */
-							displayPlayerFullAndTournamentTreeAnimation();
+				animationPanel.animateLABEL(startPanel, endPoint, endDim, endColor, endFont, JLayeredPane.POPUP_LAYER,
+						frameForDiffusion.getLayeredPane(), ghosts, () -> {
+							/* callback appelé à la FIN de ce label */
+							if (remaining.decrementAndGet() == 0) { // ← dernier ?
+								/* ① on affiche le panneau définitif */
+								displayPlayerFullAndTournamentTreeAnimation();
 
-							/* ② on enlève tous les ghosts d’un coup */
-							JLayeredPane lp = frameForDiffusion.getLayeredPane();
-							ghosts.forEach(lp::remove);
-							lp.repaint();
-						}
-					});
-			break;
+								/* ② on enlève tous les ghosts d’un coup */
+								JLayeredPane lp = frameForDiffusion.getLayeredPane();
+								ghosts.forEach(lp::remove);
+								lp.repaint();
+							}
+						});
+				break;
+			}
 		}
 	}
 

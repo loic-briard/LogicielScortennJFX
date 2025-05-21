@@ -21,6 +21,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
@@ -42,7 +43,7 @@ public class PanelAnimationConfiguration extends JPanel {
     private JCheckBox zoomAnimationCheckBox;
     
     /** The zoom animation spinner. */
-    private JSpinner zoomAnimationSpinner;
+    private  JSpinner zoomAnimationSpinner;
     
     /** The label animation check box. */
     private JCheckBox labelAnimationCheckBox;
@@ -98,8 +99,9 @@ public class PanelAnimationConfiguration extends JPanel {
      * @param windowTournamentTreee the window tournament treee
      * @throws ClassNotFoundException the class not found exception
      * @throws SQLException the SQL exception
+     * @throws IOException 
      */
-    public PanelAnimationConfiguration(WindowTournamentTree windowTournamentTreee) throws ClassNotFoundException, SQLException {
+    public PanelAnimationConfiguration(WindowTournamentTree windowTournamentTreee) throws ClassNotFoundException, SQLException, IOException {
     	Border contour = BorderFactory.createLineBorder(Color.black);
     	this.setBorder(contour);
         setLayout(new GridBagLayout());
@@ -117,8 +119,9 @@ public class PanelAnimationConfiguration extends JPanel {
      *
      * @throws ClassNotFoundException the class not found exception
      * @throws SQLException the SQL exception
+     * @throws IOException 
      */
-    private void initFrame() throws ClassNotFoundException, SQLException {
+    private void initFrame() throws ClassNotFoundException, SQLException, IOException {
     	
     	zoomAnimationCheckBox = new JCheckBox("Zoom Animation");
         zoomAnimationSpinner = new JSpinner(new SpinnerNumberModel(1000, 0, 10000, 10));
@@ -267,7 +270,7 @@ public class PanelAnimationConfiguration extends JPanel {
      *
      * @return true, if is zoom animation enabled
      */
-    public boolean isZoomAnimationEnabled() {
+    public  boolean isZoomAnimationEnabled() {
         return zoomAnimationCheckBox.isSelected();
     }
 
@@ -276,7 +279,7 @@ public class PanelAnimationConfiguration extends JPanel {
      *
      * @return the zoom animation duration
      */
-    public int getZoomAnimationDuration() {
+    public  int getZoomAnimationDuration() {
         return isZoomAnimationEnabled() ? (int) zoomAnimationSpinner.getValue() : 0;
     }
 
@@ -547,7 +550,7 @@ public class PanelAnimationConfiguration extends JPanel {
 	 * @param onComplete the on complete
 	 */
 	public void animateLABEL(JPanel panel, Point targetLocation, Dimension targetSize, Color targetColor, Font targetFont, Integer layer, JLayeredPane layeredPane,List<JComponent> ghosts, Runnable onComplete) {
-		System.out.println("isLabelAnimationEnabled "+isLabelAnimationEnabled());
+//		System.out.println("isLabelAnimationEnabled "+isLabelAnimationEnabled());
 	    if(!isLabelAnimationEnabled()) {
 	        if(onComplete != null) 
 	            onComplete.run();
@@ -833,72 +836,238 @@ public class PanelAnimationConfiguration extends JPanel {
 //            });
 //        }
 //	}
+	
+	
+//	public void zoomPanelSnap(JPanel panel, JFrame frame, Runnable onComplete) {
+//		// 1. S'assurer que tout est à jour
+//		panel.setVisible(true);
+//	    panel.validate();
+//	    panel.repaint();
+//
+//	    // 2. Désactiver double-buffering pour le snapshot
+//	    RepaintManager currentManager = RepaintManager.currentManager(panel);
+//	    boolean db = currentManager.isDoubleBufferingEnabled();
+//	    currentManager.setDoubleBufferingEnabled(false);
+//
+//	    // 3. Création du snapshot
+//	    BufferedImage snapshot = new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_ARGB);
+//	    panel.paint(snapshot.getGraphics());
+//	    
+//	    // 4. Réactiver le double-buffering
+//	    currentManager.setDoubleBufferingEnabled(db);
+//
+//	    // On cache le vrai panel pendant l'animation
+//	    panel.setVisible(false);
+//
+//	 // ... code d'animation identique à plus haut ...
+//	    class AnimatedPanel extends JPanel {
+//	        double scale = 0.15;
+//	        @Override
+//	        protected void paintComponent(Graphics g) {
+//	            super.paintComponent(g);
+//	            Graphics2D g2 = (Graphics2D) g;
+//
+//	            int imgW = snapshot.getWidth();
+//	            int imgH = snapshot.getHeight();
+//	            int drawW = (int) (imgW * scale);
+//	            int drawH = (int) (imgH * scale);
+//
+//	            int x = (getWidth() - drawW) / 2;
+//	            int y = (getHeight() - drawH) / 2;
+//
+//	            // Image snapshot du panel (doit contenir tous les éléments joueurs)
+//	            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+//	            g2.drawImage(snapshot, x, y, drawW, drawH, null);
+//
+//	            // Debug carré rouge zoomé
+//	            g2.setColor(new Color(255,0,0,128));
+//	            int debugSize = (int)(100 * scale);
+//	            int debugX = (getWidth() - debugSize) / 2;
+//	            int debugY = (getHeight() - debugSize) / 2;
+//	            g2.fillRect(debugX, debugY, debugSize, debugSize);
+//	        }
+//	    }
+//
+//	    AnimatedPanel animationPanel = new AnimatedPanel();
+//	    animationPanel.setOpaque(false);
+//	    animationPanel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
+//
+//	    // Utilisation du glassPane comme overlay
+//	    JRootPane root = frame.getRootPane();
+//	    JComponent glass = (JComponent) root.getGlassPane();
+//	    glass.setVisible(true);
+//	    glass.setOpaque(false);
+//	    glass.setLayout(null);
+//
+//	    glass.add(animationPanel);
+//	    animationPanel.setVisible(true);
+//	    glass.repaint();
+//
+//	    int durationMs = getZoomAnimationDuration();
+//	    int steps = 24;
+//	    int delay = durationMs / steps;
+//
+//	    Timer timer = new Timer(delay, null);
+//	    final int[] step = {0};
+//	    timer.addActionListener(e -> {
+//	        double t = step[0] / (double) steps;
+//	        animationPanel.scale = 0.15 + t * (1.0 - 0.15);
+//	        animationPanel.repaint();
+//
+//	        if (++step[0] > steps) {
+//	            timer.stop();
+//	            glass.remove(animationPanel);
+//	            glass.repaint();
+//	            panel.setVisible(true);
+//	            if (onComplete != null) onComplete.run();
+//	            glass.setVisible(false);
+//	        }
+//	    });
+//	    timer.start();
+//	}
+
+
 	public void zoomPanel(JPanel panel, WindowBroadcastPublic frame, Runnable onComplete) {
+		
+//		panel.setOpaque(true);
+		/* 0. Paramètres de l’animation */
+		double startScale = 0.15; // 15 % au départ
+		int durationMs = getZoomAnimationDuration();
 
-	    int initialW = panel.getWidth();
-	    int initialH = panel.getHeight();
-	    int targetW  = frame.getWidth();
-	    int targetH  = frame.getHeight();
-	    
-	    // centre actuel du panel et centre de la fenêtre
-	    Point initialLoc = new Point(frame.getWidth()/2, frame.getHeight()/2);
-	    int initialCenterX = initialLoc.x + initialW / 2;
-	    int initialCenterY = initialLoc.y + initialH / 2;
-	    int frameCenterX   = targetW / 2;
-	    int frameCenterY   = targetH / 2;
+		/* 1. Taille finale = taille courante du panel */
+		int endW = frame.getWidth();// panel.getWidth();
+		int endH = frame.getHeight(); //panel.getHeight();
+		
 
-	    int duration = getZoomAnimationDuration();
-	    if (!isZoomAnimationEnabled()) {
-	        panel.setBounds(frameCenterX - targetW / 2,
-	                        frameCenterY - targetH / 2,
-	                        targetW, targetH);
-	        if (onComplete != null) onComplete.run();
-	        return;
-	    }
+		/* 2. Taille de départ = 15 % de la taille finale */
+		double startW = (endW * startScale);
+		double startH = (endH * startScale);
 
-	    final long start = System.nanoTime();
-	    final int dW = targetW - initialW;
-	    final int dH = targetH - initialH;
-	    
-	    animRunning = true;
-	    panel.setDoubleBuffered(false);
-	    Timer timer = new Timer(14, null);
-	    timer.setCoalesce(true);
-	    timer.addActionListener(ev -> {
-	        long ms      = (System.nanoTime() - start) / 1_000_000;
-	        double prog  = Math.min(1.0, (double) ms / duration);
-	        double eased = 0.15 + 0.85 * easeInOutQuad(prog);
-//	        double eased = 0.15 + 0.85 * prog;//linear
+		/* 3. Centre de la fenêtre (fixe) */
+		int cx = frame.getWidth() / 2;
+		int cy = frame.getHeight() / 2;
+		
+		System.out.println("initial bounds : "+panel.getBounds());
+		/* 5. Pas d’animation ? onComplete immédiat */
+		if (!isZoomAnimationEnabled()) {
+			panel.setBounds(cx - endW / 2, cy - endH / 2, endW, endH);
+			if (onComplete != null)
+				onComplete.run();
+			return;
+		}
 
-	        int w  = (int) (initialW + eased * dW);
-	        int h  = (int) (initialH + eased * dH);
+		/* 6. Animation progressive */
+		panel.setDoubleBuffered(false);
+		animRunning = true;
 
-	        // centre intermédiaire = interpolation linéaire entre les deux centres
-	        int cx = (int) (initialCenterX + (frameCenterX - initialCenterX) * eased);
-	        int cy = (int) (initialCenterY + (frameCenterY - initialCenterY) * eased);
+		final long start = System.nanoTime();
+		Timer timer = new Timer(16, null); // ≈ 60 fps
+		timer.setCoalesce(true);
 
-	        int x = cx - w / 2;
-	        int y = cy - h / 2;
+		timer.addActionListener(e -> {
+			double prog = Math.min(1.0, (System.nanoTime() - start) / 1_000_000.0 / durationMs); // 0 → 1
+			double eased = easeInOutQuad(prog); // lissage
+			
 
-	        SwingUtilities.invokeLater(() -> {
-	            panel.setBounds(x, y, w, h);
-	            if (panel instanceof ZoomablePanel)
-	                ((ZoomablePanel) panel).setScale(eased);
-	            if (panel instanceof BackgroundPanel)
-	                ((BackgroundPanel) panel).setScale(eased);
-	        });
+			/* Interpolation taille + position (centrée en continu) */
+			int w = (int) (startW + (endW - startW) * eased);
+			int h = (int) (startH + (endH - startH) * eased);
+			int x = cx - w / 2;
+			int y = cy - h / 2;
 
-	        if (prog >= 1.0) {
-	            timer.stop();
-	            panel.setDoubleBuffered(true);
-	            animRunning = false;                  // ► l’animation est finie
-	            if (onComplete != null) SwingUtilities.invokeLater(onComplete);
-	        }
-	    });
-	    timer.setCoalesce(true);
-	    SwingUtilities.invokeLater(timer::start);
+			SwingUtilities.invokeLater(() -> {
+				panel.setBounds(x, y, w, h);
+				double s = startScale + (1 - startScale) * eased; // 0.15 → 1
+				if (panel instanceof ZoomablePanel)
+					 ((ZoomablePanel) panel).setScale(s);
+				if (panel instanceof BackgroundPanel)
+					((BackgroundPanel) panel).setScale(s);
+			});
+
+			/* Fin d’animation */
+			if (prog >= 1.0) {
+				timer.stop();
+				SwingUtilities.invokeLater(() -> {
+					panel.setDoubleBuffered(true);
+					animRunning = false;
+					if (onComplete != null)
+						onComplete.run();
+				});
+			}
+		});
+
+		timer.start();
 	}
-
+//	/**
+//	 * Agrandit progressivement {@code panel} jusqu’à occuper toute la fenêtre {@code frame}.
+//	 * Lance le callback {@code onComplete} quand l’animation est terminée,
+//	 * puis retire le panneau fantôme du layeredPane.
+//	 */
+//	public void zoomPanel(JPanel panel, WindowBroadcastPublic frame, Runnable onComplete) {
+//
+//	    int initialW = panel.getWidth();
+//	    int initialH = panel.getHeight();
+//	    int targetW  = frame.getWidth();
+//	    int targetH  = frame.getHeight();
+//
+//	    // centre actuel du panel et centre de la fenêtre
+//	    Point initialLoc = new Point(frame.getWidth()/2, frame.getHeight()/2);
+//	    int initialCenterX = initialLoc.x + initialW / 2;
+//	    int initialCenterY = initialLoc.y + initialH / 2;
+//	    int frameCenterX   = targetW / 2;
+//	    int frameCenterY   = targetH / 2;
+//
+//	    int duration = getZoomAnimationDuration();
+//
+//	    if (!isZoomAnimationEnabled()) {
+//	    	System.out.println("taille et position finale 1 : "+panel.getBounds());
+////	        panel.setBounds(frameCenterX - targetW / 2,frameCenterY - targetH / 2,targetW, targetH);
+//	        panel.setBounds(frameCenterX - targetW / 2,frameCenterY - targetH / 2, targetW, targetH);
+//	        System.out.println("taille et position finale 2 : "+panel.getBounds());
+//	        
+//	        if (onComplete != null) onComplete.run();
+//	        return;
+//	    }
+//
+//	    final long start = System.nanoTime();
+//	    final int dW = targetW - initialW;
+//	    final int dH = targetH - initialH;
+//
+//	    animRunning = true;
+//	    panel.setDoubleBuffered(false);
+//	    Timer timer = new Timer(2, null);
+//	    timer.addActionListener(ev -> {
+//	        long ms      = (System.nanoTime() - start) / 1_000_000;
+//	        double prog  = Math.min(1.0, (double) ms / duration);
+//	        double eased = 0.15 + 0.85 * easeInOutQuad(prog);
+////	        double eased = 0.15 + 0.85 * prog;//linear
+//
+//	        int w  = (int) (initialW + eased * dW);
+//	        int h  = (int) (initialH + eased * dH);
+//	        // centre intermédiaire = interpolation linéaire entre les deux centres
+//	        int cx = (int) (initialCenterX + (frameCenterX - initialCenterX) * eased);
+//	        int cy = (int) (initialCenterY + (frameCenterY - initialCenterY) * eased);
+//	        int x = cx - w / 2;
+//	        int y = cy - h / 2;
+//
+//	        SwingUtilities.invokeLater(() -> {
+//	            panel.setBounds(x, y, w, h);
+//	            if (panel instanceof ZoomablePanel)
+//	                ((ZoomablePanel) panel).setScale(eased);
+//	            if (panel instanceof BackgroundPanel)
+//	                ((BackgroundPanel) panel).setScale(eased);
+//	        });
+//
+//	        if (prog >= 1.0) {
+//	            timer.stop();
+//	            panel.setDoubleBuffered(true);
+//	            animRunning = false;                  // ► l’animation est finie
+//	            if (onComplete != null) SwingUtilities.invokeLater(onComplete);
+//	        }
+//	    });
+//	    timer.setCoalesce(true);
+//	    SwingUtilities.invokeLater(timer::start);
+//	}
     
     /**
      * Setup animated label.

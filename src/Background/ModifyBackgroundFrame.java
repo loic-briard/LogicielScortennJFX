@@ -18,7 +18,7 @@ public class ModifyBackgroundFrame extends JFrame {
     private JButton[] loadButtons;
     private JPanel imagePreviewPanel, buttonPanel;
     private String lastFolder = null;
-    private String[] buttonName = {"Load Full","Load PLayer","Load Game","Load Tab","Load waiting background"};
+    private String[] buttonName = {"Load Full","Load Player","Load Game","Load Tab","Load waiting background"};
 
     public ModifyBackgroundFrame(GraphicsDevice configScreen, ListOfBackgroundFrame parentFrame, String currentName, String... images) {
         setTitle("Modify Background " + currentName);

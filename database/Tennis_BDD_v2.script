@@ -28,7 +28,7 @@ SET FILES NIO TRUE
 SET FILES NIO SIZE 256
 SET FILES LOG TRUE
 SET FILES LOG SIZE 50
-SET FILES CHECK 122679
+SET FILES CHECK 144841
 SET DATABASE COLLATION "SQL_TEXT" PAD SPACE
 CREATE USER SA PASSWORD DIGEST 'd41d8cd98f00b204e9800998ecf8427e'
 ALTER USER SA SET LOCAL TRUE
@@ -304,7 +304,7 @@ INSERT INTO FLAG VALUES('ZWE','Zimbabwe','resources\flag\ZWE.png')
 INSERT INTO FLAG VALUES('blank','blank','resources\flag\blank.png')
 INSERT INTO FLAG VALUES('clear','clear','resources\flag\clear.png')
 INSERT INTO BACKGROUND VALUES('backgroundExample32','resources\Background\1bgFull32.png','resources\Background\2bgPlayer.png','resources\Background\3bgGame.png','resources\Background\4bgTab32.png','resources\Background\5bgWaiting.png')
-INSERT INTO BACKGROUND VALUES('backgroundExampleTEST','resources\Background\ROANNEdraw32-2024.png','resources\Background\2bgPlayer.png','resources\Background\3bgGame.png','resources\Background\ROANNEdraw8-2024.png','resources\Background\5bgWaiting.png')
+INSERT INTO BACKGROUND VALUES('backgroundExampleTEST','resources\Background\ROANNEdraw32-2024.png','resources\Background\2bgPlayerTest.png','resources\Background\3bgGame.png','resources\Background\ROANNEdraw8-2024.png','resources\Background\5bgWaiting.png')
 INSERT INTO EVENT VALUES('EVENT_EXAMPLE_32','backgroundExampleTEST')
 INSERT INTO WTA VALUES(18731,'women','Paszek','Tamira ','T. Paszek','AUT','Austria','','resources\imgInterface\clear.png',386,'0','','0','0','','','','')
 INSERT INTO WTA VALUES(18910,'women','Wozniacki','Caroline ','C. Wozniacki','DNK','Denmark','','resources\imgInterface\clear.png',118,'0','','0','0','','','','')

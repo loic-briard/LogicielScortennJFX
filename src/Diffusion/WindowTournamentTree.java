@@ -27,6 +27,7 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -108,10 +109,11 @@ public class WindowTournamentTree extends JFrame {
 	 * @param nbJoueur the nb joueur
 	 * @throws ClassNotFoundException the class not found exception
 	 * @throws SQLException the SQL exception
+	 * @throws IOException 
 	 */
 	@SuppressWarnings("unchecked")
 	public WindowTournamentTree(GraphicsDevice configScreen, ArrayList<Joueur> selectedJoueurs, Evenement event,
-			WindowBroadcastPublic diffusionFrame, int nbJoueur) throws ClassNotFoundException, SQLException {
+			WindowBroadcastPublic diffusionFrame, int nbJoueur) throws ClassNotFoundException, SQLException, IOException {
 		this.selectedJoueurs = selectedJoueurs;
 		this.windowBroadcastPublic = diffusionFrame;
 		this.event = event;
@@ -147,8 +149,9 @@ public class WindowTournamentTree extends JFrame {
 	 * Setup frame.
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
+	 * @throws IOException 
 	 */
-	private void setupFrame() throws ClassNotFoundException, SQLException {
+	private void setupFrame() throws ClassNotFoundException, SQLException, IOException {
 		setTitle("Broadcast configuration");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(800, 800);
@@ -224,7 +227,14 @@ public class WindowTournamentTree extends JFrame {
 		JPanel rockBottomSectionsPanel = new JPanel();
 		rockBottomSectionsPanel.setLayout(new GridLayout(1, 1));
 		JButton playerButton = new JButton("All Player");
-		playerButton.addActionListener(e -> handleFullCompetition());
+		playerButton.addActionListener(e -> {
+			try {
+				handleFullCompetition();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		});
 		rockBottomSectionsPanel.add(playerButton);
 
 		// Ajoutez les conteneurs des sections é votre fenétre
@@ -278,8 +288,13 @@ public class WindowTournamentTree extends JFrame {
 		JButton playerButton = new JButton("Player");
 		playerButton.addActionListener(e ->
 		{
-			if (!panelAnimationConfiguration.isAnimRunning()) 
-				handlePlayerSelection(comboBox, playerIndex, panelIndex);
+			if (!panelAnimationConfiguration.isAnimRunning())
+				try {
+					handlePlayerSelection(comboBox, playerIndex, panelIndex);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 		});
 		int ligne = playerIndex + (nbJoueur / 4) * panelIndex+1;
 		
@@ -304,7 +319,13 @@ public class WindowTournamentTree extends JFrame {
 		for (int i = 0; i < (nbJoueur / 8); i++) {
 			JButton gameButton = new JButton("Game");
 			int buttonIndex = i;
-			gameButton.addActionListener(e -> {if (!panelAnimationConfiguration.isAnimRunning()) handleGameSelection(buttonIndex, indexPanel);});
+			gameButton.addActionListener(e -> {if (!panelAnimationConfiguration.isAnimRunning())
+				try {
+					handleGameSelection(buttonIndex, indexPanel);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}});
 			gamePanel.add(gameButton);
 		}
 
@@ -319,7 +340,13 @@ public class WindowTournamentTree extends JFrame {
 	 */
 	private JButton createTabButton(int indexPanel) {
 		JButton tabButton = new JButton("Tab");
-		tabButton.addActionListener(e -> {if (!panelAnimationConfiguration.isAnimRunning()) handleTabSelection(indexPanel);});
+		tabButton.addActionListener(e -> {if (!panelAnimationConfiguration.isAnimRunning())
+			try {
+				handleTabSelection(indexPanel);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}});
 		return tabButton;
 	}
 
@@ -399,8 +426,9 @@ public class WindowTournamentTree extends JFrame {
 	 * @param comboBox the combo box
 	 * @param playerIndex the player index
 	 * @param panelIndex the panel index
+	 * @throws IOException 
 	 */
-	private void handlePlayerSelection(JComboBox<String> comboBox, int playerIndex, int panelIndex) {
+	private void handlePlayerSelection(JComboBox<String> comboBox, int playerIndex, int panelIndex) throws IOException {
 		String selectedItem = (String) comboBox.getSelectedItem();
 		if (selectedItem != null) {
 			// changer le fond de la fenetre
@@ -418,11 +446,11 @@ public class WindowTournamentTree extends JFrame {
 			
 			System.gc();
 			Joueur soloPlayer = foundPlayer(selectedItem);
-			if(soloPlayer != null) {
-			if(soloPlayer.getNom() != "QUALIFIER")
-				displayFondJoueur("player");
-			}
-			else
+//			if(soloPlayer != null) {
+//				if(soloPlayer.getNom() != "QUALIFIER")
+//					displayFondJoueur("player");
+//			}
+//			else
 				windowBroadcastPublic.removeLayerContent(bgSGT);// nettoyage du layer
 //			ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
 			ListSelectedJoueur.clear();
@@ -482,8 +510,9 @@ public class WindowTournamentTree extends JFrame {
 	 *
 	 * @param buttonIndex the button index
 	 * @param indexPanel the index panel
+	 * @throws IOException 
 	 */
-	private void handleGameSelection(int buttonIndex, int indexPanel) {
+	private void handleGameSelection(int buttonIndex, int indexPanel) throws IOException {
 		// Retrieve the selected players from the corresponding section
 		int playerIndex1 =  (2 * buttonIndex + 1) + ((nbJoueur / 4) * indexPanel)-1; // Calculate the index of the first player
 		int playerIndex2 =  (2 * buttonIndex + 1) + ((nbJoueur / 4) * indexPanel); // Calculate the index of the second player
@@ -536,8 +565,9 @@ public class WindowTournamentTree extends JFrame {
 	 * Handle tab selection.
 	 *
 	 * @param indexPanel the index panel
+	 * @throws IOException 
 	 */
-	private void handleTabSelection(int indexPanel) {
+	private void handleTabSelection(int indexPanel) throws IOException {
 		windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_1());
 		// cr�ation d'une liste de PlayerForDiffusion pour aficher les pool
 //		ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
@@ -580,8 +610,9 @@ public class WindowTournamentTree extends JFrame {
 
 	/**
 	 * Handle full competition.
+	 * @throws IOException 
 	 */
-	private void handleFullCompetition() {
+	private void handleFullCompetition() throws IOException {
 		SwingUtilities.invokeLater(() -> {
 			windowBroadcastPublic.setBackgroundImage(event.getBackground().getImage_1());
 			windowBroadcastPublic.removeLayerContent(bgSGT);// nettoyage du layer
@@ -676,8 +707,9 @@ public class WindowTournamentTree extends JFrame {
 	 * @return the array list
 	 * @throws ClassNotFoundException the class not found exception
 	 * @throws SQLException the SQL exception
+	 * @throws IOException 
 	 */
-	public ArrayList<PlayerForDiffusion> initListPlayerForDiffusion() throws ClassNotFoundException, SQLException {
+	public ArrayList<PlayerForDiffusion> initListPlayerForDiffusion() throws ClassNotFoundException, SQLException, IOException {
 		playerForDifusionListInit = new ArrayList<PlayerForDiffusion>();
 		for (int i = 0; i < this.nbJoueur; i++) {
 			PlayerForDiffusion PlayerDetails = new PlayerForDiffusion(this.event, windowBroadcastPublic, panelAnimationConfiguration, "full", i,this);
@@ -811,6 +843,9 @@ public class WindowTournamentTree extends JFrame {
 	 */
 	public String eventName() {
 		return this.event.getNom();
+	}
+	public Evenement getEvent() {
+		return this.event;
 	}
 
 	/**

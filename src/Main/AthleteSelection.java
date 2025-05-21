@@ -86,25 +86,27 @@ public class AthleteSelection extends JFrame {
 
 	/** The choosen BDD. */
 	private String choosenBDD;
-	
+
 	private JFrame frameForMessage;
 
 	/**
 	 * Instantiates a new athlete selection.
 	 *
-	 * @param choosenBDD the choosen BDD
-	 * @param selectedPlayers 
+	 * @param choosenBDD      the choosen BDD
+	 * @param selectedPlayers
 	 * @throws SQLException           the SQL exception
 	 * @throws ClassNotFoundException the class not found exception
 	 */
-	public AthleteSelection(GraphicsDevice configScreen, String choosenBDD, ArrayList<Joueur> previousSelectedPlayers) throws SQLException, ClassNotFoundException {
+	public AthleteSelection(GraphicsDevice configScreen, String choosenBDD, ArrayList<Joueur> previousSelectedPlayers)
+			throws SQLException, ClassNotFoundException {
 		setTitle("Selection of Players");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(1050, 600); // Augmentez la largeur de la fen�tre pour mieux afficher les donn�es
 		// Obtenir l'emplacement de l'écran secondaire
-        Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
-        setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2), bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
-		ImageIcon logoIcon = new ImageIcon("resources"+File.separator+"imgInterface"+File.separator+"icon.png");
+		Rectangle bounds = configScreen.getDefaultConfiguration().getBounds();
+		setLocation(bounds.x + ((configScreen.getDisplayMode().getWidth() - getWidth()) / 2),
+				bounds.y + ((configScreen.getDisplayMode().getHeight() - getHeight()) / 2)); // Positionner la fenêtre
+		ImageIcon logoIcon = new ImageIcon("resources" + File.separator + "imgInterface" + File.separator + "icon.png");
 		// V�rifiez si l'ic�ne a �t� charg�e avec succ�s
 		if (logoIcon.getImageLoadStatus() == MediaTracker.COMPLETE) {
 			setIconImage(logoIcon.getImage());
@@ -194,7 +196,7 @@ public class AthleteSelection extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int choice = JOptionPane.showConfirmDialog(frameForMessage, "Do you want to update age of players?",
 						"Players age update", JOptionPane.YES_NO_OPTION);
-				if(choice == JOptionPane.YES_OPTION)
+				if (choice == JOptionPane.YES_OPTION)
 					System.out.println("update Age players selected");
 				else
 					System.out.println("don't update Age players selected");
@@ -234,45 +236,6 @@ public class AthleteSelection extends JFrame {
 			}
 		};
 		validateButton.addActionListener(actionValidate);
-		// Associer l'action à la touche "V" (en minuscule)
-
-//		validateButton.addActionListener(new ActionListener() {
-//		    @Override
-//		    public void actionPerformed(ActionEvent e) {
-//		    	for (int row = 0; row < modelRightTable.getRowCount(); row++) {
-//		    	    String displayName = (String) modelRightTable.getValueAt(row, 0);
-//		    	    // Recherchez le joueur correspondant dans votre liste de joueurs compl�te
-//		    	    for (Joueur joueur : allJoueurs) {
-//		    	        if (joueur.getDisplay_name().equals(displayName)) {
-//		    	        	Joueur joueurAvecVerif=null;
-//		    	        	try {
-//								joueurAvecVerif = BDD_v2.getJoueurParID(joueur.getID(), choosenBDD);
-//								// R�cup�rer la date de naissance du joueur
-//							    String dobString = joueurAvecVerif.getBirthDate();
-//							    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-//							    Date dob = dateFormat.parse(dobString);
-//							    // Calculer l'�ge � partir de la date de naissance
-//							    int age = calculateAge(dob);
-//							    
-//							    // Comparer l'�ge actuel avec l'�ge enregistr� dans le joueur
-//							    boolean ageChanged = (age != joueurAvecVerif.getAge());
-//							    if (ageChanged) {
-//							        // Mettre � jour l'�ge du joueur
-//							        joueurAvecVerif.setAge(age);
-//							        BDD_v2.updateAgeJoueur(joueurAvecVerif.getID(), age, choosenBDD);
-//							    }
-//							} catch (ClassNotFoundException | SQLException | ParseException e1) {
-//								e1.printStackTrace();
-//							}
-//		    	            selectedPlayers.add(joueurAvecVerif);
-//		    	            //break; // Sortez de la boucle interne une fois que le joueur est trouv�
-//		    	        }
-//		    	    } 
-//		    	}
-//		    	dispose();
-//		    }
-//		});
-
 		// Cr�ez un conteneur pour les boutons
 		JPanel buttonPanel = new JPanel();
 //        buttonPanel.setLayout(new GridLayout(3, 1));
@@ -312,52 +275,52 @@ public class AthleteSelection extends JFrame {
 		// Ajouter le panneau de recherche en haut de la fen�tre
 		add(searchPanel, BorderLayout.NORTH);
 
-		if(previousSelectedPlayers != null) {
+		if (previousSelectedPlayers != null) {
 			for (Joueur players : previousSelectedPlayers) {
-				if(players.getNom()!="QUALIFIER"){
+				if (players.getNom() != "QUALIFIER") {
 					String[] joueur = new String[] { players.getNom(), players.getPrenom() };
 					modelRightTable.addRow(joueur);
 				}
 			}
+			this.selectedPlayers = previousSelectedPlayers;
 		}
 		// Ajouter un �couteur pour le champ de recherche
-        searchField.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                updateSelection();
-            }
+		searchField.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				updateSelection();
+			}
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                updateSelection();
-            }
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				updateSelection();
+			}
 
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                updateSelection();
-            }
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				updateSelection();
+			}
 
-            private void updateSelection() {
-                String searchText = searchField.getText().trim().toLowerCase();
-                TableModel model = allPlayersTable.getModel();   // import javax.swing.table.TableModel;
+			private void updateSelection() {
+				String searchText = searchField.getText().trim().toLowerCase();
+				TableModel model = allPlayersTable.getModel(); // import javax.swing.table.TableModel;
 
+				for (int row = 0; row < model.getRowCount(); row++) {
+					String playerName = (String) model.getValueAt(row, 0).toString().toLowerCase();
+					boolean match = playerName.contains(searchText);
 
-                for (int row = 0; row < model.getRowCount(); row++) {
-                    String playerName = (String) model.getValueAt(row, 0).toString().toLowerCase();
-                    boolean match = playerName.contains(searchText);
-
-                    if (match) {
-                        // D�s�lectionnez toutes les autres lignes
-                    	allPlayersTable.clearSelection();
-                        // S�lectionnez uniquement la ligne correspondante
-                    	allPlayersTable.getSelectionModel().setSelectionInterval(row, row);
-                        // Faites d�filer jusqu'� la ligne s�lectionn�e pour la rendre visible
-                    	allPlayersTable.scrollRectToVisible(allPlayersTable.getCellRect(row, 0, true));
-                        break; // Sortez de la boucle d�s qu'une correspondance est trouv�e
-                    }
-                }
-            }
-        });
+					if (match) {
+						// D�s�lectionnez toutes les autres lignes
+						allPlayersTable.clearSelection();
+						// S�lectionnez uniquement la ligne correspondante
+						allPlayersTable.getSelectionModel().setSelectionInterval(row, row);
+						// Faites d�filer jusqu'� la ligne s�lectionn�e pour la rendre visible
+						allPlayersTable.scrollRectToVisible(allPlayersTable.getCellRect(row, 0, true));
+						break; // Sortez de la boucle d�s qu'une correspondance est trouv�e
+					}
+				}
+			}
+		});
 
 		setVisible(true);
 	}
@@ -373,9 +336,10 @@ public class AthleteSelection extends JFrame {
 
 	/**
 	 * Ajout plyare to selected list.
-	 * @throws SQLException 
-	 * @throws ClassNotFoundException 
-	 * @throws HeadlessException 
+	 * 
+	 * @throws SQLException
+	 * @throws ClassNotFoundException
+	 * @throws HeadlessException
 	 */
 	public void ajoutPlyareToSelectedList() throws HeadlessException, ClassNotFoundException, SQLException {
 		int selectedRow = allPlayersTable.getSelectedRow();
@@ -384,24 +348,26 @@ public class AthleteSelection extends JFrame {
 			String name = (String) allPlayersTable.getValueAt(selectedRow, 0);
 			String surname = (String) allPlayersTable.getValueAt(selectedRow, 1);
 			String[] joueur = new String[] { name, surname };
-			
+
 			if (BDD_v2.verifInfosManquante(BDD_v2.getJoueurParNom(name, choosenBDD).getID(), choosenBDD)) {
 
-				int choice = JOptionPane.showConfirmDialog(frameForMessage, "The player selected from ATP/WTA is not complete. Do you want to update it ?",
-						"Player update", JOptionPane.YES_NO_OPTION);
+				int choice = JOptionPane.showConfirmDialog(frameForMessage,
+						"The player selected from ATP/WTA is not complete. Do you want to update it ?", "Player update",
+						JOptionPane.YES_NO_OPTION);
 				if (choice == JOptionPane.YES_OPTION) {
-					System.out.println("update players "+name+" selected");
+					System.out.println("update players " + name + " selected");
 					try {
-						MainJFX.API.insertionsInfosSupJoueur(BDD_v2.getJoueurParNom(name, choosenBDD).getID(), choosenBDD);
+						MainJFX.API.insertionsInfosSupJoueur(BDD_v2.getJoueurParNom(name, choosenBDD).getID(),
+								choosenBDD);
 					} catch (ClassNotFoundException | IOException | InterruptedException | JSONException
 							| SQLException e1) {
 						e1.printStackTrace();
 					}
-				}else
-					System.out.println("don't update players "+name+" selected");
+				} else
+					System.out.println("don't update players " + name + " selected");
 
 			}
-			modelRightTable.addRow(joueur);					
+			modelRightTable.addRow(joueur);
 		}
 	}
 

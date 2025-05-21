@@ -19,6 +19,7 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -91,6 +92,8 @@ public class MenuPrincipal extends JFrame {
 	private JButton selectAthleteButton;
 
 	private ArrayList<Joueur> selectedPlayers = new ArrayList<Joueur>();
+
+	private WindowBroadcastPublic diffusionFrame;
 
 	/**
 	 * Instantiates a new menu principal.
@@ -455,12 +458,31 @@ public class MenuPrincipal extends JFrame {
 			}
 		});
 
-		JButton diffusionButton = createStyledButtonStart("Start Tournament");
-		diffusionButton.addActionListener(e -> {
-			try {
-				handleDiffusionButton();
-			} catch (ClassNotFoundException | SQLException e1) {
-				e1.printStackTrace();
+		ActionListener actionStartTournament = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					handleDiffusionButton();
+				} catch (ClassNotFoundException | SQLException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		};
+		JButton diffusionButton = createStyledButtonStart("<html><u>S</u>tart Tournament</html>");
+		diffusionButton.addActionListener(actionStartTournament);
+		// Ajouter une KeyBinding pour la touche "s" seule
+		InputMap inputMap = diffusionButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		ActionMap actionMap = diffusionButton.getActionMap();
+
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), "StartTournamentAction"); // 0 pour aucun modificateur
+		actionMap.put("StartTournamentAction", new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				actionStartTournament.actionPerformed(e);
 			}
 		});
 
@@ -521,9 +543,10 @@ public class MenuPrincipal extends JFrame {
 	 *
 	 * @throws ClassNotFoundException the class not found exception
 	 * @throws SQLException           the SQL exception
+	 * @throws IOException 
 	 */
 	// Keeping original functionality for athlete selection and diffusion
-	private void handleDiffusionButton() throws ClassNotFoundException, SQLException {
+	private void handleDiffusionButton() throws ClassNotFoundException, SQLException, IOException {
 		if (eventComboBox.getSelectedItem() == null) {
 			blinkComponentBorder(eventComboBox, 3);
 		} else if (bddPLayersComboBox.getSelectedItem() == null) {
@@ -535,8 +558,9 @@ public class MenuPrincipal extends JFrame {
 		} else {
 //        	System.out.println(GlobalSettings.getInstance().getNameMaxLength());
 //			selectedPlayers = athleteSelection.getSelectedPlayers();
-			displaySelectedPlayers(selectedPlayers);
-			createDiffusionWindow(selectedPlayers);
+			if(displaySelectedPlayers(selectedPlayers) && (diffusionFrame == null || !diffusionFrame.isVisible()))			
+				createDiffusionWindow(selectedPlayers);
+			
 		}
 	}
 
@@ -783,14 +807,22 @@ public class MenuPrincipal extends JFrame {
 	 * Display selected players.
 	 *
 	 * @param selectedPlayers the selected players
+	 * @return 
 	 */
-	private void displaySelectedPlayers(ArrayList<Joueur> selectedPlayers) {
+	private boolean displaySelectedPlayers(ArrayList<Joueur> selectedPlayers) {
 		StringBuilder playersInfo = new StringBuilder("Selected players :\n");
 		for (Joueur joueur : selectedPlayers) {
 			playersInfo.append(joueur.getNom()).append(" ").append(joueur.getPrenom()).append("\n");
 		}
-		JOptionPane.showMessageDialog(this, playersInfo.toString(), "Selected players",
-				JOptionPane.INFORMATION_MESSAGE);
+//		JOptionPane.showMessageDialog(this, playersInfo.toString(), "Selected players",
+//				JOptionPane.INFORMATION_MESSAGE);
+		
+		int  result = JOptionPane.showConfirmDialog(this,  playersInfo.toString(),"Selected players", JOptionPane.OK_CANCEL_OPTION);
+		System.out.println(result);
+			if (result == JOptionPane.OK_OPTION) {
+			    return true;
+			}else
+				return false;
 	}
 
 	/**
@@ -799,8 +831,9 @@ public class MenuPrincipal extends JFrame {
 	 * @param selectedPlayers the selected players
 	 * @throws ClassNotFoundException the class not found exception
 	 * @throws SQLException           the SQL exception
+	 * @throws IOException 
 	 */
-	private void createDiffusionWindow(ArrayList<Joueur> selectedPlayers) throws ClassNotFoundException, SQLException {
+	private void createDiffusionWindow(ArrayList<Joueur> selectedPlayers) throws ClassNotFoundException, SQLException, IOException {
 		String selectedEvent = (String) eventComboBox.getSelectedItem();
 		Evenement eventChoosen = new Evenement(selectedEvent);
 		try {
@@ -812,7 +845,7 @@ public class MenuPrincipal extends JFrame {
 			GraphicsDevice[] screens = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
 			GraphicsDevice selectedScreen = screens[Integer.parseInt((String) spinnerScreen.getValue())];
 			GraphicsDevice configScreen = screens[Integer.parseInt(actualScreen.substring(actualScreen.length() - 1))];
-			WindowBroadcastPublic diffusionFrame = new WindowBroadcastPublic(eventChoosen, selectedScreen,
+			diffusionFrame = new WindowBroadcastPublic(eventChoosen, selectedScreen,
 					new Dimension((int) sizeFenetreX.getValue(), (int) sizeFenetreY.getValue()));
 			System.out.println("--> ecran actuel : " + actualScreen);
 			WindowTournamentTree windowTournamentTree = new WindowTournamentTree(configScreen, selectedPlayers,
