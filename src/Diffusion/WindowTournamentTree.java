@@ -13,8 +13,6 @@ import Players.Joueur;
 import Police.TabPolice;
 import Sauvegarde.ConfigurationSaveLoad;
 import Event.Evenement;
-import Main.ImageUtility;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;

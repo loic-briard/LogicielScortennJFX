@@ -200,6 +200,7 @@ public class AthleteSelection extends JFrame {
 					System.out.println("update Age players selected");
 				else
 					System.out.println("don't update Age players selected");
+				selectedPlayers.clear();
 				for (int row = 0; row < modelRightTable.getRowCount(); row++) {
 					String name = (String) modelRightTable.getValueAt(row, 0);
 					// Recherchez le joueur correspondant dans votre liste de joueurs compl�te
