@@ -1,6 +1,3 @@
-/*
- * 
- */
 package Diffusion;
 
 /*
@@ -97,6 +94,7 @@ autre}
 	 */
 	public WindowConfigurationPlayerInfos(GraphicsDevice configScreen,WindowBroadcastPublic sonFrame, String typeFrame) {
 		this.displayFrame = sonFrame;
+		System.out.println(typeFrame);
 		this.frameType = FrameType.valueOf(typeFrame.toLowerCase());
 		
 		initializeFrame(configScreen);

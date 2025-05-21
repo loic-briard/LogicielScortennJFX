@@ -280,7 +280,7 @@ public class PanelAnimationConfiguration extends JPanel {
      * @return the zoom animation duration
      */
     public  int getZoomAnimationDuration() {
-        return isZoomAnimationEnabled() ? (int) zoomAnimationSpinner.getValue() : 0;
+        return (int) zoomAnimationSpinner.getValue();
     }
 
     /**
@@ -298,7 +298,7 @@ public class PanelAnimationConfiguration extends JPanel {
      * @return the label animation duration
      */
     public int getLabelAnimationDuration() {
-        return isLabelAnimationEnabled() ? (int) labelAnimationSpinner.getValue() : 0;
+        return (int) labelAnimationSpinner.getValue();
     }
     
     /**
@@ -379,7 +379,7 @@ public class PanelAnimationConfiguration extends JPanel {
      * @return true, if is path tree animation enabled
      */
     public boolean isPathTreeAnimationEnabled() {
-        return animationTreeCheckBox.isSelected();
+		return animationTreeCheckBox.isSelected();
     }
     
     /**
@@ -677,13 +677,15 @@ public class PanelAnimationConfiguration extends JPanel {
 
         animRunning = true;
         final long startNs = System.nanoTime();
+        
+        int duration = isLabelAnimationEnabled() ? (int) labelAnimationSpinner.getValue() : 0;
 
         Timer timer = new Timer(14, null);//60hz
         timer.addActionListener(e -> {
         	
             
             double   elapsedMs = (System.nanoTime() - startNs) / 1_000_000.0;
-            double   t         = Math.min(1.0, elapsedMs / durationMs);
+            double   t         = Math.min(1.0, elapsedMs / duration);
             double   p         = EASE.applyAsDouble(t);
 
             int  x = x0 + (int) (dx * p);

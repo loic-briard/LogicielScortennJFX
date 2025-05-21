@@ -648,6 +648,7 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	        case "full":
 	            panelPlayerGlobal.setSize(this.frameForDiffusion.getWidth(), this.frameForDiffusion.getHeight());
 	            panelPlayerGlobal.setLocation(0, 0);
+//	            displayPlayerFull();
 	            break;
 	        case "player":
 	        	if(joueur.getNom()!="QUALIFIER") {
@@ -689,11 +690,41 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	        	    
 	        	}else
 	        		displayPlayerFull();
-	        	
 	            break;
+	        case"game":
+	        	ImageUtility imageFond3 = new ImageUtility(this.windowTournamentTree.getEvent().getBackground().getImage_3(), 0);
+				imageFond3.setLocation(0, 0);
+				imageFond3.setSize(imageFond3.getPreferredSize());
+				JPanel panelFondGame = new JPanel();
+				panelFondGame.setLayout(null);
+				panelFondGame.setOpaque(false);
+				panelFondGame.add(imageFond3);
+				panelFondGame.setLocation(0,0);
+				panelFondGame.setSize(imageFond3.getPreferredSize());
+				this.frameForDiffusion.addContent(this.windowTournamentTree.bgSGT , panelFondGame);
+				
+	        	panelPlayerGlobal.setSize(this.frameForDiffusion.getWidth(), this.frameForDiffusion.getHeight());
+		        panelPlayerGlobal.setLocation(0, 0);
+	        	break;
+	        case "tab":
+	        	ImageUtility imageFond4 = new ImageUtility(this.windowTournamentTree.getEvent().getBackground().getImage_4(), 0);
+	        	imageFond4.setLocation(0, 0);
+	        	imageFond4.setSize(imageFond4.getPreferredSize());
+				JPanel panelFondTab = new JPanel();
+				panelFondTab.setLayout(null);
+				panelFondTab.setOpaque(false);
+				panelFondTab.add(imageFond4);
+				panelFondTab.setLocation(0,0);
+				panelFondTab.setSize(imageFond4.getPreferredSize());
+				this.frameForDiffusion.addContent(this.windowTournamentTree.bgSGT , panelFondTab);
+				
+	        	panelPlayerGlobal.setSize(this.frameForDiffusion.getWidth(), this.frameForDiffusion.getHeight());
+		        panelPlayerGlobal.setLocation(0, 0);
+	        	break;
 	        default:
-	        	System.out.println("default animation player");
-	        	animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, null);
+	        	panelPlayerGlobal.setSize(this.frameForDiffusion.getWidth(), this.frameForDiffusion.getHeight());
+		        panelPlayerGlobal.setLocation(0, 0);
+//	        	animationPanel.zoomPanel(panelPlayerGlobal, frameForDiffusion, null);
 	    }
 	}
 
@@ -795,10 +826,12 @@ public MouseAdapterPanel getMouseAdapterPanel() {
 	 * Display player full.
 	 */
 	private void displayPlayerFull() {
-		if(animationPanel.isPlayerFullEnabled())
-			this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer].setVisible(true);
-		else
-			this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer].setVisible(false);
+		if (animationPanel != null) {
+			if (animationPanel.isPlayerFullEnabled())
+				this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer].setVisible(true);
+			else
+				this.frameForDiffusion.getWindowTournamentTreeFromBroadcast().getTabPlayerForTree()[this.numeroPlayer].setVisible(false);
+		}
 	}
 	
 	/**

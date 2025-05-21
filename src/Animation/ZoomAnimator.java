@@ -108,6 +108,7 @@ public final class ZoomAnimator {
 		comp.setOpaque(false);
 		comp.setDoubleBuffered(false);
 		if (!cfg.isZoomAnimationEnabled()) {
+			comp.setVisible(true);
 			comp.setBounds(0, 0, frame.getWidth(), frame.getHeight());
 			comp.revalidate();
 			comp.repaint();

@@ -670,8 +670,8 @@ public class ConfigurationSaveLoad {
 			if (jsonElement.isJsonObject()) {
 				JsonObject configObject = jsonElement.getAsJsonObject();
 				JsonObject elementObject = new JsonObject();// configObject.getAsJsonObject(typeFenetre).getAsJsonObject(nomElement);
-				System.out.println(typeFenetre + " GET element : " + nomElement + " for player index : " + index
-						+ " from file : " + emplacement);
+//				System.out.println(typeFenetre + " GET element : " + nomElement + " for player index : " + index
+//						+ " from file : " + emplacement);
 				switch (typeFenetre) {
 				case "player":
 					elementObject = configObject.getAsJsonObject("player").getAsJsonObject(nomElement);
