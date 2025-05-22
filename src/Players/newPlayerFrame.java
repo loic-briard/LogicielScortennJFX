@@ -374,7 +374,7 @@ public class newPlayerFrame extends JFrame {
 			            		if (BDD_v2.verifInfosManquante(joueur.getID(), choosenBDD)) {
 
 			        				int choice = JOptionPane.showConfirmDialog(newPlayerFrame,
-			        						"The player selected is not complete. Do you want to update it ?", "Player update",
+			        						"The player selected is not complete. Do you want to update it with the API?", "Player update",
 			        						JOptionPane.YES_NO_OPTION);
 			        				if (choice == JOptionPane.YES_OPTION) {
 			        					System.out.println("update players " + joueur.getDisplay_name() + " selected");
