@@ -132,6 +132,8 @@ public class newPlayerFrame extends JFrame {
 	
 	/** The i D. */
 	private int iD;
+	
+	private JFrame newPlayerFrame; 
 
 	/**
 	 * Instantiates a new new player frame.
@@ -155,6 +157,7 @@ public class newPlayerFrame extends JFrame {
 			System.err.println("Impossible de charger l'ic�ne.");
 		}
 		this.bddChoosen = bddChoosen;
+		this.newPlayerFrame = this;
 		
 		//ajout d'une combobox pour choisir les joueur dune autre bdd
 		JComboBox<String> selectedPLayerComboBox = new JComboBox<>();
@@ -367,10 +370,26 @@ public class newPlayerFrame extends JFrame {
 					for (Joueur joueur : selectedJoueurs) {
 			            if (joueur.getDisplay_name().equals((String) selectedPLayerComboBox.getSelectedItem())) {
 			            	try {
-								MainJFX.API.insertionsInfosSupJoueur(joueur.getID(), (String)bddPLayersComboBox.getSelectedItem());
+			            		String choosenBDD = (String)bddPLayersComboBox.getSelectedItem();
+			            		if (BDD_v2.verifInfosManquante(joueur.getID(), choosenBDD)) {
+
+			        				int choice = JOptionPane.showConfirmDialog(newPlayerFrame,
+			        						"The player selected is not complete. Do you want to update it ?", "Player update",
+			        						JOptionPane.YES_NO_OPTION);
+			        				if (choice == JOptionPane.YES_OPTION) {
+			        					System.out.println("update players " + joueur.getDisplay_name() + " selected");
+			        					try {
+			        						MainJFX.API.insertionsInfosSupJoueur(joueur.getID(), (String)bddPLayersComboBox.getSelectedItem());
+			        					} catch (ClassNotFoundException | IOException | InterruptedException | JSONException
+			        							| SQLException e1) {
+			        						e1.printStackTrace();
+			        					}
+			        				} else
+			        					System.out.println("don't update players " + joueur.getDisplay_name() + " selected");
+
+			        			}
 								autoCompleteInfosJoueur(BDD_v2.getJoueurParID(joueur.getID(), (String)bddPLayersComboBox.getSelectedItem())); // Retourne le joueur si son nom correspond
-							} catch (ClassNotFoundException | IOException | InterruptedException | JSONException
-									| SQLException e1) {
+							} catch (ClassNotFoundException | SQLException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
@@ -479,22 +498,26 @@ public class newPlayerFrame extends JFrame {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         try {
             // Conversion de la cha�ne en objet Date
-            Date dateBirthdatePlayer = simpleDateFormat.parse(selectedJoueur.getBirthDate());
-            birthdateChooser.setDate(dateBirthdatePlayer);
+			if (selectedJoueur.getBirthDate() != null) {
+				Date dateBirthdatePlayer = simpleDateFormat.parse(selectedJoueur.getBirthDate());
+				birthdateChooser.setDate(dateBirthdatePlayer);
+			}
             // Affichage de la date convertie
-            System.out.println("++++ Date convertie : " + dateBirthdatePlayer);
+//            System.out.println("Date convertie : " + dateBirthdatePlayer);
         } catch (ParseException e) {
-            System.err.println("++++ Erreur lors de la conversion de la date : " + e.getMessage());
+            System.err.println("Erreur lors de la conversion de la date : " + e.getMessage());
         }
         
         currentImage = selectedJoueur.getImgJoueur();
         updatePlayerImagePreview(selectedJoueur.getImgJoueur());
         
 		// R�cup�rez la date de naissance choisie par l'utilisateur
-		Date dob = birthdateChooser.getDate();
-		// Calculez l'�ge en fonction de la date de naissance
-		int age = calculateAge(dob);
-		// Affichez l'�ge dans le champ correspondant
+        int age = 0;
+		if (birthdateChooser.getDate() != null) {
+			Date dob = birthdateChooser.getDate();
+			// Calculez l'�ge en fonction de la date de naissance
+			age = calculateAge(dob);
+		} // Affichez l'�ge dans le champ correspondant
 		ageField.setText(Integer.toString(age));
 		
 		weightField.setText(selectedJoueur.getWeight()+"");

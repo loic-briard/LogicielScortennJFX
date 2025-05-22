@@ -235,7 +235,7 @@ public class WindowTournamentTree extends JFrame {
 
 		JPanel rockBottomSectionsPanel = new JPanel();
 		rockBottomSectionsPanel.setLayout(new GridLayout(1, 1));
-		JButton playerButton = new JButton("All Player");
+		JButton playerButton = new JButton("All Players");
 		playerButton.addActionListener(e -> {
 			try {
 				handleFullCompetition();

@@ -350,7 +350,7 @@ public class MenuPrincipal extends JFrame {
 			panel.add(connexionImage);
 		}
 
-		JLabel titleLabel = new JLabel("Tournament Management System");
+		JLabel titleLabel = new JLabel("Tennis Tournament Management System");
 		titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
 		titleLabel.setForeground(Color.WHITE);
 		panel.add(titleLabel);
