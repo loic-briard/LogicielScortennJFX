@@ -107,13 +107,37 @@ public class WindowBroadcastPublic extends JFrame {
 	 * @param imagePath the new background image
 	 */
 	public void setBackgroundImage(String imagePath) {
-		ImageIcon imageBackground = new ImageIcon(imagePath);
-		Image scaledImageBackground = imageBackground.getImage().getScaledInstance(this.getWidth(), this.getHeight(),
-				Image.SCALE_SMOOTH);
-		System.out.println("> switch background to : " + imagePath);
-		backgroundLabel.setIcon(new ImageIcon(scaledImageBackground));
+//		ImageIcon imageBackground = new ImageIcon(imagePath);
+//		Image scaledImageBackground = imageBackground.getImage().getScaledInstance(this.getWidth(), this.getHeight(),
+//				Image.SCALE_SMOOTH);
+//		System.out.println("> switch background to : " + imagePath);
+//		backgroundLabel.setIcon(new ImageIcon(scaledImageBackground));
+//		layeredPane.revalidate();
+//		layeredPane.repaint();	
+		
+		// Vérifier si le fichier est un GIF (basé sur l'extension)
+	    boolean isGif = imagePath.toLowerCase().endsWith(".gif");
+
+	    if (isGif) {
+	        // GIF animé : NE PAS redimensionner avec getScaledInstance (ça fige le GIF)
+	        ImageIcon gifIcon = new ImageIcon(imagePath);
+	        backgroundLabel.setIcon(gifIcon);
+	        backgroundLabel.setBounds(0, 0, this.getWidth(), this.getHeight());
+	        backgroundLabel.setHorizontalAlignment(JLabel.CENTER);
+	        backgroundLabel.setVerticalAlignment(JLabel.CENTER);
+	        // Option : utiliser un layout pour que le GIF soit centré sans étirement
+	    } else {
+	        // Image fixe : on peut la redimensionner
+	        ImageIcon imageBackground = new ImageIcon(imagePath);
+	        Image scaledImageBackground = imageBackground.getImage().getScaledInstance(this.getWidth(), this.getHeight(),
+	                Image.SCALE_SMOOTH);
+	        backgroundLabel.setIcon(new ImageIcon(scaledImageBackground));
+	        backgroundLabel.setBounds(0, 0, this.getWidth(), this.getHeight());
+	    }
+
+	    System.out.println("> switch background to : " + imagePath );
 		layeredPane.revalidate();
-		layeredPane.repaint();
+		layeredPane.repaint();	
 	}
 
 	/**
@@ -124,15 +148,40 @@ public class WindowBroadcastPublic extends JFrame {
 	 */
 	public void setBackgroundImageLayered(String imagePath, Integer layer) {
 		removeLayerContent(layer);
-		ImageIcon imageBackground = new ImageIcon(imagePath);
-		Image scaledImageBackground = imageBackground.getImage().getScaledInstance(this.getWidth(), this.getHeight(),
-				Image.SCALE_SMOOTH);
-		System.out.println("> switch background to : " + imagePath + " on layer : " + layer);
-		JLabel imageLabel = new JLabel();
-		imageLabel.setBounds(0, 0, this.getWidth(), this.getHeight());
-		imageLabel.setIcon(new ImageIcon(scaledImageBackground));
-		layeredPane.add(imageLabel, layer);
+		// Vérifier si le fichier est un GIF (basé sur l'extension)
+	    boolean isGif = imagePath.toLowerCase().endsWith(".gif");
+	    JLabel imageLabel = new JLabel();
+
+	    if (isGif) {
+	        // GIF animé : NE PAS redimensionner avec getScaledInstance (ça fige le GIF)
+	        ImageIcon gifIcon = new ImageIcon(imagePath);
+	        imageLabel.setIcon(gifIcon);
+	        imageLabel.setBounds(0, 0, this.getWidth(), this.getHeight());
+	        imageLabel.setHorizontalAlignment(JLabel.CENTER);
+	        imageLabel.setVerticalAlignment(JLabel.CENTER);
+	        // Option : utiliser un layout pour que le GIF soit centré sans étirement
+	    } else {
+	        // Image fixe : on peut la redimensionner
+	        ImageIcon imageBackground = new ImageIcon(imagePath);
+	        Image scaledImageBackground = imageBackground.getImage().getScaledInstance(this.getWidth(), this.getHeight(),
+	                Image.SCALE_SMOOTH);
+	        imageLabel.setIcon(new ImageIcon(scaledImageBackground));
+	        imageLabel.setBounds(0, 0, this.getWidth(), this.getHeight());
+	    }
+
+	    System.out.println("> switch background to : " + imagePath + " on layer : " + layer);
+	    layeredPane.add(imageLabel, layer);
+	    layeredPane.repaint();
 	}
+//		ImageIcon imageBackground = new ImageIcon(imagePath);
+//		Image scaledImageBackground = imageBackground.getImage().getScaledInstance(this.getWidth(), this.getHeight(),
+//				Image.SCALE_SMOOTH);
+//		System.out.println("> switch background to : " + imagePath + " on layer : " + layer);
+//		JLabel imageLabel = new JLabel();
+//		imageLabel.setBounds(0, 0, this.getWidth(), this.getHeight());
+//		imageLabel.setIcon(new ImageIcon(scaledImageBackground));
+//		layeredPane.add(imageLabel, layer);
+//	}
 
 	/**
 	 * Adds the content.

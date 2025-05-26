@@ -449,13 +449,9 @@ public class WindowTournamentTree extends JFrame {
 
 			System.gc();
 			Joueur soloPlayer = foundPlayer(selectedItem);
-//			if(soloPlayer != null) {
-//				if(soloPlayer.getNom() != "QUALIFIER")
-//					displayFondJoueur("player");
-//			}
-//			else
+			
 			windowBroadcastPublic.removeLayerContent(bgSGT);// nettoyage du layer
-//			ArrayList<PlayerForDiffusion> ListSelectedJoueur = new ArrayList<>();
+			
 			ListSelectedJoueur.clear();
 			int ligne = playerIndex + (nbJoueur / 4) * panelIndex;
 //			SwingUtilities.invokeLater(() -> {
